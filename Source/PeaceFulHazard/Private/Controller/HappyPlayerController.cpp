@@ -157,11 +157,6 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
         bSuccess = ControlledCharacter->Reload(Value);
     }
 
-    if (bSuccess)
-    {
-        SetBulletCount(false);
-    }
-
 }
 
 void AHappyPlayerController::SetBulletCount(bool bFire)

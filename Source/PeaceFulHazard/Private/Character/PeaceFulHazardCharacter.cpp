@@ -178,7 +178,7 @@ void APeaceFulHazardCharacter::SetUIUpdateTick()
 
 bool APeaceFulHazardCharacter::GetIsAiming() const
 {
-	return bNowAiming && !GetCharacterMovement()->IsFalling();
+	return bNowAiming && !GetCharacterMovement()->IsFalling() && !bReloading;
 }
 
 float APeaceFulHazardCharacter::GetMoveXInput() const
@@ -453,7 +453,10 @@ bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
 bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
 {
 	if (!bEquiped) return false;
+	if (bReloading) return false;
 
+	bReloading = true;
+	
 	if (GetMesh())
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -471,5 +474,15 @@ bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
 	}
 
 	return false;
+}
+
+void APeaceFulHazardCharacter::ReloadEndTrigger()
+{
+	bReloading = false;
+
+	if (HappyPlayerController)
+	{
+		HappyPlayerController->SetBulletCount(false);
+	}
 }
 

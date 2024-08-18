@@ -66,6 +66,9 @@ public:
 
 	virtual void Tick(float deltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+	void ReloadEndTrigger();
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
@@ -148,6 +151,9 @@ protected:
 	void SetWeaponEquip(bool isEquiped);
 
 	bool bEquiped = false;
+
+	bool bReloading = false;
+
 
 	bool bShootableAimState = false;
 
