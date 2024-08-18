@@ -275,6 +275,7 @@ void APeaceFulHazardCharacter::SetupPlayerInputComponent(UInputComponent* Player
 		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Started, this, &ThisClass::EquipTrigger);
 
 
+
 	}
 	else
 	{
