@@ -28,6 +28,14 @@ void APlayerHUD::SetAimDisplay(bool bVisible)
 
 }
 
+void APlayerHUD::SetBulletDisplay(int32 currentBullet, int32 maxBullet)
+{
+    if (DefaultPlayerWidget != nullptr)
+    {
+        DefaultPlayerWidget->SetBulletUI(currentBullet, maxBullet);
+    }
+}
+
 void APlayerHUD::BeginPlay()
 {
     Super::BeginPlay();
@@ -44,7 +52,7 @@ void APlayerHUD::BeginPlay()
     if (DefaultPlayerWidgetClass != nullptr)
     {
         DefaultPlayerWidget = CreateWidget<UDefaultPlayerWidget>(GetWorld(), DefaultPlayerWidgetClass);
-        if (HUDAimWidget != nullptr)
+        if (DefaultPlayerWidget != nullptr)
         {
             DefaultPlayerWidget->AddToViewport();
         }

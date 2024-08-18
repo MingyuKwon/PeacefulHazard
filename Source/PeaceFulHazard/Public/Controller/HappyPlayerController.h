@@ -27,6 +27,7 @@ class PEACEFULHAZARD_API AHappyPlayerController : public APlayerController
 protected:
 
 	virtual void SetupInputComponent() override;
+	virtual void BeginPlay() override;
 
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
@@ -51,6 +52,10 @@ protected:
 
 	/** Called for Fire input */
 	void EquipTrigger(const FInputActionValue& Value);
+
+	/** Called for Fire input */
+	void Reload(const FInputActionValue& Value);
+
 
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -80,8 +85,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* EquipAction;
 
+	/** Shoot Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ReloadAction;
+
+	class APlayerHUD* PlayerHUD;
 
 protected:
 
 	int32 currentBullet = 6;
+	int32 maxBullet = 6;
+
+	void SetBulletCount(bool bFire);
+
 };

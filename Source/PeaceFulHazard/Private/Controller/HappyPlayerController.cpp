@@ -40,11 +40,21 @@ void AHappyPlayerController::SetupInputComponent()
         EnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ThisClass::ShiftEnd);
 
         EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Started, this, &ThisClass::EquipTrigger);
+
+        EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &ThisClass::Reload);
+
     }
     else
     {
         UE_LOG(LogTemp, Error, TEXT("Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."));
     }
+}
+
+void AHappyPlayerController::BeginPlay()
+{
+    Super::BeginPlay();
+
+    PlayerHUD = Cast<APlayerHUD>(GetHUD());
 }
 
 void AHappyPlayerController::Move(const FInputActionValue& Value)
@@ -81,7 +91,7 @@ void AHappyPlayerController::Fire(const FInputActionValue& Value)
 
     if (bSuccess)
     {
-        currentBullet--;
+        SetBulletCount(true);
     }
 }
 
@@ -133,4 +143,31 @@ void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
     {
         bSuccess = ControlledCharacter->EquipTrigger(Value);
     }
+}
+
+void AHappyPlayerController::Reload(const FInputActionValue& Value)
+{
+    if (currentBullet >= maxBullet) return;
+
+    SetBulletCount(false);
+}
+
+void AHappyPlayerController::SetBulletCount(bool bFire)
+{
+    if (bFire)
+    {
+        currentBullet--;
+    }
+    else
+    {
+        currentBullet = maxBullet;
+    }
+
+
+    currentBullet = FMath::Clamp(currentBullet, 0, maxBullet);
+    if (PlayerHUD)
+    {
+        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet);
+    }
+
 }

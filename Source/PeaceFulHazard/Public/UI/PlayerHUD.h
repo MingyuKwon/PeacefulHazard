@@ -21,6 +21,8 @@ public:
 
 	void SetAimDisplay(bool bVisible);
 
+	void SetBulletDisplay(int32 currentBullet, int32 maxBullet);
+
 protected:
 	virtual void BeginPlay() override;
 
