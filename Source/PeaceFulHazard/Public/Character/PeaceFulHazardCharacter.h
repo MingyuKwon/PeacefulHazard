@@ -35,28 +35,28 @@ public:
 	UCameraComponent* FollowCamera;
 
 	/** Called for movement input */
-	void Move(const FInputActionValue& Value);
+	bool Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
-	void Look(const FInputActionValue& Value);
+	bool Look(const FInputActionValue& Value);
 
 	/** Called for Aim input */
-	void AimStart(const FInputActionValue& Value);
+	bool AimStart(const FInputActionValue& Value);
 
 	/** Called for Aim input */
-	void AimEnd(const FInputActionValue& Value);
+	bool AimEnd(const FInputActionValue& Value);
 
 	/** Called for Fire input */
-	void Fire(const FInputActionValue& Value);
+	bool Fire(const FInputActionValue& Value);
 
 	/** Called for Fire input */
-	void ShiftStart(const FInputActionValue& Value);
+	bool ShiftStart(const FInputActionValue& Value);
 
 	/** Called for Fire input */
-	void ShiftEnd(const FInputActionValue& Value);
+	bool ShiftEnd(const FInputActionValue& Value);
 
 	/** Called for Fire input */
-	void EquipTrigger(const FInputActionValue& Value);
+	bool EquipTrigger(const FInputActionValue& Value);
 
 
 	APeaceFulHazardCharacter();

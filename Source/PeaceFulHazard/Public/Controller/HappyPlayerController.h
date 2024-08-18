@@ -79,4 +79,9 @@ protected:
 	/** Shoot Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* EquipAction;
+
+
+protected:
+
+	int32 currentBullet = 6;
 };
