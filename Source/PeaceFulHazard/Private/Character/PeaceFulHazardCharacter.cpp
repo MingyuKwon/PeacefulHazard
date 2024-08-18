@@ -223,7 +223,7 @@ void APeaceFulHazardCharacter::SetMoveSpeed()
 {
 	float Speed = DefaultMoveSpeed;
 
-	if (bNowAiming)
+	if (GetIsAiming())
 	{
 		Speed = AimMoveSpeed;
 	}
@@ -244,7 +244,7 @@ void APeaceFulHazardCharacter::SetMoveSpeed()
 
 void APeaceFulHazardCharacter::SetShouldRotate()
 {
-	if (bNowAiming)
+	if (GetIsAiming())
 	{
 		GetCharacterMovement()->bOrientRotationToMovement = false;
 		return;
@@ -322,7 +322,7 @@ bool APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
 
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
-	if (bNowAiming)
+	if (GetIsAiming())
 	{
 		LookAxisVector = LookAxisVector * MouseAimSensitivity;
 	}
@@ -419,7 +419,7 @@ bool APeaceFulHazardCharacter::ShiftEnd(const FInputActionValue& Value)
 
 bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
 {
-	if (bNowAiming) return false;
+	if (GetIsAiming()) return false;
 
 	bEquiped = !bEquiped;
 
