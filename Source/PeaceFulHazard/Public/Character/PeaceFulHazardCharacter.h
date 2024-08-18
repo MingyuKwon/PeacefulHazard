@@ -100,7 +100,7 @@ protected:
 	float AimMoveSpeed = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
-	float DefaultMoveSpeed = 200.f;
+	float DefaultMoveSpeed = 170.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
 	float ShiftMoveSpeed = 300.f;

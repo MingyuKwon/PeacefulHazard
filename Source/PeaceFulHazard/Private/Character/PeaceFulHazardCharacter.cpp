@@ -164,6 +164,8 @@ void APeaceFulHazardCharacter::BeginPlay()
 
 void APeaceFulHazardCharacter::SetWeaponEquip(bool isEquiped)
 {
+	if (bNowAiming) return;
+
 	bEquiped = isEquiped;
 
 	if (EquipWeapon)
