@@ -450,3 +450,20 @@ bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
 	return true;
 }
 
+bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
+{
+	if (!bEquiped) return false;
+
+	if (ReloadMontage && GetMesh())
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (AnimInstance)
+		{
+			AnimInstance->Montage_Play(ReloadMontage);
+		}
+		return true;
+	}
+
+	return false;
+}
+

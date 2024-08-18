@@ -55,13 +55,14 @@ void AHappyPlayerController::BeginPlay()
     Super::BeginPlay();
 
     PlayerHUD = Cast<APlayerHUD>(GetHUD());
+    ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn());
 }
 
 void AHappyPlayerController::Move(const FInputActionValue& Value)
 {
     bool bSuccess = false;
 
-    if (APeaceFulHazardCharacter* ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn()))
+    if (ControlledCharacter)
     {
         bSuccess = ControlledCharacter->Move(Value);
     }
@@ -71,8 +72,7 @@ void AHappyPlayerController::Look(const FInputActionValue& Value)
 {
     bool bSuccess = false;
 
-
-    if (APeaceFulHazardCharacter* ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn()))
+    if (ControlledCharacter)
     {
         bSuccess = ControlledCharacter->Look(Value);
     }
@@ -84,7 +84,7 @@ void AHappyPlayerController::Fire(const FInputActionValue& Value)
 
     bool bSuccess = false;
 
-    if (APeaceFulHazardCharacter* ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn()))
+    if (ControlledCharacter)
     {
         bSuccess = ControlledCharacter->Fire(Value);
     }
@@ -99,7 +99,7 @@ void AHappyPlayerController::AimStart(const FInputActionValue& Value)
 {
     bool bSuccess = false;
 
-    if (APeaceFulHazardCharacter* ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn()))
+    if (ControlledCharacter)
     {
         bSuccess = ControlledCharacter->AimStart(Value);
     }
@@ -109,7 +109,7 @@ void AHappyPlayerController::AimEnd(const FInputActionValue& Value)
 {
     bool bSuccess = false;
 
-    if (APeaceFulHazardCharacter* ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn()))
+    if (ControlledCharacter)
     {
         bSuccess = ControlledCharacter->AimEnd(Value);
     }
@@ -119,7 +119,7 @@ void AHappyPlayerController::ShiftStart(const FInputActionValue& Value)
 {
     bool bSuccess = false;
 
-    if (APeaceFulHazardCharacter* ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn()))
+    if (ControlledCharacter)
     {
         bSuccess = ControlledCharacter->ShiftStart(Value);
     }
@@ -129,7 +129,7 @@ void AHappyPlayerController::ShiftEnd(const FInputActionValue& Value)
 {
     bool bSuccess = false;
 
-    if (APeaceFulHazardCharacter* ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn()))
+    if (ControlledCharacter)
     {
         bSuccess = ControlledCharacter->ShiftEnd(Value);
     }
@@ -139,7 +139,7 @@ void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
 {
     bool bSuccess = false;
 
-    if (APeaceFulHazardCharacter* ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn()))
+    if (ControlledCharacter)
     {
         bSuccess = ControlledCharacter->EquipTrigger(Value);
     }
@@ -147,9 +147,22 @@ void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
 
 void AHappyPlayerController::Reload(const FInputActionValue& Value)
 {
+    bool bSuccess = false;
+
     if (currentBullet >= maxBullet) return;
 
-    SetBulletCount(false);
+    
+    if (ControlledCharacter)
+    {
+        bSuccess = ControlledCharacter->Reload(Value);
+    }
+
+    if (bSuccess)
+    {
+        SetBulletCount(false);
+
+    }
+
 }
 
 void AHappyPlayerController::SetBulletCount(bool bFire)

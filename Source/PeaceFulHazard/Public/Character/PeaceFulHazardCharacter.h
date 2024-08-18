@@ -58,6 +58,9 @@ public:
 	/** Called for Fire input */
 	bool EquipTrigger(const FInputActionValue& Value);
 
+	/** Called for looking input */
+	bool Reload(const FInputActionValue& Value);
+
 
 	APeaceFulHazardCharacter();
 
@@ -84,6 +87,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	UAnimMontage* FireMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Bullet Para")
+	UAnimMontage* ReloadMontage;
 
 
 	// this is used for Aiming start and end. using Camera Arm distance lerping (min 0, max 1)

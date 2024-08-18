@@ -90,6 +90,7 @@ protected:
 	UInputAction* ReloadAction;
 
 	class APlayerHUD* PlayerHUD;
+	class APeaceFulHazardCharacter* ControlledCharacter;
 
 protected:
 
