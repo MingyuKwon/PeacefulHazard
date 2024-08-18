@@ -454,13 +454,19 @@ bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
 {
 	if (!bEquiped) return false;
 
-	if (ReloadMontage && GetMesh())
+	if (GetMesh())
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
 		if (AnimInstance)
 		{
-			AnimInstance->Montage_Play(ReloadMontage);
+			if (AimReloadMontage)
+			{
+				AnimInstance->Montage_Play(AimReloadMontage);
+			}
+
 		}
+
 		return true;
 	}
 

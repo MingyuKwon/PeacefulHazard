@@ -160,7 +160,6 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
     if (bSuccess)
     {
         SetBulletCount(false);
-
     }
 
 }

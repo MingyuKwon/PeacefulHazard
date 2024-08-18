@@ -89,7 +89,11 @@ protected:
 	UAnimMontage* FireMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Bullet Para")
-	UAnimMontage* ReloadMontage;
+	UAnimMontage* NoAimReloadMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Bullet Para")
+	UAnimMontage* AimReloadMontage;
+
 
 
 	// this is used for Aiming start and end. using Camera Arm distance lerping (min 0, max 1)
