@@ -164,31 +164,7 @@ void APeaceFulHazardCharacter::BeginPlay()
 
 void APeaceFulHazardCharacter::SetWeaponEquip(bool isEquiped)
 {
-	bEquiped = isEquiped;
 
-	if (EquipWeapon)
-	{
-		EquipWeapon->Destroy();
-		EquipWeapon = nullptr;
-	}
-
-	if (bEquiped)
-	{
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Owner = this;
-		SpawnParams.Instigator = GetInstigator();
-
-		if (PistolClass)
-		{
-			EquipWeapon = GetWorld()->SpawnActor<AWeapon>(PistolClass, SpawnParams);
-		}
-
-		if (EquipWeapon)
-		{
-			FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
-			EquipWeapon->AttachToComponent(GetMesh(), AttachmentRules, FName("PistolSocket"));
-		}
-	}
 }
 
 void APeaceFulHazardCharacter::SetUIUpdateTick()
@@ -202,7 +178,7 @@ void APeaceFulHazardCharacter::SetUIUpdateTick()
 
 bool APeaceFulHazardCharacter::GetIsAiming() const
 {
-	return bNowAiming && !GetCharacterMovement()->IsFalling();
+	return bNowAiming && !GetCharacterMovement()->IsFalling() && !bReloading;
 }
 
 float APeaceFulHazardCharacter::GetMoveXInput() const
@@ -237,113 +213,29 @@ float APeaceFulHazardCharacter::GetAimPitch() const
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-
-void APeaceFulHazardCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	// Add Input Mapping Context
-	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-		}
-	}
-
-	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-
-		// Jumping
-		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
-		// Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
-
-		// Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
-
-		// Fire
-		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ThisClass::Fire);
-
-
-		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ThisClass::AimStart);
-		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ThisClass::AimEnd);
-
-		EnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &ThisClass::ShiftStart);
-		EnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ThisClass::ShiftEnd);
-
-		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Started, this, &ThisClass::EquipTrigger);
-
-
-
-	}
-	else
-	{
-		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
-	}
-}
-
-void APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
-{
-	// input is a Vector2D
-	FVector2D MovementVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
-	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-		// add movement 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
-
-
-		float moderateValue = (MovementVector.Length() > 1) ? 0.5f : 1;
-
-		SetMoveInputLerp(MovementVector.X * moderateValue, MovementVector.Y * moderateValue);
-	}
-
-}
-
 void APeaceFulHazardCharacter::SetMoveInputLerp(float aimmoveXInput, float aimmoveYInput)
 {
-	if (aimmoveXInput * moveXInput < 0)
-	{
-		moveXInput = FMath::Lerp(moveXInput, aimmoveXInput, 0.03f);
-	}
-	else
-	{
-		moveXInput = FMath::Lerp(moveXInput, aimmoveXInput, 0.1f);
-	}
-
-	if (aimmoveYInput * moveYInput < 0)
-	{
-		moveYInput = FMath::Lerp(moveYInput, aimmoveYInput, 0.03f);
-	}
-	else
-	{
-		moveYInput = FMath::Lerp(moveYInput, aimmoveYInput, 0.1f);
-	}
+	moveXInput = FMath::Lerp(moveXInput, aimmoveXInput, 0.023f);
+	moveYInput = FMath::Lerp(moveYInput, aimmoveYInput, 0.023f);
 }
 
 void APeaceFulHazardCharacter::SetMoveSpeed()
 {
 	float Speed = DefaultMoveSpeed;
 
-	if (bNowAiming)
+	if (GetIsAiming())
 	{
 		Speed = AimMoveSpeed;
 	}
 	else if (bNowShifting)
 	{
 		Speed = ShiftMoveSpeed;
+
+		if (!bEquiped)
+		{
+			Speed += 20.f;
+		}
+
 	}
 
 	GetCharacterMovement()->MaxWalkSpeed = Speed;
@@ -352,7 +244,7 @@ void APeaceFulHazardCharacter::SetMoveSpeed()
 
 void APeaceFulHazardCharacter::SetShouldRotate()
 {
-	if (bNowAiming)
+	if (GetIsAiming())
 	{
 		GetCharacterMovement()->bOrientRotationToMovement = false;
 		return;
@@ -392,12 +284,45 @@ void APeaceFulHazardCharacter::SetShouldPlayerFollowCamera()
 	}
 }
 
-void APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
+bool APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
+{
+	// input is a Vector2D
+	FVector2D MovementVector = Value.Get<FVector2D>();
+	MovementVector = MovementVector.GetSafeNormal();
+
+	if (Controller != nullptr)
+	{
+		// find out which way is forward
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get forward vector
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+		// get right vector 
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+		// add movement 
+		AddMovementInput(ForwardDirection, MovementVector.Y);
+		AddMovementInput(RightDirection, MovementVector.X);
+
+
+		SetMoveInputLerp(MovementVector.X, MovementVector.Y);
+
+		return true;
+
+	}
+
+	return false;
+
+}
+
+bool APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
 {
 
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
-	if (bNowAiming)
+	if (GetIsAiming())
 	{
 		LookAxisVector = LookAxisVector * MouseAimSensitivity;
 	}
@@ -411,33 +336,40 @@ void APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+		return true;
+
 	}
+
+	return false;
+
 }
 
-void APeaceFulHazardCharacter::AimStart(const FInputActionValue& Value)
+bool APeaceFulHazardCharacter::AimStart(const FInputActionValue& Value)
 {
-	if (!bEquiped) return;
+	if (!bEquiped) return false;
 
 	bNowAiming = true;
 
+	return true;
 }
 
-void APeaceFulHazardCharacter::AimEnd(const FInputActionValue& Value)
+bool APeaceFulHazardCharacter::AimEnd(const FInputActionValue& Value)
 {
 	bNowAiming = false;
+	return true;
 
 }
 
-void APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
+bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 {
-	if (!bShootableAimState) return;
-	if (bFireLock) return;
+	if (!bShootableAimState) return false;
+	if (bFireLock) return false;
 
 	bFireLock = true;
 
 	if (EquipWeapon)
 	{
-		if (HappyPlayerController == nullptr) return;
+		if (HappyPlayerController == nullptr) return false;
 
 		int32 ViewportSizeX, ViewportSizeY;
 		HappyPlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
@@ -467,22 +399,90 @@ void APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 			bFireLock = false;
 		}, PistolFireDelay, false);
 
+	return true;
 }
 
 
-void APeaceFulHazardCharacter::ShiftStart(const FInputActionValue& Value)
+bool APeaceFulHazardCharacter::ShiftStart(const FInputActionValue& Value)
 {
 	bNowShifting = true;
+	return true;
+
 }
 
-void APeaceFulHazardCharacter::ShiftEnd(const FInputActionValue& Value)
+bool APeaceFulHazardCharacter::ShiftEnd(const FInputActionValue& Value)
 {
 	bNowShifting = false;
+	return true;
+
 }
 
-void APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
+bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
 {
-	SetWeaponEquip(!bEquiped);
+	if (GetIsAiming()) return false;
 
+	bEquiped = !bEquiped;
+
+	if (EquipWeapon)
+	{
+		EquipWeapon->Destroy();
+		EquipWeapon = nullptr;
+	}
+
+	if (bEquiped)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetInstigator();
+
+		if (PistolClass)
+		{
+			EquipWeapon = GetWorld()->SpawnActor<AWeapon>(PistolClass, SpawnParams);
+		}
+
+		if (EquipWeapon)
+		{
+			FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
+			EquipWeapon->AttachToComponent(GetMesh(), AttachmentRules, FName("PistolSocket"));
+		}
+	}
+
+	return true;
+}
+
+bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
+{
+	if (!bEquiped) return false;
+	if (bReloading) return false;
+
+	bReloading = true;
+	
+	if (GetMesh())
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+		if (AnimInstance)
+		{
+			if (AimReloadMontage)
+			{
+				AnimInstance->Montage_Play(AimReloadMontage);
+			}
+
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+void APeaceFulHazardCharacter::ReloadEndTrigger()
+{
+	bReloading = false;
+
+	if (HappyPlayerController)
+	{
+		HappyPlayerController->SetBulletCount(false);
+	}
 }
 

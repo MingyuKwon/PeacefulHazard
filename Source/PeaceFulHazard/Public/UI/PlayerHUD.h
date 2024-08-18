@@ -7,6 +7,7 @@
 #include "PlayerHUD.generated.h"
 
 class UAimCrossHairWidget;
+class UDefaultPlayerWidget;
 /**
  *
  */
@@ -20,12 +21,20 @@ public:
 
 	void SetAimDisplay(bool bVisible);
 
+	void SetBulletDisplay(int32 currentBullet, int32 maxBullet);
+
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UAimCrossHairWidget> AimCrossHairWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UDefaultPlayerWidget> DefaultPlayerWidgetClass;
+
+
 	UAimCrossHairWidget* HUDAimWidget;
+
+	UDefaultPlayerWidget* DefaultPlayerWidget;
 
 };

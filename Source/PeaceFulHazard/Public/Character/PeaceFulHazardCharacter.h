@@ -24,6 +24,8 @@ class APeaceFulHazardCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+public:
+
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
@@ -32,75 +34,48 @@ class APeaceFulHazardCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
-	/** MappingContext */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
+	/** Called for movement input */
+	bool Move(const FInputActionValue& Value);
 
-	/** Jump Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* JumpAction;
+	/** Called for looking input */
+	bool Look(const FInputActionValue& Value);
 
-	/** Move Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* MoveAction;
+	/** Called for Aim input */
+	bool AimStart(const FInputActionValue& Value);
 
-	/** Look Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* LookAction;
+	/** Called for Aim input */
+	bool AimEnd(const FInputActionValue& Value);
 
-	/** Aim Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* AimAction;
+	/** Called for Fire input */
+	bool Fire(const FInputActionValue& Value);
 
-	/** Shoot Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* FireAction;
+	/** Called for Fire input */
+	bool ShiftStart(const FInputActionValue& Value);
 
-	/** Shoot Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* ShiftAction;
+	/** Called for Fire input */
+	bool ShiftEnd(const FInputActionValue& Value);
 
-	/** Shoot Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* EquipAction;
+	/** Called for Fire input */
+	bool EquipTrigger(const FInputActionValue& Value);
+
+	/** Called for looking input */
+	bool Reload(const FInputActionValue& Value);
 
 
-public:
 	APeaceFulHazardCharacter();
 
 	virtual void Tick(float deltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+	void ReloadEndTrigger();
+
 protected:
-
-	/** Called for movement input */
-	void Move(const FInputActionValue& Value);
-
-	/** Called for looking input */
-	void Look(const FInputActionValue& Value);
-
-	/** Called for Aim input */
-	void AimStart(const FInputActionValue& Value);
-
-	/** Called for Aim input */
-	void AimEnd(const FInputActionValue& Value);
-
-	/** Called for Fire input */
-	void Fire(const FInputActionValue& Value);
-
-	/** Called for Fire input */
-	void ShiftStart(const FInputActionValue& Value);
-
-	/** Called for Fire input */
-	void ShiftEnd(const FInputActionValue& Value);
-
-	/** Called for Fire input */
-	void EquipTrigger(const FInputActionValue& Value);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
 	float AimMoveSpeed = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
-	float DefaultMoveSpeed = 200.f;
+	float DefaultMoveSpeed = 170.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
 	float ShiftMoveSpeed = 300.f;
@@ -115,6 +90,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	UAnimMontage* FireMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Bullet Para")
+	UAnimMontage* NoAimReloadMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Bullet Para")
+	UAnimMontage* AimReloadMontage;
+
 
 
 	// this is used for Aiming start and end. using Camera Arm distance lerping (min 0, max 1)
@@ -149,8 +131,6 @@ protected:
 
 
 protected:
-	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// To add mapping context
 	virtual void BeginPlay();
@@ -171,6 +151,9 @@ protected:
 	void SetWeaponEquip(bool isEquiped);
 
 	bool bEquiped = false;
+
+	bool bReloading = false;
+
 
 	bool bShootableAimState = false;
 
