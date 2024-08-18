@@ -3,6 +3,7 @@
 
 #include "UI/PlayerHUD.h"
 #include "UI/AimCrossHairWidget.h"
+#include "UI/DefaultPlayerWidget.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -37,6 +38,15 @@ void APlayerHUD::BeginPlay()
         if (HUDAimWidget != nullptr)
         {
             HUDAimWidget->AddToViewport();
+        }
+    }
+
+    if (DefaultPlayerWidgetClass != nullptr)
+    {
+        DefaultPlayerWidget = CreateWidget<UDefaultPlayerWidget>(GetWorld(), DefaultPlayerWidgetClass);
+        if (HUDAimWidget != nullptr)
+        {
+            DefaultPlayerWidget->AddToViewport();
         }
     }
 }

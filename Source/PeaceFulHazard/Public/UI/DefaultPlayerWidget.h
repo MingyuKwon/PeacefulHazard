@@ -6,6 +6,10 @@
 #include "Blueprint/UserWidget.h"
 #include "DefaultPlayerWidget.generated.h"
 
+class UTextBlock;
+class UCanvasPanel;
+class UImage;
+
 /**
  * 
  */
@@ -14,4 +18,16 @@ class PEACEFULHAZARD_API UDefaultPlayerWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+protected:
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MaxBulletText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* CurrentBulletText;
+
+public:
+
+	UFUNCTION(BlueprintCallable)
+	void SetBulletUI(int32 currentBullet, int32 maxBullet);
 };

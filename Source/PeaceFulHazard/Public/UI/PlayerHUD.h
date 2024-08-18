@@ -7,6 +7,7 @@
 #include "PlayerHUD.generated.h"
 
 class UAimCrossHairWidget;
+class UDefaultPlayerWidget;
 /**
  *
  */
@@ -26,6 +27,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UAimCrossHairWidget> AimCrossHairWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UDefaultPlayerWidget> DefaultPlayerWidgetClass;
+
+
 	UAimCrossHairWidget* HUDAimWidget;
+
+	UDefaultPlayerWidget* DefaultPlayerWidget;
 
 };
