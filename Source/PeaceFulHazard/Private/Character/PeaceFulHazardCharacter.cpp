@@ -265,24 +265,28 @@ void APeaceFulHazardCharacter::SetShouldRotate()
 
 void APeaceFulHazardCharacter::SetShouldPlayerFollowCamera()
 {
-	if (GetIsAiming())
-	{
-		FRotator NewRotation = Controller->GetControlRotation();
-		NewRotation.Pitch = 0;
-		SetActorRotation(NewRotation);
-	}
+    if (GetIsAiming())
+    {
+        FRotator CurrentRotation = GetActorRotation();
+        FRotator TargetRotation = Controller->GetControlRotation();
+        TargetRotation.Pitch = 0;
 
-	if (bEquiped)
-	{
-		if (!bNowShifting && GetCharacterMovement()->Velocity.Length() > 0)
-		{
-			FRotator NewRotation = Controller->GetControlRotation();
-			NewRotation.Pitch = 0;
-			SetActorRotation(NewRotation);
+        SetActorRotation(TargetRotation);
+    }
 
-		}
-	}
+    if (bEquiped)
+    {
+        if (!bNowShifting && GetCharacterMovement()->Velocity.Length() > 0)
+        {
+            FRotator CurrentRotation = GetActorRotation();
+            FRotator TargetRotation = Controller->GetControlRotation();
+            TargetRotation.Pitch = 0;
+
+            SetActorRotation(TargetRotation);
+        }
+    }
 }
+
 
 bool APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
 {
@@ -413,6 +417,7 @@ bool APeaceFulHazardCharacter::ShiftStart(const FInputActionValue& Value)
 bool APeaceFulHazardCharacter::ShiftEnd(const FInputActionValue& Value)
 {
 	bNowShifting = false;
+
 	return true;
 
 }

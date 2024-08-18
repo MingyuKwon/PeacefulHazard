@@ -163,7 +163,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Action", meta = (AllowPrivateAccess = "true"))
 	bool bNowShifting = false;
 
-
 	void SetUIUpdateTick();
 
 public:
