@@ -289,6 +289,7 @@ void APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
+	MovementVector = MovementVector.GetSafeNormal();
 
 	if (Controller != nullptr)
 	{
@@ -307,32 +308,15 @@ void APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
 		AddMovementInput(RightDirection, MovementVector.X);
 
 
-		float moderateValue = (MovementVector.Length() > 1) ? 0.5f : 1;
-
-		SetMoveInputLerp(MovementVector.X * moderateValue, MovementVector.Y * moderateValue);
+		SetMoveInputLerp(MovementVector.X , MovementVector.Y );
 	}
 
 }
 
 void APeaceFulHazardCharacter::SetMoveInputLerp(float aimmoveXInput, float aimmoveYInput)
 {
-	if (aimmoveXInput * moveXInput < 0)
-	{
-		moveXInput = FMath::Lerp(moveXInput, aimmoveXInput, 0.03f);
-	}
-	else
-	{
-		moveXInput = FMath::Lerp(moveXInput, aimmoveXInput, 0.1f);
-	}
-
-	if (aimmoveYInput * moveYInput < 0)
-	{
-		moveYInput = FMath::Lerp(moveYInput, aimmoveYInput, 0.03f);
-	}
-	else
-	{
-		moveYInput = FMath::Lerp(moveYInput, aimmoveYInput, 0.1f);
-	}
+	moveXInput = FMath::Lerp(moveXInput, aimmoveXInput, 0.023f);
+	moveYInput = FMath::Lerp(moveYInput, aimmoveYInput, 0.023f);
 }
 
 void APeaceFulHazardCharacter::SetMoveSpeed()
@@ -346,6 +330,12 @@ void APeaceFulHazardCharacter::SetMoveSpeed()
 	else if (bNowShifting)
 	{
 		Speed = ShiftMoveSpeed;
+
+		if (!bEquiped)
+		{
+			Speed += 20.f;
+		}
+
 	}
 
 	GetCharacterMovement()->MaxWalkSpeed = Speed;
