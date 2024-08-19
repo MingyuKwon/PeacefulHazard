@@ -43,9 +43,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	UAnimMontage* FireMontage;
 
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UAnimMontage* ReloadMontage;
 
 
 public:
 	void Fire(FVector CameraPosition, FVector CameraNormalVector);
-
+	void ReloadTrigger();
 };

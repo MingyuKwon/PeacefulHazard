@@ -102,6 +102,18 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
     }
 }
 
+void AWeapon::ReloadTrigger()
+{
+    if (ReloadMontage)
+    {
+        UAnimInstance* AnimInstance = WeaponMesh->GetAnimInstance();
+        if (AnimInstance)
+        {
+            AnimInstance->Montage_Play(ReloadMontage);
+        }
+    }
+}
+
 // Called every frame
 void AWeapon::Tick(float DeltaTime)
 {

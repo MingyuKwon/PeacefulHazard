@@ -475,8 +475,15 @@ bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
 
 		}
 
+		if (EquipWeapon)
+		{
+			EquipWeapon->ReloadTrigger();
+		}
+
+
 		return true;
 	}
+
 
 	return false;
 }
