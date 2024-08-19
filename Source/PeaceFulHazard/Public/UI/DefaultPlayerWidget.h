@@ -26,6 +26,11 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* CurrentBulletText;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftBulletText;
+
+	
+
 public:
 
 	UFUNCTION(BlueprintCallable)

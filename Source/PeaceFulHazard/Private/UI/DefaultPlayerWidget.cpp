@@ -10,9 +10,11 @@ void UDefaultPlayerWidget::SetBulletUI(int32 currentBullet, int32 maxBullet, int
 {
     FText CurrentBulletTextValue = FText::AsNumber(currentBullet);
     FText MaxBulletTextValue = FText::AsNumber(maxBullet);
+    FText LeftBulletTextValue = FText::AsNumber(leftBullet);
 
     CurrentBulletText->SetText(CurrentBulletTextValue);
     MaxBulletText->SetText(MaxBulletTextValue);
+    LeftBulletText->SetText(LeftBulletTextValue);
 
     if (currentBullet == maxBullet)
     {

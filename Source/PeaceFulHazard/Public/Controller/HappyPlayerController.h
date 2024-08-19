@@ -56,6 +56,7 @@ protected:
 	/** Called for Fire input */
 	void Reload(const FInputActionValue& Value);
 
+	int32 GetReloadBulletCount();
 
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))

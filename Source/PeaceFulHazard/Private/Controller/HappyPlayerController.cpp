@@ -154,15 +154,24 @@ void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
 void AHappyPlayerController::Reload(const FInputActionValue& Value)
 {
     bool bSuccess = false;
+    int32 reloadBulletCount = GetReloadBulletCount();
 
-    if (currentBullet >= maxBullet) return;
-
+    if (reloadBulletCount <= 0) return;
     
     if (ControlledCharacter)
     {
         bSuccess = ControlledCharacter->Reload(Value);
     }
 
+}
+
+int32 AHappyPlayerController::GetReloadBulletCount()
+{
+    int32 neededBullet = maxBullet - currentBullet;
+
+    neededBullet = FMath::Clamp(neededBullet, 0, leftBullet);
+
+    return neededBullet;
 }
 
 void AHappyPlayerController::SetBulletCount(bool bFire)
@@ -173,7 +182,11 @@ void AHappyPlayerController::SetBulletCount(bool bFire)
     }
     else
     {
-        currentBullet = maxBullet;
+
+        int32 reloadBulletCount = GetReloadBulletCount();
+
+        currentBullet += reloadBulletCount;
+        leftBullet -= reloadBulletCount;
     }
 
 
