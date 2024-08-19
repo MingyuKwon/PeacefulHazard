@@ -29,5 +29,14 @@ void UDefaultPlayerWidget::SetBulletUI(int32 currentBullet, int32 maxBullet, int
         CurrentBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f))); // White
     }
 
+    if (leftBullet == 0)
+    {
+        LeftBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 0.0f, 0.0f))); // Red
+    }
+    else
+    {
+        LeftBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f))); // White
+    }
+
 }
 
