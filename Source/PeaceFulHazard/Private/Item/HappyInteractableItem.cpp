@@ -2,12 +2,22 @@
 
 
 #include "Item/HappyInteractableItem.h"
+#include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values
 AHappyInteractableItem::AHappyInteractableItem()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
+
+    BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+    RootComponent = BoxComponent;
+
+    StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+    StaticMeshComponent->SetupAttachment(BoxComponent);
+
+    WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
+    WidgetComponent->SetupAttachment(BoxComponent);
 
 }
 

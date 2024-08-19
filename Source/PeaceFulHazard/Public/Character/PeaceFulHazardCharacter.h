@@ -16,6 +16,8 @@ struct FInputActionValue;
 class AHappyPlayerController;
 class AWeapon;
 class UAnimMontage;
+class UBoxComponent;
+class AHappyInteractableItem;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -33,6 +35,13 @@ public:
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	/** Camera boom positioning the camera behind the character */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* InteractBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* actiontBox;
 
 	/** Called for movement input */
 	bool Move(const FInputActionValue& Value);
@@ -140,6 +149,8 @@ protected:
 	AHappyPlayerController* HappyPlayerController;
 
 	AWeapon* EquipWeapon;
+
+	AHappyInteractableItem* currentInteractItem;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Class Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeapon> PistolClass;

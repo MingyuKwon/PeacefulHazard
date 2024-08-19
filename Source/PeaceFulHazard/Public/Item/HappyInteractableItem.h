@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "HappyInteractableItem.generated.h"
 
+class UBoxComponent;
+class UWidgetComponent;
+
 UCLASS()
 class PEACEFULHAZARD_API AHappyInteractableItem : public AActor
 {
@@ -19,6 +22,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* BoxComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* StaticMeshComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UWidgetComponent* WidgetComponent;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
