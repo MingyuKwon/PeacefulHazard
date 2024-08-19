@@ -28,11 +28,22 @@ void APlayerHUD::SetAimDisplay(bool bVisible)
 
 }
 
-void APlayerHUD::SetBulletDisplay(int32 currentBullet, int32 maxBullet)
+void APlayerHUD::SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet)
 {
     if (DefaultPlayerWidget != nullptr)
     {
-        DefaultPlayerWidget->SetBulletUI(currentBullet, maxBullet);
+        DefaultPlayerWidget->SetBulletUI(currentBullet, maxBullet, leftBullet);
+
+        beforeCurrentBulle = -1;
+        beforeMaxBullet = -1;
+        beforeLeftBullet = -1;
+
+    }
+    else
+    {
+        beforeCurrentBulle = currentBullet;
+        beforeMaxBullet = maxBullet;
+        beforeLeftBullet = leftBullet;
     }
 }
 
@@ -55,6 +66,12 @@ void APlayerHUD::BeginPlay()
         if (DefaultPlayerWidget != nullptr)
         {
             DefaultPlayerWidget->AddToViewport();
+
+            if (beforeCurrentBulle >= 0)
+            {
+                SetBulletDisplay(beforeCurrentBulle, beforeMaxBullet, beforeLeftBullet);
+            }
+
         }
     }
 }

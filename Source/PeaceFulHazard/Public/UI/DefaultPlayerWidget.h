@@ -29,5 +29,5 @@ protected:
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void SetBulletUI(int32 currentBullet, int32 maxBullet);
+	void SetBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet);
 };

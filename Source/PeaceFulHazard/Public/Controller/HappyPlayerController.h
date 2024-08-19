@@ -96,6 +96,7 @@ protected:
 
 	int32 currentBullet = 6;
 	int32 maxBullet = 6;
+	int32 leftBullet = 10;
 
 public:
 	void SetBulletCount(bool bFire);

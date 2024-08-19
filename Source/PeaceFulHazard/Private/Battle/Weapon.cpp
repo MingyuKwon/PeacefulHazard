@@ -102,7 +102,7 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
                 if (ShellMesh)
                 {
                     FVector ImpulseDirection = FVector(0.0f, 1.0f, 0.0f);  
-                    float ImpulseStrength = 50.0f;
+                    float ImpulseStrength = 70.0f;
 
                     ShellMesh->AddImpulse(ImpulseDirection * ImpulseStrength, NAME_None, true);
                 }

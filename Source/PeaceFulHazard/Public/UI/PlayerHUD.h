@@ -21,7 +21,7 @@ public:
 
 	void SetAimDisplay(bool bVisible);
 
-	void SetBulletDisplay(int32 currentBullet, int32 maxBullet);
+	void SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet);
 
 protected:
 	virtual void BeginPlay() override;
@@ -36,5 +36,10 @@ protected:
 	UAimCrossHairWidget* HUDAimWidget;
 
 	UDefaultPlayerWidget* DefaultPlayerWidget;
+
+
+	int32 beforeCurrentBulle = -1;
+	int32 beforeMaxBullet = -1;
+	int32 beforeLeftBullet = -1;
 
 };

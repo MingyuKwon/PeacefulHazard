@@ -55,6 +55,12 @@ void AHappyPlayerController::BeginPlay()
     Super::BeginPlay();
 
     PlayerHUD = Cast<APlayerHUD>(GetHUD());
+
+    if (PlayerHUD)
+    {
+        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, leftBullet);
+    }
+
     ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn());
 }
 
@@ -174,7 +180,7 @@ void AHappyPlayerController::SetBulletCount(bool bFire)
     currentBullet = FMath::Clamp(currentBullet, 0, maxBullet);
     if (PlayerHUD)
     {
-        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet);
+        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, leftBullet);
     }
 
 }
