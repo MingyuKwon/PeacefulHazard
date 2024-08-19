@@ -8,7 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
 #include "NiagaraDataInterfaceArrayFunctionLibrary.h"
-
+#include "Battle/PistolShell.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -77,6 +77,36 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
 
 
 
+        }
+
+
+        if (ShellClass)
+        {
+            FActorSpawnParameters SpawnParams;
+            SpawnParams.Owner = this;
+            SpawnParams.Instigator = GetInstigator();
+
+            APistolShell* shell = GetWorld()->SpawnActor<APistolShell>(ShellClass, SpawnParams);
+
+            FVector SocketLocation = WeaponMesh->GetSocketLocation(FName("ShellSocket"));
+            FRotator SocketRotation = WeaponMesh->GetSocketRotation(FName("ShellSocket"));
+
+            if (shell)
+            {
+                shell->SetActorLocation(SocketLocation);
+                shell->SetActorRotation(SocketRotation);
+
+                shell->SetLifeSpan(3.f);
+
+                UStaticMeshComponent* ShellMesh = Cast<UStaticMeshComponent>(shell->GetComponentByClass(UStaticMeshComponent::StaticClass()));
+                if (ShellMesh)
+                {
+                    FVector ImpulseDirection = FVector(0.0f, 1.0f, 0.0f);  
+                    float ImpulseStrength = 50.0f;
+
+                    ShellMesh->AddImpulse(ImpulseDirection * ImpulseStrength, NAME_None, true);
+                }
+            }
         }
 
     }

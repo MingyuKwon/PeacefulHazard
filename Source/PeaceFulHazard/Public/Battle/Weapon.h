@@ -9,6 +9,8 @@
 class UBoxComponent;
 class UNiagaraSystem;
 class UAnimMontage;
+class APistolShell;
+
 
 UCLASS()
 class PEACEFULHAZARD_API AWeapon : public AActor
@@ -46,7 +48,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	UAnimMontage* ReloadMontage;
 
-
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	TSubclassOf<APistolShell> ShellClass;
+	
 public:
 	void Fire(FVector CameraPosition, FVector CameraNormalVector);
 	void ReloadTrigger();
