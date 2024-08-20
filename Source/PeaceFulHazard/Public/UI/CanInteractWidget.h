@@ -23,8 +23,8 @@ protected:
 	UImage* InteractImage;
 
 public:
-	void SetActionEnable(bool flag);
+	void SetActionEnable(bool bCanShowUI, bool flag);
 
-	void SetInteractEnable(bool flag);
+	void SetInteractEnable(bool bCanShowUI, bool flag);
 
 };

@@ -218,6 +218,83 @@ float APeaceFulHazardCharacter::GetAimPitch() const
 	return Pitch;
 }
 
+void APeaceFulHazardCharacter::AddCurrentActionableItem(AHappyInteractableItem* item)
+{
+	if (item == nullptr) return;
+
+	if (!ActionableItems.Contains(item))
+	{
+		ActionableItems.Add(item);
+	}
+
+	SetCurrentActionItem();
+}
+
+void APeaceFulHazardCharacter::RemoveCurrentActionableItem(AHappyInteractableItem* item)
+{
+	if (item == nullptr) return;
+
+	if (ActionableItems.Contains(item))
+	{
+		ActionableItems.Remove(item);
+	}
+
+	if (ActionableItems.Num() <= 0)
+	{
+		UE_LOG(LogTemp, Display, TEXT("ActionableItems.Num() <= 0"));
+		item->SetbActionable(false);
+	}
+	else
+	{
+		SetCurrentActionItem();
+	}
+}
+
+void APeaceFulHazardCharacter::SetCurrentActionItem()
+{
+	if (ActionableItems.Num() <= 0)
+	{
+		if (currentActionableItem)
+		{
+			currentActionableItem->SetbActionable(false);
+		}
+
+		currentActionableItem = nullptr;
+		return;
+	}
+
+	float MinDistance = FLT_MAX;
+	AHappyInteractableItem* ClosestItem = nullptr;
+
+	FVector PlayerLocation = GetActorLocation();
+
+	for (AHappyInteractableItem* Item : ActionableItems)
+	{
+		if (Item)
+		{
+			float Distance = FVector::Dist(PlayerLocation, Item->GetActorLocation());
+
+			if (Distance < MinDistance)
+			{
+				MinDistance = Distance;
+				ClosestItem = Item;
+			}
+		}
+	}
+
+	if (currentActionableItem)
+	{
+		currentActionableItem->SetbActionable(false);
+	}
+
+	currentActionableItem = ClosestItem;
+
+	if (currentActionableItem)
+	{
+		currentActionableItem->SetbActionable(true);
+	}
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -362,6 +439,7 @@ bool APeaceFulHazardCharacter::AimStart(const FInputActionValue& Value)
 	if (!bEquiped) return false;
 
 	bNowAiming = true;
+	NowAimingEvent.Broadcast(true);
 
 	return true;
 }
@@ -369,6 +447,8 @@ bool APeaceFulHazardCharacter::AimStart(const FInputActionValue& Value)
 bool APeaceFulHazardCharacter::AimEnd(const FInputActionValue& Value)
 {
 	bNowAiming = false;
+	NowAimingEvent.Broadcast(false);
+
 	return true;
 
 }

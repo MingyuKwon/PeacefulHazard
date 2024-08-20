@@ -25,6 +25,10 @@ protected:
 
 	UCanInteractWidget* CanInteractWidget;
 
+	bool bIntearctable = false;
+	bool bActionable = false;
+
+
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
@@ -42,8 +46,16 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* WidgetComponent;
+
+	bool bCanInteractable = true;
+
+	UFUNCTION()
+	void AImVisibleUI(bool flag);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void SetbActionable(bool flag);
 
 };

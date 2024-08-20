@@ -41,12 +41,34 @@ void AHappyInteractableItem::BeginPlay()
 
         if (CanInteractWidget)
         {
-            CanInteractWidget->SetInteractEnable(false);
-            CanInteractWidget->SetActionEnable(false);
+            CanInteractWidget->SetInteractEnable(bCanInteractable, false);
+            CanInteractWidget->SetActionEnable(bCanInteractable, false);
         }
     }
 
 	
+}
+
+void AHappyInteractableItem::AImVisibleUI(bool flag)
+{
+    bCanInteractable = !flag;
+
+    if (flag)
+    {
+        if (CanInteractWidget)
+        {
+            CanInteractWidget->SetInteractEnable(bCanInteractable, false);
+            CanInteractWidget->SetActionEnable(bCanInteractable, false);
+        }
+    }
+    else
+    {
+        if (CanInteractWidget)
+        {
+            CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable);
+            CanInteractWidget->SetActionEnable(bCanInteractable, bActionable);
+        }
+    }
 }
 
 // Called every frame
@@ -54,6 +76,15 @@ void AHappyInteractableItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AHappyInteractableItem::SetbActionable(bool flag)
+{
+    bActionable = flag;
+    if (CanInteractWidget)
+    {
+        CanInteractWidget->SetActionEnable(bCanInteractable, bActionable);
+    }
 }
 
 void AHappyInteractableItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -68,22 +99,18 @@ void AHappyInteractableItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
         {
             if (OtherComp == OverlappingCharacter->InteractBox)
             {
-                UE_LOG(LogTemp, Warning, TEXT("Overlap Begin with InteractBox %s"), *OtherActor->GetName());
+                OverlappingCharacter->NowAimingEvent.AddDynamic(this, &ThisClass::AImVisibleUI);
 
+                bIntearctable = true;
                 if (CanInteractWidget)
                 {
-                    CanInteractWidget->SetInteractEnable(true);
+                    CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable);
                 }
             }
 
             if (OtherComp == OverlappingCharacter->actiontBox)
             {
-                UE_LOG(LogTemp, Warning, TEXT("Overlap Begin with actiontBox %s"), *OtherActor->GetName());
-
-                if (CanInteractWidget)
-                {
-                    CanInteractWidget->SetActionEnable(true);
-                }
+                OverlappingCharacter->AddCurrentActionableItem(this);
             }
 
         }
@@ -100,22 +127,19 @@ void AHappyInteractableItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, A
         {
             if (OtherComp == OverlappingCharacter->InteractBox)
             {
-                UE_LOG(LogTemp, Warning, TEXT("Overlap End with InteractBox %s"), *OtherActor->GetName());
+                OverlappingCharacter->NowAimingEvent.RemoveDynamic(this, &ThisClass::AImVisibleUI);
+
+                bIntearctable = false;
 
                 if (CanInteractWidget)
                 {
-                    CanInteractWidget->SetInteractEnable(false);
+                    CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable);
                 }
             }
 
             if (OtherComp == OverlappingCharacter->actiontBox)
             {
-                UE_LOG(LogTemp, Warning, TEXT("Overlap End with actiontBox %s"), *OtherActor->GetName());
-
-                if (CanInteractWidget)
-                {
-                    CanInteractWidget->SetActionEnable(false);
-                }
+                OverlappingCharacter->RemoveCurrentActionableItem(this);
             }
         }
     }

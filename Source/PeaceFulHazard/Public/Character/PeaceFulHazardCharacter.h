@@ -7,6 +7,8 @@
 #include "Logging/LogMacros.h"
 #include "PeaceFulHazardCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNowAimingEvent, bool, flag);
+
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -42,6 +44,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* actiontBox;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FNowAimingEvent NowAimingEvent;
 
 	/** Called for movement input */
 	bool Move(const FInputActionValue& Value);
@@ -106,8 +111,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Bullet Para")
 	UAnimMontage* AimReloadMontage;
 
-
-
 	// this is used for Aiming start and end. using Camera Arm distance lerping (min 0, max 1)
 	float AimingPercent = 0.f;
 
@@ -148,9 +151,10 @@ protected:
 
 	AHappyPlayerController* HappyPlayerController;
 
-	AWeapon* EquipWeapon;
+	AHappyInteractableItem* currentActionableItem;
+	TArray<AHappyInteractableItem*> ActionableItems;
 
-	AHappyInteractableItem* currentInteractItem;
+	AWeapon* EquipWeapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Class Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeapon> PistolClass;
@@ -176,6 +180,8 @@ protected:
 
 	void SetUIUpdateTick();
 
+	void SetCurrentActionItem();
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -200,6 +206,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float GetAimPitch() const;
+
+	UFUNCTION(BlueprintCallable)
+	void AddCurrentActionableItem(AHappyInteractableItem* item);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveCurrentActionableItem(AHappyInteractableItem* item);
 
 
 	UFUNCTION(BlueprintCallable)
