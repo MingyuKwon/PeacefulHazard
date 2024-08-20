@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PeaceFulHazard/PeaceFulHazard.h"
 #include "HappyInteractableItem.generated.h"
 
 class UBoxComponent;
@@ -44,6 +45,7 @@ protected:
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* BoxComponent;
 
@@ -68,6 +70,6 @@ public:
 	void SetbActionable(bool flag);
 
 	UFUNCTION()
-	void InteractWithPlayer();
+	virtual void InteractWithPlayer(APeaceFulHazardCharacter* character);
 
 };

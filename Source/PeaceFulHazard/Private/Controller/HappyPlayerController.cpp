@@ -55,13 +55,13 @@ void AHappyPlayerController::BeginPlay()
     Super::BeginPlay();
 
     PlayerHUD = Cast<APlayerHUD>(GetHUD());
+    ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn());
 
     if (PlayerHUD)
     {
-        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, leftBullet);
+        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, GetLeftBulletFromCharacter());
     }
 
-    ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn());
 }
 
 void AHappyPlayerController::Move(const FInputActionValue& Value)
@@ -108,6 +108,7 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
         ControlledCharacter->TriggerInteract();
     }
 
+    UpdateDefaultUI();
 }
 
 void AHappyPlayerController::AimStart(const FInputActionValue& Value)
@@ -174,13 +175,33 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
 
 }
 
+
+
 int32 AHappyPlayerController::GetReloadBulletCount()
 {
     int32 neededBullet = maxBullet - currentBullet;
 
-    neededBullet = FMath::Clamp(neededBullet, 0, leftBullet);
+    neededBullet = FMath::Clamp(neededBullet, 0, GetLeftBulletFromCharacter());
 
     return neededBullet;
+}
+
+int32 AHappyPlayerController::GetLeftBulletFromCharacter()
+{
+    if (ControlledCharacter)
+    {
+        return ControlledCharacter->GetLeftBullet();
+    }
+
+    return 0;
+}
+
+void AHappyPlayerController::UpdateDefaultUI()
+{
+    if (PlayerHUD)
+    {
+        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, GetLeftBulletFromCharacter());
+    }
 }
 
 void AHappyPlayerController::SetBulletCount(bool bFire)
@@ -191,18 +212,16 @@ void AHappyPlayerController::SetBulletCount(bool bFire)
     }
     else
     {
+        if (ControlledCharacter)
+        {
+            int32 reloadBulletCount = GetReloadBulletCount();
 
-        int32 reloadBulletCount = GetReloadBulletCount();
+            currentBullet += reloadBulletCount;
 
-        currentBullet += reloadBulletCount;
-        leftBullet -= reloadBulletCount;
+            ControlledCharacter->ChangeItemInventory(EItemType::EIT_Bullet_Noraml, -reloadBulletCount);
+        }
     }
-
 
     currentBullet = FMath::Clamp(currentBullet, 0, maxBullet);
-    if (PlayerHUD)
-    {
-        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, leftBullet);
-    }
-
+    UpdateDefaultUI();
 }

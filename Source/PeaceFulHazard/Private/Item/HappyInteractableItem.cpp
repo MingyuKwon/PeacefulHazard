@@ -94,7 +94,7 @@ void AHappyInteractableItem::SetbActionable(bool flag)
     }
 }
 
-void AHappyInteractableItem::InteractWithPlayer()
+void AHappyInteractableItem::InteractWithPlayer(APeaceFulHazardCharacter* character)
 {
     DestroyItem();
 }
@@ -163,7 +163,6 @@ void AHappyInteractableItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, A
                 OverlappingCharacter->RemoveCurrentActionableItem(this);
             }
 
-            OverlappingCharacter = nullptr;
         }
     }
 }
