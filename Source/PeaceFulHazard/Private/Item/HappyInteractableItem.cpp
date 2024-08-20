@@ -94,6 +94,21 @@ void AHappyInteractableItem::SetbActionable(bool flag)
     }
 }
 
+void AHappyInteractableItem::InteractWithPlayer()
+{
+    DestroyItem();
+}
+
+void AHappyInteractableItem::DestroyItem()
+{
+    if (OverlappingCharacter)
+    {
+        OverlappingCharacter->RemoveCurrentActionableItem(this);
+    }
+    Destroy();
+
+}
+
 void AHappyInteractableItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
     bool bFromSweep, const FHitResult& SweepResult)
@@ -101,7 +116,8 @@ void AHappyInteractableItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
 
     if (OtherActor && (OtherActor != this) && OtherComp)
     {
-        APeaceFulHazardCharacter* OverlappingCharacter = Cast<APeaceFulHazardCharacter>(OtherActor);
+        OverlappingCharacter = Cast<APeaceFulHazardCharacter>(OtherActor);
+
         if (OverlappingCharacter)
         {
             if (OtherComp == OverlappingCharacter->InteractBox)
@@ -128,7 +144,8 @@ void AHappyInteractableItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, A
 {
     if (OtherActor && (OtherActor != this) && OtherComp)
     {
-        APeaceFulHazardCharacter* OverlappingCharacter = Cast<APeaceFulHazardCharacter>(OtherActor);
+        OverlappingCharacter = Cast<APeaceFulHazardCharacter>(OtherActor);
+
         if (OverlappingCharacter)
         {
             if (OtherComp == OverlappingCharacter->InteractBox)
@@ -145,6 +162,8 @@ void AHappyInteractableItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, A
             {
                 OverlappingCharacter->RemoveCurrentActionableItem(this);
             }
+
+            OverlappingCharacter = nullptr;
         }
     }
 }

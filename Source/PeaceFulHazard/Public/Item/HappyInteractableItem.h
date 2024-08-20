@@ -10,6 +10,7 @@ class UBoxComponent;
 class UWidgetComponent;
 class UCanInteractWidget;
 class APeaceFulHazardGameMode;
+class APeaceFulHazardCharacter;
 
 UCLASS()
 class PEACEFULHAZARD_API AHappyInteractableItem : public AActor
@@ -27,6 +28,8 @@ protected:
 	UCanInteractWidget* CanInteractWidget;
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+
+	APeaceFulHazardCharacter* OverlappingCharacter;
 
 	bool bIntearctable = false;
 	bool bActionable = false;
@@ -54,11 +57,17 @@ protected:
 
 	UFUNCTION()
 	void AImVisibleUI(bool flag);
+
+	void DestroyItem();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	void SetbActionable(bool flag);
+
+	UFUNCTION()
+	void InteractWithPlayer();
 
 };

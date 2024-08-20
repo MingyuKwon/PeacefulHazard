@@ -42,7 +42,7 @@ protected:
 	void AimEnd(const FInputActionValue& Value);
 
 	/** Called for Fire input */
-	void Fire(const FInputActionValue& Value);
+	void Action(const FInputActionValue& Value);
 
 	/** Called for Fire input */
 	void ShiftStart(const FInputActionValue& Value);

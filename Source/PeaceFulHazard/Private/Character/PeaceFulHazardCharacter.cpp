@@ -245,7 +245,7 @@ void APeaceFulHazardCharacter::RemoveCurrentActionableItem(AHappyInteractableIte
 
 	if (ActionableItems.Num() <= 0)
 	{
-		UE_LOG(LogTemp, Display, TEXT("ActionableItems.Num() <= 0"));
+		currentActionableItem = nullptr;
 		item->SetbActionable(false);
 	}
 	else
@@ -501,6 +501,15 @@ bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 		{
 			bFireLock = false;
 		}, PistolFireDelay, false);
+
+	return true;
+}
+
+bool APeaceFulHazardCharacter::TriggerInteract()
+{
+	if (currentActionableItem == nullptr) return false;
+
+	currentActionableItem->InteractWithPlayer();
 
 	return true;
 }

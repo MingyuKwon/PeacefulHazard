@@ -31,7 +31,7 @@ void AHappyPlayerController::SetupInputComponent()
 
         EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
 
-        EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ThisClass::Fire);
+        EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ThisClass::Action);
 
         EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ThisClass::AimStart);
         EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ThisClass::AimEnd);
@@ -84,21 +84,30 @@ void AHappyPlayerController::Look(const FInputActionValue& Value)
     }
 }
 
-void AHappyPlayerController::Fire(const FInputActionValue& Value)
+void AHappyPlayerController::Action(const FInputActionValue& Value)
 {
-    if (currentBullet <= 0) return;
-
     bool bSuccess = false;
 
-    if (ControlledCharacter)
+    if (ControlledCharacter == nullptr) return;
+
+
+    if (ControlledCharacter->GetIsAiming())
     {
+        if (currentBullet <= 0) return;
+
         bSuccess = ControlledCharacter->Fire(Value);
+       
+        if (bSuccess)
+        {
+            SetBulletCount(true);
+        }
+
+    }
+    else
+    {
+        ControlledCharacter->TriggerInteract();
     }
 
-    if (bSuccess)
-    {
-        SetBulletCount(true);
-    }
 }
 
 void AHappyPlayerController::AimStart(const FInputActionValue& Value)
