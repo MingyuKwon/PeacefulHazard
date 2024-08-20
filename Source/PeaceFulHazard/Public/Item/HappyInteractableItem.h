@@ -9,6 +9,7 @@
 class UBoxComponent;
 class UWidgetComponent;
 class UCanInteractWidget;
+class APeaceFulHazardGameMode;
 
 UCLASS()
 class PEACEFULHAZARD_API AHappyInteractableItem : public AActor
@@ -24,6 +25,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	UCanInteractWidget* CanInteractWidget;
+
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 
 	bool bIntearctable = false;
 	bool bActionable = false;

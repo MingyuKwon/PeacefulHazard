@@ -7,7 +7,6 @@
 #include "Logging/LogMacros.h"
 #include "PeaceFulHazardCharacter.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNowAimingEvent, bool, flag);
 
 class USpringArmComponent;
 class UCameraComponent;
@@ -20,6 +19,7 @@ class AWeapon;
 class UAnimMontage;
 class UBoxComponent;
 class AHappyInteractableItem;
+class APeaceFulHazardGameMode;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -45,8 +45,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* actiontBox;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FNowAimingEvent NowAimingEvent;
 
 	/** Called for movement input */
 	bool Move(const FInputActionValue& Value);
@@ -153,6 +151,8 @@ protected:
 
 	AHappyInteractableItem* currentActionableItem;
 	TArray<AHappyInteractableItem*> ActionableItems;
+
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 
 	AWeapon* EquipWeapon;
 

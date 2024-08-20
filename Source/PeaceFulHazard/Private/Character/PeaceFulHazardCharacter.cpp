@@ -15,6 +15,8 @@
 #include "Battle/Weapon.h"
 #include "Components/BoxComponent.h"
 #include "Item/HappyInteractableItem.h"
+#include "GameMode/PeaceFulHazardGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -169,6 +171,8 @@ void APeaceFulHazardCharacter::BeginPlay()
 	{
 		PlayerHUD = Cast<APlayerHUD>(HappyPlayerController->GetHUD());
 	}
+
+	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
 }
 
 void APeaceFulHazardCharacter::SetWeaponEquip(bool isEquiped)
@@ -439,7 +443,11 @@ bool APeaceFulHazardCharacter::AimStart(const FInputActionValue& Value)
 	if (!bEquiped) return false;
 
 	bNowAiming = true;
-	NowAimingEvent.Broadcast(true);
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->NowAimingEvent.Broadcast(true);
+	}
+	
 
 	return true;
 }
@@ -447,8 +455,10 @@ bool APeaceFulHazardCharacter::AimStart(const FInputActionValue& Value)
 bool APeaceFulHazardCharacter::AimEnd(const FInputActionValue& Value)
 {
 	bNowAiming = false;
-	NowAimingEvent.Broadcast(false);
-
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->NowAimingEvent.Broadcast(false);
+	}
 	return true;
 
 }

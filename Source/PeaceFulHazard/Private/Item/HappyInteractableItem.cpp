@@ -6,6 +6,8 @@
 #include "Components/WidgetComponent.h"
 #include "Character/PeaceFulHazardCharacter.h"
 #include "UI/CanInteractWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameMode/PeaceFulHazardGameMode.h"
 
 // Sets default values
 AHappyInteractableItem::AHappyInteractableItem()
@@ -46,7 +48,12 @@ void AHappyInteractableItem::BeginPlay()
         }
     }
 
-	
+    PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
+    if (PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->NowAimingEvent.AddDynamic(this, &ThisClass::AImVisibleUI);
+    }
+
 }
 
 void AHappyInteractableItem::AImVisibleUI(bool flag)
@@ -99,7 +106,6 @@ void AHappyInteractableItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
         {
             if (OtherComp == OverlappingCharacter->InteractBox)
             {
-                OverlappingCharacter->NowAimingEvent.AddDynamic(this, &ThisClass::AImVisibleUI);
 
                 bIntearctable = true;
                 if (CanInteractWidget)
@@ -127,8 +133,6 @@ void AHappyInteractableItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, A
         {
             if (OtherComp == OverlappingCharacter->InteractBox)
             {
-                OverlappingCharacter->NowAimingEvent.RemoveDynamic(this, &ThisClass::AImVisibleUI);
-
                 bIntearctable = false;
 
                 if (CanInteractWidget)
