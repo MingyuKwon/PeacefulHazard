@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Character/PeaceFulHazardCharacter.h"
+#include "UI/CanInteractWidget.h"
 
 // Sets default values
 AHappyInteractableItem::AHappyInteractableItem()
@@ -36,7 +37,13 @@ void AHappyInteractableItem::BeginPlay()
 
     if (WidgetComponent)
     {
-        WidgetComponent->SetVisibility(false);
+        CanInteractWidget = Cast<UCanInteractWidget>(WidgetComponent->GetUserWidgetObject());
+
+        if (CanInteractWidget)
+        {
+            CanInteractWidget->SetInteractEnable(false);
+            CanInteractWidget->SetActionEnable(false);
+        }
     }
 
 	
@@ -53,17 +60,32 @@ void AHappyInteractableItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
     bool bFromSweep, const FHitResult& SweepResult)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Overlap Begin with %s"), *OtherActor->GetName());
 
     if (OtherActor && (OtherActor != this) && OtherComp)
     {
         APeaceFulHazardCharacter* OverlappingCharacter = Cast<APeaceFulHazardCharacter>(OtherActor);
         if (OverlappingCharacter)
         {
-            if (WidgetComponent)
+            if (OtherComp == OverlappingCharacter->InteractBox)
             {
-                WidgetComponent->SetVisibility(true);
+                UE_LOG(LogTemp, Warning, TEXT("Overlap Begin with InteractBox %s"), *OtherActor->GetName());
+
+                if (CanInteractWidget)
+                {
+                    CanInteractWidget->SetInteractEnable(true);
+                }
             }
+
+            if (OtherComp == OverlappingCharacter->actiontBox)
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Overlap Begin with actiontBox %s"), *OtherActor->GetName());
+
+                if (CanInteractWidget)
+                {
+                    CanInteractWidget->SetActionEnable(true);
+                }
+            }
+
         }
     }
 }
@@ -71,16 +93,29 @@ void AHappyInteractableItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
 void AHappyInteractableItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Overlap End with %s"), *OtherActor->GetName());
-
     if (OtherActor && (OtherActor != this) && OtherComp)
     {
         APeaceFulHazardCharacter* OverlappingCharacter = Cast<APeaceFulHazardCharacter>(OtherActor);
         if (OverlappingCharacter)
         {
-            if (WidgetComponent)
+            if (OtherComp == OverlappingCharacter->InteractBox)
             {
-                WidgetComponent->SetVisibility(false);
+                UE_LOG(LogTemp, Warning, TEXT("Overlap End with InteractBox %s"), *OtherActor->GetName());
+
+                if (CanInteractWidget)
+                {
+                    CanInteractWidget->SetInteractEnable(false);
+                }
+            }
+
+            if (OtherComp == OverlappingCharacter->actiontBox)
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Overlap End with actiontBox %s"), *OtherActor->GetName());
+
+                if (CanInteractWidget)
+                {
+                    CanInteractWidget->SetActionEnable(false);
+                }
             }
         }
     }

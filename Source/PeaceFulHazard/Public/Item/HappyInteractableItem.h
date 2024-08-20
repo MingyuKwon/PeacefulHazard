@@ -8,6 +8,7 @@
 
 class UBoxComponent;
 class UWidgetComponent;
+class UCanInteractWidget;
 
 UCLASS()
 class PEACEFULHAZARD_API AHappyInteractableItem : public AActor
@@ -22,10 +23,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UCanInteractWidget* CanInteractWidget;
+
+	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 		bool bFromSweep, const FHitResult& SweepResult);
 
+	UFUNCTION()
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
