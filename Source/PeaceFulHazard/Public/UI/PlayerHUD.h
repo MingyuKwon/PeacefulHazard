@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "Controller/HappyPlayerController.h"
 #include "PlayerHUD.generated.h"
 
 class UAimCrossHairWidget;

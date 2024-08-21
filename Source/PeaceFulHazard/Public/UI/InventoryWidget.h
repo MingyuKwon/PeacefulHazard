@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Controller/HappyPlayerController.h"
 #include "InventoryWidget.generated.h"
 
 class UButton;

@@ -63,11 +63,27 @@ void AHappyPlayerController::BeginPlay()
     PlayerHUD = Cast<APlayerHUD>(GetHUD());
     ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn());
 
+    InitializeInventory();
+
     if (PlayerHUD)
     {
-        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, GetLeftBulletFromCharacter());
+        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, GetLeftBullet());
     }
 
+}
+
+
+void AHappyPlayerController::InitializeInventory()
+{
+    CharacterInventoty.ItemLockArray.Init(false, 10);
+    CharacterInventoty.ItemLockArray.Add(true);
+    CharacterInventoty.ItemLockArray.Add(true);
+    CharacterInventoty.ItemLockArray.Add(true);
+    CharacterInventoty.ItemLockArray.Add(true);
+    CharacterInventoty.ItemLockArray.Add(true);
+
+    CharacterInventoty.inventoryItems.Init(EItemType::EIT_None, 15);
+    CharacterInventoty.inventoryItemCounts.Init(0, 15);
 }
 
 void AHappyPlayerController::Tab(const FInputActionValue& Value)
@@ -244,16 +260,16 @@ int32 AHappyPlayerController::GetReloadBulletCount()
 {
     int32 neededBullet = maxBullet - currentBullet;
 
-    neededBullet = FMath::Clamp(neededBullet, 0, GetLeftBulletFromCharacter());
+    neededBullet = FMath::Clamp(neededBullet, 0, GetLeftBullet());
 
     return neededBullet;
 }
 
-int32 AHappyPlayerController::GetLeftBulletFromCharacter()
+int32 AHappyPlayerController::GetLeftBullet()
 {
-    if (ControlledCharacter)
+    if (CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Bullet_Noraml))
     {
-        return ControlledCharacter->GetLeftBullet();
+        return CharacterInventoty.ItemCountMap[EItemType::EIT_Bullet_Noraml];
     }
 
     return 0;
@@ -263,7 +279,7 @@ void AHappyPlayerController::UpdateDefaultUI()
 {
     if (PlayerHUD)
     {
-        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, GetLeftBulletFromCharacter());
+        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, GetLeftBullet());
     }
 }
 
@@ -275,16 +291,47 @@ void AHappyPlayerController::SetBulletCount(bool bFire)
     }
     else
     {
-        if (ControlledCharacter)
-        {
-            int32 reloadBulletCount = GetReloadBulletCount();
+        int32 reloadBulletCount = GetReloadBulletCount();
+        currentBullet += reloadBulletCount;
+        ChangeItemInventory(EItemType::EIT_Bullet_Noraml, -reloadBulletCount);
 
-            currentBullet += reloadBulletCount;
-
-            ControlledCharacter->ChangeItemInventory(EItemType::EIT_Bullet_Noraml, -reloadBulletCount);
-        }
     }
 
     currentBullet = FMath::Clamp(currentBullet, 0, maxBullet);
     UpdateDefaultUI();
+}
+
+void AHappyPlayerController::ChangeItemInventory(EItemType itemType, int32 count)
+{
+    if (CharacterInventoty.ItemCountMap.Contains(itemType))
+    {
+        CharacterInventoty.ItemCountMap[itemType] += count;
+    }
+    else
+    {
+        if (count > 0)
+        {
+            CharacterInventoty.ItemCountMap.Add(itemType, count);
+        }
+        else
+        {
+            return;
+        }
+
+    }
+
+    TArray<EItemType> ItemsToRemove;
+
+    for (const TPair<EItemType, int32>& Pair : CharacterInventoty.ItemCountMap)
+    {
+        if (Pair.Value <= 0)
+        {
+            ItemsToRemove.Add(Pair.Key);
+        }
+    }
+
+    for (EItemType Key : ItemsToRemove)
+    {
+        CharacterInventoty.ItemCountMap.Remove(Key);
+    }
 }

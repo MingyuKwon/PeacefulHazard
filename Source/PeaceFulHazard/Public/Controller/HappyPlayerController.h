@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "PeaceFulHazard/PeaceFulHazard.h"
 #include "HappyPlayerController.generated.h"
 
 class USpringArmComponent;
@@ -16,6 +17,25 @@ class AHappyPlayerController;
 class AWeapon;
 class UAnimMontage;
 
+USTRUCT(BlueprintType)
+struct FCharacterInventoty
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TArray<EItemType> inventoryItems;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TArray<int32> inventoryItemCounts;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TArray<bool> ItemLockArray;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TMap<EItemType, int32> ItemCountMap;
+};
 /**
  * 
  */
@@ -106,19 +126,24 @@ protected:
 
 protected:
 
-	bool nowPausing = false;
+	FCharacterInventoty CharacterInventoty;
 
+	bool nowPausing = false;
 
 	int32 currentBullet = 6;
 	int32 maxBullet = 6;
 
-	int32 GetLeftBulletFromCharacter();
+	int32 GetLeftBullet();
 
 
 	void UpdateDefaultUI();
 
+	void InitializeInventory();
+
 public:
 	void SetBulletCount(bool bFire);
 
+	UFUNCTION(BlueprintCallable)
+	void ChangeItemInventory(EItemType itemType, int32 count);
 
 };

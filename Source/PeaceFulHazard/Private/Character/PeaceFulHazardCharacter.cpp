@@ -159,7 +159,6 @@ void APeaceFulHazardCharacter::AimingPitchLerp(float deltaTime)
 
 void APeaceFulHazardCharacter::BeginPlay()
 {
-	// Call the base class  
 	Super::BeginPlay();
 
 	if (GetController())
@@ -173,7 +172,10 @@ void APeaceFulHazardCharacter::BeginPlay()
 	}
 
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
+
 }
+
+
 
 void APeaceFulHazardCharacter::SetWeaponEquip(bool isEquiped)
 {
@@ -254,51 +256,6 @@ void APeaceFulHazardCharacter::RemoveCurrentActionableItem(AHappyInteractableIte
 	}
 }
 
-void APeaceFulHazardCharacter::ChangeItemInventory(EItemType itemType, int32 count)
-{
-	if (CharacterInventoty.ItemCountMap.Contains(itemType))
-	{
-		CharacterInventoty.ItemCountMap[itemType] += count;
-	}
-	else
-	{
-		if (count > 0)
-		{
-			CharacterInventoty.ItemCountMap.Add(itemType, count);
-		}
-		else
-		{
-			return;
-		}
-
-	}
-
-
-	TArray<EItemType> ItemsToRemove;
-
-	for (const TPair<EItemType, int32>& Pair : CharacterInventoty.ItemCountMap)
-	{
-		if (Pair.Value <= 0)
-		{
-			ItemsToRemove.Add(Pair.Key);
-		}
-	}
-
-	for (EItemType Key : ItemsToRemove)
-	{
-		CharacterInventoty.ItemCountMap.Remove(Key);
-	}
-}
-
-int32 APeaceFulHazardCharacter::GetLeftBullet()
-{
-	if (CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Bullet_Noraml))
-	{
-		return CharacterInventoty.ItemCountMap[EItemType::EIT_Bullet_Noraml];
-	}
-
-	return 0;
-}
 
 void APeaceFulHazardCharacter::SetCurrentActionItem()
 {

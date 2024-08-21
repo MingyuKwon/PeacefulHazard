@@ -25,23 +25,6 @@ class APeaceFulHazardGameMode;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 
-USTRUCT(BlueprintType)
-struct FCharacterInventoty
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
-	TArray<EItemType> inventoryItems;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
-	TArray<EItemType> inventoryItemCounts;
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
-	TMap<EItemType, int32> ItemCountMap;
-};
-
 UCLASS(config = Game)
 class APeaceFulHazardCharacter : public ACharacter
 {
@@ -166,8 +149,6 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
-	FCharacterInventoty CharacterInventoty;
-
 	APlayerHUD* PlayerHUD;
 
 	AHappyPlayerController* HappyPlayerController;
@@ -237,14 +218,7 @@ public:
 	void RemoveCurrentActionableItem(AHappyInteractableItem* item);
 
 	UFUNCTION(BlueprintCallable)
-	void ChangeItemInventory(EItemType itemType, int32 count);
-
-
-	UFUNCTION(BlueprintCallable)
 	bool GetIsShootable() const { return bShootableAimState; }
-
-	UFUNCTION(BlueprintCallable)
-	int32 GetLeftBullet();
 
 
 };

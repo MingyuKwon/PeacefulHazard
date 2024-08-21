@@ -3,6 +3,7 @@
 
 #include "Item/HappyPichUpItem.h"
 #include "Character/PeaceFulHazardCharacter.h"
+#include "Controller/HappyPlayerController.h"
 
 void AHappyPichUpItem::InteractWithPlayer(APeaceFulHazardCharacter* character)
 {
@@ -13,9 +14,11 @@ void AHappyPichUpItem::InteractWithPlayer(APeaceFulHazardCharacter* character)
 		break;
 	}
 
+	AHappyPlayerController* playerController = Cast<AHappyPlayerController>(character->GetController());
+
 	if (character)
 	{
-		character->ChangeItemInventory(ItemType, ItemCount);
+		playerController->ChangeItemInventory(ItemType, ItemCount);
 	}
 
 	DestroyItem();
