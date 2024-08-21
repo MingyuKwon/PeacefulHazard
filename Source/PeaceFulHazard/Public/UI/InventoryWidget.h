@@ -26,6 +26,8 @@ protected:
 
 	//////////////////////////////////////// Button Start//////////////////////////////////////////////////////////
 
+	TArray<UButton*> ItemButtons;
+
 	UPROPERTY(meta = (BindWidget))
 	UButton* ItemButton1;
 
@@ -71,6 +73,8 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* ItemButton15;
 
+	UButton* NowHoveringButton = nullptr;
+
 	UFUNCTION()
 	void OnItemButtonClicked();
 
@@ -94,6 +98,9 @@ protected:
 	UImage* InteractBackGround;
 
 	//////////////////////////////////////// Button End //////////////////////////////////////////////////////////
+
+	void SetInventoryCanvas();
+
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemCountText1;
