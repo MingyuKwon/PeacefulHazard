@@ -43,6 +43,7 @@ void AHappyPlayerController::SetupInputComponent()
 
         EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &ThisClass::Reload);
         
+
         EnhancedInputComponent->BindAction(TabAction, ETriggerEvent::Started, this, &ThisClass::Tab);
 
 
@@ -182,6 +183,8 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
 
 void AHappyPlayerController::Tab(const FInputActionValue& Value)
 {
+    UE_LOG(LogTemp, Display, TEXT("Tab"));
+
     bool bSuccess = false;
     if (PlayerHUD)
     {
@@ -194,7 +197,10 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
     if (nowPausing)
     {
         bShowMouseCursor = true;
-        SetInputMode(FInputModeUIOnly());
+
+        FInputModeGameAndUI InputMode;
+        InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);  
+        SetInputMode(InputMode);
 
         SetPause(true);
     }
