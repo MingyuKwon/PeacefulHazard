@@ -76,9 +76,7 @@ void AHappyPlayerController::BeginPlay()
 
 void AHappyPlayerController::InitializeInventory()
 {
-    CharacterInventoty.ItemLockArray.Init(false, 10);
-    CharacterInventoty.ItemLockArray.Add(true);
-    CharacterInventoty.ItemLockArray.Add(true);
+    CharacterInventoty.ItemLockArray.Init(false, 12);
     CharacterInventoty.ItemLockArray.Add(true);
     CharacterInventoty.ItemLockArray.Add(true);
     CharacterInventoty.ItemLockArray.Add(true);

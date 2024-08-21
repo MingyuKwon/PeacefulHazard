@@ -26,6 +26,13 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+	bool CanInteractButton(UButton* button);
+
+	int32 GetButtonIndex(UButton* button);
+
+	FCharacterInventoty* recentinventory;
+
+
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* UIInteractCanvas;
 

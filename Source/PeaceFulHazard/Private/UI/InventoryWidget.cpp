@@ -18,12 +18,13 @@ void UInventoryWidget::BackUIInputTrigger()
 
 void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 {
+	recentinventory = inventory;
 
 	for (int i = 0; i < 15; i++)
 	{
 		FText TempText;
 
-		if (inventory->ItemLockArray[i])
+		if (recentinventory->ItemLockArray[i])
 		{
 			ItemButtons[i]->SetVisibility(ESlateVisibility::Hidden);
 			ItemImages[i]->SetVisibility(ESlateVisibility::Hidden);
@@ -35,7 +36,7 @@ void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 		}
 
 
-		if (inventory->inventoryItemCounts[i] == 0)
+		if (recentinventory->inventoryItemCounts[i] == 0)
 		{
 			ItemCountBorders[i]->SetVisibility(ESlateVisibility::Hidden);
 		}
@@ -43,7 +44,7 @@ void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 		{
 			ItemCountBorders[i]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
-			TempText = FText::AsNumber(inventory->inventoryItemCounts[i]);
+			TempText = FText::AsNumber(recentinventory->inventoryItemCounts[i]);
 			ItemCountTexts[i]->SetText(TempText);
 		}
 
@@ -72,6 +73,39 @@ void UInventoryWidget::NativeConstruct()
 
 }
 
+bool UInventoryWidget::CanInteractButton(UButton* button)
+{
+	int32 index = GetButtonIndex(button);
+
+	if (index >= 0)
+	{
+		if (recentinventory->inventoryItems[index] != EItemType::EIT_None)
+		{
+			return true;
+		}
+		
+	}
+
+	return false;
+}
+
+int32 UInventoryWidget::GetButtonIndex(UButton* button)
+{
+	int32 index = 0;
+
+	for (UButton* Button : ItemButtons)
+	{
+		if (Button == button)
+		{
+			break;
+		}
+
+		index++;
+	}
+
+	return index < 15 ? index : -1;
+}
+
 void UInventoryWidget::ChangeNowHoveringButton(UButton* button)
 {
 	if (InteractLock) return;
@@ -83,6 +117,8 @@ void UInventoryWidget::ChangeNowHoveringButton(UButton* button)
 
 void UInventoryWidget::OnItemButtonClicked()
 {
+	if (!CanInteractButton(NowHoveringButton)) return;
+
 	InteractLock = true;
 
 	SetInventoryCanvas();
