@@ -56,6 +56,9 @@ protected:
 	/** Called for Fire input */
 	void Reload(const FInputActionValue& Value);
 
+	void Tab(const FInputActionValue& Value);
+
+
 	int32 GetReloadBulletCount();
 
 	/** MappingContext */
@@ -90,10 +93,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ReloadAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* TabAction;
+
+
 	class APlayerHUD* PlayerHUD;
 	class APeaceFulHazardCharacter* ControlledCharacter;
 
 protected:
+
+	bool nowPausing = false;
+
 
 	int32 currentBullet = 6;
 	int32 maxBullet = 6;

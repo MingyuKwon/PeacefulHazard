@@ -42,6 +42,11 @@ void AHappyPlayerController::SetupInputComponent()
         EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Started, this, &ThisClass::EquipTrigger);
 
         EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &ThisClass::Reload);
+        
+        EnhancedInputComponent->BindAction(TabAction, ETriggerEvent::Started, this, &ThisClass::Tab);
+
+
+        
 
     }
     else
@@ -173,6 +178,33 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
         bSuccess = ControlledCharacter->Reload(Value);
     }
 
+}
+
+void AHappyPlayerController::Tab(const FInputActionValue& Value)
+{
+    bool bSuccess = false;
+    if (PlayerHUD)
+    {
+        nowPausing = !nowPausing;
+
+        PlayerHUD->SetTabDisplay(nowPausing);
+
+    }
+
+    if (nowPausing)
+    {
+        bShowMouseCursor = true;
+        SetInputMode(FInputModeUIOnly());
+
+        SetPause(true);
+    }
+    else
+    {
+        bShowMouseCursor = false;
+        SetInputMode(FInputModeGameOnly());
+
+        SetPause(false);
+    }
 }
 
 

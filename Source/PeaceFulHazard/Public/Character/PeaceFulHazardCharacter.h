@@ -92,6 +92,7 @@ public:
 	/** Called for looking input */
 	bool Reload(const FInputActionValue& Value);
 
+
 	bool TriggerInteract();
 
 	APeaceFulHazardCharacter();

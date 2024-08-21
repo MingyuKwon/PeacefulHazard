@@ -8,6 +8,7 @@
 
 class UAimCrossHairWidget;
 class UDefaultPlayerWidget;
+class UInventoryWidget;
 /**
  *
  */
@@ -21,6 +22,9 @@ public:
 
 	void SetAimDisplay(bool bVisible);
 
+	void SetTabDisplay(bool bVisible);
+
+
 	void SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet);
 
 protected:
@@ -32,11 +36,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UDefaultPlayerWidget> DefaultPlayerWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
+
+	
 
 	UAimCrossHairWidget* HUDAimWidget;
 
 	UDefaultPlayerWidget* DefaultPlayerWidget;
 
+	UInventoryWidget* InventoryWidget;
 
 	int32 beforeCurrentBulle = -1;
 	int32 beforeMaxBullet = -1;

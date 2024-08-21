@@ -4,6 +4,7 @@
 #include "UI/PlayerHUD.h"
 #include "UI/AimCrossHairWidget.h"
 #include "UI/DefaultPlayerWidget.h"
+#include "UI/InventoryWidget.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -26,6 +27,23 @@ void APlayerHUD::SetAimDisplay(bool bVisible)
         HUDAimWidget->SetVisibility(ESlateVisibility::Visible);
     }
 
+}
+
+void APlayerHUD::SetTabDisplay(bool bVisible)
+{
+    if (!bVisible)
+    {
+        if (InventoryWidget)
+        {
+            InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+        return;
+    }
+
+    if (InventoryWidget)
+    {
+        InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+    }
 }
 
 void APlayerHUD::SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet)
@@ -72,6 +90,16 @@ void APlayerHUD::BeginPlay()
                 SetBulletDisplay(beforeCurrentBulle, beforeMaxBullet, beforeLeftBullet);
             }
 
+        }
+    }
+
+    if (InventoryWidgetClass != nullptr)
+    {
+        InventoryWidget = CreateWidget<UInventoryWidget>(GetWorld(), InventoryWidgetClass);
+        if (InventoryWidget != nullptr)
+        {
+            InventoryWidget->AddToViewport();
+            InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
         }
     }
 }

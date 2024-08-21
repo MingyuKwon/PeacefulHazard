@@ -6,6 +6,8 @@
 
 class UButton;
 class UTextBlock;
+class UImage;
+class UCanvasPanel;
 
 UCLASS()
 class PEACEFULHAZARD_API UInventoryWidget : public UUserWidget
@@ -14,6 +16,13 @@ class PEACEFULHAZARD_API UInventoryWidget : public UUserWidget
 
 protected:
 	virtual void NativeConstruct() override;
+
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* UIInteractCanvas;
+
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* InventoryCanvas;
+
 
 	//////////////////////////////////////// Button Start//////////////////////////////////////////////////////////
 
@@ -71,6 +80,19 @@ protected:
 	UFUNCTION()
 	void OnItemButtonUnhovered();
 
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* UseButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* CombineButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* DiscardButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* InteractBackGround;
+
 	//////////////////////////////////////// Button End //////////////////////////////////////////////////////////
 
 	UPROPERTY(meta = (BindWidget))
@@ -114,6 +136,21 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemCountText14;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ItemCountText15;
+
+
+
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ItemNameText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ItemExplainText;
+
+
+
 
 
 
