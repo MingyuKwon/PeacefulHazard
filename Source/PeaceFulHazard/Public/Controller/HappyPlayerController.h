@@ -36,10 +36,10 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 	/** Called for Aim input */
-	void AimStart(const FInputActionValue& Value);
+	void RIghtClickStart(const FInputActionValue& Value);
 
 	/** Called for Aim input */
-	void AimEnd(const FInputActionValue& Value);
+	void RightClickEnd(const FInputActionValue& Value);
 
 	/** Called for Fire input */
 	void Action(const FInputActionValue& Value);

@@ -33,8 +33,8 @@ void AHappyPlayerController::SetupInputComponent()
 
         EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ThisClass::Action);
 
-        EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ThisClass::AimStart);
-        EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ThisClass::AimEnd);
+        EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ThisClass::RIghtClickStart);
+        EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ThisClass::RightClickEnd);
 
         EnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &ThisClass::ShiftStart);
         EnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ThisClass::ShiftEnd);
@@ -117,17 +117,36 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
     UpdateDefaultUI();
 }
 
-void AHappyPlayerController::AimStart(const FInputActionValue& Value)
+void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
 {
     bool bSuccess = false;
 
-    if (ControlledCharacter)
+    UE_LOG(LogTemp, Display, TEXT("RIghtClickStart"));
+
+    if (IsPaused())
     {
-        bSuccess = ControlledCharacter->AimStart(Value);
+        if (PlayerHUD)
+        {
+            UE_LOG(LogTemp, Display, TEXT("IsPaused"));
+
+            PlayerHUD->BackUIInputTrigger();
+        }
+
     }
+    else
+    {
+        if (ControlledCharacter)
+        {
+            UE_LOG(LogTemp, Display, TEXT("Is Not Paused"));
+
+            bSuccess = ControlledCharacter->AimStart(Value);
+        }
+    }
+
+
 }
 
-void AHappyPlayerController::AimEnd(const FInputActionValue& Value)
+void AHappyPlayerController::RightClickEnd(const FInputActionValue& Value)
 {
     bool bSuccess = false;
 

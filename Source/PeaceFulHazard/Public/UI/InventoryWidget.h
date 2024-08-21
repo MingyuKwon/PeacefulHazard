@@ -14,8 +14,15 @@ class PEACEFULHAZARD_API UInventoryWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	void BackUIInputTrigger();
+
+
 protected:
 	virtual void NativeConstruct() override;
+
+	bool InteractLock = false;
+
 
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* UIInteractCanvas;
@@ -73,7 +80,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* ItemButton15;
 
+
 	UButton* NowHoveringButton = nullptr;
+	void ChangeNowHoveringButton(UButton* button);
 
 	UFUNCTION()
 	void OnItemButtonClicked();

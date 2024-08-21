@@ -7,6 +7,13 @@
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 
+void UInventoryWidget::BackUIInputTrigger()
+{
+	InteractLock = false;
+
+	SetInventoryCanvas();
+}
+
 void UInventoryWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -41,38 +48,42 @@ void UInventoryWidget::NativeConstruct()
 
 }
 
+void UInventoryWidget::ChangeNowHoveringButton(UButton* button)
+{
+	if (InteractLock) return;
+
+	NowHoveringButton = button;
+
+	SetInventoryCanvas();
+}
+
 void UInventoryWidget::OnItemButtonClicked()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Mouse Pressed "));
+	InteractLock = true;
 
+	SetInventoryCanvas();
 }
 
 void UInventoryWidget::OnItemButtonHovered()
 {
-	UE_LOG(LogTemp, Display, TEXT("OnItemButtonHovered"));
-
-	bool bFind = false;
+	UButton* FindButton = nullptr;
 
 	for (UButton* Button : ItemButtons)
 	{
 		if (Button->IsHovered())
 		{
-			NowHoveringButton = Button;
-			bFind = true;
+			FindButton = Button;
 			break;
 		}
 	}
 
-	NowHoveringButton = bFind ? NowHoveringButton : nullptr;
-
-	SetInventoryCanvas();
+	ChangeNowHoveringButton(FindButton);
 }
 
 void UInventoryWidget::OnItemButtonUnhovered()
 {
-	NowHoveringButton = nullptr;
-	UE_LOG(LogTemp, Display, TEXT("OnItemButtonUnhovered"));
-	SetInventoryCanvas();
+	ChangeNowHoveringButton(nullptr);
+	
 }
 
 void UInventoryWidget::SetInventoryCanvas()
@@ -93,6 +104,24 @@ void UInventoryWidget::SetInventoryCanvas()
 		{
 			CanvasSlot->SetPosition(ButtonPosition);
 		}
+	}
+
+
+	if (InteractLock)
+	{
+		InteractBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		UseButton->SetVisibility(ESlateVisibility::Visible);
+		CombineButton->SetVisibility(ESlateVisibility::Visible);
+		DiscardButton->SetVisibility(ESlateVisibility::Visible);
+
+	}
+	else
+	{
+		InteractBackGround->SetVisibility(ESlateVisibility::Hidden);
+		UseButton->SetVisibility(ESlateVisibility::Hidden);
+		CombineButton->SetVisibility(ESlateVisibility::Hidden);
+		DiscardButton->SetVisibility(ESlateVisibility::Hidden);
+
 	}
 }
 

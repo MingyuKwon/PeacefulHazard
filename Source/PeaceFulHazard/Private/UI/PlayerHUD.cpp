@@ -65,6 +65,15 @@ void APlayerHUD::SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 le
     }
 }
 
+void APlayerHUD::BackUIInputTrigger()
+{
+    if (InventoryWidget)
+    {
+        InventoryWidget->BackUIInputTrigger();
+    }
+    
+}
+
 void APlayerHUD::BeginPlay()
 {
     Super::BeginPlay();

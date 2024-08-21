@@ -24,8 +24,9 @@ public:
 
 	void SetTabDisplay(bool bVisible);
 
-
 	void SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet);
+
+	void BackUIInputTrigger();
 
 protected:
 	virtual void BeginPlay() override;
