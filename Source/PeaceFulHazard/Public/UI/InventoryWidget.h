@@ -17,11 +17,11 @@ class PEACEFULHAZARD_API UInventoryWidget : public UUserWidget
 public:
 	void BackUIInputTrigger();
 
+	bool InteractLock = false;
 
 protected:
 	virtual void NativeConstruct() override;
 
-	bool InteractLock = false;
 
 
 	UPROPERTY(meta = (BindWidget))

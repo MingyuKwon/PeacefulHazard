@@ -24,7 +24,7 @@ void APlayerHUD::SetAimDisplay(bool bVisible)
 
     if (HUDAimWidget)
     {
-        HUDAimWidget->SetVisibility(ESlateVisibility::Visible);
+        HUDAimWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     }
 
 }
@@ -42,7 +42,7 @@ void APlayerHUD::SetTabDisplay(bool bVisible)
 
     if (InventoryWidget)
     {
-        InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+        InventoryWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     }
 }
 
@@ -72,6 +72,16 @@ void APlayerHUD::BackUIInputTrigger()
         InventoryWidget->BackUIInputTrigger();
     }
     
+}
+
+bool APlayerHUD::GetCanCloseTab()
+{
+    if (InventoryWidget)
+    {
+        return !(InventoryWidget->InteractLock);
+    }
+
+    return false;
 }
 
 void APlayerHUD::BeginPlay()

@@ -58,6 +58,10 @@ protected:
 
 	void Tab(const FInputActionValue& Value);
 
+	void ChangeInventoryState();
+
+	void PauseGame(bool flag);
+
 
 	int32 GetReloadBulletCount();
 

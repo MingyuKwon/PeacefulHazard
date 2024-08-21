@@ -70,6 +70,43 @@ void AHappyPlayerController::BeginPlay()
 
 }
 
+void AHappyPlayerController::Tab(const FInputActionValue& Value)
+{
+    ChangeInventoryState();
+}
+
+void AHappyPlayerController::ChangeInventoryState()
+{
+    if (PlayerHUD)
+    {
+        nowPausing = !nowPausing;
+
+        PlayerHUD->SetTabDisplay(nowPausing);
+        PauseGame(nowPausing);
+    }
+}
+
+void AHappyPlayerController::PauseGame(bool flag)
+{
+    if (flag)
+    {
+        bShowMouseCursor = true;
+
+        FInputModeGameAndUI InputMode;
+        InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+        SetInputMode(InputMode);
+
+        SetPause(true);
+    }
+    else
+    {
+        bShowMouseCursor = false;
+        SetInputMode(FInputModeGameOnly());
+
+        SetPause(false);
+    }
+}
+
 void AHappyPlayerController::Move(const FInputActionValue& Value)
 {
     bool bSuccess = false;
@@ -121,15 +158,19 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
 {
     bool bSuccess = false;
 
-    UE_LOG(LogTemp, Display, TEXT("RIghtClickStart"));
-
     if (IsPaused())
     {
         if (PlayerHUD)
         {
-            UE_LOG(LogTemp, Display, TEXT("IsPaused"));
-
-            PlayerHUD->BackUIInputTrigger();
+            if (PlayerHUD->GetCanCloseTab())
+            {
+                ChangeInventoryState();
+            }
+            else
+            {
+                PlayerHUD->BackUIInputTrigger();
+            }
+            
         }
 
     }
@@ -137,8 +178,6 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
     {
         if (ControlledCharacter)
         {
-            UE_LOG(LogTemp, Display, TEXT("Is Not Paused"));
-
             bSuccess = ControlledCharacter->AimStart(Value);
         }
     }
@@ -199,39 +238,6 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
     }
 
 }
-
-void AHappyPlayerController::Tab(const FInputActionValue& Value)
-{
-    UE_LOG(LogTemp, Display, TEXT("Tab"));
-
-    bool bSuccess = false;
-    if (PlayerHUD)
-    {
-        nowPausing = !nowPausing;
-
-        PlayerHUD->SetTabDisplay(nowPausing);
-
-    }
-
-    if (nowPausing)
-    {
-        bShowMouseCursor = true;
-
-        FInputModeGameAndUI InputMode;
-        InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);  
-        SetInputMode(InputMode);
-
-        SetPause(true);
-    }
-    else
-    {
-        bShowMouseCursor = false;
-        SetInputMode(FInputModeGameOnly());
-
-        SetPause(false);
-    }
-}
-
 
 
 int32 AHappyPlayerController::GetReloadBulletCount()

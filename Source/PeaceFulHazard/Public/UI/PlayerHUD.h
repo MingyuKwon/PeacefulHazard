@@ -28,6 +28,8 @@ public:
 
 	void BackUIInputTrigger();
 
+	bool GetCanCloseTab();
+
 protected:
 	virtual void BeginPlay() override;
 
