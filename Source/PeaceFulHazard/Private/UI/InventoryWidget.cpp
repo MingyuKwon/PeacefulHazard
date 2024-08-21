@@ -48,7 +48,14 @@ void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 			ItemCountTexts[i]->SetText(TempText);
 		}
 
-
+		if (recentinventory->inventoryItems[i] == EItemType::EIT_None)
+		{
+			ItemImages[i]->SetColorAndOpacity(FLinearColor::Black);
+		}
+		else
+		{
+			ItemImages[i]->SetColorAndOpacity(FLinearColor::Red);
+		}
 		
 	}
 }

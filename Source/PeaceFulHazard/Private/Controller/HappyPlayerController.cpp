@@ -67,8 +67,8 @@ void AHappyPlayerController::BeginPlay()
 
     if (PlayerHUD)
     {
-        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, GetLeftBullet());
-        PlayerHUD->SetInventoryDisplay(&CharacterInventoty);
+        UpdateDefaultUI();
+        UpdateInventoryUI();
     }
 
 }
@@ -84,6 +84,7 @@ void AHappyPlayerController::InitializeInventory()
     CharacterInventoty.inventoryItems.Init(EItemType::EIT_None, 15);
     CharacterInventoty.inventoryItemCounts.Init(0, 15);
 }
+
 
 void AHappyPlayerController::Tab(const FInputActionValue& Value)
 {
@@ -274,6 +275,30 @@ int32 AHappyPlayerController::GetLeftBullet()
     return 0;
 }
 
+int32 AHappyPlayerController::GetLockIndex()
+{
+    int32 Lockindex = 0;
+    for (bool Lock : CharacterInventoty.ItemLockArray)
+    {
+        if (Lock)
+        {
+            break;
+        }
+
+        Lockindex++;
+    }
+
+    return Lockindex;
+}
+
+void AHappyPlayerController::UpdateInventoryUI()
+{
+    if (PlayerHUD)
+    {
+        PlayerHUD->SetInventoryDisplay(&CharacterInventoty);
+    }
+}
+
 void AHappyPlayerController::UpdateDefaultUI()
 {
     if (PlayerHUD)
@@ -302,6 +327,14 @@ void AHappyPlayerController::SetBulletCount(bool bFire)
 
 void AHappyPlayerController::ChangeItemInventory(EItemType itemType, int32 count)
 {
+    if (!ChangeItemInventoryArray(itemType, count)) return;
+    if (!ChangeItemInventoryMap(itemType, count)) return;
+    
+    UpdateInventoryUI();
+}
+
+bool AHappyPlayerController::ChangeItemInventoryMap(EItemType itemType, int32 count)
+{
     if (CharacterInventoty.ItemCountMap.Contains(itemType))
     {
         CharacterInventoty.ItemCountMap[itemType] += count;
@@ -314,7 +347,7 @@ void AHappyPlayerController::ChangeItemInventory(EItemType itemType, int32 count
         }
         else
         {
-            return;
+            return false;
         }
 
     }
@@ -333,4 +366,73 @@ void AHappyPlayerController::ChangeItemInventory(EItemType itemType, int32 count
     {
         CharacterInventoty.ItemCountMap.Remove(Key);
     }
+
+    return true;
+
+}
+
+bool AHappyPlayerController::ChangeItemInventoryArray(EItemType itemType, int32 count)
+{
+    int32 Lockindex = GetLockIndex();
+
+    if (count < 0)
+    {
+        int32 Findindex = 0;
+        for (EItemType InventoryitemType : CharacterInventoty.inventoryItems)
+        {
+            if (InventoryitemType == itemType)
+            {
+                break;
+            }
+
+            Findindex++;
+        }
+
+        if (Lockindex <= Findindex)
+        {
+            return false;
+        }
+
+        if (CharacterInventoty.inventoryItemCounts[Findindex] + count >= 0)
+        {
+            CharacterInventoty.inventoryItemCounts[Findindex] += count;
+
+            if (CharacterInventoty.inventoryItemCounts[Findindex] == 0)
+            {
+                CharacterInventoty.inventoryItems[Findindex] = EItemType::EIT_None;
+            }
+        }
+        else
+        {
+            count += CharacterInventoty.inventoryItemCounts[Findindex];
+
+            CharacterInventoty.inventoryItemCounts[Findindex] = 0;
+            CharacterInventoty.inventoryItems[Findindex] = EItemType::EIT_None;
+
+            if (!ChangeItemInventoryArray(itemType, count)) return false;
+        }
+
+        return true;
+    }
+
+    int32 Emptyindex = 0;
+    for (EItemType InventoryitemType : CharacterInventoty.inventoryItems)
+    {
+        if (InventoryitemType == EItemType::EIT_None)
+        {
+            break;
+        }
+
+        Emptyindex++;
+    }
+
+    if (Lockindex <= Emptyindex)
+    {
+        return false;
+    }
+
+    CharacterInventoty.inventoryItems[Emptyindex] = itemType;
+    CharacterInventoty.inventoryItemCounts[Emptyindex] = count;
+
+    return true;
 }

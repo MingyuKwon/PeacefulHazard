@@ -134,11 +134,21 @@ protected:
 	int32 maxBullet = 6;
 
 	int32 GetLeftBullet();
+	int32 GetLockIndex();
 
+	void UpdateInventoryUI();
 
 	void UpdateDefaultUI();
 
 	void InitializeInventory();
+
+
+	UFUNCTION(BlueprintCallable)
+	bool ChangeItemInventoryMap(EItemType itemType, int32 count);
+
+	UFUNCTION(BlueprintCallable)
+	bool ChangeItemInventoryArray(EItemType itemType, int32 count);
+
 
 public:
 	void SetBulletCount(bool bFire);
