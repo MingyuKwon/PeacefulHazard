@@ -65,6 +65,18 @@ void APlayerHUD::SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 le
     }
 }
 
+void APlayerHUD::SetInventoryDisplay(FCharacterInventoty* inventory)
+{
+    if (InventoryWidget)
+    {
+        InventoryWidget->SetInventoryDisplay(inventory);
+    }
+    else
+    {
+        beforeInventory = inventory;
+    }
+}
+
 void APlayerHUD::BackUIInputTrigger()
 {
     if (InventoryWidget)
@@ -119,6 +131,11 @@ void APlayerHUD::BeginPlay()
         {
             InventoryWidget->AddToViewport();
             InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+
+            if (beforeInventory != nullptr)
+            {
+                SetInventoryDisplay(beforeInventory);
+            }
         }
     }
 }

@@ -6,6 +6,8 @@
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Components/Border.h"
+#include "Components/TextBlock.h"
 
 void UInventoryWidget::BackUIInputTrigger()
 {
@@ -14,25 +16,47 @@ void UInventoryWidget::BackUIInputTrigger()
 	SetInventoryCanvas();
 }
 
+void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
+{
+
+	for (int i = 0; i < 15; i++)
+	{
+		FText TempText;
+
+		if (inventory->ItemLockArray[i])
+		{
+			ItemButtons[i]->SetVisibility(ESlateVisibility::Hidden);
+			ItemImages[i]->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else
+		{
+			ItemButtons[i]->SetVisibility(ESlateVisibility::Visible);
+			ItemImages[i]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		}
+
+
+		if (inventory->inventoryItemCounts[i] == 0)
+		{
+			ItemCountBorders[i]->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else
+		{
+			ItemCountBorders[i]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+			TempText = FText::AsNumber(inventory->inventoryItemCounts[i]);
+			ItemCountTexts[i]->SetText(TempText);
+		}
+
+
+		
+	}
+}
+
 void UInventoryWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	ItemButtons.Add(ItemButton1);
-	ItemButtons.Add(ItemButton2);
-	ItemButtons.Add(ItemButton3);
-	ItemButtons.Add(ItemButton4);
-	ItemButtons.Add(ItemButton5);
-	ItemButtons.Add(ItemButton6);
-	ItemButtons.Add(ItemButton7);
-	ItemButtons.Add(ItemButton8);
-	ItemButtons.Add(ItemButton9);
-	ItemButtons.Add(ItemButton10);
-	ItemButtons.Add(ItemButton11);
-	ItemButtons.Add(ItemButton12);
-	ItemButtons.Add(ItemButton13);
-	ItemButtons.Add(ItemButton14);
-	ItemButtons.Add(ItemButton15);
+	InitArrays();
 
 	for (UButton* Button : ItemButtons)
 	{
@@ -123,5 +147,72 @@ void UInventoryWidget::SetInventoryCanvas()
 		DiscardButton->SetVisibility(ESlateVisibility::Hidden);
 
 	}
+}
+
+void UInventoryWidget::InitArrays()
+{
+	ItemButtons.Add(ItemButton1);
+	ItemButtons.Add(ItemButton2);
+	ItemButtons.Add(ItemButton3);
+	ItemButtons.Add(ItemButton4);
+	ItemButtons.Add(ItemButton5);
+	ItemButtons.Add(ItemButton6);
+	ItemButtons.Add(ItemButton7);
+	ItemButtons.Add(ItemButton8);
+	ItemButtons.Add(ItemButton9);
+	ItemButtons.Add(ItemButton10);
+	ItemButtons.Add(ItemButton11);
+	ItemButtons.Add(ItemButton12);
+	ItemButtons.Add(ItemButton13);
+	ItemButtons.Add(ItemButton14);
+	ItemButtons.Add(ItemButton15);
+
+	ItemImages.Add(ItemImage1);
+	ItemImages.Add(ItemImage2);
+	ItemImages.Add(ItemImage3);
+	ItemImages.Add(ItemImage4);
+	ItemImages.Add(ItemImage5);
+	ItemImages.Add(ItemImage6);
+	ItemImages.Add(ItemImage7);
+	ItemImages.Add(ItemImage8);
+	ItemImages.Add(ItemImage9);
+	ItemImages.Add(ItemImage10);
+	ItemImages.Add(ItemImage11);
+	ItemImages.Add(ItemImage12);
+	ItemImages.Add(ItemImage13);
+	ItemImages.Add(ItemImage14);
+	ItemImages.Add(ItemImage15);
+
+	ItemCountTexts.Add(ItemCountText1);
+	ItemCountTexts.Add(ItemCountText2);
+	ItemCountTexts.Add(ItemCountText3);
+	ItemCountTexts.Add(ItemCountText4);
+	ItemCountTexts.Add(ItemCountText5);
+	ItemCountTexts.Add(ItemCountText6);
+	ItemCountTexts.Add(ItemCountText7);
+	ItemCountTexts.Add(ItemCountText8);
+	ItemCountTexts.Add(ItemCountText9);
+	ItemCountTexts.Add(ItemCountText10);
+	ItemCountTexts.Add(ItemCountText11);
+	ItemCountTexts.Add(ItemCountText12);
+	ItemCountTexts.Add(ItemCountText13);
+	ItemCountTexts.Add(ItemCountText14);
+	ItemCountTexts.Add(ItemCountText15);
+
+	ItemCountBorders.Add(ItemCountBorder1);
+	ItemCountBorders.Add(ItemCountBorder2);
+	ItemCountBorders.Add(ItemCountBorder3);
+	ItemCountBorders.Add(ItemCountBorder4);
+	ItemCountBorders.Add(ItemCountBorder5);
+	ItemCountBorders.Add(ItemCountBorder6);
+	ItemCountBorders.Add(ItemCountBorder7);
+	ItemCountBorders.Add(ItemCountBorder8);
+	ItemCountBorders.Add(ItemCountBorder9);
+	ItemCountBorders.Add(ItemCountBorder10);
+	ItemCountBorders.Add(ItemCountBorder11);
+	ItemCountBorders.Add(ItemCountBorder12);
+	ItemCountBorders.Add(ItemCountBorder13);
+	ItemCountBorders.Add(ItemCountBorder14);
+	ItemCountBorders.Add(ItemCountBorder15);
 }
 

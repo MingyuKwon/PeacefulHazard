@@ -27,6 +27,8 @@ public:
 
 	void SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet);
 
+	void SetInventoryDisplay(FCharacterInventoty* inventory);
+
 	void BackUIInputTrigger();
 
 	bool GetCanCloseTab();
@@ -55,4 +57,5 @@ protected:
 	int32 beforeMaxBullet = -1;
 	int32 beforeLeftBullet = -1;
 
+	FCharacterInventoty* beforeInventory = nullptr;
 };

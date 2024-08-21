@@ -68,6 +68,7 @@ void AHappyPlayerController::BeginPlay()
     if (PlayerHUD)
     {
         PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, GetLeftBullet());
+        PlayerHUD->SetInventoryDisplay(&CharacterInventoty);
     }
 
 }

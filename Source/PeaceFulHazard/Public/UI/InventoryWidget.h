@@ -9,6 +9,7 @@ class UButton;
 class UTextBlock;
 class UImage;
 class UCanvasPanel;
+class UBorder;
 
 UCLASS()
 class PEACEFULHAZARD_API UInventoryWidget : public UUserWidget
@@ -18,12 +19,12 @@ class PEACEFULHAZARD_API UInventoryWidget : public UUserWidget
 public:
 	void BackUIInputTrigger();
 
+	void SetInventoryDisplay(FCharacterInventoty* inventory);
+
 	bool InteractLock = false;
 
 protected:
 	virtual void NativeConstruct() override;
-
-
 
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* UIInteractCanvas;
@@ -31,10 +32,16 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* InventoryCanvas;
 
+	TArray<UButton*> ItemButtons;
+
+	TArray<UImage*> ItemImages;
+
+	TArray<UTextBlock*> ItemCountTexts;
+
+	TArray<UBorder*> ItemCountBorders;
 
 	//////////////////////////////////////// Button Start//////////////////////////////////////////////////////////
 
-	TArray<UButton*> ItemButtons;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* ItemButton1;
@@ -107,6 +114,54 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UImage* InteractBackGround;
 
+
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage1;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage2;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage3;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage4;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage5;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage6;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage7;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage8;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage9;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage10;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage11;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage12;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage13;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage14;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemImage15;
+
+
 	//////////////////////////////////////// Button End //////////////////////////////////////////////////////////
 
 	void SetInventoryCanvas();
@@ -159,6 +214,52 @@ protected:
 
 
 
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder1;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder2;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder3;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder4;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder5;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder6;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder7;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder8;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder9;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder10;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder11;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder12;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder13;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder14;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemCountBorder15;
+
+
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemNameText;
@@ -168,7 +269,7 @@ protected:
 
 
 
-
+	void InitArrays();
 
 
 };
