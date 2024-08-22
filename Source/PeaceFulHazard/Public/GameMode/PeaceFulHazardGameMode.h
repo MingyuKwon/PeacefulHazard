@@ -5,12 +5,16 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "PeaceFulHazard/PeaceFulHazard.h"
+#include "Item/HappyInteractableItem.h"
 #include "PeaceFulHazardGameMode.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNowAimingEvent, bool, flag);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOuterChangeInventoryEvent, int32, itemIndex, EItemType, itemType, int32, itemCount, bool, bReplace);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FUseItemEvent, EItemType, itemType,  bool, bItem);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCloseAllUIEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FInteractWithItemUIEvent, EItemType, itemtype , int32, count);
+
+
 
 UCLASS(minimalapi)
 class APeaceFulHazardGameMode : public AGameModeBase
@@ -31,6 +35,10 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FCloseAllUIEvent CloseAllUIEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FInteractWithItemUIEvent InteractWithItemUIEvent;
+
 };
 
 

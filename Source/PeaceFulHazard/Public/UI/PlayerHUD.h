@@ -35,6 +35,8 @@ public:
 
 	void BackUIInputTrigger();
 
+	void OkUIInputTrigger();
+
 	bool GetCanCloseTab();
 
 protected:

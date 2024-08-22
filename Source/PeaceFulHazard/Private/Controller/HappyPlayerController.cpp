@@ -17,6 +17,8 @@
 #include "Character/PeaceFulHazardCharacter.h"
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "Item/HappyInteractableItem.h"
+
 void AHappyPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
@@ -72,6 +74,9 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->OuterChangeInventoryEvent.AddDynamic(this, &ThisClass::OuterUIChange);
         PeaceFulHazardGameMode->UseItemEvent.AddDynamic(this, &ThisClass::UseItem);
         PeaceFulHazardGameMode->CloseAllUIEvent.AddDynamic(this, &ThisClass::CloseAllUI);
+        PeaceFulHazardGameMode->InteractWithItemUIEvent.AddDynamic(this, &ThisClass::InteractWithItemUI);
+
+        
     }
 
     InitializeInventory();
@@ -175,6 +180,15 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
 
     if (ControlledCharacter == nullptr) return;
 
+    if (IsPaused())
+    {
+        if (PlayerHUD)
+        {
+            PlayerHUD->OkUIInputTrigger();
+        }
+
+        return;
+    }
 
     if (ControlledCharacter->GetIsAiming())
     {
@@ -380,6 +394,12 @@ void AHappyPlayerController::OuterUIChange(int32 itemIndex, EItemType itemType, 
 void AHappyPlayerController::UseItem(EItemType itemType, bool bItem)
 {
 
+}
+
+void AHappyPlayerController::InteractWithItemUI(EItemType itemtype, int32 count)
+{
+    ChangeItemInventory(itemtype, count);
+    CloseAllUI();
 }
 
 bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)

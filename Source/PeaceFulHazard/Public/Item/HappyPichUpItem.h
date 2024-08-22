@@ -21,6 +21,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
 	int32 ItemCount;
 
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count);
+
 
 public:
 	virtual void InteractWithPlayer(APeaceFulHazardCharacter* character) override;

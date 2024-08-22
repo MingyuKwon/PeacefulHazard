@@ -21,6 +21,8 @@ class PEACEFULHAZARD_API UInventoryWidget : public UUserWidget
 public:
 	void BackUIInputTrigger();
 
+	void OkUIInputTrigger();
+
 	void SetInventoryDisplay(FCharacterInventoty* inventory);
 
 	void showTabUI();
@@ -38,6 +40,9 @@ protected:
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 
 	virtual void NativeConstruct() override;
+
+	EItemType beforeitemType = EItemType::EIT_None;
+	int32 beforeitemcount = -1;
 
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* UIInteractCanvas;

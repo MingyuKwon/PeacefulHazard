@@ -107,6 +107,14 @@ void APlayerHUD::BackUIInputTrigger()
     
 }
 
+void APlayerHUD::OkUIInputTrigger()
+{
+    if (InventoryWidget)
+    {
+        InventoryWidget->OkUIInputTrigger();
+    }
+}
+
 bool APlayerHUD::GetCanCloseTab()
 {
     if (InventoryWidget)

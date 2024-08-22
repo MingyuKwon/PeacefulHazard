@@ -36,6 +36,21 @@ void UInventoryWidget::BackUIInputTrigger()
 
 }
 
+void UInventoryWidget::OkUIInputTrigger()
+{
+	if (beforeitemType == EItemType::EIT_None) return;
+
+	if (ItemGetCanvas->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
+	{
+		
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->InteractWithItemUIEvent.Broadcast(beforeitemType, beforeitemcount);
+		}
+	}
+}
+
+
 void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 {
 	recentinventory = inventory;
@@ -107,6 +122,9 @@ void UInventoryWidget::showItemGetUI(EItemType itemType, int32 count)
 
 	if (ItemInformation)
 	{
+		beforeitemType = itemType;
+		beforeitemcount = count;
+
 		FString string = ItemInformation->ItemInformationMap[itemType].itemExplainText;
 		FText TempText = FText::FromString(string);
 		ItemGetItemExplainText->SetText(TempText);

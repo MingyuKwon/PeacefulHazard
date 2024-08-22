@@ -18,6 +18,7 @@ class AHappyPlayerController;
 class AWeapon;
 class UAnimMontage;
 class APeaceFulHazardGameMode;
+class AHappyInteractableItem;
 
 USTRUCT(BlueprintType)
 struct FCharacterInventoty
@@ -140,6 +141,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void UseItem(EItemType itemType, bool bItem);
+
+	UFUNCTION(BlueprintCallable)
+	void InteractWithItemUI(EItemType itemtype, int32 count);
 
 	
 

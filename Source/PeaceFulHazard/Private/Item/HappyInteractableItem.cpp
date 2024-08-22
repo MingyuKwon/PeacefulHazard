@@ -52,6 +52,7 @@ void AHappyInteractableItem::BeginPlay()
     if (PeaceFulHazardGameMode)
     {
         PeaceFulHazardGameMode->NowAimingEvent.AddDynamic(this, &ThisClass::AImVisibleUI);
+        PeaceFulHazardGameMode->CloseAllUIEvent.AddDynamic(this, &ThisClass::UICloseAllInteractWithItemOver);
     }
 
 }
@@ -107,6 +108,11 @@ void AHappyInteractableItem::DestroyItem()
     }
     Destroy();
 
+}
+
+void AHappyInteractableItem::UICloseAllInteractWithItemOver()
+{
+    bInteractWithUI = false;
 }
 
 void AHappyInteractableItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,

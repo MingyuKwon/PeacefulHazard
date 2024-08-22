@@ -35,6 +35,10 @@ protected:
 	bool bIntearctable = false;
 	bool bActionable = false;
 
+	bool bInteractWithUI = false;
+
+	UFUNCTION()
+	void UICloseAllInteractWithItemOver();
 
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
