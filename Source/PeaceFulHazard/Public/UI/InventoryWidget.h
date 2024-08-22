@@ -23,6 +23,8 @@ public:
 
 	void OkUIInputTrigger();
 
+	bool IsInventoryFull();
+
 	void SetInventoryDisplay(FCharacterInventoty* inventory);
 
 	void showTabUI();

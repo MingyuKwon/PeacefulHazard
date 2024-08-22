@@ -44,7 +44,6 @@ void APlayerHUD::SetInventoryDisplay(bool bVisible)
     {
         InventoryWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
         InventoryWidget->showTabUI();
-        
     }
 }
 

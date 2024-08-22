@@ -39,6 +39,8 @@ void UInventoryWidget::BackUIInputTrigger()
 void UInventoryWidget::OkUIInputTrigger()
 {
 	if (beforeitemType == EItemType::EIT_None) return;
+	if (IsInventoryFull()) return;
+
 
 	if (ItemGetCanvas->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
 	{
@@ -48,6 +50,38 @@ void UInventoryWidget::OkUIInputTrigger()
 			PeaceFulHazardGameMode->InteractWithItemUIEvent.Broadcast(beforeitemType, beforeitemcount);
 		}
 	}
+}
+
+bool UInventoryWidget::IsInventoryFull()
+{
+	if (recentinventory)
+	{
+		int32 Lockindex = 0;
+		for (bool Lock : recentinventory->ItemLockArray)
+		{
+			if (Lock)
+			{
+				break;
+			}
+
+			Lockindex++;
+		}
+
+		int32 Emptyindex = 0;
+		for (EItemType InventoryitemType : recentinventory->inventoryItems)
+		{
+			if (InventoryitemType == EItemType::EIT_None)
+			{
+				break;
+			}
+
+			Emptyindex++;
+		}
+
+		return Emptyindex >= Lockindex;
+	}
+
+	return true;
 }
 
 
@@ -162,6 +196,19 @@ void UInventoryWidget::showItemGetUI(EItemType itemType, int32 count)
 			}
 
 		}
+	}
+
+	if (IsInventoryFull())
+	{
+		TakeBackground->SetVisibility(ESlateVisibility::Hidden);
+		TakeText->SetVisibility(ESlateVisibility::Hidden);
+		TakeImage->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		TakeBackground->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		TakeText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		TakeImage->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 
 }

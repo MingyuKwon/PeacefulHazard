@@ -91,7 +91,11 @@ void AHappyPlayerController::BeginPlay()
 
 void AHappyPlayerController::InitializeInventory()
 {
-    CharacterInventoty.ItemLockArray.Init(false, 12);
+    CharacterInventoty.ItemLockArray.Init(false, 8);
+    CharacterInventoty.ItemLockArray.Add(true);
+    CharacterInventoty.ItemLockArray.Add(true);
+    CharacterInventoty.ItemLockArray.Add(true);
+    CharacterInventoty.ItemLockArray.Add(true);
     CharacterInventoty.ItemLockArray.Add(true);
     CharacterInventoty.ItemLockArray.Add(true);
     CharacterInventoty.ItemLockArray.Add(true);
@@ -113,6 +117,8 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
         }
         else
         {
+            UpdateAllUI();
+
             currentUIState = EUIState::EUIS_Inventory;
             PlayerHUD->SetInventoryDisplay(true);
             SetGamePause(true);
@@ -127,6 +133,8 @@ void AHappyPlayerController::GetItem(EItemType itemType, int32 count)
 {
     if (PlayerHUD)
     {
+        UpdateAllUI();
+
         currentUIState = EUIState::EUIS_ItemGet;
         PlayerHUD->SetGetItemDisplay(true, itemType, count);
         SetGamePause(true);
