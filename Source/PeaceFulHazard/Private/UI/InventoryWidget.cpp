@@ -48,14 +48,16 @@ void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 			ItemCountTexts[i]->SetText(TempText);
 		}
 
-		if (recentinventory->inventoryItems[i] == EItemType::EIT_None)
+		if (ItemInformation)
 		{
-			ItemImages[i]->SetColorAndOpacity(FLinearColor::Black);
+			UTexture2D* Texture = ItemInformation->ItemInformationMap[recentinventory->inventoryItems[i]].itemImage;
+			if (Texture)
+			{
+				ItemImages[i]->SetBrushFromTexture(Texture);
+			}
 		}
-		else
-		{
-			ItemImages[i]->SetColorAndOpacity(FLinearColor::Red);
-		}
+
+
 		
 	}
 }

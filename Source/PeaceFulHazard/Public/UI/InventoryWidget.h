@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Controller/HappyPlayerController.h"
+#include "Item/ItemInformation.h"
 #include "InventoryWidget.generated.h"
 
 class UButton;
@@ -23,7 +24,12 @@ public:
 
 	bool InteractLock = false;
 
+	AItemInformation* ItemInformation;
+
 protected:
+
+
+
 	virtual void NativeConstruct() override;
 
 	bool CanInteractButton(UButton* button);

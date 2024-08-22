@@ -138,4 +138,18 @@ void APlayerHUD::BeginPlay()
             }
         }
     }
+
+    SetItemInformationToDisplay();
+}
+
+void APlayerHUD::SetItemInformationToDisplay()
+{
+    if (ItemInformationClass == nullptr) return;
+
+    AItemInformation* ItemInformation = GetWorld()->SpawnActor<AItemInformation>(ItemInformationClass);
+    
+    if (InventoryWidget)
+    {
+        InventoryWidget->ItemInformation = ItemInformation;
+    }
 }

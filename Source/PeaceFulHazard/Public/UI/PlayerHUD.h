@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "Controller/HappyPlayerController.h"
+#include "Item/ItemInformation.h"
 #include "PlayerHUD.generated.h"
 
 class UAimCrossHairWidget;
@@ -45,7 +46,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
 
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Parameter")
+	TSubclassOf<AItemInformation> ItemInformationClass;
+
+	void SetItemInformationToDisplay();
+
 
 	UAimCrossHairWidget* HUDAimWidget;
 

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "PeaceFulHazard/PeaceFulHazard.h"
+#include "Item/ItemInformation.h"
 #include "HappyPlayerController.generated.h"
 
 class USpringArmComponent;
@@ -81,7 +82,6 @@ protected:
 	void ChangeInventoryState();
 
 	void PauseGame(bool flag);
-
 
 	int32 GetReloadBulletCount();
 
