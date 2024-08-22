@@ -19,6 +19,9 @@ public:
 	EItemType itemType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	FString itemNameText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	FString itemExplainText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
@@ -26,6 +29,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	UTexture2D* itemImage;  
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	bool bUsable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	bool bDiscardable;
 
 };
 

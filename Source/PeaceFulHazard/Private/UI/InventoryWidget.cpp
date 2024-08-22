@@ -157,6 +157,9 @@ void UInventoryWidget::OnItemButtonUnhovered()
 
 void UInventoryWidget::SetInventoryCanvas()
 {
+	SetItemExplainText();
+	SetInteractPanelButton();
+
 	if (NowHoveringButton == nullptr)
 	{
 		UIInteractCanvas->SetVisibility(ESlateVisibility::Hidden);
@@ -190,6 +193,74 @@ void UInventoryWidget::SetInventoryCanvas()
 		UseButton->SetVisibility(ESlateVisibility::Hidden);
 		CombineButton->SetVisibility(ESlateVisibility::Hidden);
 		DiscardButton->SetVisibility(ESlateVisibility::Hidden);
+
+	}
+}
+
+void UInventoryWidget::SetItemExplainText()
+{
+	FText TempText = FText();
+
+	if (NowHoveringButton == nullptr)
+	{
+		ItemNameText->SetText(TempText);
+		ItemExplainText->SetText(TempText);
+	}
+	else
+	{
+		int32 index = GetButtonIndex(NowHoveringButton);
+
+
+		if (ItemInformation)
+		{
+			FString string = ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].itemExplainText;
+			TempText = FText::FromString(string);
+			ItemExplainText->SetText(TempText);
+
+			string = ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].itemNameText;
+			TempText = FText::FromString(string);
+			ItemNameText->SetText(TempText);
+
+		}
+
+
+	}
+}
+
+void UInventoryWidget::SetInteractPanelButton()
+{
+	if (NowHoveringButton == nullptr) return;
+
+	int32 index = GetButtonIndex(NowHoveringButton);
+
+	if (ItemInformation)
+	{
+		if (ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].bUsable)
+		{
+			UseButton->SetIsEnabled(true);
+		}
+		else
+		{
+			UseButton->SetIsEnabled(false);
+		}
+
+		if (ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].ItemCombineArray.Num() > 0)
+		{
+			CombineButton->SetIsEnabled(true);
+		}
+		else
+		{
+			CombineButton->SetIsEnabled(false);
+		}
+
+		if (ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].bDiscardable)
+		{
+			DiscardButton->SetIsEnabled(true);
+		}
+		else
+		{
+			DiscardButton->SetIsEnabled(false);
+		}
 
 	}
 }

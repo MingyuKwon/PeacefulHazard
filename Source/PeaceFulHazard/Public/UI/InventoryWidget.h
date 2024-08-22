@@ -36,6 +36,14 @@ protected:
 
 	int32 GetButtonIndex(UButton* button);
 
+
+	void SetInventoryCanvas();
+
+	void SetItemExplainText();
+
+	void SetInteractPanelButton();
+
+
 	FCharacterInventoty* recentinventory;
 
 
@@ -176,9 +184,6 @@ protected:
 
 
 	//////////////////////////////////////// Button End //////////////////////////////////////////////////////////
-
-	void SetInventoryCanvas();
-
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemCountText1;
