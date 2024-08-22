@@ -22,3 +22,12 @@ enum class EInteractSituationType : uint8
     EIST_Bullet_Noraml,
     EIST_Max
 };
+
+UENUM(BlueprintType)
+enum class EUIState : uint8
+{
+    EUIS_None,
+    EUIS_Inventory,
+    EUIS_ItemGet,
+    EUIS_Max
+};

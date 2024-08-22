@@ -24,11 +24,14 @@ public:
 
 	void SetAimDisplay(bool bVisible);
 
-	void SetTabDisplay(bool bVisible);
+	void SetInventoryDisplay(bool bVisible);
+
+	void SetGetItemDisplay(bool bVisible, EItemType itemType = EItemType::EIT_None, int32 count = 0);
+
 
 	void SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet);
 
-	void SetInventoryDisplay(FCharacterInventoty* inventory);
+	void UpdateInventoryDisplay(FCharacterInventoty* inventory);
 
 	void BackUIInputTrigger();
 

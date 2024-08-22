@@ -80,8 +80,6 @@ protected:
 
 	void Tab(const FInputActionValue& Value);
 
-	void ChangeInventoryState();
-
 	void PauseGame(bool flag);
 
 	int32 GetReloadBulletCount();
@@ -127,6 +125,8 @@ protected:
 
 	AItemInformation* ItemInformation;
 
+	EUIState currentUIState = EUIState::EUIS_None;
+
 	class APlayerHUD* PlayerHUD;
 	class APeaceFulHazardCharacter* ControlledCharacter;
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
@@ -144,6 +144,7 @@ protected:
 	FCharacterInventoty CharacterInventoty;
 
 	bool nowPausing = false;
+	void SetGamePause(bool flag);
 
 	int32 currentBullet = 6;
 	int32 maxBullet = 6;
@@ -169,11 +170,15 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	bool ChangeItemInventoryArrayOneSlot(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace);
 
+	UFUNCTION(BlueprintCallable)
+	void ChangeItemInventory(EItemType itemType, int32 count);
 
 public:
 	void SetBulletCount(bool bFire);
 
+
 	UFUNCTION(BlueprintCallable)
-	void ChangeItemInventory(EItemType itemType, int32 count);
+	void GetItem(EItemType itemType, int32 count);
+
 
 };

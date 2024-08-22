@@ -83,6 +83,18 @@ void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 
 }
 
+void UInventoryWidget::showTabUI()
+{
+	InventoryCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	ItemGetCanvas->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UInventoryWidget::showItemGetUI(EItemType itemType, int32 count)
+{
+	InventoryCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	ItemGetCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+}
+
 void UInventoryWidget::NativeConstruct()
 {
 	Super::NativeConstruct();

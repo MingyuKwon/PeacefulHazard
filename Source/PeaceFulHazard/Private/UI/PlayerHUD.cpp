@@ -29,7 +29,7 @@ void APlayerHUD::SetAimDisplay(bool bVisible)
 
 }
 
-void APlayerHUD::SetTabDisplay(bool bVisible)
+void APlayerHUD::SetInventoryDisplay(bool bVisible)
 {
     if (!bVisible)
     {
@@ -43,6 +43,27 @@ void APlayerHUD::SetTabDisplay(bool bVisible)
     if (InventoryWidget)
     {
         InventoryWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+        InventoryWidget->showTabUI();
+        
+    }
+}
+
+void APlayerHUD::SetGetItemDisplay(bool bVisible, EItemType itemType, int32 count)
+{
+    if (!bVisible)
+    {
+        if (InventoryWidget)
+        {
+            InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+        return;
+    }
+
+    if (InventoryWidget)
+    {
+        InventoryWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+        InventoryWidget->showItemGetUI(itemType, count);
+
     }
 }
 
@@ -65,7 +86,7 @@ void APlayerHUD::SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 le
     }
 }
 
-void APlayerHUD::SetInventoryDisplay(FCharacterInventoty* inventory)
+void APlayerHUD::UpdateInventoryDisplay(FCharacterInventoty* inventory)
 {
     if (InventoryWidget)
     {
@@ -134,7 +155,7 @@ void APlayerHUD::BeginPlay()
 
             if (beforeInventory != nullptr)
             {
-                SetInventoryDisplay(beforeInventory);
+                UpdateInventoryDisplay(beforeInventory);
             }
         }
     }

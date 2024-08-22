@@ -23,6 +23,10 @@ public:
 
 	void SetInventoryDisplay(FCharacterInventoty* inventory);
 
+	void showTabUI();
+
+	void showItemGetUI(EItemType itemType, int32 count);
+
 	bool InteractLock = false;
 
 	bool combineLock = false;
@@ -35,13 +39,70 @@ protected:
 
 	virtual void NativeConstruct() override;
 
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* UIInteractCanvas;
+
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* InventoryCanvas;
+
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* ItemGetCanvas;
+
+
+	//////////////////////////////////////// itemGet Canvas//////////////////////////////////////////////////////////
+
+
+
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ItemGetItemNameText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ItemGetItemExplainText;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemGetImage;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* ItemGetCountBorder;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ItemGetCountText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ItemGetAskText;
+
+
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TakeBackground;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* BackBackground;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TakeText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* BackText;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TakeImage;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* BackImage;
+
+	
+
+	//////////////////////////////////////// Inventory Canvas//////////////////////////////////////////////////////////
+
 	bool CanInteractButton(UButton* button);
 
 	int32 GetButtonIndex(UButton* button);
 
 	void SetCombineUIState();
 
-	void SetAllUIUpdate ();
+	void SetAllUIUpdate();
 
 	void SetInventoryCanvas();
 
@@ -73,13 +134,6 @@ protected:
 	void OnItemButtonUnhovered();
 
 
-
-	UPROPERTY(meta = (BindWidget))
-	UCanvasPanel* UIInteractCanvas;
-
-	UPROPERTY(meta = (BindWidget))
-	UCanvasPanel* InventoryCanvas;
-
 	TArray<UButton*> ItemButtons;
 
 	TArray<UImage*> ItemImages;
@@ -87,9 +141,6 @@ protected:
 	TArray<UTextBlock*> ItemCountTexts;
 
 	TArray<UBorder*> ItemCountBorders;
-
-	//////////////////////////////////////// Button Start//////////////////////////////////////////////////////////
-
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* ItemButton1;
@@ -215,8 +266,6 @@ protected:
 	UBorder* InventoryBackGround;
 
 	
-	//////////////////////////////////////// Button End //////////////////////////////////////////////////////////
-
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemCountText1;
 
@@ -309,8 +358,6 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UBorder* ItemCountBorder15;
 
-	
-
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemNameText;
 
@@ -318,8 +365,8 @@ protected:
 	UTextBlock* ItemExplainText;
 
 
-
 	void InitArrays();
 
+	//////////////////////////////////////// Inventory Canvas//////////////////////////////////////////////////////////
 
 };

@@ -98,17 +98,33 @@ void AHappyPlayerController::InitializeInventory()
 
 void AHappyPlayerController::Tab(const FInputActionValue& Value)
 {
-    ChangeInventoryState();
+    if (PlayerHUD)
+    {
+        if (nowPausing)
+        {
+            PlayerHUD->SetInventoryDisplay(false);
+            SetGamePause(false);
+
+        }
+        else
+        {
+            currentUIState = EUIState::EUIS_Inventory;
+            PlayerHUD->SetInventoryDisplay(true);
+            SetGamePause(true);
+
+        }
+
+    }
 }
 
-void AHappyPlayerController::ChangeInventoryState()
+
+void AHappyPlayerController::GetItem(EItemType itemType, int32 count)
 {
     if (PlayerHUD)
     {
-        nowPausing = !nowPausing;
-
-        PlayerHUD->SetTabDisplay(nowPausing);
-        PauseGame(nowPausing);
+        currentUIState = EUIState::EUIS_ItemGet;
+        PlayerHUD->SetGetItemDisplay(true, itemType, count);
+        SetGamePause(true);
     }
 }
 
@@ -190,7 +206,17 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
         {
             if (PlayerHUD->GetCanCloseTab())
             {
-                ChangeInventoryState();
+                if (currentUIState == EUIState::EUIS_Inventory)
+                {
+                    PlayerHUD->SetInventoryDisplay(false);
+                }
+                else if (currentUIState == EUIState::EUIS_ItemGet)
+                {
+                    PlayerHUD->SetGetItemDisplay(false);
+                }
+
+                SetGamePause(false);
+
             }
             else
             {
@@ -276,6 +302,17 @@ int32 AHappyPlayerController::GetReloadBulletCount()
 }
 
 
+void AHappyPlayerController::SetGamePause(bool flag)
+{
+    nowPausing = flag;
+    PauseGame(nowPausing);
+
+    if (!flag)
+    {
+        currentUIState = EUIState::EUIS_None;
+    }
+}
+
 int32 AHappyPlayerController::GetLeftBullet()
 {
     if (CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Bullet_Noraml))
@@ -312,7 +349,7 @@ void AHappyPlayerController::UpdateInventoryUI()
 {
     if (PlayerHUD)
     {
-        PlayerHUD->SetInventoryDisplay(&CharacterInventoty);
+        PlayerHUD->UpdateInventoryDisplay(&CharacterInventoty);
     }
 }
 
@@ -352,7 +389,7 @@ void AHappyPlayerController::OuterUIChange(int32 itemIndex, EItemType itemType, 
 
 void AHappyPlayerController::UseItem(EItemType itemType, bool bItem)
 {
-    UE_LOG(LogTemp, Display, TEXT("UseItem"));
+
 }
 
 bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
@@ -392,6 +429,7 @@ void AHappyPlayerController::ChangeItemInventory(EItemType itemType, int32 count
     
     UpdateAllUI();
 }
+
 
 bool AHappyPlayerController::ChangeItemInventoryMap(EItemType itemType, int32 count)
 {
