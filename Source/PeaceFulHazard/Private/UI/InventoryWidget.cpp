@@ -181,6 +181,8 @@ int32 UInventoryWidget::GetButtonIndex(UButton* button)
 
 void UInventoryWidget::ChangeNowHoveringButton(UButton* button)
 {
+	LiteralHoveringButton = button;
+
 	if (InteractLock) return;
 
 	NowHoveringButton = button;
@@ -188,12 +190,62 @@ void UInventoryWidget::ChangeNowHoveringButton(UButton* button)
 	SetAllUIUpdate();
 }
 
+bool UInventoryWidget::CombineItem(UButton* originButton, UButton* addButton)
+{
+	if (originButton == nullptr) return false;
+	if (addButton == nullptr) return false;
+
+	int32 originIndex = GetButtonIndex(originButton);
+	int32 addIndex = GetButtonIndex(addButton);
+
+	EItemType originItemType = recentinventory->inventoryItems[originIndex];
+	EItemType addItemType = recentinventory->inventoryItems[addIndex];
+
+	int32 originCount = recentinventory->inventoryItemCounts[originIndex];
+	int32 addCount = recentinventory->inventoryItemCounts[addIndex];
+
+	TMap<EItemType, EItemType> originInteractArray = ItemInformation->ItemInformationMap[originItemType].ItemCombineMap;
+
+	if (!originInteractArray.Contains(addItemType)) return false;
+
+	if (originInteractArray[addItemType] == addItemType)
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(addIndex, addItemType, -addCount, false);
+			PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(originIndex, originItemType, addCount, false);
+		}
+	}
+	else
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(addIndex, addItemType, -addCount, false);
+			PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(originIndex, originInteractArray[addItemType], originCount, true);
+		}
+	}
+
+
+	return true;
+}
+
 void UInventoryWidget::OnItemButtonClicked()
 {
 	if (!CanInteractButton(NowHoveringButton)) return;
+	if (LiteralHoveringButton == nullptr) return;
 
-	InteractLock = true;
-	NowInteractButton = NowHoveringButton;
+	if (combineLock)
+	{
+		if (!CombineItem(NowInteractButton, LiteralHoveringButton)) return;
+
+		combineLock = false;
+	}
+	else
+	{
+		InteractLock = true;
+		NowInteractButton = NowHoveringButton;
+	}
+
 
 	SetAllUIUpdate();
 }
@@ -233,14 +285,14 @@ void UInventoryWidget::SetCombineUIState()
 	{
 		int32 interactIndex = GetButtonIndex(NowInteractButton);
 		EItemType itemType = recentinventory->inventoryItems[interactIndex];
-		TArray<EItemType> interactArray = ItemInformation->ItemInformationMap[itemType].ItemCombineArray;
+		TMap<EItemType, EItemType> interactMap = ItemInformation->ItemInformationMap[itemType].ItemCombineMap;
 
 		for (UButton* Button : ItemButtons)
 		{
 			int32 i = GetButtonIndex(Button);
 			EItemType IT = recentinventory->inventoryItems[i];
 
-			if (interactArray.Contains(IT))
+			if (interactMap.Contains(IT))
 			{
 				Button->SetIsEnabled(true);
 			}
@@ -369,7 +421,7 @@ void UInventoryWidget::SetInteractPanelButton()
 			UseButton->SetIsEnabled(false);
 		}
 
-		if (ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].ItemCombineArray.Num() > 0)
+		if (ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].ItemCombineMap.Num() > 0)
 		{
 			CombineButton->SetIsEnabled(true);
 		}
@@ -389,6 +441,8 @@ void UInventoryWidget::SetInteractPanelButton()
 
 	}
 }
+
+
 
 void UInventoryWidget::InitArrays()
 {

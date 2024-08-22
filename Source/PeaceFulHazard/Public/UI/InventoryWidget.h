@@ -50,8 +50,12 @@ protected:
 	void SetInteractPanelButton();
 
 
+	bool CombineItem(UButton* originButton, UButton* addButton);
+
+
 	FCharacterInventoty* recentinventory;
 
+	UButton* LiteralHoveringButton = nullptr;
 
 	UButton* NowHoveringButton = nullptr;
 

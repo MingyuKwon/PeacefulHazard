@@ -28,7 +28,7 @@ public:
 	FString itemExplainText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
-	TArray<EItemType> ItemCombineArray;
+	TMap<EItemType, EItemType> ItemCombineMap;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	UTexture2D* itemImage;  
