@@ -222,6 +222,11 @@ void UInventoryWidget::SetInventoryCanvas()
 	}
 
 
+	if (recentinventory->inventoryItems[GetButtonIndex(NowHoveringButton)] == EItemType::EIT_None)
+	{
+		InteractLock = false;
+	}
+
 	if (InteractLock)
 	{
 		InteractBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
