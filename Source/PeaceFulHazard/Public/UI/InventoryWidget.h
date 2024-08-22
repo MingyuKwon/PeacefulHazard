@@ -34,6 +34,7 @@ public:
 	bool InteractLock = false;
 
 	bool combineLock = false;
+	bool MoveLock = false;
 
 	AItemInformation* ItemInformation;
 
@@ -108,6 +109,9 @@ protected:
 	int32 GetButtonIndex(UButton* button);
 
 	void SetCombineUIState();
+
+	void SetMoveUIState();
+
 
 	void SetAllUIUpdate();
 
@@ -207,12 +211,19 @@ protected:
 	UButton* DiscardButton;
 
 	UPROPERTY(meta = (BindWidget))
+	UButton* MoveButton;
+
+	
+	UPROPERTY(meta = (BindWidget))
 	UImage* InteractBackGround;
 
 	UPROPERTY(meta = (BindWidget))
 	UBorder* CombineModeBorder;
 
+	UPROPERTY(meta = (BindWidget))
+	UBorder* MoveModeBorder;
 
+	
 	UFUNCTION()
 	void OnUseButtoClicked();
 
@@ -222,6 +233,8 @@ protected:
 	UFUNCTION()
 	void OnDiscardButtoClicked();
 
+	UFUNCTION()
+	void OnMoveButtoClicked();
 
 
 	UPROPERTY(meta = (BindWidget))

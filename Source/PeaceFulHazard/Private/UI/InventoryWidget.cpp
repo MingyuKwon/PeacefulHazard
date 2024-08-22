@@ -17,6 +17,10 @@ void UInventoryWidget::BackUIInputTrigger()
 	{
 		combineLock = false;
 	}
+	else if (MoveLock)
+	{
+		MoveLock = false;
+	}
 	else if(InteractLock)
 	{
 		InteractLock = false;
@@ -245,6 +249,12 @@ void UInventoryWidget::NativeConstruct()
 		DiscardButton->OnClicked.AddDynamic(this, &ThisClass::OnDiscardButtoClicked);
 	}
 
+	if (MoveButton)
+	{
+		MoveButton->OnClicked.AddDynamic(this, &ThisClass::OnMoveButtoClicked);
+	}
+
+
 	UIInteractCanvas->SetVisibility(ESlateVisibility::Hidden);
 
 }
@@ -283,6 +293,13 @@ void UInventoryWidget::OnDiscardButtoClicked()
 	{
 		PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
 	}
+}
+
+void UInventoryWidget::OnMoveButtoClicked()
+{
+	MoveLock = true;
+	SetAllUIUpdate();
+
 }
 
 
@@ -383,6 +400,10 @@ void UInventoryWidget::OnItemButtonClicked()
 
 		combineLock = false;
 	}
+	else if (MoveLock)
+	{
+		MoveLock = false;
+	}
 	else
 	{
 		InteractLock = true;
@@ -419,12 +440,32 @@ void UInventoryWidget::SetAllUIUpdate()
 {
 	SetInventoryCanvas();
 	SetItemExplainText();
-	SetCombineUIState();
+
+	if (combineLock || MoveLock)
+	{
+		SetCombineUIState();
+		SetMoveUIState();
+	}
+	else
+	{
+		if (InventoryBackGround)
+		{
+			FLinearColor Color = InventoryBackGround->BrushColor;
+			Color.A = 0.5f;
+			InventoryBackGround->SetBrushColor(Color);
+		}
+
+		for (UButton* Button : ItemButtons)
+		{
+			Button->SetIsEnabled(true);
+		}
+	}
+
+	
 }
 
 void UInventoryWidget::SetCombineUIState()
 {
-	
 	if (combineLock && NowInteractButton != nullptr)
 	{
 		if (InventoryBackGround)
@@ -454,22 +495,41 @@ void UInventoryWidget::SetCombineUIState()
 
 		}
 	}
-	else
+	
+
+
+}
+
+void UInventoryWidget::SetMoveUIState()
+{
+	if (MoveLock && NowInteractButton != nullptr)
 	{
 		if (InventoryBackGround)
 		{
 			FLinearColor Color = InventoryBackGround->BrushColor;
-			Color.A = 0.5f;
+			Color.A = 1.f;
 			InventoryBackGround->SetBrushColor(Color);
 		}
 
+		int32 interactIndex = GetButtonIndex(NowInteractButton);
+		EItemType itemType = recentinventory->inventoryItems[interactIndex];
+
 		for (UButton* Button : ItemButtons)
 		{
-			Button->SetIsEnabled(true);
+			int32 i = GetButtonIndex(Button);
+
+			if (recentinventory->inventoryItems[i] == EItemType::EIT_None)
+			{
+				Button->SetIsEnabled(true);
+			}
+			else
+			{
+				Button->SetIsEnabled(false);
+			}
+
 		}
 	}
-
-
+	
 }
 
 void UInventoryWidget::SetInventoryCanvas()
@@ -503,13 +563,25 @@ void UInventoryWidget::SetInventoryCanvas()
 
 	if (InteractLock)
 	{
-		if (combineLock)
+		if (combineLock || MoveLock)
 		{
-			CombineModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			if (combineLock)
+			{
+				CombineModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+				MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
+			}
+			else if (MoveLock)
+			{
+				CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
+				MoveModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			}
+
 			InteractBackGround->SetVisibility(ESlateVisibility::Hidden);
 			UseButton->SetVisibility(ESlateVisibility::Hidden);
 			CombineButton->SetVisibility(ESlateVisibility::Hidden);
 			DiscardButton->SetVisibility(ESlateVisibility::Hidden);
+			MoveButton->SetVisibility(ESlateVisibility::Hidden);
+
 		}
 		else
 		{
@@ -518,7 +590,7 @@ void UInventoryWidget::SetInventoryCanvas()
 			UseButton->SetVisibility(ESlateVisibility::Visible);
 			CombineButton->SetVisibility(ESlateVisibility::Visible);
 			DiscardButton->SetVisibility(ESlateVisibility::Visible);
-
+			MoveButton->SetVisibility(ESlateVisibility::Visible);
 		}
 
 
@@ -526,10 +598,13 @@ void UInventoryWidget::SetInventoryCanvas()
 	else
 	{
 		CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
+		MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
+
 		InteractBackGround->SetVisibility(ESlateVisibility::Hidden);
 		UseButton->SetVisibility(ESlateVisibility::Hidden);
 		CombineButton->SetVisibility(ESlateVisibility::Hidden);
 		DiscardButton->SetVisibility(ESlateVisibility::Hidden);
+		MoveButton->SetVisibility(ESlateVisibility::Hidden);
 
 	}
 }
