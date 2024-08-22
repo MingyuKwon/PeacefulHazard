@@ -122,6 +122,11 @@ protected:
 	UInputAction* TabAction;
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Parameter")
+	TSubclassOf<AItemInformation> ItemInformationClass;
+
+	AItemInformation* ItemInformation;
+
 	class APlayerHUD* PlayerHUD;
 	class APeaceFulHazardCharacter* ControlledCharacter;
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;

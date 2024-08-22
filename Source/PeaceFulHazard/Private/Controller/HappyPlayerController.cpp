@@ -61,6 +61,8 @@ void AHappyPlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
+    ItemInformation = GetWorld()->SpawnActor<AItemInformation>(ItemInformationClass);
+
     PlayerHUD = Cast<APlayerHUD>(GetHUD());
     ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn());
     PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
@@ -355,12 +357,19 @@ bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EI
     else
     {
         if (CharacterInventoty.inventoryItems[itemIndex] != itemType) return false;
-        
+
         CharacterInventoty.inventoryItemCounts[itemIndex] += itemCount;
 
         if (CharacterInventoty.inventoryItemCounts[itemIndex] <= 0)
         {
             CharacterInventoty.inventoryItems[itemIndex] = EItemType::EIT_None;
+        }
+
+        if (CharacterInventoty.inventoryItemCounts[itemIndex] > ItemInformation->ItemInformationMap[itemType].itemMaxCount)
+        {
+            if (!ChangeItemInventoryArray(itemType, CharacterInventoty.inventoryItemCounts[itemIndex] - ItemInformation->ItemInformationMap[itemType].itemMaxCount)) return false;
+
+            CharacterInventoty.inventoryItemCounts[itemIndex] = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
         }
     }
 
@@ -475,6 +484,14 @@ bool AHappyPlayerController::ChangeItemInventoryArray(EItemType itemType, int32 
 
     CharacterInventoty.inventoryItems[Emptyindex] = itemType;
     CharacterInventoty.inventoryItemCounts[Emptyindex] = count;
+
+    if (CharacterInventoty.inventoryItemCounts[Emptyindex] > ItemInformation->ItemInformationMap[itemType].itemMaxCount)
+    {
+        if (!ChangeItemInventoryArray(itemType, CharacterInventoty.inventoryItemCounts[Emptyindex] - ItemInformation->ItemInformationMap[itemType].itemMaxCount)) return false;
+
+        CharacterInventoty.inventoryItemCounts[Emptyindex] = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
+    }
+
 
     return true;
 }

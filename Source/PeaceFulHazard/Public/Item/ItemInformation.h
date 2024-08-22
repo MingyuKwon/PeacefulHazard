@@ -19,6 +19,9 @@ public:
 	EItemType itemType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	int32 itemMaxCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	FString itemNameText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
