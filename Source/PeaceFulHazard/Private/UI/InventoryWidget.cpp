@@ -20,10 +20,10 @@ void UInventoryWidget::BackUIInputTrigger()
 	else
 	{
 		InteractLock = false;
+		NowInteractButton = nullptr;
 	}
 
-
-	SetInventoryCanvas();
+	SetAllUIUpdate();
 }
 
 void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
@@ -78,7 +78,7 @@ void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 		}
 	}
 
-	SetInventoryCanvas();
+	SetAllUIUpdate();
 
 }
 
@@ -127,7 +127,7 @@ void UInventoryWidget::OnCombineButtoClicked()
 {
 	combineLock = true;
 
-	SetInventoryCanvas();
+	SetAllUIUpdate();
 }
 
 void UInventoryWidget::OnDiscardButtoClicked()
@@ -178,13 +178,14 @@ int32 UInventoryWidget::GetButtonIndex(UButton* button)
 	return index < 15 ? index : -1;
 }
 
+
 void UInventoryWidget::ChangeNowHoveringButton(UButton* button)
 {
 	if (InteractLock) return;
 
 	NowHoveringButton = button;
 
-	SetInventoryCanvas();
+	SetAllUIUpdate();
 }
 
 void UInventoryWidget::OnItemButtonClicked()
@@ -192,8 +193,9 @@ void UInventoryWidget::OnItemButtonClicked()
 	if (!CanInteractButton(NowHoveringButton)) return;
 
 	InteractLock = true;
+	NowInteractButton = NowHoveringButton;
 
-	SetInventoryCanvas();
+	SetAllUIUpdate();
 }
 
 void UInventoryWidget::OnItemButtonHovered()
@@ -218,9 +220,48 @@ void UInventoryWidget::OnItemButtonUnhovered()
 	
 }
 
+void UInventoryWidget::SetAllUIUpdate()
+{
+	SetInventoryCanvas();
+	SetItemExplainText();
+	SetCombineUIState();
+}
+
+void UInventoryWidget::SetCombineUIState()
+{
+	if (combineLock && NowInteractButton != nullptr)
+	{
+		int32 interactIndex = GetButtonIndex(NowInteractButton);
+		EItemType itemType = recentinventory->inventoryItems[interactIndex];
+		TArray<EItemType> interactArray = ItemInformation->ItemInformationMap[itemType].ItemCombineArray;
+
+		for (UButton* Button : ItemButtons)
+		{
+			int32 i = GetButtonIndex(Button);
+			EItemType IT = recentinventory->inventoryItems[i];
+
+			if (interactArray.Contains(IT))
+			{
+				Button->SetIsEnabled(true);
+			}
+			else
+			{
+				Button->SetIsEnabled(false);
+			}
+
+		}
+	}
+	else
+	{
+		for (UButton* Button : ItemButtons)
+		{
+			Button->SetIsEnabled(true);
+		}
+	}
+}
+
 void UInventoryWidget::SetInventoryCanvas()
 {
-	SetItemExplainText();
 	SetInteractPanelButton();
 
 	if (NowHoveringButton == nullptr)
@@ -245,6 +286,7 @@ void UInventoryWidget::SetInventoryCanvas()
 	if (recentinventory->inventoryItems[GetButtonIndex(NowHoveringButton)] == EItemType::EIT_None)
 	{
 		InteractLock = false;
+		NowInteractButton = nullptr;
 	}
 
 	if (InteractLock)

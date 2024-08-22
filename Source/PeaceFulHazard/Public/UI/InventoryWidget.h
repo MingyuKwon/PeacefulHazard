@@ -39,6 +39,9 @@ protected:
 
 	int32 GetButtonIndex(UButton* button);
 
+	void SetCombineUIState();
+
+	void SetAllUIUpdate ();
 
 	void SetInventoryCanvas();
 
@@ -48,6 +51,23 @@ protected:
 
 
 	FCharacterInventoty* recentinventory;
+
+
+	UButton* NowHoveringButton = nullptr;
+
+	UButton* NowInteractButton = nullptr;
+
+	void ChangeNowHoveringButton(UButton* button);
+
+	UFUNCTION()
+	void OnItemButtonClicked();
+
+	UFUNCTION()
+	void OnItemButtonHovered();
+
+	UFUNCTION()
+	void OnItemButtonUnhovered();
+
 
 
 	UPROPERTY(meta = (BindWidget))
@@ -113,17 +133,6 @@ protected:
 	UButton* ItemButton15;
 
 
-	UButton* NowHoveringButton = nullptr;
-	void ChangeNowHoveringButton(UButton* button);
-
-	UFUNCTION()
-	void OnItemButtonClicked();
-
-	UFUNCTION()
-	void OnItemButtonHovered();
-
-	UFUNCTION()
-	void OnItemButtonUnhovered();
 
 
 	UPROPERTY(meta = (BindWidget))
