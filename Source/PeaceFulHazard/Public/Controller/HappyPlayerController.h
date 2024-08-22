@@ -132,6 +132,10 @@ protected:
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 
 	UFUNCTION(BlueprintCallable)
+	void CloseAllUI();
+
+
+	UFUNCTION(BlueprintCallable)
 	void OuterUIChange(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace);
 
 	UFUNCTION(BlueprintCallable)

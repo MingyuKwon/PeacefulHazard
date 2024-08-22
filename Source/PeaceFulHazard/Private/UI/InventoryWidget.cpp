@@ -17,13 +17,23 @@ void UInventoryWidget::BackUIInputTrigger()
 	{
 		combineLock = false;
 	}
-	else
+	else if(InteractLock)
 	{
 		InteractLock = false;
 		NowInteractButton = nullptr;
 	}
+	else
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->CloseAllUIEvent.Broadcast();
+		}
+
+		return;
+	}
 
 	SetAllUIUpdate();
+
 }
 
 void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)

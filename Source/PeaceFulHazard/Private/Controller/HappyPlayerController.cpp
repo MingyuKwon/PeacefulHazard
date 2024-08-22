@@ -71,7 +71,7 @@ void AHappyPlayerController::BeginPlay()
     {
         PeaceFulHazardGameMode->OuterChangeInventoryEvent.AddDynamic(this, &ThisClass::OuterUIChange);
         PeaceFulHazardGameMode->UseItemEvent.AddDynamic(this, &ThisClass::UseItem);
-
+        PeaceFulHazardGameMode->CloseAllUIEvent.AddDynamic(this, &ThisClass::CloseAllUI);
     }
 
     InitializeInventory();
@@ -204,25 +204,7 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
     {
         if (PlayerHUD)
         {
-            if (PlayerHUD->GetCanCloseTab())
-            {
-                if (currentUIState == EUIState::EUIS_Inventory)
-                {
-                    PlayerHUD->SetInventoryDisplay(false);
-                }
-                else if (currentUIState == EUIState::EUIS_ItemGet)
-                {
-                    PlayerHUD->SetGetItemDisplay(false);
-                }
-
-                SetGamePause(false);
-
-            }
-            else
-            {
-                PlayerHUD->BackUIInputTrigger();
-            }
-            
+            PlayerHUD->BackUIInputTrigger();
         }
 
     }
@@ -377,6 +359,14 @@ void AHappyPlayerController::SetBulletCount(bool bFire)
 
     currentBullet = FMath::Clamp(currentBullet, 0, maxBullet);
     UpdateAllUI();
+}
+
+void AHappyPlayerController::CloseAllUI()
+{
+    PlayerHUD->SetGetItemDisplay(false);
+    PlayerHUD->SetInventoryDisplay(false);
+
+    SetGamePause(false);
 }
 
 void AHappyPlayerController::OuterUIChange(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)

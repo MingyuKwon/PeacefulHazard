@@ -10,6 +10,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNowAimingEvent, bool, flag);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOuterChangeInventoryEvent, int32, itemIndex, EItemType, itemType, int32, itemCount, bool, bReplace);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FUseItemEvent, EItemType, itemType,  bool, bItem);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCloseAllUIEvent);
 
 UCLASS(minimalapi)
 class APeaceFulHazardGameMode : public AGameModeBase
@@ -28,6 +29,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FUseItemEvent UseItemEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FCloseAllUIEvent CloseAllUIEvent;
 };
 
 
