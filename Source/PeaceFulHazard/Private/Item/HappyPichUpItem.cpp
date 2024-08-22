@@ -20,6 +20,4 @@ void AHappyPichUpItem::InteractWithPlayer(APeaceFulHazardCharacter* character)
 	{
 		playerController->GetItem(ItemType, ItemCount);
 	}
-
-	DestroyItem();
 }

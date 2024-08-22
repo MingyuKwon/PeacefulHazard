@@ -93,6 +93,49 @@ void UInventoryWidget::showItemGetUI(EItemType itemType, int32 count)
 {
 	InventoryCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	ItemGetCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+
+	if (ItemInformation)
+	{
+		FString string = ItemInformation->ItemInformationMap[itemType].itemExplainText;
+		FText TempText = FText::FromString(string);
+		ItemGetItemExplainText->SetText(TempText);
+
+		string = ItemInformation->ItemInformationMap[itemType].itemNameText;
+		TempText = FText::FromString(string);
+		ItemGetItemNameText->SetText(TempText);
+
+
+		UTexture2D* Texture = ItemInformation->ItemInformationMap[itemType].itemImage;
+		if (Texture)
+		{
+			ItemGetImage->SetBrushFromTexture(Texture);
+		}
+
+		if (count == 0 ||
+			ItemInformation->ItemInformationMap[itemType].itemMaxCount == 1)
+		{
+			ItemGetCountBorder->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else
+		{
+			ItemGetCountBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+			TempText = FText::AsNumber(count);
+			ItemGetCountText->SetText(TempText);
+
+			if (count == ItemInformation->ItemInformationMap[itemType].itemMaxCount)
+			{
+				ItemGetCountText->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
+			}
+			else
+			{
+				ItemGetCountText->SetColorAndOpacity(FSlateColor(FLinearColor::Black));
+			}
+
+		}
+	}
+
 }
 
 void UInventoryWidget::NativeConstruct()
