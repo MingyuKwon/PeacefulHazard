@@ -8,6 +8,8 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Border.h"
 #include "Components/TextBlock.h"
+#include "GameMode/PeaceFulHazardGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 void UInventoryWidget::BackUIInputTrigger()
 {
@@ -56,15 +58,18 @@ void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 				ItemImages[i]->SetBrushFromTexture(Texture);
 			}
 		}
-
-
-		
 	}
+
+	SetInventoryCanvas();
+
 }
 
 void UInventoryWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
 
 	InitArrays();
 
@@ -78,9 +83,47 @@ void UInventoryWidget::NativeConstruct()
 		}
 	}
 
+	if (UseButton)
+	{
+		UseButton->OnClicked.AddDynamic(this, &ThisClass::OnUseButtoClicked);
+	}
+	if (CombineButton)
+	{
+		CombineButton->OnClicked.AddDynamic(this, &ThisClass::OnCombineButtoClicked);
+	}
+	if (DiscardButton)
+	{
+		DiscardButton->OnClicked.AddDynamic(this, &ThisClass::OnDiscardButtoClicked);
+	}
+
 	UIInteractCanvas->SetVisibility(ESlateVisibility::Hidden);
 
 }
+
+void UInventoryWidget::OnUseButtoClicked()
+{
+
+}
+
+void UInventoryWidget::OnCombineButtoClicked()
+{
+
+}
+
+void UInventoryWidget::OnDiscardButtoClicked()
+{
+	if (NowHoveringButton == nullptr) return;
+
+	int32 index = GetButtonIndex(NowHoveringButton);
+	EItemType itemType = recentinventory->inventoryItems[index];
+	int32 itemCount = recentinventory->inventoryItemCounts[index];
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
+	}
+}
+
 
 bool UInventoryWidget::CanInteractButton(UButton* button)
 {

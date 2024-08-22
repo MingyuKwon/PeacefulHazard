@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "PeaceFulHazard/PeaceFulHazard.h"
 #include "PeaceFulHazardGameMode.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNowAimingEvent, bool, flag);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOuterChangeInventoryEvent, int32, itemIndex, EItemType, itemType, int32, itemCount, bool, bReplace);
 
 UCLASS(minimalapi)
 class APeaceFulHazardGameMode : public AGameModeBase
@@ -19,6 +20,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FNowAimingEvent NowAimingEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOuterChangeInventoryEvent OuterChangeInventoryEvent;
 
 };
 

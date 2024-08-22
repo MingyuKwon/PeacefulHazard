@@ -17,6 +17,7 @@ struct FInputActionValue;
 class AHappyPlayerController;
 class AWeapon;
 class UAnimMontage;
+class APeaceFulHazardGameMode;
 
 USTRUCT(BlueprintType)
 struct FCharacterInventoty
@@ -123,6 +124,10 @@ protected:
 
 	class APlayerHUD* PlayerHUD;
 	class APeaceFulHazardCharacter* ControlledCharacter;
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+
+	UFUNCTION(BlueprintCallable)
+	void OuterUIChange(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace);
 
 protected:
 
@@ -136,6 +141,8 @@ protected:
 	int32 GetLeftBullet();
 	int32 GetLockIndex();
 
+	void UpdateAllUI();
+
 	void UpdateInventoryUI();
 
 	void UpdateDefaultUI();
@@ -148,6 +155,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	bool ChangeItemInventoryArray(EItemType itemType, int32 count);
+
+	UFUNCTION(BlueprintCallable)
+	bool ChangeItemInventoryArrayOneSlot(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace);
 
 
 public:

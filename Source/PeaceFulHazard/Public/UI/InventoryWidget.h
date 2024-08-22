@@ -11,6 +11,7 @@ class UTextBlock;
 class UImage;
 class UCanvasPanel;
 class UBorder;
+class APeaceFulHazardGameMode;
 
 UCLASS()
 class PEACEFULHAZARD_API UInventoryWidget : public UUserWidget
@@ -28,7 +29,7 @@ public:
 
 protected:
 
-
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 
 	virtual void NativeConstruct() override;
 
@@ -134,6 +135,15 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UImage* InteractBackGround;
+
+	UFUNCTION()
+	void OnUseButtoClicked();
+
+	UFUNCTION()
+	void OnCombineButtoClicked();
+
+	UFUNCTION()
+	void OnDiscardButtoClicked();
 
 
 

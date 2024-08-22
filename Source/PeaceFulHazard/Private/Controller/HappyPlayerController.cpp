@@ -15,7 +15,8 @@
 #include "Controller/HappyPlayerController.h"
 #include "Battle/Weapon.h"
 #include "Character/PeaceFulHazardCharacter.h"
-
+#include "GameMode/PeaceFulHazardGameMode.h"
+#include "Kismet/GameplayStatics.h"
 void AHappyPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
@@ -62,13 +63,18 @@ void AHappyPlayerController::BeginPlay()
 
     PlayerHUD = Cast<APlayerHUD>(GetHUD());
     ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn());
+    PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+    if (PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->OuterChangeInventoryEvent.AddDynamic(this, &ThisClass::OuterUIChange);
+    }
 
     InitializeInventory();
 
     if (PlayerHUD)
     {
-        UpdateDefaultUI();
-        UpdateInventoryUI();
+        UpdateAllUI();
     }
 
 }
@@ -167,7 +173,7 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
         ControlledCharacter->TriggerInteract();
     }
 
-    UpdateDefaultUI();
+    UpdateAllUI();
 }
 
 void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
@@ -265,6 +271,7 @@ int32 AHappyPlayerController::GetReloadBulletCount()
     return neededBullet;
 }
 
+
 int32 AHappyPlayerController::GetLeftBullet()
 {
     if (CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Bullet_Noraml))
@@ -289,6 +296,12 @@ int32 AHappyPlayerController::GetLockIndex()
     }
 
     return Lockindex;
+}
+
+void AHappyPlayerController::UpdateAllUI()
+{
+    UpdateInventoryUI();
+    UpdateDefaultUI();
 }
 
 void AHappyPlayerController::UpdateInventoryUI()
@@ -322,7 +335,36 @@ void AHappyPlayerController::SetBulletCount(bool bFire)
     }
 
     currentBullet = FMath::Clamp(currentBullet, 0, maxBullet);
-    UpdateDefaultUI();
+    UpdateAllUI();
+}
+
+void AHappyPlayerController::OuterUIChange(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
+{
+    if (!ChangeItemInventoryArrayOneSlot(itemIndex, itemType, itemCount, bReplace)) return;
+    if (!ChangeItemInventoryMap(itemType, itemCount)) return;
+
+    UpdateAllUI();
+}
+
+bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
+{
+    if (bReplace)
+    {
+
+    }
+    else
+    {
+        if (CharacterInventoty.inventoryItems[itemIndex] != itemType) return false;
+        
+        CharacterInventoty.inventoryItemCounts[itemIndex] += itemCount;
+
+        if (CharacterInventoty.inventoryItemCounts[itemIndex] <= 0)
+        {
+            CharacterInventoty.inventoryItems[itemIndex] = EItemType::EIT_None;
+        }
+    }
+
+    return true;
 }
 
 void AHappyPlayerController::ChangeItemInventory(EItemType itemType, int32 count)
@@ -330,7 +372,7 @@ void AHappyPlayerController::ChangeItemInventory(EItemType itemType, int32 count
     if (!ChangeItemInventoryArray(itemType, count)) return;
     if (!ChangeItemInventoryMap(itemType, count)) return;
     
-    UpdateInventoryUI();
+    UpdateAllUI();
 }
 
 bool AHappyPlayerController::ChangeItemInventoryMap(EItemType itemType, int32 count)
@@ -436,3 +478,4 @@ bool AHappyPlayerController::ChangeItemInventoryArray(EItemType itemType, int32 
 
     return true;
 }
+
