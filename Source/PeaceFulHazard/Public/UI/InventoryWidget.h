@@ -61,7 +61,7 @@ protected:
 
 	UButton* NowInteractButton = nullptr;
 
-	void ChangeNowHoveringButton(UButton* button);
+	void ChangeNowHoveringButton(UButton* button, bool force = false);
 
 	UFUNCTION()
 	void OnItemButtonClicked();

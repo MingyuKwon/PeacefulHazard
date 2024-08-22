@@ -190,11 +190,11 @@ int32 UInventoryWidget::GetButtonIndex(UButton* button)
 }
 
 
-void UInventoryWidget::ChangeNowHoveringButton(UButton* button)
+void UInventoryWidget::ChangeNowHoveringButton(UButton* button, bool force)
 {
 	LiteralHoveringButton = button;
 
-	if (InteractLock) return;
+	if (InteractLock && !force) return;
 
 	NowHoveringButton = button;
 
@@ -236,6 +236,8 @@ bool UInventoryWidget::CombineItem(UButton* originButton, UButton* addButton)
 		}
 	}
 
+	NowInteractButton = originButton;
+	ChangeNowHoveringButton(originButton, true);
 
 	return true;
 }
@@ -247,7 +249,7 @@ void UInventoryWidget::OnItemButtonClicked()
 
 	if (combineLock)
 	{
-		if (!CombineItem(NowInteractButton, LiteralHoveringButton)) return;
+		if (!CombineItem(LiteralHoveringButton, NowInteractButton)) return;
 
 		combineLock = false;
 	}
