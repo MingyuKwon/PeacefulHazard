@@ -352,6 +352,8 @@ bool UInventoryWidget::CombineItem(UButton* originButton, UButton* addButton)
 {
 	if (originButton == nullptr) return false;
 	if (addButton == nullptr) return false;
+	if (addButton == originButton) return false;
+
 
 	int32 originIndex = GetButtonIndex(originButton);
 	int32 addIndex = GetButtonIndex(addButton);
@@ -389,6 +391,33 @@ bool UInventoryWidget::CombineItem(UButton* originButton, UButton* addButton)
 	return true;
 }
 
+bool UInventoryWidget::MoveItem(UButton* originButton, UButton* addButton)
+{
+	if (originButton == nullptr) return false;
+	if (addButton == nullptr) return false;
+	if (addButton == originButton) return false;
+
+
+	int32 originIndex = GetButtonIndex(originButton);
+	int32 addIndex = GetButtonIndex(addButton);
+
+	EItemType addItemType = recentinventory->inventoryItems[addIndex];
+	int32 addCount = recentinventory->inventoryItemCounts[addIndex];
+
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(addIndex, addItemType, -addCount, false);
+		PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(originIndex, addItemType, addCount, true);
+	}
+
+	NowInteractButton = originButton;
+	ChangeNowHoveringButton(originButton, true);
+
+	return true;
+
+}
+
 void UInventoryWidget::OnItemButtonClicked()
 {
 	if (!CanInteractButton(NowHoveringButton)) return;
@@ -402,6 +431,8 @@ void UInventoryWidget::OnItemButtonClicked()
 	}
 	else if (MoveLock)
 	{
+		if (!MoveItem(LiteralHoveringButton, NowInteractButton)) return;
+
 		MoveLock = false;
 	}
 	else
@@ -586,6 +617,8 @@ void UInventoryWidget::SetInventoryCanvas()
 		else
 		{
 			CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
+			MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
+
 			InteractBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			UseButton->SetVisibility(ESlateVisibility::Visible);
 			CombineButton->SetVisibility(ESlateVisibility::Visible);

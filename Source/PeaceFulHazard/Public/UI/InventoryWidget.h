@@ -122,7 +122,10 @@ protected:
 	void SetInteractPanelButton();
 
 
+	
+
 	bool CombineItem(UButton* originButton, UButton* addButton);
+	bool MoveItem(UButton* originButton, UButton* addButton);
 
 
 	FCharacterInventoty* recentinventory;
