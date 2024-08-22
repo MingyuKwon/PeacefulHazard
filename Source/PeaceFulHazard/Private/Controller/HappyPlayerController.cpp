@@ -352,6 +352,8 @@ bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EI
 {
     if (bReplace)
     {
+        CharacterInventoty.inventoryItems[itemIndex] = itemType;
+        CharacterInventoty.inventoryItemCounts[itemIndex] = itemCount;
 
     }
     else

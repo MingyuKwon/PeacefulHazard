@@ -46,7 +46,8 @@ void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 		}
 
 
-		if (recentinventory->inventoryItemCounts[i] == 0)
+		if (recentinventory->inventoryItemCounts[i] == 0 || 
+			ItemInformation->ItemInformationMap[recentinventory->inventoryItems[i]].itemMaxCount == 1)
 		{
 			ItemCountBorders[i]->SetVisibility(ESlateVisibility::Hidden);
 		}
