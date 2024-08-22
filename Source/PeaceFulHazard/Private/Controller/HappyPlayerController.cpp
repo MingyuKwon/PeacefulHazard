@@ -70,6 +70,8 @@ void AHappyPlayerController::BeginPlay()
     if (PeaceFulHazardGameMode)
     {
         PeaceFulHazardGameMode->OuterChangeInventoryEvent.AddDynamic(this, &ThisClass::OuterUIChange);
+        PeaceFulHazardGameMode->UseItemEvent.AddDynamic(this, &ThisClass::UseItem);
+
     }
 
     InitializeInventory();
@@ -346,6 +348,11 @@ void AHappyPlayerController::OuterUIChange(int32 itemIndex, EItemType itemType, 
     if (!ChangeItemInventoryMap(itemType, itemCount)) return;
 
     UpdateAllUI();
+}
+
+void AHappyPlayerController::UseItem(EItemType itemType, bool bItem)
+{
+    UE_LOG(LogTemp, Display, TEXT("UseItem"));
 }
 
 bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)

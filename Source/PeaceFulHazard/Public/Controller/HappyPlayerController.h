@@ -134,6 +134,11 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void OuterUIChange(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace);
 
+	UFUNCTION(BlueprintCallable)
+	void UseItem(EItemType itemType, bool bItem);
+
+	
+
 protected:
 
 	FCharacterInventoty CharacterInventoty;

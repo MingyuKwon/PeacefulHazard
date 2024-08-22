@@ -121,6 +121,16 @@ void UInventoryWidget::NativeConstruct()
 
 void UInventoryWidget::OnUseButtoClicked()
 {
+	if (NowHoveringButton == nullptr) return;
+
+	int32 index = GetButtonIndex(NowHoveringButton);
+	EItemType itemType = recentinventory->inventoryItems[index];
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->UseItemEvent.Broadcast(itemType, false);
+		PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
+	}
 
 }
 
