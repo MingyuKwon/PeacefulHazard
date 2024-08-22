@@ -281,8 +281,16 @@ void UInventoryWidget::SetAllUIUpdate()
 
 void UInventoryWidget::SetCombineUIState()
 {
+	
 	if (combineLock && NowInteractButton != nullptr)
 	{
+		if (InventoryBackGround)
+		{
+			FLinearColor Color = InventoryBackGround->BrushColor;
+			Color.A = 1.f;
+			InventoryBackGround->SetBrushColor(Color);
+		}
+
 		int32 interactIndex = GetButtonIndex(NowInteractButton);
 		EItemType itemType = recentinventory->inventoryItems[interactIndex];
 		TMap<EItemType, EItemType> interactMap = ItemInformation->ItemInformationMap[itemType].ItemCombineMap;
@@ -305,11 +313,20 @@ void UInventoryWidget::SetCombineUIState()
 	}
 	else
 	{
+		if (InventoryBackGround)
+		{
+			FLinearColor Color = InventoryBackGround->BrushColor;
+			Color.A = 0.5f;
+			InventoryBackGround->SetBrushColor(Color);
+		}
+
 		for (UButton* Button : ItemButtons)
 		{
 			Button->SetIsEnabled(true);
 		}
 	}
+
+
 }
 
 void UInventoryWidget::SetInventoryCanvas()

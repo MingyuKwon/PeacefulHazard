@@ -211,7 +211,10 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UImage* ItemImage15;
 
+	UPROPERTY(meta = (BindWidget))
+	UBorder* InventoryBackGround;
 
+	
 	//////////////////////////////////////// Button End //////////////////////////////////////////////////////////
 
 	UPROPERTY(meta = (BindWidget))
