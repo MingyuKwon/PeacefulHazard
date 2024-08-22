@@ -25,6 +25,8 @@ public:
 
 	bool InteractLock = false;
 
+	bool combineLock = false;
+
 	AItemInformation* ItemInformation;
 
 protected:
@@ -135,6 +137,10 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UImage* InteractBackGround;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CombineModeBorder;
+
 
 	UFUNCTION()
 	void OnUseButtoClicked();
@@ -287,7 +293,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UBorder* ItemCountBorder15;
 
-
+	
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemNameText;

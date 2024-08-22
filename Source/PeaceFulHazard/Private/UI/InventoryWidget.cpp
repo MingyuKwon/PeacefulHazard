@@ -13,7 +13,15 @@
 
 void UInventoryWidget::BackUIInputTrigger()
 {
-	InteractLock = false;
+	if (combineLock)
+	{
+		combineLock = false;
+	}
+	else
+	{
+		InteractLock = false;
+	}
+
 
 	SetInventoryCanvas();
 }
@@ -48,6 +56,16 @@ void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 
 			TempText = FText::AsNumber(recentinventory->inventoryItemCounts[i]);
 			ItemCountTexts[i]->SetText(TempText);
+
+			if (recentinventory->inventoryItemCounts[i] == ItemInformation->ItemInformationMap[recentinventory->inventoryItems[i]].itemMaxCount)
+			{
+				ItemCountTexts[i]->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
+			}
+			else
+			{
+				ItemCountTexts[i]->SetColorAndOpacity(FSlateColor(FLinearColor::White));
+			}
+
 		}
 
 		if (ItemInformation)
@@ -107,7 +125,9 @@ void UInventoryWidget::OnUseButtoClicked()
 
 void UInventoryWidget::OnCombineButtoClicked()
 {
+	combineLock = true;
 
+	SetInventoryCanvas();
 }
 
 void UInventoryWidget::OnDiscardButtoClicked()
@@ -229,14 +249,29 @@ void UInventoryWidget::SetInventoryCanvas()
 
 	if (InteractLock)
 	{
-		InteractBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		UseButton->SetVisibility(ESlateVisibility::Visible);
-		CombineButton->SetVisibility(ESlateVisibility::Visible);
-		DiscardButton->SetVisibility(ESlateVisibility::Visible);
+		if (combineLock)
+		{
+			CombineModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			InteractBackGround->SetVisibility(ESlateVisibility::Hidden);
+			UseButton->SetVisibility(ESlateVisibility::Hidden);
+			CombineButton->SetVisibility(ESlateVisibility::Hidden);
+			DiscardButton->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else
+		{
+			CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
+			InteractBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			UseButton->SetVisibility(ESlateVisibility::Visible);
+			CombineButton->SetVisibility(ESlateVisibility::Visible);
+			DiscardButton->SetVisibility(ESlateVisibility::Visible);
+
+		}
+
 
 	}
 	else
 	{
+		CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
 		InteractBackGround->SetVisibility(ESlateVisibility::Hidden);
 		UseButton->SetVisibility(ESlateVisibility::Hidden);
 		CombineButton->SetVisibility(ESlateVisibility::Hidden);
