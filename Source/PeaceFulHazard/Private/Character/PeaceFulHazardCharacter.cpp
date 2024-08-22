@@ -536,6 +536,7 @@ bool APeaceFulHazardCharacter::ShiftEnd(const FInputActionValue& Value)
 bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
 {
 	if (GetIsAiming()) return false;
+	if (bReloading) return false;
 
 	bEquiped = !bEquiped;
 

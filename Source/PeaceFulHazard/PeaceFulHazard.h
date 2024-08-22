@@ -9,6 +9,9 @@ enum class EItemType : uint8
 {
     EIT_None,
     EIT_Bullet_Noraml,
+    EIT_Bullet_Big,
+    EIT_HealPack_Small,
+    EIT_HealPack_Big,
     EIT_Max
 };
 
