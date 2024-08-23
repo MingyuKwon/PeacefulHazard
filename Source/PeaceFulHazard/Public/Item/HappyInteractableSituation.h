@@ -15,10 +15,18 @@ class PEACEFULHAZARD_API AHappyInteractableSituation : public AHappyInteractable
 	GENERATED_BODY()
 	
 protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* AdditiveStaticMesh1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* AdditiveStaticMesh2;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
 	EInteractSituationType situationType;
 
 public:
 	virtual void InteractWithPlayer(APeaceFulHazardCharacter* character) override;
 
+	AHappyInteractableSituation();
 };

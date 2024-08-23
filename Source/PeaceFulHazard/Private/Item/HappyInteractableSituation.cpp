@@ -7,3 +7,13 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 {
 
 }
+
+AHappyInteractableSituation::AHappyInteractableSituation()
+{
+	AdditiveStaticMesh1 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AdditiveStaticMesh1"));
+	AdditiveStaticMesh1->SetupAttachment(StaticMeshComponent);
+
+	AdditiveStaticMesh2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AdditiveStaticMesh2"));
+	AdditiveStaticMesh2->SetupAttachment(StaticMeshComponent);
+
+}
