@@ -105,8 +105,8 @@ void AHappyPlayerController::InitializeInventory()
     CharacterInventoty.inventoryItemCounts.Init(0, 15);
 
 
-    CharacterItemBox.itemBoxItems.Init(EItemType::EIT_None, 100);
-    CharacterItemBox.itemBoxItemCounts.Init(0, 100);
+    CharacterItemBox.itemBoxItems.Init(EItemType::EIT_None, 20);
+    CharacterItemBox.itemBoxItemCounts.Init(0, 20);
 
 }
 

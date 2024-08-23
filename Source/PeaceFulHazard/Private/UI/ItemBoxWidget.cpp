@@ -154,6 +154,7 @@ void UItemBoxWidget::NativeConstruct()
 
 
 	InitArrays();
+	InitArrays_1();
 
 	for (UButton* Button : ItemButtons)
 	{
@@ -162,6 +163,16 @@ void UItemBoxWidget::NativeConstruct()
 			Button->OnClicked.AddDynamic(this, &ThisClass::OnItemButtonClicked);
 			Button->OnHovered.AddDynamic(this, &ThisClass::OnItemButtonHovered);
 			Button->OnUnhovered.AddDynamic(this, &ThisClass::OnItemButtonUnhovered);
+		}
+	}
+
+	for (UButton* Button : ItemButtons_1)
+	{
+		if (Button)
+		{
+			Button->OnClicked.AddDynamic(this, &ThisClass::OnItemButtonClicked_1);
+			Button->OnHovered.AddDynamic(this, &ThisClass::OnItemButtonHovered_1);
+			Button->OnUnhovered.AddDynamic(this, &ThisClass::OnItemButtonUnhovered_1);
 		}
 	}
 
@@ -187,6 +198,7 @@ void UItemBoxWidget::NativeConstruct()
 	UIInteractCanvas->SetVisibility(ESlateVisibility::Hidden);
 
 }
+
 
 void UItemBoxWidget::OnUseButtoClicked()
 {
@@ -225,6 +237,22 @@ void UItemBoxWidget::OnMoveButtoClicked()
 
 }
 
+bool UItemBoxWidget::CanInteractButton_1(UButton* button)
+{
+	int32 index = GetButtonIndex_1(button);
+
+	if (index >= 0)
+	{
+		if (recentItemBox->itemBoxItems[index] != EItemType::EIT_None)
+		{
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
 
 bool UItemBoxWidget::CanInteractButton(UButton* button)
 {
@@ -240,6 +268,23 @@ bool UItemBoxWidget::CanInteractButton(UButton* button)
 	}
 
 	return false;
+}
+
+int32 UItemBoxWidget::GetButtonIndex_1(UButton* button)
+{
+	int32 index = 0;
+
+	for (UButton* Button : ItemButtons_1)
+	{
+		if (Button == button)
+		{
+			break;
+		}
+
+		index++;
+	}
+
+	return index < 20 ? index : -1;
 }
 
 int32 UItemBoxWidget::GetButtonIndex(UButton* button)
@@ -353,6 +398,44 @@ bool UItemBoxWidget::MoveItem(UButton* originButton, UButton* addButton)
 
 }
 
+
+
+void UItemBoxWidget::OnItemButtonClicked_1()
+{
+	if (LiteralHoveringButton_1 == nullptr) return;
+	UE_LOG(LogTemp, Display, TEXT("OnItemButtonClicked_1"));
+
+	if (!CanInteractButton_1(LiteralHoveringButton_1)) return;
+
+	////////////////////// put item to invnentory
+
+	SetAllUIUpdate();
+}
+
+void UItemBoxWidget::OnItemButtonHovered_1()
+{
+	UButton* FindButton = nullptr;
+
+	for (UButton* Button : ItemButtons_1)
+	{
+		if (Button->IsHovered())
+		{
+			FindButton = Button;
+			break;
+		}
+	}
+
+	LiteralHoveringButton_1 = FindButton;
+	SetAllUIUpdate();
+}
+
+void UItemBoxWidget::OnItemButtonUnhovered_1()
+{
+	LiteralHoveringButton_1 = nullptr;
+	SetAllUIUpdate();
+}
+
+
 void UItemBoxWidget::OnItemButtonClicked()
 {
 	if (!CanInteractButton(NowHoveringButton)) return;
@@ -402,10 +485,18 @@ void UItemBoxWidget::OnItemButtonUnhovered()
 
 }
 
+
+
+// 이제 여기서 창고 부분에서 일어난 일도 다 업데이트 시키도록 업뎅트 ㅎ마수들 싹 창고 버전은로 바꿔야 함
+// 그리고 move나 combine, interact lock이 결려 있는 경우에 , 창고는 싹다 애들 버튼 disable 시켜야 함
+// 창고는 애들 자동으로 앞에서 부터 채워지도록 만들까?
 void UItemBoxWidget::SetAllUIUpdate()
 {
 	SetInventoryCanvas();
+	SetInventoryCanvas_1();
+
 	SetItemExplainText();
+	SetItemExplainText_1();
 
 	if (combineLock || MoveLock)
 	{
@@ -498,6 +589,27 @@ void UItemBoxWidget::SetMoveUIState()
 
 }
 
+void UItemBoxWidget::SetInventoryCanvas_1()
+{
+	if (LiteralHoveringButton_1 == nullptr)
+	{
+		UIBoxInteractCanvas->SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
+
+	UIBoxInteractCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	if (UCanvasPanelSlot* ButtonSlot = Cast<UCanvasPanelSlot>(LiteralHoveringButton_1->Slot))
+	{
+		FVector2D ButtonPosition = ButtonSlot->GetPosition();
+
+		if (UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(UIBoxInteractCanvas->Slot))
+		{
+			CanvasSlot->SetPosition(ButtonPosition);
+		}
+	}
+}
+
 void UItemBoxWidget::SetInventoryCanvas()
 {
 	SetInteractPanelButton();
@@ -576,14 +688,54 @@ void UItemBoxWidget::SetInventoryCanvas()
 	}
 }
 
+void UItemBoxWidget::SetItemExplainText_1()
+{
+	FText TempText = FText();
+
+	if (LiteralHoveringButton_1 == nullptr)
+	{
+		if (NowHoveringButton == nullptr)
+		{
+			ItemNameText->SetText(TempText);
+			ItemExplainText->SetText(TempText);
+		}
+
+	}
+	else
+	{
+		int32 index = GetButtonIndex_1(LiteralHoveringButton_1);
+
+
+		if (ItemInformation)
+		{
+			FString string = ItemInformation->ItemInformationMap[recentItemBox->itemBoxItems[index]].itemExplainText;
+			TempText = FText::FromString(string);
+			ItemExplainText->SetText(TempText);
+
+			string = ItemInformation->ItemInformationMap[recentItemBox->itemBoxItems[index]].itemNameText;
+			TempText = FText::FromString(string);
+			ItemNameText->SetText(TempText);
+
+		}
+
+
+	}
+}
+
+
+
 void UItemBoxWidget::SetItemExplainText()
 {
 	FText TempText = FText();
 
 	if (NowHoveringButton == nullptr)
 	{
-		ItemNameText->SetText(TempText);
-		ItemExplainText->SetText(TempText);
+		if (LiteralHoveringButton_1 == nullptr)
+		{
+			ItemNameText->SetText(TempText);
+			ItemExplainText->SetText(TempText);
+		}
+
 	}
 	else
 	{
@@ -644,7 +796,96 @@ void UItemBoxWidget::SetInteractPanelButton()
 	}
 }
 
+void UItemBoxWidget::InitArrays_1()
+{
+	ItemButtons_1.Add(ItemButton1_1);
+	ItemButtons_1.Add(ItemButton2_1);
+	ItemButtons_1.Add(ItemButton3_1);
+	ItemButtons_1.Add(ItemButton4_1);
+	ItemButtons_1.Add(ItemButton5_1);
+	ItemButtons_1.Add(ItemButton6_1);
+	ItemButtons_1.Add(ItemButton7_1);
+	ItemButtons_1.Add(ItemButton8_1);
+	ItemButtons_1.Add(ItemButton9_1);
+	ItemButtons_1.Add(ItemButton10_1);
+	ItemButtons_1.Add(ItemButton11_1);
+	ItemButtons_1.Add(ItemButton12_1);
+	ItemButtons_1.Add(ItemButton13_1);
+	ItemButtons_1.Add(ItemButton14_1);
+	ItemButtons_1.Add(ItemButton15_1);
+	ItemButtons_1.Add(ItemButton16_1);
+	ItemButtons_1.Add(ItemButton17_1);
+	ItemButtons_1.Add(ItemButton18_1);
+	ItemButtons_1.Add(ItemButton19_1);
+	ItemButtons_1.Add(ItemButton20_1);
 
+
+	ItemImages_1.Add(ItemImage1_1);
+	ItemImages_1.Add(ItemImage2_1);
+	ItemImages_1.Add(ItemImage3_1);
+	ItemImages_1.Add(ItemImage4_1);
+	ItemImages_1.Add(ItemImage5_1);
+	ItemImages_1.Add(ItemImage6_1);
+	ItemImages_1.Add(ItemImage7_1);
+	ItemImages_1.Add(ItemImage8_1);
+	ItemImages_1.Add(ItemImage9_1);
+	ItemImages_1.Add(ItemImage10_1);
+	ItemImages_1.Add(ItemImage11_1);
+	ItemImages_1.Add(ItemImage12_1);
+	ItemImages_1.Add(ItemImage13_1);
+	ItemImages_1.Add(ItemImage14_1);
+	ItemImages_1.Add(ItemImage15_1);
+	ItemImages_1.Add(ItemImage16_1);
+	ItemImages_1.Add(ItemImage17_1);
+	ItemImages_1.Add(ItemImage18_1);
+	ItemImages_1.Add(ItemImage19_1);
+	ItemImages_1.Add(ItemImage20_1);
+
+
+	ItemCountTexts_1.Add(ItemCountText1_1);
+	ItemCountTexts_1.Add(ItemCountText2_1);
+	ItemCountTexts_1.Add(ItemCountText3_1);
+	ItemCountTexts_1.Add(ItemCountText4_1);
+	ItemCountTexts_1.Add(ItemCountText5_1);
+	ItemCountTexts_1.Add(ItemCountText6_1);
+	ItemCountTexts_1.Add(ItemCountText7_1);
+	ItemCountTexts_1.Add(ItemCountText8_1);
+	ItemCountTexts_1.Add(ItemCountText9_1);
+	ItemCountTexts_1.Add(ItemCountText10_1);
+	ItemCountTexts_1.Add(ItemCountText11_1);
+	ItemCountTexts_1.Add(ItemCountText12_1);
+	ItemCountTexts_1.Add(ItemCountText13_1);
+	ItemCountTexts_1.Add(ItemCountText14_1);
+	ItemCountTexts_1.Add(ItemCountText15_1);
+	ItemCountTexts_1.Add(ItemCountText16_1);
+	ItemCountTexts_1.Add(ItemCountText17_1);
+	ItemCountTexts_1.Add(ItemCountText18_1);
+	ItemCountTexts_1.Add(ItemCountText19_1);
+	ItemCountTexts_1.Add(ItemCountText20_1);
+
+
+	ItemCountBorders_1.Add(ItemCountBorder1_1);
+	ItemCountBorders_1.Add(ItemCountBorder2_1);
+	ItemCountBorders_1.Add(ItemCountBorder3_1);
+	ItemCountBorders_1.Add(ItemCountBorder4_1);
+	ItemCountBorders_1.Add(ItemCountBorder5_1);
+	ItemCountBorders_1.Add(ItemCountBorder6_1);
+	ItemCountBorders_1.Add(ItemCountBorder7_1);
+	ItemCountBorders_1.Add(ItemCountBorder8_1);
+	ItemCountBorders_1.Add(ItemCountBorder9_1);
+	ItemCountBorders_1.Add(ItemCountBorder10_1);
+	ItemCountBorders_1.Add(ItemCountBorder11_1);
+	ItemCountBorders_1.Add(ItemCountBorder12_1);
+	ItemCountBorders_1.Add(ItemCountBorder13_1);
+	ItemCountBorders_1.Add(ItemCountBorder14_1);
+	ItemCountBorders_1.Add(ItemCountBorder15_1);
+	ItemCountBorders_1.Add(ItemCountBorder16_1);
+	ItemCountBorders_1.Add(ItemCountBorder17_1);
+	ItemCountBorders_1.Add(ItemCountBorder18_1);
+	ItemCountBorders_1.Add(ItemCountBorder19_1);
+	ItemCountBorders_1.Add(ItemCountBorder20_1);
+
+}
 
 void UItemBoxWidget::InitArrays()
 {
