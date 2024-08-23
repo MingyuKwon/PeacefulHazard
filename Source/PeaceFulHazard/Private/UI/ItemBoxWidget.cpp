@@ -137,6 +137,43 @@ void UItemBoxWidget::SetItemBoxDisplay(FCharacterInventoty* inventory, FCharacte
 		}
 	}
 
+	for (int i = 0; i < 20; i++)
+	{
+		FText TempText;
+
+		if (recentItemBox->itemBoxItemCounts[i] == 0 ||
+			ItemInformation->ItemInformationMap[recentItemBox->itemBoxItems[i]].itemMaxCount == 1)
+		{
+			ItemCountBorders_1[i]->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else
+		{
+			ItemCountBorders_1[i]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+			TempText = FText::AsNumber(recentItemBox->itemBoxItemCounts[i]);
+			ItemCountTexts_1[i]->SetText(TempText);
+
+			if (recentItemBox->itemBoxItemCounts[i] == ItemInformation->ItemInformationMap[recentItemBox->itemBoxItems[i]].itemMaxCount)
+			{
+				ItemCountTexts_1[i]->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
+			}
+			else
+			{
+				ItemCountTexts_1[i]->SetColorAndOpacity(FSlateColor(FLinearColor::White));
+			}
+
+		}
+
+		if (ItemInformation)
+		{
+			UTexture2D* Texture = ItemInformation->ItemInformationMap[recentItemBox->itemBoxItems[i]].itemImage;
+			if (Texture)
+			{
+				ItemImages_1[i]->SetBrushFromTexture(Texture);
+			}
+		}
+	}
+
 	SetAllUIUpdate();
 
 }
@@ -502,6 +539,11 @@ void UItemBoxWidget::SetAllUIUpdate()
 	{
 		SetCombineUIState();
 		SetMoveUIState();
+
+		for (UButton* Button : ItemButtons_1)
+		{
+			Button->SetIsEnabled(false);
+		}
 	}
 	else
 	{
@@ -515,6 +557,21 @@ void UItemBoxWidget::SetAllUIUpdate()
 		for (UButton* Button : ItemButtons)
 		{
 			Button->SetIsEnabled(true);
+		}
+
+		if (InteractLock)
+		{
+			for (UButton* Button : ItemButtons_1)
+			{
+				Button->SetIsEnabled(false);
+			}
+		}
+		else
+		{
+			for (UButton* Button : ItemButtons_1)
+			{
+				Button->SetIsEnabled(true);
+			}
 		}
 	}
 
