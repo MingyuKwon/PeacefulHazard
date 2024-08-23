@@ -199,6 +199,16 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ChangeItemInventory(EItemType itemType, int32 count);
 
+	UFUNCTION(BlueprintCallable)
+	void ChangeItemBoxInContrller(int32 index, EItemType itemType, int32 count);
+
+	void ReArrangeBox();
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeItemBox(bool bInventroyToBox, int32 index, EItemType itemtype, int32 count);
+
+	
+
 public:
 	void SetBulletCount(bool bFire);
 

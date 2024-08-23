@@ -243,6 +243,12 @@ void UItemBoxWidget::OnUseButtoClicked()
 
 	int32 index = GetButtonIndex(NowHoveringButton);
 	EItemType itemType = recentinventory->inventoryItems[index];
+	int32 itemCount = recentinventory->inventoryItemCounts[index];
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->ItemBoxInteractEvent.Broadcast(true, index, itemType, itemCount);
+	}
 
 }
 
@@ -444,7 +450,13 @@ void UItemBoxWidget::OnItemButtonClicked_1()
 
 	if (!CanInteractButton_1(LiteralHoveringButton_1)) return;
 
-	////////////////////// put item to invnentory
+	if (PeaceFulHazardGameMode)
+	{
+		int32 index = GetButtonIndex_1(LiteralHoveringButton_1);
+		PeaceFulHazardGameMode->ItemBoxInteractEvent.Broadcast(false, index, recentItemBox->itemBoxItems[index], recentItemBox->itemBoxItemCounts[index]);
+
+	}
+	
 
 	SetAllUIUpdate();
 }

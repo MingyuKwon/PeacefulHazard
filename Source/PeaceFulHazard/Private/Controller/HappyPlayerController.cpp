@@ -76,8 +76,7 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->CloseAllUIEvent.AddDynamic(this, &ThisClass::CloseAllUI);
         PeaceFulHazardGameMode->InteractWithItemUIEvent.AddDynamic(this, &ThisClass::InteractWithItemUI);
         PeaceFulHazardGameMode->InteractSituationEvent.AddDynamic(this, &ThisClass::SituationInteract);
-
-        
+        PeaceFulHazardGameMode->ItemBoxInteractEvent.AddDynamic(this, &ThisClass::ChangeItemBox);
     }
 
     InitializeInventory();
@@ -502,6 +501,74 @@ void AHappyPlayerController::ChangeItemInventory(EItemType itemType, int32 count
     if (!ChangeItemInventoryArray(itemType, count)) return;
     if (!ChangeItemInventoryMap(itemType, count)) return;
     
+    UpdateAllUI();
+}
+
+void AHappyPlayerController::ChangeItemBoxInContrller(int32 index, EItemType itemType, int32 count)
+{
+    if (count >= 0)
+    {
+        int32 Emptyindex = 0;
+        for (EItemType boxItemType : CharacterItemBox.itemBoxItems)
+        {
+            if (boxItemType == EItemType::EIT_None) break;
+            Emptyindex++;
+        }
+        
+        if (Emptyindex >= 20) return;
+
+        CharacterItemBox.itemBoxItems[Emptyindex] = itemType;
+        CharacterItemBox.itemBoxItemCounts[Emptyindex] = count;
+
+    }
+    else
+    {
+        CharacterItemBox.itemBoxItems[index] = EItemType::EIT_None;
+        CharacterItemBox.itemBoxItemCounts[index] = 0;
+
+        ReArrangeBox();
+
+    }
+}
+
+void AHappyPlayerController::ReArrangeBox()
+{
+    int samllestNoneIndex = 0;
+
+    for (int i = 0; i < 20; i++)
+    {
+        if (CharacterItemBox.itemBoxItems[i] != EItemType::EIT_None)
+        {
+            if (samllestNoneIndex < i)
+            {
+                CharacterItemBox.itemBoxItems[samllestNoneIndex] = CharacterItemBox.itemBoxItems[i];
+                CharacterItemBox.itemBoxItemCounts[samllestNoneIndex] = CharacterItemBox.itemBoxItemCounts[i];
+
+                CharacterItemBox.itemBoxItems[i] = EItemType::EIT_None;
+                CharacterItemBox.itemBoxItemCounts[i] = 0;
+
+            }
+
+            samllestNoneIndex++;
+
+        }
+
+    }
+}
+
+void AHappyPlayerController::ChangeItemBox(bool bInventroyToBox, int32 index, EItemType itemtype, int32 count)
+{
+    if (bInventroyToBox)
+    {
+        OuterUIChange(index, itemtype, -count, false);
+        ChangeItemBoxInContrller(index, itemtype, count);
+    }
+    else
+    {
+        ChangeItemInventory(itemtype, count);
+        ChangeItemBoxInContrller(index, itemtype, -count);
+    }
+
     UpdateAllUI();
 }
 
