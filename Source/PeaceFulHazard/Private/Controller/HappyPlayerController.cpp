@@ -75,6 +75,7 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->UseItemEvent.AddDynamic(this, &ThisClass::UseItem);
         PeaceFulHazardGameMode->CloseAllUIEvent.AddDynamic(this, &ThisClass::CloseAllUI);
         PeaceFulHazardGameMode->InteractWithItemUIEvent.AddDynamic(this, &ThisClass::InteractWithItemUI);
+        PeaceFulHazardGameMode->InteractSituationEvent.AddDynamic(this, &ThisClass::SituationInteract);
 
         
     }
@@ -420,6 +421,11 @@ void AHappyPlayerController::UseItem(EItemType itemType, bool bItem)
 void AHappyPlayerController::InteractWithItemUI(EItemType itemtype, int32 count)
 {
     ChangeItemInventory(itemtype, count);
+    CloseAllUI();
+}
+
+void AHappyPlayerController::SituationInteract(EInteractSituationType situationType)
+{
     CloseAllUI();
 }
 

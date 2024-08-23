@@ -318,8 +318,18 @@ void UInventoryWidget::OnUseButtoClicked()
 
 	if (PeaceFulHazardGameMode)
 	{
-		PeaceFulHazardGameMode->UseItemEvent.Broadcast(itemType, false);
-		PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
+		if (situationLock)
+		{
+			if (beforeSituationType == EInteractSituationType::EIST_None) return;
+
+			situationLock = false;
+			PeaceFulHazardGameMode->InteractSituationEvent.Broadcast(beforeSituationType);
+		}
+		else
+		{
+			PeaceFulHazardGameMode->UseItemEvent.Broadcast(itemType, false);
+			PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false); 
+		}
 	}
 
 }
@@ -648,21 +658,13 @@ void UInventoryWidget::SetInventoryCanvas()
 
 	if (InteractLock)
 	{
-		if (combineLock || MoveLock)
+		if (situationLock)
 		{
-			if (combineLock)
-			{
-				CombineModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-				MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
-			}
-			else if (MoveLock)
-			{
-				CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
-				MoveModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-			}
+			CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
+			MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
 
-			InteractBackGround->SetVisibility(ESlateVisibility::Hidden);
-			UseButton->SetVisibility(ESlateVisibility::Hidden);
+			InteractBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			UseButton->SetVisibility(ESlateVisibility::Visible);
 			CombineButton->SetVisibility(ESlateVisibility::Hidden);
 			DiscardButton->SetVisibility(ESlateVisibility::Hidden);
 			MoveButton->SetVisibility(ESlateVisibility::Hidden);
@@ -670,16 +672,38 @@ void UInventoryWidget::SetInventoryCanvas()
 		}
 		else
 		{
-			CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
-			MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
+			if (combineLock || MoveLock)
+			{
+				if (combineLock)
+				{
+					CombineModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+					MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
+				}
+				else if (MoveLock)
+				{
+					CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
+					MoveModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+				}
 
-			InteractBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-			UseButton->SetVisibility(ESlateVisibility::Visible);
-			CombineButton->SetVisibility(ESlateVisibility::Visible);
-			DiscardButton->SetVisibility(ESlateVisibility::Visible);
-			MoveButton->SetVisibility(ESlateVisibility::Visible);
+				InteractBackGround->SetVisibility(ESlateVisibility::Hidden);
+				UseButton->SetVisibility(ESlateVisibility::Hidden);
+				CombineButton->SetVisibility(ESlateVisibility::Hidden);
+				DiscardButton->SetVisibility(ESlateVisibility::Hidden);
+				MoveButton->SetVisibility(ESlateVisibility::Hidden);
+
+			}
+			else
+			{
+				CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
+				MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
+
+				InteractBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+				UseButton->SetVisibility(ESlateVisibility::Visible);
+				CombineButton->SetVisibility(ESlateVisibility::Visible);
+				DiscardButton->SetVisibility(ESlateVisibility::Visible);
+				MoveButton->SetVisibility(ESlateVisibility::Visible);
+			}
 		}
-
 
 	}
 	else
