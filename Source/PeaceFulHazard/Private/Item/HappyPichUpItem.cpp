@@ -41,3 +41,8 @@ void AHappyPichUpItem::InteractWithPlayer(APeaceFulHazardCharacter* character)
 		playerController->GetItem(ItemType, ItemCount);
 	}
 }
+
+AHappyPichUpItem::AHappyPichUpItem()
+{
+	StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}

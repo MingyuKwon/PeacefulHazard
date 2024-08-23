@@ -33,4 +33,6 @@ protected:
 public:
 	virtual void InteractWithPlayer(APeaceFulHazardCharacter* character) override;
 
+	AHappyPichUpItem();
+
 };
