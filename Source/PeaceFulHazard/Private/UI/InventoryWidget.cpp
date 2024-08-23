@@ -414,7 +414,14 @@ bool UInventoryWidget::IsItemisMax(UButton* button)
 	int32 itemcount = recentinventory->inventoryItemCounts[index];
 	int32 maxCount = ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].itemMaxCount;
 
-	return itemcount >= maxCount;
+	if (maxCount == 1)
+	{
+		return false;
+	}
+	else
+	{
+		return itemcount >= maxCount;
+	}
 }
 
 
