@@ -25,8 +25,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
 	EInteractSituationType situationType;
 
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void CheckBroadCastItemIsMe(EInteractSituationType _situationType);
+
+	
 public:
 	virtual void InteractWithPlayer(APeaceFulHazardCharacter* character) override;
 
 	AHappyInteractableSituation();
+
 };

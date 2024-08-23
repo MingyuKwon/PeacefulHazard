@@ -66,6 +66,25 @@ void APlayerHUD::SetGetItemDisplay(bool bVisible, EItemType itemType, int32 coun
     }
 }
 
+void APlayerHUD::showSituationUI(bool bVisible, EInteractSituationType situationType)
+{
+    if (!bVisible)
+    {
+        if (InventoryWidget)
+        {
+            InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+        return;
+    }
+
+    if (InventoryWidget)
+    {
+        InventoryWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+        InventoryWidget->showSituationUI(situationType);
+
+    }
+}
+
 void APlayerHUD::SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet)
 {
     if (DefaultPlayerWidget != nullptr)

@@ -141,6 +141,18 @@ void AHappyPlayerController::GetItem(EItemType itemType, int32 count)
     }
 }
 
+void AHappyPlayerController::TriggerSituation(EInteractSituationType situtaionType)
+{
+    if (PlayerHUD)
+    {
+        UpdateAllUI();
+
+        currentUIState = EUIState::EUIS_ItemGet;
+        PlayerHUD->showSituationUI(true, situtaionType);
+        SetGamePause(true);
+    }
+}
+
 void AHappyPlayerController::PauseGame(bool flag)
 {
     if (flag)
@@ -387,6 +399,7 @@ void AHappyPlayerController::CloseAllUI()
 {
     PlayerHUD->SetGetItemDisplay(false);
     PlayerHUD->SetInventoryDisplay(false);
+    PlayerHUD->showSituationUI(false);
 
     SetGamePause(false);
 }

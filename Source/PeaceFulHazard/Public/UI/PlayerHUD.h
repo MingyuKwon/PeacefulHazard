@@ -28,6 +28,7 @@ public:
 
 	void SetGetItemDisplay(bool bVisible, EItemType itemType = EItemType::EIT_None, int32 count = 0);
 
+	void showSituationUI(bool bVisible, EInteractSituationType situationType = EInteractSituationType::EIST_None);
 
 	void SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet);
 

@@ -150,12 +150,14 @@ void UInventoryWidget::showTabUI()
 {
 	InventoryCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	ItemGetCanvas->SetVisibility(ESlateVisibility::Hidden);
+	SituationCanvas->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UInventoryWidget::showItemGetUI(EItemType itemType, int32 count)
 {
 	InventoryCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	ItemGetCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	SituationCanvas->SetVisibility(ESlateVisibility::Hidden);
 
 
 	if (ItemInformation)
@@ -215,6 +217,51 @@ void UInventoryWidget::showItemGetUI(EItemType itemType, int32 count)
 		TakeImage->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 
+}
+
+void UInventoryWidget::showSituationUI(EInteractSituationType situationType)
+{
+	InventoryCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	ItemGetCanvas->SetVisibility(ESlateVisibility::Hidden);
+	SituationCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	if (ItemInformation)
+	{
+		beforeSituationType = situationType;
+
+		FString string = ItemInformation->SituationMap[situationType].situationExplainText;
+		FText TempText = FText::FromString(string);
+		SituationExplainText->SetText(TempText);
+
+		string = ItemInformation->SituationMap[situationType].situationNameText;
+		TempText = FText::FromString(string);
+		SituationNameText->SetText(TempText);
+
+
+		UTexture2D* Texture = ItemInformation->SituationMap[situationType].situationImage;
+		if (Texture)
+		{
+			SituationImage->SetBrushFromTexture(Texture);
+		}
+
+		TArray<EItemType> interactItems = ItemInformation->SituationMap[situationType].InteractItemArray;
+
+		for (UButton* Button : ItemButtons)
+		{
+			int32 i = GetButtonIndex(Button);
+			EItemType IT = recentinventory->inventoryItems[i];
+
+			if (interactItems.Contains(IT))
+			{
+				Button->SetIsEnabled(true);
+			}
+			else
+			{
+				Button->SetIsEnabled(false);
+			}
+
+		}
+	}
 }
 
 void UInventoryWidget::NativeConstruct()

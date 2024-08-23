@@ -13,7 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOuterChangeInventoryEvent, int32,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FUseItemEvent, EItemType, itemType,  bool, bItem);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCloseAllUIEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FInteractWithItemUIEvent, EItemType, itemtype , int32, count);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractSituationEvent, EInteractSituationType, situationType);
 
 
 UCLASS(minimalapi)
@@ -38,6 +38,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractWithItemUIEvent InteractWithItemUIEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FInteractSituationEvent InteractSituationEvent;
 
 };
 

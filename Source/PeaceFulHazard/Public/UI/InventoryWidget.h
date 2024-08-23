@@ -31,6 +31,8 @@ public:
 
 	void showItemGetUI(EItemType itemType, int32 count);
 
+	void showSituationUI(EInteractSituationType situationType);
+
 	bool InteractLock = false;
 
 	bool combineLock = false;
@@ -47,6 +49,8 @@ protected:
 	EItemType beforeitemType = EItemType::EIT_None;
 	int32 beforeitemcount = -1;
 
+	EInteractSituationType beforeSituationType = EInteractSituationType::EIST_None;
+
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* UIInteractCanvas;
 
@@ -56,10 +60,23 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* ItemGetCanvas;
 
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* SituationCanvas;
+
+
+	//////////////////////////////////////// Situation Canvas//////////////////////////////////////////////////////////
+	
+	UPROPERTY(meta = (BindWidget))
+	UImage* SituationImage;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SituationNameText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SituationExplainText;
+
 
 	//////////////////////////////////////// itemGet Canvas//////////////////////////////////////////////////////////
-
-
 
 
 	UPROPERTY(meta = (BindWidget))

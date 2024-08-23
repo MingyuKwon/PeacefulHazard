@@ -51,10 +51,10 @@ public:
 	EInteractSituationType situationType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
-	FString itemNameText;
+	FString situationNameText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
-	FString itemExplainText;
+	FString situationExplainText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	TArray<EItemType> InteractItemArray;
@@ -77,7 +77,7 @@ public:
 	TMap<EItemType, FItemInformationUnit> ItemInformationMap;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
-	TMap<EItemType, FSituationInformationUnit> SituationMap;
+	TMap<EInteractSituationType, FSituationInformationUnit> SituationMap;
 
 
 };

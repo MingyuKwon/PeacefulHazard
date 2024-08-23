@@ -188,5 +188,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GetItem(EItemType itemType, int32 count);
 
+	UFUNCTION(BlueprintCallable)
+	void TriggerSituation(EInteractSituationType situtaionType);
 
 };
