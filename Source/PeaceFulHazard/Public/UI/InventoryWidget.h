@@ -126,6 +126,8 @@ protected:
 
 	int32 GetButtonIndex(UButton* button);
 
+	bool IsItemisMax(UButton* button);
+
 	void SetCombineUIState();
 
 	void SetMoveUIState();

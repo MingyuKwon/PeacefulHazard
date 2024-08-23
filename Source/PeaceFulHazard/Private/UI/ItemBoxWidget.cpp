@@ -259,6 +259,18 @@ int32 UItemBoxWidget::GetButtonIndex(UButton* button)
 	return index < 15 ? index : -1;
 }
 
+bool UItemBoxWidget::IsItemisMax(UButton* button)
+{
+	if (button == nullptr) return true;
+
+	int32 index = GetButtonIndex(button);
+
+	int32 itemcount = recentinventory->inventoryItemCounts[index];
+	int32 maxCount = ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].itemMaxCount;
+
+	return itemcount >= maxCount;
+}
+
 
 void UItemBoxWidget::ChangeNowHoveringButton(UButton* button, bool force)
 {
@@ -438,7 +450,7 @@ void UItemBoxWidget::SetCombineUIState()
 			int32 i = GetButtonIndex(Button);
 			EItemType IT = recentinventory->inventoryItems[i];
 
-			if (interactMap.Contains(IT))
+			if (interactMap.Contains(IT) && !IsItemisMax(Button))
 			{
 				Button->SetIsEnabled(true);
 			}
@@ -606,7 +618,14 @@ void UItemBoxWidget::SetInteractPanelButton()
 
 		if (ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].ItemCombineMap.Num() > 0)
 		{
-			CombineButton->SetIsEnabled(true);
+			if (IsItemisMax(NowHoveringButton))
+			{
+				CombineButton->SetIsEnabled(false);
+			}
+			else
+			{
+				CombineButton->SetIsEnabled(true);
+			}
 		}
 		else
 		{
