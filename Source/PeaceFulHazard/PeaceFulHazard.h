@@ -12,6 +12,9 @@ enum class EItemType : uint8
     EIT_Bullet_Big,
     EIT_HealPack_Small,
     EIT_HealPack_Big,
+    EIT_KeyNormal,
+    EIT_KeyBig,
+
     EIT_Max
 };
 
@@ -19,7 +22,7 @@ UENUM(BlueprintType)
 enum class EInteractSituationType : uint8
 {
     EIST_None,
-    EIST_Bullet_Noraml,
+    EIST_NormalDoor,
     EIST_Max
 };
 

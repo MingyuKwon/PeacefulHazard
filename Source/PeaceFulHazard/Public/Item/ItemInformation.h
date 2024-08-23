@@ -38,7 +38,29 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	bool bDiscardable;
+	
+};
 
+USTRUCT(BlueprintType)
+struct FSituationInformationUnit
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	EInteractSituationType situationType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	FString itemNameText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	FString itemExplainText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TArray<EItemType> InteractItemArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	UTexture2D* situationImage;
 };
 
 UCLASS()
@@ -53,6 +75,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	TMap<EItemType, FItemInformationUnit> ItemInformationMap;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TMap<EItemType, FSituationInformationUnit> SituationMap;
 
 
 };
