@@ -24,8 +24,15 @@ void AHappyInteractableSituation::AfterInteraction()
 	switch (situationType)
 	{
 	case EInteractSituationType::EIST_NormalDoor:
-		AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
-		AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
+		if (AdditiveStaticMesh1)
+		{
+			AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
+		}
+
+		if (AdditiveStaticMesh2)
+		{
+			AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
+		}
 
 		break;
 	}
@@ -43,10 +50,18 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 {
 	AHappyPlayerController* playerController = Cast<AHappyPlayerController>(character->GetController());
 
-	if (character)
+	if (playerController)
 	{
 		bInteractWithUI = true;
-		playerController->TriggerSituation(situationType);
+
+		if (situationType == EInteractSituationType::EIST_ItemBox)
+		{
+			playerController->TriggerItemBox();
+		}
+		else
+		{
+			playerController->TriggerSituation(situationType);
+		}
 	}
 }
 

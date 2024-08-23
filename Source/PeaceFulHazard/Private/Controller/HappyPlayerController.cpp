@@ -103,6 +103,11 @@ void AHappyPlayerController::InitializeInventory()
 
     CharacterInventoty.inventoryItems.Init(EItemType::EIT_None, 15);
     CharacterInventoty.inventoryItemCounts.Init(0, 15);
+
+
+    CharacterItemBox.itemBoxItems.Init(EItemType::EIT_None, 100);
+    CharacterItemBox.itemBoxItemCounts.Init(0, 100);
+
 }
 
 
@@ -151,6 +156,29 @@ void AHappyPlayerController::TriggerSituation(EInteractSituationType situtaionTy
         currentUIState = EUIState::EUIS_ItemGet;
         PlayerHUD->showSituationUI(true, situtaionType);
         SetGamePause(true);
+    }
+}
+
+void AHappyPlayerController::TriggerItemBox()
+{
+    if (PlayerHUD)
+    {
+        if (nowPausing)
+        {
+            PlayerHUD->SetInventoryDisplay(false);
+            SetGamePause(false);
+
+        }
+        else
+        {
+            UpdateAllUI();
+
+            currentUIState = EUIState::EUIS_ItemBox;
+            PlayerHUD->SetItemBoxDisplay(true);
+            SetGamePause(true);
+
+        }
+
     }
 }
 
@@ -360,6 +388,7 @@ void AHappyPlayerController::UpdateAllUI()
 {
     UpdateInventoryUI();
     UpdateDefaultUI();
+    UpdateItemBoxUI();
 }
 
 void AHappyPlayerController::UpdateInventoryUI()
@@ -367,6 +396,14 @@ void AHappyPlayerController::UpdateInventoryUI()
     if (PlayerHUD)
     {
         PlayerHUD->UpdateInventoryDisplay(&CharacterInventoty);
+    }
+}
+
+void AHappyPlayerController::UpdateItemBoxUI()
+{
+    if (PlayerHUD)
+    {
+        PlayerHUD->UpdateItemBoxDisplay(&CharacterInventoty, &CharacterItemBox);
     }
 }
 
@@ -401,6 +438,7 @@ void AHappyPlayerController::CloseAllUI()
     PlayerHUD->SetGetItemDisplay(false);
     PlayerHUD->SetInventoryDisplay(false);
     PlayerHUD->showSituationUI(false);
+    PlayerHUD->SetItemBoxDisplay(false);
 
     SetGamePause(false);
 }

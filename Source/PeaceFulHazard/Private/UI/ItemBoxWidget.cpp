@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/InventoryWidget.h"
+#include "UI/ItemBoxWidget.h"
 #include "Components/Image.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
@@ -11,10 +11,9 @@
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
-void UInventoryWidget::BackUIInputTrigger()
+void UItemBoxWidget::BackUIInputTrigger()
 {
 	if (GetVisibility() == ESlateVisibility::Hidden) return;
-
 
 	if (combineLock)
 	{
@@ -24,7 +23,7 @@ void UInventoryWidget::BackUIInputTrigger()
 	{
 		MoveLock = false;
 	}
-	else if(InteractLock)
+	else if (InteractLock)
 	{
 		InteractLock = false;
 		NowInteractButton = nullptr;
@@ -33,7 +32,6 @@ void UInventoryWidget::BackUIInputTrigger()
 	{
 		if (PeaceFulHazardGameMode)
 		{
-			situationLock = false;
 			PeaceFulHazardGameMode->CloseAllUIEvent.Broadcast();
 		}
 
@@ -44,24 +42,13 @@ void UInventoryWidget::BackUIInputTrigger()
 
 }
 
-void UInventoryWidget::OkUIInputTrigger()
+void UItemBoxWidget::OkUIInputTrigger()
 {
 	if (GetVisibility() == ESlateVisibility::Hidden) return;
 
-	if (beforeitemType == EItemType::EIT_None) return;
-	if (IsInventoryFull()) return;
-
-
-	if (ItemGetCanvas->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
-	{
-		if (PeaceFulHazardGameMode)
-		{
-			PeaceFulHazardGameMode->InteractWithItemUIEvent.Broadcast(beforeitemType, beforeitemcount);
-		}
-	}
 }
 
-bool UInventoryWidget::IsInventoryFull()
+bool UItemBoxWidget::IsInventoryFull()
 {
 	if (recentinventory)
 	{
@@ -94,11 +81,13 @@ bool UInventoryWidget::IsInventoryFull()
 }
 
 
-void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
+void UItemBoxWidget::SetItemBoxDisplay(FCharacterInventoty* inventory, FCharacterItemBox* itemBox)
 {
 	recentinventory = inventory;
+	recentItemBox = itemBox;
 
 	if (recentinventory == nullptr) return;
+	if (recentItemBox == nullptr) return;
 
 	for (int i = 0; i < 15; i++)
 	{
@@ -115,8 +104,7 @@ void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 			ItemImages[i]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 
-
-		if (recentinventory->inventoryItemCounts[i] == 0 || 
+		if (recentinventory->inventoryItemCounts[i] == 0 ||
 			ItemInformation->ItemInformationMap[recentinventory->inventoryItems[i]].itemMaxCount == 1)
 		{
 			ItemCountBorders[i]->SetVisibility(ESlateVisibility::Hidden);
@@ -153,127 +141,12 @@ void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 
 }
 
-void UInventoryWidget::showTabUI()
+void UItemBoxWidget::showItemBoxUI()
 {
 	InventoryCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	ItemGetCanvas->SetVisibility(ESlateVisibility::Hidden);
-	SituationCanvas->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UInventoryWidget::showItemGetUI(EItemType itemType, int32 count)
-{
-	InventoryCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	ItemGetCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	SituationCanvas->SetVisibility(ESlateVisibility::Hidden);
-
-
-	if (ItemInformation)
-	{
-		beforeitemType = itemType;
-		beforeitemcount = count;
-
-		FString string = ItemInformation->ItemInformationMap[itemType].itemExplainText;
-		FText TempText = FText::FromString(string);
-		ItemGetItemExplainText->SetText(TempText);
-
-		string = ItemInformation->ItemInformationMap[itemType].itemNameText;
-		TempText = FText::FromString(string);
-		ItemGetItemNameText->SetText(TempText);
-
-
-		UTexture2D* Texture = ItemInformation->ItemInformationMap[itemType].itemImage;
-		if (Texture)
-		{
-			ItemGetImage->SetBrushFromTexture(Texture);
-		}
-
-		if (count == 0 ||
-			ItemInformation->ItemInformationMap[itemType].itemMaxCount == 1)
-		{
-			ItemGetCountBorder->SetVisibility(ESlateVisibility::Hidden);
-		}
-		else
-		{
-			ItemGetCountBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-			TempText = FText::AsNumber(count);
-			ItemGetCountText->SetText(TempText);
-
-			if (count == ItemInformation->ItemInformationMap[itemType].itemMaxCount)
-			{
-				ItemGetCountText->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
-			}
-			else
-			{
-				ItemGetCountText->SetColorAndOpacity(FSlateColor(FLinearColor::Black));
-			}
-
-		}
-	}
-
-	if (IsInventoryFull())
-	{
-		TakeBackground->SetVisibility(ESlateVisibility::Hidden);
-		TakeText->SetVisibility(ESlateVisibility::Hidden);
-		TakeImage->SetVisibility(ESlateVisibility::Hidden);
-	}
-	else
-	{
-		TakeBackground->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		TakeText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		TakeImage->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
-
-}
-
-void UInventoryWidget::showSituationUI(EInteractSituationType situationType)
-{
-	InventoryCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	ItemGetCanvas->SetVisibility(ESlateVisibility::Hidden);
-	SituationCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-	situationLock = true;
-
-	if (ItemInformation)
-	{
-		beforeSituationType = situationType;
-
-		FString string = ItemInformation->SituationMap[situationType].situationExplainText;
-		FText TempText = FText::FromString(string);
-		SituationExplainText->SetText(TempText);
-
-		string = ItemInformation->SituationMap[situationType].situationNameText;
-		TempText = FText::FromString(string);
-		SituationNameText->SetText(TempText);
-
-
-		UTexture2D* Texture = ItemInformation->SituationMap[situationType].situationImage;
-		if (Texture)
-		{
-			SituationImage->SetBrushFromTexture(Texture);
-		}
-
-		TArray<EItemType> interactItems = ItemInformation->SituationMap[situationType].InteractItemArray;
-
-		for (UButton* Button : ItemButtons)
-		{
-			int32 i = GetButtonIndex(Button);
-			EItemType IT = recentinventory->inventoryItems[i];
-
-			if (interactItems.Contains(IT))
-			{
-				Button->SetIsEnabled(true);
-			}
-			else
-			{
-				Button->SetIsEnabled(false);
-			}
-
-		}
-	}
-}
-
-void UInventoryWidget::NativeConstruct()
+void UItemBoxWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
@@ -315,42 +188,23 @@ void UInventoryWidget::NativeConstruct()
 
 }
 
-void UInventoryWidget::OnUseButtoClicked()
+void UItemBoxWidget::OnUseButtoClicked()
 {
 	if (NowHoveringButton == nullptr) return;
 
 	int32 index = GetButtonIndex(NowHoveringButton);
 	EItemType itemType = recentinventory->inventoryItems[index];
 
-	if (PeaceFulHazardGameMode)
-	{
-		if (situationLock)
-		{
-			if (beforeSituationType == EInteractSituationType::EIST_None) return;
-
-			situationLock = false;
-			PeaceFulHazardGameMode->InteractSituationEvent.Broadcast(beforeSituationType);
-			PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
-
-		}
-		else
-		{
-			PeaceFulHazardGameMode->UseItemEvent.Broadcast(itemType, false);
-			PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
-
-		}
-	}
-
 }
 
-void UInventoryWidget::OnCombineButtoClicked()
+void UItemBoxWidget::OnCombineButtoClicked()
 {
 	combineLock = true;
 
 	SetAllUIUpdate();
 }
 
-void UInventoryWidget::OnDiscardButtoClicked()
+void UItemBoxWidget::OnDiscardButtoClicked()
 {
 	if (NowHoveringButton == nullptr) return;
 
@@ -364,7 +218,7 @@ void UInventoryWidget::OnDiscardButtoClicked()
 	}
 }
 
-void UInventoryWidget::OnMoveButtoClicked()
+void UItemBoxWidget::OnMoveButtoClicked()
 {
 	MoveLock = true;
 	SetAllUIUpdate();
@@ -372,7 +226,7 @@ void UInventoryWidget::OnMoveButtoClicked()
 }
 
 
-bool UInventoryWidget::CanInteractButton(UButton* button)
+bool UItemBoxWidget::CanInteractButton(UButton* button)
 {
 	int32 index = GetButtonIndex(button);
 
@@ -382,13 +236,13 @@ bool UInventoryWidget::CanInteractButton(UButton* button)
 		{
 			return true;
 		}
-		
+
 	}
 
 	return false;
 }
 
-int32 UInventoryWidget::GetButtonIndex(UButton* button)
+int32 UItemBoxWidget::GetButtonIndex(UButton* button)
 {
 	int32 index = 0;
 
@@ -406,7 +260,7 @@ int32 UInventoryWidget::GetButtonIndex(UButton* button)
 }
 
 
-void UInventoryWidget::ChangeNowHoveringButton(UButton* button, bool force)
+void UItemBoxWidget::ChangeNowHoveringButton(UButton* button, bool force)
 {
 	LiteralHoveringButton = button;
 
@@ -417,7 +271,7 @@ void UInventoryWidget::ChangeNowHoveringButton(UButton* button, bool force)
 	SetAllUIUpdate();
 }
 
-bool UInventoryWidget::CombineItem(UButton* originButton, UButton* addButton)
+bool UItemBoxWidget::CombineItem(UButton* originButton, UButton* addButton)
 {
 	if (originButton == nullptr) return false;
 	if (addButton == nullptr) return false;
@@ -460,7 +314,7 @@ bool UInventoryWidget::CombineItem(UButton* originButton, UButton* addButton)
 	return true;
 }
 
-bool UInventoryWidget::MoveItem(UButton* originButton, UButton* addButton)
+bool UItemBoxWidget::MoveItem(UButton* originButton, UButton* addButton)
 {
 	if (originButton == nullptr) return false;
 	if (addButton == nullptr) return false;
@@ -487,7 +341,7 @@ bool UInventoryWidget::MoveItem(UButton* originButton, UButton* addButton)
 
 }
 
-void UInventoryWidget::OnItemButtonClicked()
+void UItemBoxWidget::OnItemButtonClicked()
 {
 	if (!CanInteractButton(NowHoveringButton)) return;
 	if (LiteralHoveringButton == nullptr) return;
@@ -514,7 +368,7 @@ void UInventoryWidget::OnItemButtonClicked()
 	SetAllUIUpdate();
 }
 
-void UInventoryWidget::OnItemButtonHovered()
+void UItemBoxWidget::OnItemButtonHovered()
 {
 	UButton* FindButton = nullptr;
 
@@ -530,13 +384,13 @@ void UInventoryWidget::OnItemButtonHovered()
 	ChangeNowHoveringButton(FindButton);
 }
 
-void UInventoryWidget::OnItemButtonUnhovered()
+void UItemBoxWidget::OnItemButtonUnhovered()
 {
 	ChangeNowHoveringButton(nullptr);
-	
+
 }
 
-void UInventoryWidget::SetAllUIUpdate()
+void UItemBoxWidget::SetAllUIUpdate()
 {
 	SetInventoryCanvas();
 	SetItemExplainText();
@@ -545,10 +399,6 @@ void UInventoryWidget::SetAllUIUpdate()
 	{
 		SetCombineUIState();
 		SetMoveUIState();
-	}
-	else if (situationLock)
-	{
-
 	}
 	else
 	{
@@ -565,10 +415,10 @@ void UInventoryWidget::SetAllUIUpdate()
 		}
 	}
 
-	
+
 }
 
-void UInventoryWidget::SetCombineUIState()
+void UItemBoxWidget::SetCombineUIState()
 {
 	if (combineLock && NowInteractButton != nullptr)
 	{
@@ -599,12 +449,12 @@ void UInventoryWidget::SetCombineUIState()
 
 		}
 	}
-	
+
 
 
 }
 
-void UInventoryWidget::SetMoveUIState()
+void UItemBoxWidget::SetMoveUIState()
 {
 	if (MoveLock && NowInteractButton != nullptr)
 	{
@@ -633,10 +483,10 @@ void UInventoryWidget::SetMoveUIState()
 
 		}
 	}
-	
+
 }
 
-void UInventoryWidget::SetInventoryCanvas()
+void UItemBoxWidget::SetInventoryCanvas()
 {
 	SetInteractPanelButton();
 
@@ -667,13 +517,21 @@ void UInventoryWidget::SetInventoryCanvas()
 
 	if (InteractLock)
 	{
-		if (situationLock)
+		if (combineLock || MoveLock)
 		{
-			CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
-			MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
+			if (combineLock)
+			{
+				CombineModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+				MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
+			}
+			else if (MoveLock)
+			{
+				CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
+				MoveModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			}
 
-			InteractBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-			UseButton->SetVisibility(ESlateVisibility::Visible);
+			InteractBackGround->SetVisibility(ESlateVisibility::Hidden);
+			UseButton->SetVisibility(ESlateVisibility::Hidden);
 			CombineButton->SetVisibility(ESlateVisibility::Hidden);
 			DiscardButton->SetVisibility(ESlateVisibility::Hidden);
 			MoveButton->SetVisibility(ESlateVisibility::Hidden);
@@ -681,37 +539,14 @@ void UInventoryWidget::SetInventoryCanvas()
 		}
 		else
 		{
-			if (combineLock || MoveLock)
-			{
-				if (combineLock)
-				{
-					CombineModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-					MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
-				}
-				else if (MoveLock)
-				{
-					CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
-					MoveModeBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-				}
+			CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
+			MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
 
-				InteractBackGround->SetVisibility(ESlateVisibility::Hidden);
-				UseButton->SetVisibility(ESlateVisibility::Hidden);
-				CombineButton->SetVisibility(ESlateVisibility::Hidden);
-				DiscardButton->SetVisibility(ESlateVisibility::Hidden);
-				MoveButton->SetVisibility(ESlateVisibility::Hidden);
-
-			}
-			else
-			{
-				CombineModeBorder->SetVisibility(ESlateVisibility::Hidden);
-				MoveModeBorder->SetVisibility(ESlateVisibility::Hidden);
-
-				InteractBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-				UseButton->SetVisibility(ESlateVisibility::Visible);
-				CombineButton->SetVisibility(ESlateVisibility::Visible);
-				DiscardButton->SetVisibility(ESlateVisibility::Visible);
-				MoveButton->SetVisibility(ESlateVisibility::Visible);
-			}
+			InteractBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			UseButton->SetVisibility(ESlateVisibility::Visible);
+			CombineButton->SetVisibility(ESlateVisibility::Visible);
+			DiscardButton->SetVisibility(ESlateVisibility::Visible);
+			MoveButton->SetVisibility(ESlateVisibility::Visible);
 		}
 
 	}
@@ -729,7 +564,7 @@ void UInventoryWidget::SetInventoryCanvas()
 	}
 }
 
-void UInventoryWidget::SetItemExplainText()
+void UItemBoxWidget::SetItemExplainText()
 {
 	FText TempText = FText();
 
@@ -759,7 +594,7 @@ void UInventoryWidget::SetItemExplainText()
 	}
 }
 
-void UInventoryWidget::SetInteractPanelButton()
+void UItemBoxWidget::SetInteractPanelButton()
 {
 	if (NowHoveringButton == nullptr) return;
 
@@ -767,29 +602,7 @@ void UInventoryWidget::SetInteractPanelButton()
 
 	if (ItemInformation)
 	{
-		if (ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].bUsable)
-		{
-			if (ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].bKeyItem )
-			{
-				if (situationLock)
-				{
-					UseButton->SetIsEnabled(true);
-				}
-				else
-				{
-					UseButton->SetIsEnabled(false);
-				}
-			}
-			else
-			{
-				UseButton->SetIsEnabled(true);
-			}
-			
-		}
-		else
-		{
-			UseButton->SetIsEnabled(false);
-		}
+		UseButton->SetIsEnabled(true);
 
 		if (ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].ItemCombineMap.Num() > 0)
 		{
@@ -814,7 +627,7 @@ void UInventoryWidget::SetInteractPanelButton()
 
 
 
-void UInventoryWidget::InitArrays()
+void UItemBoxWidget::InitArrays()
 {
 	ItemButtons.Add(ItemButton1);
 	ItemButtons.Add(ItemButton2);
@@ -880,4 +693,3 @@ void UInventoryWidget::InitArrays()
 	ItemCountBorders.Add(ItemCountBorder14);
 	ItemCountBorders.Add(ItemCountBorder15);
 }
-

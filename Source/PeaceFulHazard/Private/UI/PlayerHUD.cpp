@@ -5,6 +5,7 @@
 #include "UI/AimCrossHairWidget.h"
 #include "UI/DefaultPlayerWidget.h"
 #include "UI/InventoryWidget.h"
+#include "UI/ItemBoxWidget.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -45,6 +46,25 @@ void APlayerHUD::SetInventoryDisplay(bool bVisible)
         InventoryWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
         InventoryWidget->showTabUI();
     }
+}
+
+void APlayerHUD::SetItemBoxDisplay(bool bVisible)
+{
+    if (!bVisible)
+    {
+        if (ItemBoxWidget)
+        {
+            ItemBoxWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+        return;
+    }
+
+    if (ItemBoxWidget)
+    {
+        ItemBoxWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+        ItemBoxWidget->showItemBoxUI();
+    }
+
 }
 
 void APlayerHUD::SetGetItemDisplay(bool bVisible, EItemType itemType, int32 count)
@@ -116,11 +136,29 @@ void APlayerHUD::UpdateInventoryDisplay(FCharacterInventoty* inventory)
     }
 }
 
+void APlayerHUD::UpdateItemBoxDisplay(FCharacterInventoty* inventory, FCharacterItemBox* itemBox)
+{
+    if (ItemBoxWidget)
+    {
+        ItemBoxWidget->SetItemBoxDisplay(inventory, itemBox);
+    }
+    else
+    {
+        beforeInventory = inventory;
+        beforeItemBox = itemBox;
+    }
+}
+
 void APlayerHUD::BackUIInputTrigger()
 {
     if (InventoryWidget)
     {
         InventoryWidget->BackUIInputTrigger();
+    }
+
+    if (ItemBoxWidget)
+    {
+        ItemBoxWidget->BackUIInputTrigger();
     }
     
 }
@@ -130,6 +168,11 @@ void APlayerHUD::OkUIInputTrigger()
     if (InventoryWidget)
     {
         InventoryWidget->OkUIInputTrigger();
+    }
+
+    if (ItemBoxWidget)
+    {
+        ItemBoxWidget->OkUIInputTrigger();
     }
 }
 
@@ -186,6 +229,22 @@ void APlayerHUD::BeginPlay()
         }
     }
 
+    if (ItemBoxWidgetClass != nullptr)
+    {
+        ItemBoxWidget = CreateWidget<UItemBoxWidget>(GetWorld(), ItemBoxWidgetClass);
+        if (ItemBoxWidget != nullptr)
+        {
+            ItemBoxWidget->AddToViewport();
+            ItemBoxWidget->SetVisibility(ESlateVisibility::Hidden);
+
+            if (beforeInventory != nullptr && beforeItemBox != nullptr)
+            {
+                UpdateItemBoxDisplay(beforeInventory,beforeItemBox);
+            }
+        }
+        
+    }
+
     SetItemInformationToDisplay();
 }
 
@@ -198,5 +257,10 @@ void APlayerHUD::SetItemInformationToDisplay()
     if (InventoryWidget)
     {
         InventoryWidget->ItemInformation = ItemInformation;
+    }
+
+    if (ItemBoxWidget)
+    {
+        ItemBoxWidget->ItemInformation = ItemInformation;
     }
 }

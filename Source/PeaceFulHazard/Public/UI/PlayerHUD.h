@@ -11,6 +11,7 @@
 class UAimCrossHairWidget;
 class UDefaultPlayerWidget;
 class UInventoryWidget;
+class UItemBoxWidget;
 /**
  *
  */
@@ -26,6 +27,9 @@ public:
 
 	void SetInventoryDisplay(bool bVisible);
 
+	void SetItemBoxDisplay(bool bVisible);
+
+
 	void SetGetItemDisplay(bool bVisible, EItemType itemType = EItemType::EIT_None, int32 count = 0);
 
 	void showSituationUI(bool bVisible, EInteractSituationType situationType = EInteractSituationType::EIST_None);
@@ -33,6 +37,9 @@ public:
 	void SetBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet);
 
 	void UpdateInventoryDisplay(FCharacterInventoty* inventory);
+
+	void UpdateItemBoxDisplay(FCharacterInventoty* inventory, FCharacterItemBox* itemBox);
+
 
 	void BackUIInputTrigger();
 
@@ -52,6 +59,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UItemBoxWidget> ItemBoxWidgetClass;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Parameter")
 	TSubclassOf<AItemInformation> ItemInformationClass;
@@ -65,9 +75,13 @@ protected:
 
 	UInventoryWidget* InventoryWidget;
 
+	UItemBoxWidget* ItemBoxWidget;
+
 	int32 beforeCurrentBulle = -1;
 	int32 beforeMaxBullet = -1;
 	int32 beforeLeftBullet = -1;
 
 	FCharacterInventoty* beforeInventory = nullptr;
+	FCharacterItemBox* beforeItemBox = nullptr;
+
 };

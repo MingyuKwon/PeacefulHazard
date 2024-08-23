@@ -39,9 +39,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	TMap<EItemType, int32> ItemCountMap;
 };
-/**
- * 
- */
+
+USTRUCT(BlueprintType)
+struct FCharacterItemBox
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TArray<EItemType> itemBoxItems;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TArray<int32> itemBoxItemCounts;
+};
+
+
 UCLASS()
 class PEACEFULHAZARD_API AHappyPlayerController : public APlayerController
 {
@@ -152,6 +164,7 @@ protected:
 protected:
 
 	FCharacterInventoty CharacterInventoty;
+	FCharacterItemBox CharacterItemBox;
 
 	bool nowPausing = false;
 	void SetGamePause(bool flag);
@@ -165,6 +178,9 @@ protected:
 	void UpdateAllUI();
 
 	void UpdateInventoryUI();
+
+	void UpdateItemBoxUI();
+
 
 	void UpdateDefaultUI();
 
@@ -192,5 +208,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void TriggerSituation(EInteractSituationType situtaionType);
+
+	UFUNCTION(BlueprintCallable)
+	void TriggerItemBox();
+
 
 };
