@@ -30,6 +30,7 @@ void UInventoryWidget::BackUIInputTrigger()
 	{
 		if (PeaceFulHazardGameMode)
 		{
+			situationLock = false;
 			PeaceFulHazardGameMode->CloseAllUIEvent.Broadcast();
 		}
 
@@ -224,6 +225,8 @@ void UInventoryWidget::showSituationUI(EInteractSituationType situationType)
 	InventoryCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	ItemGetCanvas->SetVisibility(ESlateVisibility::Hidden);
 	SituationCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	situationLock = true;
 
 	if (ItemInformation)
 	{
@@ -523,6 +526,10 @@ void UInventoryWidget::SetAllUIUpdate()
 	{
 		SetCombineUIState();
 		SetMoveUIState();
+	}
+	else if (situationLock)
+	{
+
 	}
 	else
 	{

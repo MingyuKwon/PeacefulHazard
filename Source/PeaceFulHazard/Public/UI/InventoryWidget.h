@@ -37,6 +37,7 @@ public:
 
 	bool combineLock = false;
 	bool MoveLock = false;
+	bool situationLock = false;
 
 	AItemInformation* ItemInformation;
 
