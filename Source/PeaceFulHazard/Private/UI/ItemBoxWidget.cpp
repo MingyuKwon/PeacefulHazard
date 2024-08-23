@@ -80,6 +80,27 @@ bool UItemBoxWidget::IsInventoryFull()
 	return true;
 }
 
+bool UItemBoxWidget::IsBoxFull()
+{
+	if (recentItemBox)
+	{
+		int32 Emptyindex = 0;
+		for (EItemType InventoryitemType : recentItemBox->itemBoxItems)
+		{
+			if (InventoryitemType == EItemType::EIT_None)
+			{
+				break;
+			}
+
+			Emptyindex++;
+		}
+
+		return Emptyindex >= 20;
+	}
+
+	return true;
+}
+
 
 void UItemBoxWidget::SetItemBoxDisplay(FCharacterInventoty* inventory, FCharacterItemBox* itemBox)
 {
@@ -88,6 +109,7 @@ void UItemBoxWidget::SetItemBoxDisplay(FCharacterInventoty* inventory, FCharacte
 
 	if (recentinventory == nullptr) return;
 	if (recentItemBox == nullptr) return;
+	if (ItemInformation == nullptr) return;
 
 	for (int i = 0; i < 15; i++)
 	{
@@ -141,8 +163,7 @@ void UItemBoxWidget::SetItemBoxDisplay(FCharacterInventoty* inventory, FCharacte
 	{
 		FText TempText;
 
-		if (recentItemBox->itemBoxItemCounts[i] == 0 ||
-			ItemInformation->ItemInformationMap[recentItemBox->itemBoxItems[i]].itemMaxCount == 1)
+		if (recentItemBox->itemBoxItemCounts[i] == 0 || ItemInformation->ItemInformationMap[recentItemBox->itemBoxItems[i]].itemMaxCount == 1)
 		{
 			ItemCountBorders_1[i]->SetVisibility(ESlateVisibility::Hidden);
 		}
@@ -240,6 +261,7 @@ void UItemBoxWidget::NativeConstruct()
 void UItemBoxWidget::OnUseButtoClicked()
 {
 	if (NowHoveringButton == nullptr) return;
+	if (IsBoxFull()) return;
 
 	int32 index = GetButtonIndex(NowHoveringButton);
 	EItemType itemType = recentinventory->inventoryItems[index];
@@ -350,6 +372,7 @@ int32 UItemBoxWidget::GetButtonIndex(UButton* button)
 bool UItemBoxWidget::IsItemisMax(UButton* button)
 {
 	if (button == nullptr) return true;
+	if (ItemInformation == nullptr) return true;
 
 	int32 index = GetButtonIndex(button);
 
@@ -383,6 +406,8 @@ bool UItemBoxWidget::CombineItem(UButton* originButton, UButton* addButton)
 	if (originButton == nullptr) return false;
 	if (addButton == nullptr) return false;
 	if (addButton == originButton) return false;
+
+	if (ItemInformation == nullptr) return false;
 
 
 	int32 originIndex = GetButtonIndex(originButton);
@@ -452,9 +477,8 @@ bool UItemBoxWidget::MoveItem(UButton* originButton, UButton* addButton)
 
 void UItemBoxWidget::OnItemButtonClicked_1()
 {
+	if (IsInventoryFull()) return;
 	if (LiteralHoveringButton_1 == nullptr) return;
-	UE_LOG(LogTemp, Display, TEXT("OnItemButtonClicked_1"));
-
 	if (!CanInteractButton_1(LiteralHoveringButton_1)) return;
 
 	if (PeaceFulHazardGameMode)
@@ -541,11 +565,6 @@ void UItemBoxWidget::OnItemButtonUnhovered()
 
 }
 
-
-
-// 이제 여기서 창고 부분에서 일어난 일도 다 업데이트 시키도록 업뎅트 ㅎ마수들 싹 창고 버전은로 바꿔야 함
-// 그리고 move나 combine, interact lock이 결려 있는 경우에 , 창고는 싹다 애들 버튼 disable 시켜야 함
-// 창고는 애들 자동으로 앞에서 부터 채워지도록 만들까?
 void UItemBoxWidget::SetAllUIUpdate()
 {
 	SetInventoryCanvas();
@@ -553,6 +572,23 @@ void UItemBoxWidget::SetAllUIUpdate()
 
 	SetItemExplainText();
 	SetItemExplainText_1();
+
+
+	if (IsInventoryFull())
+	{
+		BoxInventoryState->SetText(FText::FromString(FString("Your inventory is full. Please create an empty slot in your inventory to retrieve an item from the box. ")));
+		BoxInventoryState->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
+	}
+	else if (IsBoxFull())
+	{
+		BoxInventoryState->SetText(FText::FromString(FString("Your Box is full. Please create an empty slot in your Box to retrieve an item from the inventory. ")));
+		BoxInventoryState->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
+	}
+	else
+	{
+		BoxInventoryState->SetText(FText::FromString(FString("Press Item to Move to Inventory")));
+		BoxInventoryState->SetColorAndOpacity(FSlateColor(FLinearColor::Black));
+	}
 
 	if (combineLock || MoveLock)
 	{
@@ -599,6 +635,8 @@ void UItemBoxWidget::SetAllUIUpdate()
 
 void UItemBoxWidget::SetCombineUIState()
 {
+	if (ItemInformation == nullptr) return;
+
 	if (combineLock && NowInteractButton != nullptr)
 	{
 		if (InventoryBackGround)

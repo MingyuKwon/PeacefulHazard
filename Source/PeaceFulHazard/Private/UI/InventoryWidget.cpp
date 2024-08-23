@@ -96,6 +96,8 @@ bool UInventoryWidget::IsInventoryFull()
 
 void UInventoryWidget::SetInventoryDisplay(FCharacterInventoty* inventory)
 {
+	if (ItemInformation == nullptr) return;
+
 	recentinventory = inventory;
 
 	if (recentinventory == nullptr) return;
@@ -408,6 +410,7 @@ int32 UInventoryWidget::GetButtonIndex(UButton* button)
 bool UInventoryWidget::IsItemisMax(UButton* button)
 {
 	if (button == nullptr) return true;
+	if (ItemInformation == nullptr) return true;
 
 	int32 index = GetButtonIndex(button);
 
@@ -441,6 +444,7 @@ bool UInventoryWidget::CombineItem(UButton* originButton, UButton* addButton)
 	if (originButton == nullptr) return false;
 	if (addButton == nullptr) return false;
 	if (addButton == originButton) return false;
+	if (ItemInformation == nullptr) return false;
 
 
 	int32 originIndex = GetButtonIndex(originButton);
@@ -589,6 +593,8 @@ void UInventoryWidget::SetAllUIUpdate()
 
 void UInventoryWidget::SetCombineUIState()
 {
+	if (ItemInformation == nullptr) return;
+
 	if (combineLock && NowInteractButton != nullptr)
 	{
 		if (InventoryBackGround)

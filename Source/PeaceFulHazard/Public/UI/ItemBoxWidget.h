@@ -30,6 +30,8 @@ public:
 
 	bool IsInventoryFull();
 
+	bool IsBoxFull();
+
 	void SetItemBoxDisplay(FCharacterInventoty* inventory, FCharacterItemBox* itemBox);
 
 	void showItemBoxUI();
@@ -273,9 +275,10 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemCountText20_1;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* BoxInventoryState;
 
-
-
+	
 
 	UPROPERTY(meta = (BindWidget))
 	UBorder* ItemCountBorder1_1;
