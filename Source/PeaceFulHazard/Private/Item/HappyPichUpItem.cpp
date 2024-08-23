@@ -16,11 +16,18 @@ void AHappyPichUpItem::BeginPlay()
 	}
 }
 
+void AHappyPichUpItem::AfterInteraction()
+{
+	Super::AfterInteraction();
+
+	DestroyItem();
+}
+
 void AHappyPichUpItem::CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count)
 {
 	if (_itemtype == ItemType && _count == ItemCount)
 	{
-		if(bInteractWithUI) DestroyItem();
+		if(bInteractWithUI) AfterInteraction();
 	}
 }
 

@@ -110,6 +110,11 @@ void AHappyInteractableItem::DestroyItem()
 
 }
 
+void AHappyInteractableItem::AfterInteraction()
+{
+    WidgetComponent->SetVisibility(false);
+}
+
 void AHappyInteractableItem::UICloseAllInteractWithItemOver()
 {
     bInteractWithUI = false;

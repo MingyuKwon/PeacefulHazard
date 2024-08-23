@@ -17,12 +17,26 @@ void AHappyInteractableSituation::BeginPlay()
 
 }
 
+void AHappyInteractableSituation::AfterInteraction()
+{
+	Super::AfterInteraction();
+
+	switch (situationType)
+	{
+	case EInteractSituationType::EIST_NormalDoor:
+		AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
+		AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
+
+		break;
+	}
+}
+
 void AHappyInteractableSituation::CheckBroadCastItemIsMe(EInteractSituationType _situationType)
 {
-	if (_situationType == situationType)
-	{
-		if (bInteractWithUI) DestroyItem();
-	}
+	if (_situationType != situationType) return;
+	if (!bInteractWithUI) return;
+
+	AfterInteraction();
 }
 
 void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* character)

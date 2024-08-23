@@ -23,6 +23,9 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	virtual void AfterInteraction() override;
+
+
 	UFUNCTION()
 	void CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count);
 

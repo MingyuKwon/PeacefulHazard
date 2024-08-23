@@ -27,6 +27,8 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	virtual void AfterInteraction() override;
+
 	UFUNCTION()
 	void CheckBroadCastItemIsMe(EInteractSituationType _situationType);
 

@@ -37,6 +37,8 @@ protected:
 
 	bool bInteractWithUI = false;
 
+	virtual void AfterInteraction();
+
 	UFUNCTION()
 	void UICloseAllInteractWithItemOver();
 

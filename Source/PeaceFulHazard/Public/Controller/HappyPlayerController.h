@@ -146,7 +146,7 @@ protected:
 	void InteractWithItemUI(EItemType itemtype, int32 count);
 
 	UFUNCTION(BlueprintCallable)
-	void SituationInteract(EInteractSituationType _situationType);
+	void SituationInteract(EInteractSituationType situationType);
 
 
 protected:

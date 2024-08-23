@@ -324,11 +324,14 @@ void UInventoryWidget::OnUseButtoClicked()
 
 			situationLock = false;
 			PeaceFulHazardGameMode->InteractSituationEvent.Broadcast(beforeSituationType);
+			PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
+
 		}
 		else
 		{
 			PeaceFulHazardGameMode->UseItemEvent.Broadcast(itemType, false);
-			PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false); 
+			PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
+
 		}
 	}
 
