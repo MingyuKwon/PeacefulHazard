@@ -39,6 +39,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	bool bDiscardable;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	bool bKeyItem;
+
 };
 
 USTRUCT(BlueprintType)

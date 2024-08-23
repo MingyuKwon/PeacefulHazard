@@ -113,6 +113,7 @@ void AHappyInteractableItem::DestroyItem()
 void AHappyInteractableItem::AfterInteraction()
 {
     WidgetComponent->SetVisibility(false);
+    BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AHappyInteractableItem::UICloseAllInteractWithItemOver()

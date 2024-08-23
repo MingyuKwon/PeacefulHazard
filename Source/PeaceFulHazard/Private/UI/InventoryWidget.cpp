@@ -763,7 +763,22 @@ void UInventoryWidget::SetInteractPanelButton()
 	{
 		if (ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].bUsable)
 		{
-			UseButton->SetIsEnabled(true);
+			if (ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].bKeyItem )
+			{
+				if (situationLock)
+				{
+					UseButton->SetIsEnabled(true);
+				}
+				else
+				{
+					UseButton->SetIsEnabled(false);
+				}
+			}
+			else
+			{
+				UseButton->SetIsEnabled(true);
+			}
+			
 		}
 		else
 		{
