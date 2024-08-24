@@ -22,6 +22,7 @@ UENUM(BlueprintType)
 enum class EInteractSituationType : uint8
 {
     EIST_None,
+    EIST_OneWayDoor,
     EIST_ItemBox,
     EIST_NormalDoor,
     EIST_Max

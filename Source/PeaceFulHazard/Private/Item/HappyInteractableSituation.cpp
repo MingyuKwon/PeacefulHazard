@@ -5,6 +5,7 @@
 #include "Character/PeaceFulHazardCharacter.h"
 #include "Controller/HappyPlayerController.h"
 #include "GameMode/PeaceFulHazardGameMode.h"
+#include "Components/BoxComponent.h"
 
 void AHappyInteractableSituation::BeginPlay()
 {
@@ -58,6 +59,24 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		{
 			playerController->TriggerItemBox();
 		}
+		else if (situationType == EInteractSituationType::EIST_OneWayDoor)
+		{
+			if (character && OneWayAllow && OneWayNotAllow)
+			{
+				float DistanceToAllow = FVector::Dist2D(character->GetActorLocation(), OneWayAllow->GetComponentLocation());
+				float DistanceToNotAllow = FVector::Dist2D(character->GetActorLocation(), OneWayNotAllow->GetComponentLocation());
+
+				if (DistanceToAllow > DistanceToNotAllow)
+				{
+					// 이 경우는 반대 방향에서 열러고 한 것
+				}
+				else
+				{
+					// 이 경우는 옳은 방향에서 열려고 한것
+					UE_LOG(LogTemp, Display, TEXT("Door Open"));
+				}
+			}
+		}
 		else
 		{
 			playerController->TriggerSituation(situationType);
@@ -73,4 +92,12 @@ AHappyInteractableSituation::AHappyInteractableSituation()
 	AdditiveStaticMesh2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AdditiveStaticMesh2"));
 	AdditiveStaticMesh2->SetupAttachment(StaticMeshComponent);
 
+	OneWayAllow = CreateDefaultSubobject<UBoxComponent>(TEXT("OneWayAllow"));
+	OneWayAllow->SetupAttachment(StaticMeshComponent);
+
+	OneWayNotAllow = CreateDefaultSubobject<UBoxComponent>(TEXT("OneWayNotAllow"));
+	OneWayNotAllow->SetupAttachment(StaticMeshComponent);
+
+
+	
 }
