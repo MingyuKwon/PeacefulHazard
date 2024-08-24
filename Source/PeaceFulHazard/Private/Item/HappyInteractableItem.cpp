@@ -43,7 +43,7 @@ void AHappyInteractableItem::BeginPlay()
 
         if (CanInteractWidget)
         {
-            CanInteractWidget->SetInteractEnable(bCanInteractable, false);
+            CanInteractWidget->SetInteractEnable(bCanInteractable, false, DoorInteractkeyImage, DoorInteractkeyName);
             CanInteractWidget->SetActionEnable(bCanInteractable, false);
         }
     }
@@ -65,7 +65,7 @@ void AHappyInteractableItem::AImVisibleUI(bool flag)
     {
         if (CanInteractWidget)
         {
-            CanInteractWidget->SetInteractEnable(bCanInteractable, false);
+            CanInteractWidget->SetInteractEnable(bCanInteractable, false, DoorInteractkeyImage, DoorInteractkeyName);
             CanInteractWidget->SetActionEnable(bCanInteractable, false);
         }
     }
@@ -73,7 +73,7 @@ void AHappyInteractableItem::AImVisibleUI(bool flag)
     {
         if (CanInteractWidget)
         {
-            CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable);
+            CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable, DoorInteractkeyImage, DoorInteractkeyName);
             CanInteractWidget->SetActionEnable(bCanInteractable, bActionable);
         }
     }
@@ -138,7 +138,7 @@ void AHappyInteractableItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
                 bIntearctable = true;
                 if (CanInteractWidget)
                 {
-                    CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable);
+                    CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable, DoorInteractkeyImage, DoorInteractkeyName);
                 }
             }
 
@@ -166,7 +166,7 @@ void AHappyInteractableItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, A
 
                 if (CanInteractWidget)
                 {
-                    CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable);
+                    CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable, DoorInteractkeyImage, DoorInteractkeyName);
                 }
             }
 

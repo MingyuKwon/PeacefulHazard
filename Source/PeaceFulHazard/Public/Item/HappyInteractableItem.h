@@ -26,6 +26,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	UTexture2D* DoorInteractkeyImage = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	FString DoorInteractkeyName = FString("");
+
+
 	UCanInteractWidget* CanInteractWidget;
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
