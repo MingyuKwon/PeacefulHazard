@@ -207,8 +207,10 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ChangeItemBox(bool bInventroyToBox, int32 index, EItemType itemtype, int32 count);
 
-	
+	UFUNCTION(BlueprintCallable)
+	void ShowNoticeUI(bool bVisible, FString& noticeText);
 
+	
 public:
 	void SetBulletCount(bool bFire);
 

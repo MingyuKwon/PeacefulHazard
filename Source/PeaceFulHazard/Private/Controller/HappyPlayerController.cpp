@@ -77,6 +77,8 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->InteractWithItemUIEvent.AddDynamic(this, &ThisClass::InteractWithItemUI);
         PeaceFulHazardGameMode->InteractSituationEvent.AddDynamic(this, &ThisClass::SituationInteract);
         PeaceFulHazardGameMode->ItemBoxInteractEvent.AddDynamic(this, &ThisClass::ChangeItemBox);
+
+        PeaceFulHazardGameMode->NoticeUIShowEvent.AddDynamic(this, &ThisClass::ShowNoticeUI);
     }
 
     InitializeInventory();
@@ -570,6 +572,29 @@ void AHappyPlayerController::ChangeItemBox(bool bInventroyToBox, int32 index, EI
     }
 
     UpdateAllUI();
+}
+
+void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
+{
+    if (bVisible)
+    {
+        if (PlayerHUD)
+        {
+            PauseGame(true);
+            PlayerHUD->UpdateNoticeDisplay(noticeText);
+            PlayerHUD->SetNoticeDisplay(true);
+        }
+        
+        
+    }
+    else
+    {
+        if (PlayerHUD)
+        {
+            PauseGame(false);
+            PlayerHUD->SetNoticeDisplay(false);
+        }
+    }
 }
 
 

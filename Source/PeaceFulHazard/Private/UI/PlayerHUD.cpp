@@ -6,6 +6,7 @@
 #include "UI/DefaultPlayerWidget.h"
 #include "UI/InventoryWidget.h"
 #include "UI/ItemBoxWidget.h"
+#include "UI/NoticePanelWidget.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -66,6 +67,24 @@ void APlayerHUD::SetItemBoxDisplay(bool bVisible)
     {
         ItemBoxWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
         ItemBoxWidget->showItemBoxUI();
+    }
+
+}
+
+void APlayerHUD::SetNoticeDisplay(bool bVisible)
+{
+    if (!bVisible)
+    {
+        if (NoticePanelWidget)
+        {
+            NoticePanelWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+        return;
+    }
+
+    if (NoticePanelWidget)
+    {
+        NoticePanelWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     }
 
 }
@@ -152,6 +171,15 @@ void APlayerHUD::UpdateItemBoxDisplay(FCharacterInventoty* inventory, FCharacter
     }
 }
 
+void APlayerHUD::UpdateNoticeDisplay(FString& noticeText)
+{
+    if (NoticePanelWidget)
+    {
+        NoticePanelWidget->UpdateNoticeDisplay(noticeText);
+    }
+
+}
+
 void APlayerHUD::BackUIInputTrigger()
 {
     if (InventoryWidget)
@@ -164,6 +192,10 @@ void APlayerHUD::BackUIInputTrigger()
         ItemBoxWidget->BackUIInputTrigger();
     }
     
+    if (NoticePanelWidget)
+    {
+        NoticePanelWidget->BackUIInputTrigger();
+    }
 }
 
 void APlayerHUD::OkUIInputTrigger()
@@ -176,6 +208,11 @@ void APlayerHUD::OkUIInputTrigger()
     if (ItemBoxWidget)
     {
         ItemBoxWidget->OkUIInputTrigger();
+    }
+
+    if (NoticePanelWidget)
+    {
+        NoticePanelWidget->OkUIInputTrigger();
     }
 }
 
@@ -247,6 +284,19 @@ void APlayerHUD::BeginPlay()
         }
         
     }
+
+    if (NoticePanelWidgetClass != nullptr)
+    {
+        NoticePanelWidget = CreateWidget<UNoticePanelWidget>(GetWorld(), NoticePanelWidgetClass);
+        if (NoticePanelWidget != nullptr)
+        {
+            NoticePanelWidget->AddToViewport();
+            NoticePanelWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+
+    }
+
+    
 
     SetItemInformationToDisplay();
 }

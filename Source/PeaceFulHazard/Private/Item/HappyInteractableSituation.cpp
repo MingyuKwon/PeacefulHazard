@@ -82,11 +82,20 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 
 				if (DistanceToAllow > DistanceToNotAllow)
 				{
-					// 이 경우는 반대 방향에서 열러고 한 것
+					if (PeaceFulHazardGameMode)
+					{
+						FString string = FString("Doors Should be Opened in the Opposite Direction");
+						PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+					}
 				}
 				else
 				{
 					bAlreadyInteract = true;
+					if (PeaceFulHazardGameMode)
+					{
+						FString string = FString("Doors Open in the Right Direction");
+						PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+					}
 					AfterInteraction();
 
 				}

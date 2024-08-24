@@ -35,5 +35,7 @@ enum class EUIState : uint8
     EUIS_ItemBox,
     EUIS_Inventory,
     EUIS_ItemGet,
+    EUIS_Notice,
+
     EUIS_Max
 };

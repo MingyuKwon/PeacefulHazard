@@ -15,6 +15,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCloseAllUIEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FInteractWithItemUIEvent, EItemType, itemtype , int32, count);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractSituationEvent, EInteractSituationType, situationType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FItemBoxInteractEvent, bool, bInventroyToBox, int32, index, EItemType, itemtype, int32, count );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNoticeUIShowEvent, bool, bVisible, FString&, noticeText);
 
 
 UCLASS(minimalapi)
@@ -46,7 +47,10 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FItemBoxInteractEvent ItemBoxInteractEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FNoticeUIShowEvent NoticeUIShowEvent;
 
+	
 };
 
 

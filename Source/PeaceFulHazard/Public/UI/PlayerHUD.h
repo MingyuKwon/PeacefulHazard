@@ -12,6 +12,7 @@ class UAimCrossHairWidget;
 class UDefaultPlayerWidget;
 class UInventoryWidget;
 class UItemBoxWidget;
+class UNoticePanelWidget;
 /**
  *
  */
@@ -29,6 +30,8 @@ public:
 
 	void SetItemBoxDisplay(bool bVisible);
 
+	void SetNoticeDisplay(bool bVisible);
+
 
 	void SetGetItemDisplay(bool bVisible, EItemType itemType = EItemType::EIT_None, int32 count = 0);
 
@@ -39,6 +42,11 @@ public:
 	void UpdateInventoryDisplay(FCharacterInventoty* inventory);
 
 	void UpdateItemBoxDisplay(FCharacterInventoty* inventory, FCharacterItemBox* itemBox);
+
+	void UpdateNoticeDisplay(FString& noticeText);
+
+
+	
 
 
 	void BackUIInputTrigger();
@@ -62,6 +70,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UItemBoxWidget> ItemBoxWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UNoticePanelWidget> NoticePanelWidgetClass;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Parameter")
 	TSubclassOf<AItemInformation> ItemInformationClass;
@@ -76,6 +87,8 @@ protected:
 	UInventoryWidget* InventoryWidget;
 
 	UItemBoxWidget* ItemBoxWidget;
+
+	UNoticePanelWidget* NoticePanelWidget;
 
 	int32 beforeCurrentBulle = -1;
 	int32 beforeMaxBullet = -1;
