@@ -275,6 +275,15 @@ void UInventoryWidget::showSituationUI(EInteractSituationType situationType)
 	}
 }
 
+void UInventoryWidget::CloseInventoryUIValue()
+{
+	InteractLock = false;
+	combineLock = false;
+	MoveLock = false;
+	situationLock = false;
+
+}
+
 void UInventoryWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -320,6 +329,7 @@ void UInventoryWidget::NativeConstruct()
 void UInventoryWidget::OnUseButtoClicked()
 {
 	if (NowHoveringButton == nullptr) return;
+	if (ItemInformation == nullptr) return;
 
 	int32 index = GetButtonIndex(NowHoveringButton);
 	EItemType itemType = recentinventory->inventoryItems[index];
@@ -332,7 +342,10 @@ void UInventoryWidget::OnUseButtoClicked()
 
 			situationLock = false;
 			PeaceFulHazardGameMode->InteractSituationEvent.Broadcast(beforeSituationType);
-			PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
+			if (!ItemInformation->ItemInformationMap[itemType].bReusable)
+			{
+				PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
+			}
 
 		}
 		else

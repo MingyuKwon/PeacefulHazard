@@ -37,6 +37,9 @@ void APlayerHUD::SetInventoryDisplay(bool bVisible)
         if (InventoryWidget)
         {
             InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+            InventoryWidget->CloseInventoryUIValue();
+
+            
         }
         return;
     }

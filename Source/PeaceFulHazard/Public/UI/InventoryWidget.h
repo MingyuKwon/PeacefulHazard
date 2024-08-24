@@ -25,6 +25,9 @@ public:
 
 	bool IsInventoryFull();
 
+	void CloseInventoryUIValue();
+
+
 	void SetInventoryDisplay(FCharacterInventoty* inventory);
 
 	void showTabUI();
@@ -42,6 +45,7 @@ public:
 	AItemInformation* ItemInformation;
 
 protected:
+
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 
