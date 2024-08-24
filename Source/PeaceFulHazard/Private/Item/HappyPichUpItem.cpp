@@ -27,7 +27,12 @@ void AHappyPichUpItem::CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count)
 {
 	if (_itemtype == ItemType && _count == ItemCount)
 	{
-		if(bInteractWithUI) AfterInteraction();
+		if (bInteractWithUI)
+		{
+			bAlreadyInteract = true;
+			AfterInteraction();
+
+		}
 	}
 }
 

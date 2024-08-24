@@ -36,6 +36,19 @@ void AHappyInteractableSituation::AfterInteraction()
 		}
 
 		break;
+
+	case EInteractSituationType::EIST_OneWayDoor:
+		if (AdditiveStaticMesh1)
+		{
+			AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
+		}
+
+		if (AdditiveStaticMesh2)
+		{
+			AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
+		}
+
+		break;
 	}
 }
 
@@ -44,6 +57,7 @@ void AHappyInteractableSituation::CheckBroadCastItemIsMe(EInteractSituationType 
 	if (_situationType != situationType) return;
 	if (!bInteractWithUI) return;
 
+	bAlreadyInteract = true;
 	AfterInteraction();
 }
 
@@ -72,8 +86,9 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 				}
 				else
 				{
-					// 이 경우는 옳은 방향에서 열려고 한것
-					UE_LOG(LogTemp, Display, TEXT("Door Open"));
+					bAlreadyInteract = true;
+					AfterInteraction();
+
 				}
 			}
 		}

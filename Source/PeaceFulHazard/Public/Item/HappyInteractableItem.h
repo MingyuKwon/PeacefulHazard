@@ -42,6 +42,8 @@ protected:
 	bool bIntearctable = false;
 	bool bActionable = false;
 
+	bool bAlreadyInteract = false;
+
 	bool bInteractWithUI = false;
 
 	virtual void AfterInteraction();
