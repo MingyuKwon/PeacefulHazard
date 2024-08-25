@@ -25,6 +25,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void PossessedBy(AController* NewController) override;
+
+	UPROPERTY()
+	class AEnemyAIController* EnemyAIController;
+
+	UPROPERTY(EditAnywhere, Category = "AI Parameter")
+	class UBehaviorTree* BehaviorTree = nullptr;
+
+
 
 public:	
 	// Called every frame

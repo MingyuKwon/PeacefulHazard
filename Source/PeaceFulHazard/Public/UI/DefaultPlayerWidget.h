@@ -43,7 +43,12 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UImage* PistolAnotherBulletImage;
 
-	
+	UPROPERTY(meta = (BindWidget))
+	UImage* NowBackGround;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* AnotherBackGround;
+
 	
 	
 public:

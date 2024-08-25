@@ -15,8 +15,6 @@ void UDefaultPlayerWidget::UpdateBulletUI(int32 currentBullet, int32 maxBullet, 
 
     CurrentBulletText->SetText(CurrentBulletTextValue);
     MaxBulletText->SetText(MaxBulletTextValue);
-    LeftBulletText->SetText(LeftBulletTextValue);
-    LeftAnotherBulletText->SetText(anotherBulletTextValue);
 
     if (currentBullet == maxBullet)
     {
@@ -31,41 +29,77 @@ void UDefaultPlayerWidget::UpdateBulletUI(int32 currentBullet, int32 maxBullet, 
         CurrentBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f))); // White
     }
 
-    if (anotherBullet == 0)
-    {
-        LeftAnotherBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 0.0f, 0.0f))); // Red
-    }
-    else
-    {
-        LeftAnotherBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f))); // White
-    }
-
-
-    if (leftBullet == 0)
-    {
-        LeftBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 0.0f, 0.0f))); // Red
-    }
-    else
-    {
-        LeftBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f))); // White
-    }
 
     if (itemType == EItemType::EIT_Bullet_Big)
     {
         PistolImage->SetColorAndOpacity(FLinearColor(1.0, 0.373266, 0.53436));
 
-        PistolBulletImage->SetColorAndOpacity(FLinearColor(1.0, 0.208265, 0.218212));
-        PistolAnotherBulletImage->SetColorAndOpacity(FLinearColor(0.489158, 0.666189, 1));
+        NowBackGround->SetVisibility(ESlateVisibility::Hidden);
+        AnotherBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+        LeftAnotherBulletText->SetText(LeftBulletTextValue);
+        LeftBulletText->SetText(anotherBulletTextValue);
 
     }
     else 
     {
         PistolImage->SetColorAndOpacity(FLinearColor::White);
-        PistolBulletImage->SetColorAndOpacity(FLinearColor(0.489158, 0.666189, 1));
-        PistolAnotherBulletImage->SetColorAndOpacity(FLinearColor(1.0, 0.208265, 0.218212));
+
+        AnotherBackGround->SetVisibility(ESlateVisibility::Hidden);
+        NowBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+        LeftBulletText->SetText(LeftBulletTextValue);
+        LeftAnotherBulletText->SetText(anotherBulletTextValue);
+
     }
 
-    
+
+    if (anotherBullet == 0)
+    {
+        if (itemType == EItemType::EIT_Bullet_Big)
+        {
+            LeftBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 0.0f, 0.0f))); // Red
+        }
+        else
+        {
+            LeftAnotherBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 0.0f, 0.0f))); // Red
+        }
+    }
+    else
+    {
+        if (itemType == EItemType::EIT_Bullet_Big)
+        {
+            LeftBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f))); // Red
+        }
+        else
+        {
+            LeftAnotherBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f))); // Red
+        }
+    }
+
+
+    if (leftBullet == 0)
+    {
+        if (itemType == EItemType::EIT_Bullet_Big)
+        {
+            LeftAnotherBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 0.0f, 0.0f))); // Red
+        }
+        else
+        {
+            LeftBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 0.0f, 0.0f))); // Red
+        }
+    }
+    else
+    {
+        if (itemType == EItemType::EIT_Bullet_Big)
+        {
+            LeftAnotherBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f))); // Red
+        }
+        else
+        {
+            LeftBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f))); // White
+        }
+    }
 
 
 }

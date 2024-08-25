@@ -18,6 +18,9 @@
 #include "Item/HappyInteractableItem.h"
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "Enemy/EnemyAIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -29,6 +32,21 @@ AEnemyBase::AEnemyBase()
 	HeadBox->SetupAttachment(RootComponent);
 	HeadBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("FX_Head"));
 
+}
+
+void AEnemyBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (BehaviorTree && NewController)
+	{
+		EnemyAIController = Cast<AEnemyAIController>(NewController);
+		if (EnemyAIController)
+		{
+			EnemyAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+			EnemyAIController->RunBehaviorTree(BehaviorTree);
+		}
+	}
 }
 
 // Called when the game starts or when spawned
