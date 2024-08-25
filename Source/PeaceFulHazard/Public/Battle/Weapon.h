@@ -39,6 +39,13 @@ protected:
 	UNiagaraSystem* BulletHitImpact;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UNiagaraSystem* BigMuzzleEffect;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UNiagaraSystem* BigBulletHitImpact;
+
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	UNiagaraSystem* BulletTrail;
 
 
@@ -58,8 +65,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Material Parameter")
 	UMaterialInstance* BigMaterial;
 
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float NormalBulletDamage = 5.f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float BigBulletDamage = 10.f;
+
+	EItemType currentItemType = EItemType::EIT_Bullet_Noraml;
+
 public:
 	void Fire(FVector CameraPosition, FVector CameraNormalVector);
+
 	void ReloadTrigger();
 
 	void ChangeBulletMode(EItemType itemType = EItemType::EIT_Bullet_Noraml);

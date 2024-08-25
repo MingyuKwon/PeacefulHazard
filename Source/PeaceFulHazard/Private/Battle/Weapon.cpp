@@ -35,19 +35,21 @@ void AWeapon::BeginPlay()
 
 void AWeapon::ChangeBulletMode(EItemType itemType)
 {
+    currentItemType = itemType;
+
     if (itemType == EItemType::EIT_Bullet_Noraml)
     {
-        if (BigMaterial)
+        if (NormalMaterial)
         {
-            WeaponMesh->SetMaterial(0, BigMaterial);
+            WeaponMesh->SetMaterial(0, NormalMaterial);
         }
     }
     else
     {
-        
-        if (NormalMaterial)
+       
+        if (BigMaterial)
         {
-            WeaponMesh->SetMaterial(0, NormalMaterial);
+            WeaponMesh->SetMaterial(0, BigMaterial);
         }
     }
 }
@@ -70,33 +72,29 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
 
     if (bHit)
     {
-        if (BulletHitImpact)
+        if (currentItemType == EItemType::EIT_Bullet_Big)
         {
-            UNiagaraComponent* bulletHit = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-                GetWorld(),
-                BulletHitImpact,
-                HitResult.ImpactPoint,
-                HitResult.ImpactNormal.Rotation()
-            );
-
-            /*
-
-            UNiagaraComponent* bulletTrail = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-                GetWorld(),
-                BulletTrail,
-                MuzzleLocation
-            );
-
-            if (bulletTrail)
+            if (BigBulletHitImpact)
             {
-                bulletTrail->SetVectorParameter(FName("TrailStart"), MuzzleLocation);
-                bulletTrail->SetVectorParameter(FName("TrailEnd"), HitResult.ImpactPoint);
+                UNiagaraComponent* bulletHit = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+                    GetWorld(),
+                    BigBulletHitImpact,
+                    HitResult.ImpactPoint,
+                    HitResult.ImpactNormal.Rotation()
+                );
             }
-
-            */
-
-
-
+        }
+        else
+        {
+            if (BulletHitImpact)
+            {
+                UNiagaraComponent* bulletHit = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+                    GetWorld(),
+                    BulletHitImpact,
+                    HitResult.ImpactPoint,
+                    HitResult.ImpactNormal.Rotation()
+                );
+            }
         }
 
 
@@ -131,16 +129,31 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
 
     }
 
-
-    if (MuzzleEffect)
+    if (currentItemType == EItemType::EIT_Bullet_Big)
     {
-        UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-            GetWorld(),
-            MuzzleEffect,
-            MuzzleLocation,
-            MuzzleRotation
-        );
+        if (BigMuzzleEffect)
+        {
+            UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+                GetWorld(),
+                BigMuzzleEffect,
+                MuzzleLocation,
+                MuzzleRotation
+            );
+        }
     }
+    else
+    {
+        if (MuzzleEffect)
+        {
+            UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+                GetWorld(),
+                MuzzleEffect,
+                MuzzleLocation,
+                MuzzleRotation
+            );
+        }
+    }
+
 
     if (FireMontage)
     {
@@ -150,6 +163,24 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
             AnimInstance->Montage_Play(FireMontage);
         }
     }
+
+
+
+    /*
+
+UNiagaraComponent* bulletTrail = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+    GetWorld(),
+    BulletTrail,
+    MuzzleLocation
+);
+
+if (bulletTrail)
+{
+    bulletTrail->SetVectorParameter(FName("TrailStart"), MuzzleLocation);
+    bulletTrail->SetVectorParameter(FName("TrailEnd"), HitResult.ImpactPoint);
+}
+
+*/
 }
 
 void AWeapon::ReloadTrigger()

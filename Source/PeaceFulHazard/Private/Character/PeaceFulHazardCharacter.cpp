@@ -648,8 +648,8 @@ void APeaceFulHazardCharacter::ChangeBulletEndTrigger()
 
 	if (EquipWeapon && HappyPlayerController)
 	{
-		EquipWeapon->ChangeBulletMode(HappyPlayerController->GetcurrentBulletType());
 		HappyPlayerController->SetBulletChangeCount();
+		EquipWeapon->ChangeBulletMode(HappyPlayerController->GetcurrentBulletType());
 
 	}
 }

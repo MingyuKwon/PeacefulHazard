@@ -439,7 +439,7 @@ void AHappyPlayerController::SetBulletCount(bool bFire)
     {
         int32 reloadBulletCount = GetReloadBulletCount();
         currentBullet += reloadBulletCount;
-        ChangeItemInventory(EItemType::EIT_Bullet_Noraml, -reloadBulletCount);
+        ChangeItemInventory(currentBulletType, -reloadBulletCount);
 
     }
 
