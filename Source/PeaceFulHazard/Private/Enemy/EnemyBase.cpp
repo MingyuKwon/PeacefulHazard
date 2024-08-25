@@ -27,6 +27,7 @@ AEnemyBase::AEnemyBase()
 
 	HeadBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HeadBox"));
 	HeadBox->SetupAttachment(RootComponent);
+	HeadBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("FX_Head"));
 
 }
 
