@@ -91,6 +91,8 @@ protected:
 	/** Called for Fire input */
 	void Reload(const FInputActionValue& Value);
 
+	void ChangeBullet(const FInputActionValue& Value);
+
 	void Tab(const FInputActionValue& Value);
 
 	void PauseGame(bool flag);
@@ -130,6 +132,10 @@ protected:
 	UInputAction* ReloadAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* BulletChangeAction;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* TabAction;
 
 
@@ -138,7 +144,9 @@ protected:
 
 	AItemInformation* ItemInformation;
 
+
 	EUIState currentUIState = EUIState::EUIS_None;
+	EItemType currentBulletType = EItemType::EIT_Bullet_Noraml;
 
 	class APlayerHUD* PlayerHUD;
 	class APeaceFulHazardCharacter* ControlledCharacter;

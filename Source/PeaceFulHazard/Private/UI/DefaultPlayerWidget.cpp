@@ -6,7 +6,7 @@
 #include "Components/CanvasPanel.h"
 #include "Components/Image.h"
 
-void UDefaultPlayerWidget::SetBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet)
+void UDefaultPlayerWidget::UpdateBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType)
 {
     FText CurrentBulletTextValue = FText::AsNumber(currentBullet);
     FText MaxBulletTextValue = FText::AsNumber(maxBullet);
@@ -38,5 +38,17 @@ void UDefaultPlayerWidget::SetBulletUI(int32 currentBullet, int32 maxBullet, int
         LeftBulletText->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f, 1.0f, 1.0f))); // White
     }
 
-}
+    if (itemType == EItemType::EIT_Bullet_Big)
+    {
+        PistolImage->SetColorAndOpacity(FLinearColor(1.0, 0.373266, 0.53436));
 
+    }
+    else 
+    {
+        PistolImage->SetColorAndOpacity(FLinearColor::White);
+    }
+
+    
+
+
+}

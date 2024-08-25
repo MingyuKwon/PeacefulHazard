@@ -45,8 +45,10 @@ void AHappyPlayerController::SetupInputComponent()
         EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Started, this, &ThisClass::EquipTrigger);
 
         EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &ThisClass::Reload);
-        
+        EnhancedInputComponent->BindAction(BulletChangeAction, ETriggerEvent::Started, this, &ThisClass::ChangeBullet);
 
+
+        
         EnhancedInputComponent->BindAction(TabAction, ETriggerEvent::Started, this, &ThisClass::Tab);
 
 
@@ -337,6 +339,29 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
 
 }
 
+void AHappyPlayerController::ChangeBullet(const FInputActionValue& Value)
+{
+    if (ControlledCharacter)
+    {
+        bool equipped = ControlledCharacter->GetIEquipped();
+
+        if (!equipped) return;
+
+        if (currentBulletType == EItemType::EIT_Bullet_Noraml)
+        {
+            currentBulletType = EItemType::EIT_Bullet_Big;
+        }
+        else
+        {
+            currentBulletType = EItemType::EIT_Bullet_Noraml;
+        }
+
+        UpdateAllUI();
+    }
+    
+
+}
+
 
 int32 AHappyPlayerController::GetReloadBulletCount()
 {
@@ -412,7 +437,7 @@ void AHappyPlayerController::UpdateDefaultUI()
 {
     if (PlayerHUD)
     {
-        PlayerHUD->SetBulletDisplay(currentBullet, maxBullet, GetLeftBullet());
+        PlayerHUD->UpdateBulletDisplay(currentBullet, maxBullet, GetLeftBullet(), currentBulletType);
     }
 }
 
@@ -433,6 +458,7 @@ void AHappyPlayerController::SetBulletCount(bool bFire)
     currentBullet = FMath::Clamp(currentBullet, 0, maxBullet);
     UpdateAllUI();
 }
+
 
 void AHappyPlayerController::CloseAllUI()
 {
