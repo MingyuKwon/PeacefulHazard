@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Item/ItemInformation.h"
 #include "Weapon.generated.h"
 
 class UBoxComponent;
@@ -50,8 +51,17 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	TSubclassOf<APistolShell> ShellClass;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = "Material Parameter")
+	UMaterialInstance* NormalMaterial;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Material Parameter")
+	UMaterialInstance* BigMaterial;
+
 public:
 	void Fire(FVector CameraPosition, FVector CameraNormalVector);
 	void ReloadTrigger();
+
+	void ChangeBulletMode(EItemType itemType = EItemType::EIT_Bullet_Noraml);
+
 };

@@ -341,45 +341,13 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
 
 void AHappyPlayerController::ChangeBullet(const FInputActionValue& Value)
 {
+    bool bSuccess = false;
+
     if (ControlledCharacter)
     {
-        bool equipped = ControlledCharacter->GetIEquipped();
-
-        if (!equipped) return;
-
-        int32 beforeCurrentBullet = currentBullet;
-
-        if (currentBulletType == EItemType::EIT_Bullet_Noraml)
-        {
-            currentBulletType = EItemType::EIT_Bullet_Big;
-            maxBullet = BigBulletMax;
-        }
-        else
-        {
-            currentBulletType = EItemType::EIT_Bullet_Noraml;
-            maxBullet = normalBulletMax;
-        }
-
-        int32 nowLeftBullet = GetLeftBullet();
-        int32 reloadBullet = FMath::Clamp(nowLeftBullet, 0, maxBullet);
-
-        currentBullet = reloadBullet;
-        ChangeItemInventory(currentBulletType, -reloadBullet);
-
-        if (currentBulletType == EItemType::EIT_Bullet_Noraml)
-        {
-            ChangeItemInventory(EItemType::EIT_Bullet_Big, beforeCurrentBullet);
-        }
-        else
-        {
-            ChangeItemInventory(EItemType::EIT_Bullet_Noraml, beforeCurrentBullet);
-
-        }
-        
-        UpdateAllUI();
+        bSuccess = ControlledCharacter->ChangeBullet();
     }
-    
-
+   
 }
 
 
@@ -476,6 +444,40 @@ void AHappyPlayerController::SetBulletCount(bool bFire)
     }
 
     currentBullet = FMath::Clamp(currentBullet, 0, maxBullet);
+    UpdateAllUI();
+}
+
+void AHappyPlayerController::SetBulletChangeCount()
+{
+    int32 beforeCurrentBullet = currentBullet;
+
+    if (currentBulletType == EItemType::EIT_Bullet_Noraml)
+    {
+        currentBulletType = EItemType::EIT_Bullet_Big;
+        maxBullet = BigBulletMax;
+    }
+    else
+    {
+        currentBulletType = EItemType::EIT_Bullet_Noraml;
+        maxBullet = normalBulletMax;
+    }
+
+    int32 nowLeftBullet = GetLeftBullet();
+    int32 reloadBullet = FMath::Clamp(nowLeftBullet, 0, maxBullet);
+
+    currentBullet = reloadBullet;
+    ChangeItemInventory(currentBulletType, -reloadBullet);
+
+    if (currentBulletType == EItemType::EIT_Bullet_Noraml)
+    {
+        ChangeItemInventory(EItemType::EIT_Bullet_Big, beforeCurrentBullet);
+    }
+    else
+    {
+        ChangeItemInventory(EItemType::EIT_Bullet_Noraml, beforeCurrentBullet);
+
+    }
+
     UpdateAllUI();
 }
 

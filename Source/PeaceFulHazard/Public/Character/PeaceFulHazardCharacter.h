@@ -78,12 +78,17 @@ public:
 
 	bool TriggerInteract();
 
+	bool ChangeBullet();
+
 	APeaceFulHazardCharacter();
 
 	virtual void Tick(float deltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
 	void ReloadEndTrigger();
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeBulletEndTrigger();
 
 protected:
 
@@ -108,10 +113,11 @@ protected:
 	UAnimMontage* FireMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Bullet Para")
-	UAnimMontage* NoAimReloadMontage;
+	UAnimMontage* AimReloadMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Bullet Para")
-	UAnimMontage* AimReloadMontage;
+	UAnimMontage* AimBulletChangeMontage;
+
 
 	// this is used for Aiming start and end. using Camera Arm distance lerping (min 0, max 1)
 	float AimingPercent = 0.f;

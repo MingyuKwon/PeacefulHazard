@@ -9,6 +9,7 @@
 #include "DrawDebugHelpers.h"
 #include "NiagaraDataInterfaceArrayFunctionLibrary.h"
 #include "Battle/PistolShell.h"
+#include "Materials/MaterialInstance.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -30,6 +31,25 @@ void AWeapon::BeginPlay()
 {
     Super::BeginPlay();
 
+}
+
+void AWeapon::ChangeBulletMode(EItemType itemType)
+{
+    if (itemType == EItemType::EIT_Bullet_Noraml)
+    {
+        if (BigMaterial)
+        {
+            WeaponMesh->SetMaterial(0, BigMaterial);
+        }
+    }
+    else
+    {
+        
+        if (NormalMaterial)
+        {
+            WeaponMesh->SetMaterial(0, NormalMaterial);
+        }
+    }
 }
 
 void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)

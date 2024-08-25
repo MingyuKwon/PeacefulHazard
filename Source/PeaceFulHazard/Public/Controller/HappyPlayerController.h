@@ -224,6 +224,7 @@ protected:
 	
 public:
 	void SetBulletCount(bool bFire);
+	void SetBulletChangeCount();
 
 
 	UFUNCTION(BlueprintCallable)
@@ -235,5 +236,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TriggerItemBox();
 
+	UFUNCTION(BlueprintCallable)
+	EItemType GetcurrentBulletType() { return currentBulletType; }
 
+	
 };

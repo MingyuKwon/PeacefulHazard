@@ -610,3 +610,47 @@ void APeaceFulHazardCharacter::ReloadEndTrigger()
 	}
 }
 
+bool APeaceFulHazardCharacter::ChangeBullet()
+{
+	if (!bEquiped) return false;
+	if (bReloading) return false;
+
+	bReloading = true;
+
+	if (GetMesh())
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+		if (AnimInstance)
+		{
+			if (AimBulletChangeMontage)
+			{
+				AnimInstance->Montage_Play(AimBulletChangeMontage);
+			}
+
+		}
+
+		if (EquipWeapon)
+		{
+			EquipWeapon->ReloadTrigger();
+		}
+
+		return true;
+	}
+
+
+	return false;
+}
+
+void APeaceFulHazardCharacter::ChangeBulletEndTrigger()
+{
+	bReloading = false;
+
+	if (EquipWeapon && HappyPlayerController)
+	{
+		EquipWeapon->ChangeBulletMode(HappyPlayerController->GetcurrentBulletType());
+		HappyPlayerController->SetBulletChangeCount();
+
+	}
+}
+
