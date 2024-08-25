@@ -10,6 +10,7 @@
 #include "NiagaraDataInterfaceArrayFunctionLibrary.h"
 #include "Battle/PistolShell.h"
 #include "Materials/MaterialInstance.h"
+#include "Enemy/EnemyBase.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -69,6 +70,25 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
     Params.AddIgnoredActor(this);
 
     bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, Params);
+
+    AEnemyBase* hitEnemy;
+    if (HitResult.bBlockingHit)
+    {
+        hitEnemy = Cast<AEnemyBase>(HitResult.GetActor());
+
+        if (hitEnemy)
+        {
+            if (HitResult.GetComponent() == hitEnemy->HeadBox)
+            {
+                UE_LOG(LogTemp, Display, TEXT("Head Shot"));
+            }
+            else
+            {
+                UE_LOG(LogTemp, Display, TEXT("Body Shot"));
+
+            }
+        }
+    }
 
     if (bHit)
     {
