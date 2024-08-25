@@ -177,8 +177,11 @@ protected:
 	bool nowPausing = false;
 	void SetGamePause(bool flag);
 
-	int32 currentBullet = 6;
-	int32 maxBullet = 6;
+	int32 currentBullet = 10;
+	int32 maxBullet = 10;
+
+	int32 normalBulletMax = 10;
+	int32 BigBulletMax = 5;
 
 	int32 GetLeftBullet();
 	int32 GetLockIndex();

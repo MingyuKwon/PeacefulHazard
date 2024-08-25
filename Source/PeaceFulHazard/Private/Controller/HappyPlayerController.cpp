@@ -347,15 +347,35 @@ void AHappyPlayerController::ChangeBullet(const FInputActionValue& Value)
 
         if (!equipped) return;
 
+        int32 beforeCurrentBullet = currentBullet;
+
         if (currentBulletType == EItemType::EIT_Bullet_Noraml)
         {
             currentBulletType = EItemType::EIT_Bullet_Big;
+            maxBullet = BigBulletMax;
         }
         else
         {
             currentBulletType = EItemType::EIT_Bullet_Noraml;
+            maxBullet = normalBulletMax;
         }
 
+        int32 nowLeftBullet = GetLeftBullet();
+        int32 reloadBullet = FMath::Clamp(nowLeftBullet, 0, maxBullet);
+
+        currentBullet = reloadBullet;
+        ChangeItemInventory(currentBulletType, -reloadBullet);
+
+        if (currentBulletType == EItemType::EIT_Bullet_Noraml)
+        {
+            ChangeItemInventory(EItemType::EIT_Bullet_Big, beforeCurrentBullet);
+        }
+        else
+        {
+            ChangeItemInventory(EItemType::EIT_Bullet_Noraml, beforeCurrentBullet);
+
+        }
+        
         UpdateAllUI();
     }
     
@@ -386,9 +406,9 @@ void AHappyPlayerController::SetGamePause(bool flag)
 
 int32 AHappyPlayerController::GetLeftBullet()
 {
-    if (CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Bullet_Noraml))
+    if (CharacterInventoty.ItemCountMap.Contains(currentBulletType))
     {
-        return CharacterInventoty.ItemCountMap[EItemType::EIT_Bullet_Noraml];
+        return CharacterInventoty.ItemCountMap[currentBulletType];
     }
 
     return 0;
@@ -472,6 +492,7 @@ void AHappyPlayerController::CloseAllUI()
 
 void AHappyPlayerController::OuterUIChange(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
 {
+    if (itemCount == 0) return;
     if (!ChangeItemInventoryArrayOneSlot(itemIndex, itemType, itemCount, bReplace)) return;
     if (!ChangeItemInventoryMap(itemType, itemCount)) return;
 
@@ -526,6 +547,7 @@ bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EI
 
 void AHappyPlayerController::ChangeItemInventory(EItemType itemType, int32 count)
 {
+    if (count == 0) return;
     if (!ChangeItemInventoryArray(itemType, count)) return;
     if (!ChangeItemInventoryMap(itemType, count)) return;
     
