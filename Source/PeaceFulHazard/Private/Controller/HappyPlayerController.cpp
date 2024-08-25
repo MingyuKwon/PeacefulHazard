@@ -382,6 +382,27 @@ int32 AHappyPlayerController::GetLeftBullet()
     return 0;
 }
 
+int32 AHappyPlayerController::GetAnotherBullet()
+{
+    EItemType anotherItemType ;
+
+    if (currentBulletType == EItemType::EIT_Bullet_Big)
+    {
+        anotherItemType = EItemType::EIT_Bullet_Noraml;
+    }
+    else
+    {
+        anotherItemType = EItemType::EIT_Bullet_Big;
+    }
+
+    if (CharacterInventoty.ItemCountMap.Contains(anotherItemType))
+    {
+        return CharacterInventoty.ItemCountMap[anotherItemType];
+    }
+
+    return 0;
+}
+
 int32 AHappyPlayerController::GetLockIndex()
 {
     int32 Lockindex = 0;
@@ -425,7 +446,7 @@ void AHappyPlayerController::UpdateDefaultUI()
 {
     if (PlayerHUD)
     {
-        PlayerHUD->UpdateBulletDisplay(currentBullet, maxBullet, GetLeftBullet(), currentBulletType);
+        PlayerHUD->UpdateBulletDisplay(currentBullet, maxBullet, GetLeftBullet(), currentBulletType, GetAnotherBullet());
     }
 }
 

@@ -184,6 +184,8 @@ protected:
 	int32 BigBulletMax = 5;
 
 	int32 GetLeftBullet();
+	int32 GetAnotherBullet();
+
 	int32 GetLockIndex();
 
 	void UpdateAllUI();

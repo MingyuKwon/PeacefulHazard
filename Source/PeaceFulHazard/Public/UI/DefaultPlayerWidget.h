@@ -31,11 +31,23 @@ protected:
 	UTextBlock* LeftBulletText;
 
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftAnotherBulletText;
+
+	
+	UPROPERTY(meta = (BindWidget))
 	UImage* PistolImage;
 
+	UPROPERTY(meta = (BindWidget))
+	UImage* PistolBulletImage;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* PistolAnotherBulletImage;
+
+	
+	
 	
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType);
+	void UpdateBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet);
 };

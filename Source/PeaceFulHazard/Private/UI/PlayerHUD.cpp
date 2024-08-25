@@ -127,16 +127,17 @@ void APlayerHUD::showSituationUI(bool bVisible, EInteractSituationType situation
     }
 }
 
-void APlayerHUD::UpdateBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType)
+void APlayerHUD::UpdateBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet)
 {
     if (DefaultPlayerWidget != nullptr)
     {
-        DefaultPlayerWidget->UpdateBulletUI(currentBullet, maxBullet, leftBullet, itemType);
+        DefaultPlayerWidget->UpdateBulletUI(currentBullet, maxBullet, leftBullet, itemType, anotherBullet);
 
         beforeCurrentBulle = -1;
         beforeMaxBullet = -1;
         beforeLeftBullet = -1;
         beforeBulletType = EItemType::EIT_Bullet_Noraml;
+        beforeanotherBullet = -1;
 
     }
     else
@@ -145,6 +146,8 @@ void APlayerHUD::UpdateBulletDisplay(int32 currentBullet, int32 maxBullet, int32
         beforeMaxBullet = maxBullet;
         beforeLeftBullet = leftBullet;
         beforeBulletType = itemType;
+        beforeanotherBullet = anotherBullet;
+
     }
 }
 
@@ -250,7 +253,7 @@ void APlayerHUD::BeginPlay()
 
             if (beforeCurrentBulle >= 0)
             {
-                UpdateBulletDisplay(beforeCurrentBulle, beforeMaxBullet, beforeLeftBullet, beforeBulletType);
+                UpdateBulletDisplay(beforeCurrentBulle, beforeMaxBullet, beforeLeftBullet, beforeBulletType, beforeanotherBullet);
             }
 
         }

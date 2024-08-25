@@ -37,7 +37,7 @@ public:
 
 	void showSituationUI(bool bVisible, EInteractSituationType situationType = EInteractSituationType::EIST_None);
 
-	void UpdateBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType);
+	void UpdateBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet);
 
 	void UpdateInventoryDisplay(FCharacterInventoty* inventory);
 
@@ -93,6 +93,8 @@ protected:
 	int32 beforeCurrentBulle = -1;
 	int32 beforeMaxBullet = -1;
 	int32 beforeLeftBullet = -1;
+	int32 beforeanotherBullet = -1;
+
 	EItemType beforeBulletType = EItemType::EIT_Bullet_Noraml;
 
 	FCharacterInventoty* beforeInventory = nullptr;
