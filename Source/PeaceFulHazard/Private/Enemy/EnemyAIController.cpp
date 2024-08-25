@@ -43,8 +43,6 @@ AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializ
 
 void AEnemyAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnPerceptionUpdated"));
-
 	for (AActor* Actor : UpdatedActors)
 	{
 		if (Actor->IsA(APeaceFulHazardCharacter::StaticClass()))
@@ -56,12 +54,24 @@ void AEnemyAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActor
 
 void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
+	if (!Actor->IsA(APeaceFulHazardCharacter::StaticClass())) return;
+
 	if (Stimulus.WasSuccessfullySensed())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Sense In: %s"), *Actor->GetName());
+
+		if (UBlackboardComponent* BlackboardComp = GetBlackboardComponent())
+		{
+			BlackboardComp->SetValueAsObject(TEXT("Target"), Actor);
+		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Sense Out: %s"), *Actor->GetName());
+
+		if (UBlackboardComponent* BlackboardComp = GetBlackboardComponent())
+		{
+			BlackboardComp->ClearValue(TEXT("Target"));
+		}
 	}
 }
