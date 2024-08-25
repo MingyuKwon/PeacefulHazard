@@ -32,7 +32,11 @@ AEnemyBase::AEnemyBase()
 	HeadBox->SetupAttachment(RootComponent);
 	HeadBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("FX_Head"));
 
+
+
+
 }
+
 
 void AEnemyBase::PossessedBy(AController* NewController)
 {

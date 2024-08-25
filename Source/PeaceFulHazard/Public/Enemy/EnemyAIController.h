@@ -10,6 +10,7 @@
  * 
  */
 class UBehaviorTreeComponent;
+struct FAIStimulus;
 
 UCLASS()
 class PEACEFULHAZARD_API AEnemyAIController : public AAIController
@@ -23,6 +24,13 @@ protected:
 
 	UPROPERTY()
 	UBehaviorTreeComponent* BehaviorTreeComponent;
+
+
+	UFUNCTION()
+	void OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors);
+
+	UFUNCTION()
+	void OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
 	class UCrowdFollowingComponent* CrowdComp;
 };

@@ -5,6 +5,10 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Navigation/CrowdFollowingComponent.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISense_Sight.h"
+#include "Perception/AISense_Hearing.h"
+#include "Character/PeaceFulHazardCharacter.h"
 
 AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent")))
@@ -30,4 +34,34 @@ AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializ
 
 	}
 
+
+	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
+	PerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &ThisClass::OnPerceptionUpdated);
+	PerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::OnTargetPerceptionUpdated);
+
+}
+
+void AEnemyAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnPerceptionUpdated"));
+
+	for (AActor* Actor : UpdatedActors)
+	{
+		if (Actor->IsA(APeaceFulHazardCharacter::StaticClass()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Player detected: %s"), *Actor->GetName());
+		}
+	}
+}
+
+void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+{
+	if (Stimulus.WasSuccessfullySensed())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Sense In: %s"), *Actor->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Sense Out: %s"), *Actor->GetName());
+	}
 }

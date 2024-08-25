@@ -34,7 +34,6 @@ protected:
 	class UBehaviorTree* BehaviorTree = nullptr;
 
 
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
