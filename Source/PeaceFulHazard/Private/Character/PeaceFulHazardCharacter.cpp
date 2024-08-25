@@ -471,7 +471,13 @@ bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 	if (!bShootableAimState) return false;
 	if (bFireLock) return false;
 
+	bool bNormalFire = true;
+
 	bFireLock = true;
+	if (HappyPlayerController)
+	{
+		bNormalFire = HappyPlayerController->GetcurrentBulletType() == EItemType::EIT_Bullet_Noraml;
+	}
 
 	if (EquipWeapon)
 	{
@@ -489,21 +495,34 @@ bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 		EquipWeapon->Fire(WorldLocation, WorldDirection);
 	}
 
-	if (FireMontage && GetMesh())
+	if (bNormalFire)
 	{
-		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-		if (AnimInstance)
+		if (FireMontage && GetMesh())
 		{
-			AnimInstance->Montage_Play(FireMontage);
+			UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+			if (AnimInstance)
+			{
+				AnimInstance->Montage_Play(FireMontage);
+			}
 		}
 	}
-
+	else
+	{
+		if (StrongFireMontage && GetMesh())
+		{
+			UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+			if (AnimInstance)
+			{
+				AnimInstance->Montage_Play(StrongFireMontage);
+			}
+		}
+	}
 
 	FTimerHandle FireDelayHandle;
 	GetWorld()->GetTimerManager().SetTimer(FireDelayHandle, [this]()
 		{
 			bFireLock = false;
-		}, PistolFireDelay, false);
+		}, bNormalFire ? PistolFireDelay : PistolPowerFireDelay, false);
 
 	return true;
 }

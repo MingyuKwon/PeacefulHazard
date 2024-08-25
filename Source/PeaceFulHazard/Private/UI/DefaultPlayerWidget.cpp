@@ -53,6 +53,7 @@ void UDefaultPlayerWidget::UpdateBulletUI(int32 currentBullet, int32 maxBullet, 
     if (itemType == EItemType::EIT_Bullet_Big)
     {
         PistolImage->SetColorAndOpacity(FLinearColor(1.0, 0.373266, 0.53436));
+
         PistolBulletImage->SetColorAndOpacity(FLinearColor(1.0, 0.208265, 0.218212));
         PistolAnotherBulletImage->SetColorAndOpacity(FLinearColor(0.489158, 0.666189, 1));
 

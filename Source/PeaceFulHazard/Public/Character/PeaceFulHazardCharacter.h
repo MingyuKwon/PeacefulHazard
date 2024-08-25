@@ -112,6 +112,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	UAnimMontage* FireMontage;
 
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UAnimMontage* StrongFireMontage;
+
+
 	UPROPERTY(EditAnywhere, Category = "Bullet Para")
 	UAnimMontage* AimReloadMontage;
 
@@ -123,9 +127,9 @@ protected:
 	float AimingPercent = 0.f;
 
 	float DefaultArmLength = 110.f;
-	float AimArmLength = 60.f;
-	float AimUpArmLength = 20.0f;
-	float AimDownArmLength = 60.f;
+	float AimArmLength = 70.f;
+	float AimUpArmLength = 30.0f;
+	float AimDownArmLength = 70.f;
 
 	FVector DefaultSocketPosition = FVector(0.f, 40.f, 65.f);
 	FVector AimSocketPosition = FVector(0.f, 45.f, 50.f);
@@ -170,7 +174,9 @@ protected:
 	TSubclassOf<AWeapon> PistolClass;
 
 	bool bFireLock = false;
+
 	float PistolFireDelay = 1.f;
+	float PistolPowerFireDelay = 1.5f;
 
 
 	void SetWeaponEquip(bool isEquiped);
