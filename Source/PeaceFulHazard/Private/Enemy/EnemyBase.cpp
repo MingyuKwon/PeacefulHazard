@@ -57,37 +57,44 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 {
     float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-    if (ActualDamage > 0.0f)
+    if (ActualDamage <= 0.0f) return 0;
+
+    FVector ShotDirection;
+    bool bHead = false;
+    if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
     {
-        FVector ShotDirection;
-        if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
-        {
-            FPointDamageEvent* PointDamageEvent = (FPointDamageEvent*)(&DamageEvent);
-            ShotDirection = PointDamageEvent->ShotDirection;
+        FPointDamageEvent* PointDamageEvent = (FPointDamageEvent*)(&DamageEvent);
+        ShotDirection = PointDamageEvent->ShotDirection;
 
-            if (PointDamageEvent->HitInfo.BoneName == "Head")
-            {
-                ActualDamage *= 2.0f; // 헤드샷의 경우 데미지 2배
-                UE_LOG(LogTemp, Display, TEXT("Head Shot"));
-            }
-            else
-            {
-                UE_LOG(LogTemp, Display, TEXT("Body Shot"));
-            }
+        bHead = PointDamageEvent->HitInfo.BoneName == "Head";
 
-            UE_LOG(LogTemp, Warning, TEXT("Received Point Damage: %f from %s"), ActualDamage, *DamageCauser->GetName());
-        }
-        else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
+        if (bHead)
         {
-            // Radial damage handling code here (e.g., explosions)
+            ActualDamage *= 2.0f; // 헤드샷의 경우 데미지 2배
+            UE_LOG(LogTemp, Display, TEXT("Head Shot"));
         }
         else
         {
-            // General damage handling code here
+            UE_LOG(LogTemp, Display, TEXT("Body Shot"));
         }
 
-        PlayHitMontage(ShotDirection);
+        UE_LOG(LogTemp, Warning, TEXT("Received Point Damage: %f from %s"), ActualDamage, *DamageCauser->GetName());
     }
+    else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
+    {
+        // Radial damage handling code here (e.g., explosions)
+    }
+    else
+    {
+        // General damage handling code here
+    }
+
+    if (EnemyAIController)
+    {
+        EnemyAIController->EnemyTakeDamge(ActualDamage, bHead);
+    }
+
+    PlayHitMontage(ShotDirection);
 
     return ActualDamage;
 }

@@ -10,6 +10,7 @@
  * 
  */
 class UBehaviorTreeComponent;
+class UBlackboardComponent;
 struct FAIStimulus;
 
 UCLASS()
@@ -20,10 +21,45 @@ class PEACEFULHAZARD_API AEnemyAIController : public AAIController
 public:
 	AEnemyAIController(const FObjectInitializer& ObjectInitializer);
 
+	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	float currentHealth = 100.f;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	float maxHealth = 100.f;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	float damageAccumulate = 0.f;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	float stundamageAccumulateUnit = 50.f;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	bool bStunHeadShot = false;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	bool bStunDamage = false;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	bool bDeath = false;
+
+	void EnemyTakeDamge(float Damage, bool bHead);
+
+
 protected:
+
+	UFUNCTION()
+	void UpdateBlackBoard();
+
+	FTimerHandle updateTimerHandle;
+	FTimerHandle HeadStunTimerHandle;
+	FTimerHandle DamgeStunTimerHandle;
+
+	virtual void BeginPlay() override;
 
 	UPROPERTY()
 	UBehaviorTreeComponent* BehaviorTreeComponent;
+	UPROPERTY()
+	UBlackboardComponent* BlackboardComp;
 
 
 	UFUNCTION()
