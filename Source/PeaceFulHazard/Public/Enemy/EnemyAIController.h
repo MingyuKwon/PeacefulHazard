@@ -45,6 +45,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	bool bDeath = false;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	bool bFollowingLastPositon = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	int32 routeIndex = 0;
+
+
 	void EnemyTakeDamge(float Damage, bool bHead);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
@@ -54,7 +62,12 @@ public:
 	APeaceFulHazardCharacter* Target;
 
 	void TriggerRoute(TArray<AEnemyRoutePivot*> Pivots);
+
+	void TriggerResetPivotIndex(bool BFollowingLastPosition);
 protected:
+
+	UFUNCTION()
+	bool CheckMovetoDestination();
 
 	TArray<AEnemyRoutePivot*> RoutePivots;
 

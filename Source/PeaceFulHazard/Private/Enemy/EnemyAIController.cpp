@@ -51,8 +51,6 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 
 	damageAccumulate += Damage;
 
-	UE_LOG(LogTemp, Display, TEXT("%f"), currentHealth);
-
 	if (stundamageAccumulateUnit <= damageAccumulate)
 	{
 		damageAccumulate = 0;
@@ -74,9 +72,66 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 
 void AEnemyAIController::TriggerRoute(TArray<AEnemyRoutePivot*> Pivots)
 {
+	Pivots.Sort([](const AEnemyRoutePivot& A, const AEnemyRoutePivot& B)
+		{
+			return A.index < B.index;
+		});
+
 	RoutePivots = Pivots;
 
-	UE_LOG(LogTemp, Display, TEXT("%s : %d"), *GetName(), RoutePivots.Num());
+	TriggerResetPivotIndex(false);
+}
+
+void AEnemyAIController::TriggerResetPivotIndex(bool bFollowingLastPosition)
+{
+	UE_LOG(LogTemp, Warning, TEXT("TriggerResetPivotIndex"));
+
+	if (bFollowingLastPosition)
+	{
+		if (GetPawn() && RoutePivots.Num() > 0)
+		{
+			FVector PawnLocation = GetPawn()->GetActorLocation();
+			float MinDistance = FLT_MAX;
+			int32 ClosestIndex = 0;
+
+			for (int32 i = 0; i < RoutePivots.Num(); i++)
+			{
+				float Distance = FVector::Dist(PawnLocation, RoutePivots[i]->GetActorLocation());
+				if (Distance < MinDistance)
+				{
+					MinDistance = Distance;
+					ClosestIndex = i;
+				}
+			}
+
+			routeIndex = ClosestIndex;
+			TargetLocation = RoutePivots[routeIndex]->GetActorLocation();
+
+			bFollowingLastPositon = false;
+		}
+	}
+	else
+	{
+		routeIndex++;
+		if (routeIndex == RoutePivots.Num()) routeIndex = 0;
+
+		routeIndex = FMath::Clamp(routeIndex, 0, RoutePivots.Num() - 1);
+
+		TargetLocation = RoutePivots[routeIndex]->GetActorLocation();
+	}
+}
+
+bool AEnemyAIController::CheckMovetoDestination()
+{
+	if (GetPawn() == nullptr ) return false;
+	FVector PawnPosition = GetPawn()->GetActorLocation();
+
+	float distance = FVector::Dist2D(PawnPosition, TargetLocation);
+
+	UE_LOG(LogTemp, Warning, TEXT("%s, %f"), *GetName(), distance);
+
+
+	return distance <= 40.f;
 }
 
 void AEnemyAIController::UpdateBlackBoard()
@@ -84,6 +139,13 @@ void AEnemyAIController::UpdateBlackBoard()
 	if (Target)
 	{
 		TargetLocation = Target->GetActorLocation();
+	}
+	else
+	{
+		if (CheckMovetoDestination())
+		{
+			TriggerResetPivotIndex(bFollowingLastPositon);
+		}
 	}
 
 	DrawDebugSphere(GetWorld(), TargetLocation, 100.f, 30, FColor::Blue, false, 0.1f);
@@ -153,12 +215,13 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Sense In: %s"), *Actor->GetName());
 
+		bFollowingLastPositon = false;
 		Target = Cast<APeaceFulHazardCharacter>(Actor);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Sense Out: %s"), *Actor->GetName());
-
+		bFollowingLastPositon = true;
 		Target = nullptr;
 
 	}

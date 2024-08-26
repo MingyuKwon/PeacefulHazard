@@ -65,11 +65,13 @@ void AEnemyBase::PossessedBy(AController* NewController)
 
 void AEnemyBase::MatchYawWithController(float DeltaTime)
 {
-    FRotator CurrentRotation = GetActorRotation();
+    float CurrentYaw = GetActorRotation().Yaw;
 
-    FRotator ControlRotation = GetControlRotation();
+    float ControlYaw = GetControlRotation().Yaw;
 
-    float NewYaw = FMath::FInterpTo(CurrentRotation.Yaw, ControlRotation.Yaw, DeltaTime, 5.f);
+    float DeltaYaw = FMath::UnwindDegrees(ControlYaw - CurrentYaw);
+
+    float NewYaw = CurrentYaw + FMath::Lerp(0.0f, DeltaYaw, DeltaTime * 5.f);
 
     FRotator NewRotation(0, NewYaw, 0);
     SetActorRotation(NewRotation);
