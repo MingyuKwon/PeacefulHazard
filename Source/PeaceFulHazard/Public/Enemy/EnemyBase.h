@@ -26,6 +26,13 @@ public:
 	void StopDamageStunMontage();
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
+	float PatrolMoveSpeed = 120;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
+	float ChasingMoveSpeed = 200;
+
+
 	FTimerHandle updateTimerHandle;
 	UFUNCTION()
 	void UpdateValue();

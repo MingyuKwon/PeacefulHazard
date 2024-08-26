@@ -64,6 +64,8 @@ public:
 	void TriggerRoute(TArray<AEnemyRoutePivot*> Pivots);
 
 	void TriggerResetPivotIndex(bool BFollowingLastPosition);
+
+
 protected:
 
 	UFUNCTION()

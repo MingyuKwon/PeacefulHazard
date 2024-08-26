@@ -12,6 +12,7 @@
 #include "Enemy/EnemyBase.h"
 #include "DrawDebugHelpers.h"
 #include "System/EnemyRoutePivot.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent")))
@@ -139,6 +140,7 @@ void AEnemyAIController::UpdateBlackBoard()
 	if (Target)
 	{
 		TargetLocation = Target->GetActorLocation();
+
 	}
 	else
 	{

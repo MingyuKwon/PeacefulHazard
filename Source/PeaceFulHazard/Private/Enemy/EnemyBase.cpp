@@ -239,6 +239,16 @@ void AEnemyBase::UpdateValue()
 {
     if (EnemyAIController)
     {
+        if (EnemyAIController->Target || EnemyAIController->bFollowingLastPositon)
+        {
+            GetCharacterMovement()->MaxWalkSpeed = ChasingMoveSpeed;
+        }
+        else
+        {
+            GetCharacterMovement()->MaxWalkSpeed = PatrolMoveSpeed;
+        }
+
+
         if (EnemyAIController->bDeath)
         {
             dissolvePercent += 0.09f;
