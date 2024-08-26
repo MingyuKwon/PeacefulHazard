@@ -39,3 +39,21 @@ enum class EUIState : uint8
 
     EUIS_Max
 };
+
+UENUM(BlueprintType)
+enum class ERouteNum : uint8
+{
+    ERN_None,
+    ERN_RouteNum1,
+    ERN_RouteNum2,
+    ERN_RouteNum3,
+    ERN_RouteNum4,
+    ERN_RouteNum5,
+    ERN_RouteNum6,
+    ERN_RouteNum7,
+    ERN_RouteNum8,
+    ERN_RouteNum9,
+    ERN_RouteNum10,
+
+    ERN_Max
+};

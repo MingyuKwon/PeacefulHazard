@@ -23,6 +23,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Engine/DamageEvents.h"
 #include "Materials/MaterialInstance.h"
+#include "System/EnemyRoutePivot.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -149,11 +150,6 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 
         if (EnemyAIController->bDeath)
         {
-            if (EnemyAIController)
-            {
-                EnemyAIController->UnPossess(); 
-            }
-
             GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));  // 충돌 설정을 Ragdoll로 변경
             GetCharacterMovement()->DisableMovement();  // 캐릭터의 모든 움직임 비활성화
             GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // 캡슐 콜리전 비활성화
@@ -234,7 +230,7 @@ void AEnemyBase::BeginPlay()
 	Super::BeginPlay();
 	
     GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyBase::UpdateValue, 0.1f, true);
-
+    FindEnemyRoutes();
 }
 
 void AEnemyBase::UpdateValue()
@@ -258,6 +254,54 @@ void AEnemyBase::UpdateValue()
         }
     }
 
+}
+
+void AEnemyBase::FindEnemyRoutes()
+{
+    TArray<AActor*> FoundActors;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyRoutePivot::StaticClass(), FoundActors);
+
+    AEnemyRoutePivot* ClosestPivot = nullptr;
+    float MinDistance = FLT_MAX;
+
+    for (AActor* Actor : FoundActors)
+    {
+        AEnemyRoutePivot* RoutePivot = Cast<AEnemyRoutePivot>(Actor);
+        if (RoutePivot)
+        {
+            float Distance = FVector::Dist(GetActorLocation(), RoutePivot->GetActorLocation());
+            if (Distance < MinDistance)
+            {
+                MinDistance = Distance;
+                ClosestPivot = RoutePivot;
+            }
+        }
+    }
+
+    if (ClosestPivot)
+    {
+        ERouteNum TargetRouteNum = ClosestPivot->HitRightMontage;
+
+        TArray<AEnemyRoutePivot*> EnemyRoutePivots;
+        for (AActor* Actor : FoundActors)
+        {
+            AEnemyRoutePivot* RoutePivot = Cast<AEnemyRoutePivot>(Actor);
+            if (RoutePivot && RoutePivot->HitRightMontage == TargetRouteNum)
+            {
+                EnemyRoutePivots.Add(RoutePivot);
+            }
+        }
+
+        for (AEnemyRoutePivot* RoutePivot : EnemyRoutePivots)
+        {
+            // 필요한 작업 수행
+        }
+
+        if (EnemyAIController)
+        {
+            EnemyAIController->TriggerRoute(EnemyRoutePivots);
+        }
+    }
 }
 
 

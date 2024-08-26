@@ -11,6 +11,7 @@
 #include "Character/PeaceFulHazardCharacter.h"
 #include "Enemy/EnemyBase.h"
 #include "DrawDebugHelpers.h"
+#include "System/EnemyRoutePivot.h"
 
 AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent")))
@@ -71,6 +72,13 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 	}
 }
 
+void AEnemyAIController::TriggerRoute(TArray<AEnemyRoutePivot*> Pivots)
+{
+	RoutePivots = Pivots;
+
+	UE_LOG(LogTemp, Display, TEXT("%s : %d"), *GetName(), RoutePivots.Num());
+}
+
 void AEnemyAIController::UpdateBlackBoard()
 {
 	if (Target)
@@ -86,6 +94,7 @@ void AEnemyAIController::UpdateBlackBoard()
 		BlackboardComp->SetValueAsBool(TEXT("bStunDamage"), bStunDamage);
 		BlackboardComp->SetValueAsBool(TEXT("bStunHeadShot"), bStunHeadShot);
 		BlackboardComp->SetValueAsVector(TEXT("TargetLocation"), TargetLocation);
+		BlackboardComp->SetValueAsObject(TEXT("Target"), Target);
 
 
 	}
@@ -145,11 +154,6 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 		UE_LOG(LogTemp, Warning, TEXT("Sense In: %s"), *Actor->GetName());
 
 		Target = Cast<APeaceFulHazardCharacter>(Actor);
-
-		if (BlackboardComp)
-		{
-			BlackboardComp->SetValueAsObject(TEXT("Target"), Actor);
-		}
 	}
 	else
 	{
@@ -157,9 +161,5 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 
 		Target = nullptr;
 
-		if (BlackboardComp)
-		{
-			BlackboardComp->ClearValue(TEXT("Target"));
-		}
 	}
 }

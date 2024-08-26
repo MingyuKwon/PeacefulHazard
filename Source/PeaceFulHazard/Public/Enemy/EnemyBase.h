@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "PeaceFulHazard/PeaceFulHazard.h"
 #include "EnemyBase.generated.h"
 
 class UBoxComponent;
@@ -28,6 +29,8 @@ protected:
 	FTimerHandle updateTimerHandle;
 	UFUNCTION()
 	void UpdateValue();
+
+	void FindEnemyRoutes();
 
 	float dissolvePercent = 1.f;
 

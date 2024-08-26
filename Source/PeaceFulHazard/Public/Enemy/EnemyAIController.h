@@ -14,6 +14,7 @@ class UBlackboardComponent;
 struct FAIStimulus;
 class AEnemyBase;
 class APeaceFulHazardCharacter;
+class AEnemyRoutePivot;
 
 UCLASS()
 class PEACEFULHAZARD_API AEnemyAIController : public AAIController
@@ -51,8 +52,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	APeaceFulHazardCharacter* Target;
-	
+
+	void TriggerRoute(TArray<AEnemyRoutePivot*> Pivots);
 protected:
+
+	TArray<AEnemyRoutePivot*> RoutePivots;
 
 	UFUNCTION()
 	void UpdateBlackBoard();
