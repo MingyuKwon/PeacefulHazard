@@ -12,6 +12,7 @@
 class UBehaviorTreeComponent;
 class UBlackboardComponent;
 struct FAIStimulus;
+class AEnemyBase;
 
 UCLASS()
 class PEACEFULHAZARD_API AEnemyAIController : public AAIController
@@ -50,11 +51,20 @@ protected:
 	UFUNCTION()
 	void UpdateBlackBoard();
 
+	UFUNCTION()
+	void  HeadStunRelease();
+
+	UFUNCTION()
+	void  DamageStunRelease();
+
+
 	FTimerHandle updateTimerHandle;
 	FTimerHandle HeadStunTimerHandle;
 	FTimerHandle DamgeStunTimerHandle;
 
 	virtual void BeginPlay() override;
+
+	AEnemyBase* controlEnemy;
 
 	UPROPERTY()
 	UBehaviorTreeComponent* BehaviorTreeComponent;

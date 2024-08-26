@@ -53,6 +53,22 @@ void AEnemyBase::PossessedBy(AController* NewController)
 	}
 }
 
+void AEnemyBase::StopHeadStunMontage()
+{
+    if (HeadStunMontage)
+    {
+        GetMesh()->GetAnimInstance()->Montage_Stop(0.1f, HeadStunMontage);
+    }
+}
+
+void AEnemyBase::StopDamageStunMontage()
+{
+    if (DamageStunMontage)
+    {
+        GetMesh()->GetAnimInstance()->Montage_Stop(0.2f, DamageStunMontage);
+    }
+}
+
 float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
     float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
@@ -92,9 +108,29 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
     if (EnemyAIController)
     {
         EnemyAIController->EnemyTakeDamge(ActualDamage, bHead);
+
+        if (EnemyAIController->bStunHeadShot)
+        {
+            if (HeadStunMontage)
+            {
+                PlayAnimMontage(HeadStunMontage);
+            }
+        }
+        
+        if (EnemyAIController->bStunDamage)
+        {
+            if (DamageStunMontage)
+            {
+                PlayAnimMontage(DamageStunMontage);
+            }
+        }
+        
     }
 
     PlayHitMontage(ShotDirection);
+
+
+    // 여기에 bDeath true 이면 죽는 애니메이션 진행 하도록 하자
 
     return ActualDamage;
 }

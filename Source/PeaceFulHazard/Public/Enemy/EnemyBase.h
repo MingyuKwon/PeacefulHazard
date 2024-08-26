@@ -21,6 +21,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* HeadBox;
 
+	void StopHeadStunMontage();
+	void StopDamageStunMontage();
 
 protected:
 	// Called when the game starts or when spawned
@@ -48,6 +50,17 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Anim Para")
 	UAnimMontage* HitFwdMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Anim Para")
+	UAnimMontage* HeadStunMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Anim Para")
+	UAnimMontage* DamageStunMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Anim Para")
+	UAnimMontage* DeathMontage;
+
+
 
 	void PlayHitMontage(FVector ShotDirection);
 public:	

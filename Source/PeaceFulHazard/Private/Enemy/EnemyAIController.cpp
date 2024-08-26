@@ -9,6 +9,7 @@
 #include "Perception/AISense_Sight.h"
 #include "Perception/AISense_Hearing.h"
 #include "Character/PeaceFulHazardCharacter.h"
+#include "Enemy/EnemyBase.h"
 
 AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent")))
@@ -44,25 +45,23 @@ AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializ
 void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 {
 	currentHealth -= Damage;
+	currentHealth = FMath::Clamp(currentHealth, 0, currentHealth);
+
 	damageAccumulate += Damage;
+
+	UE_LOG(LogTemp, Display, TEXT("%f"), currentHealth);
 
 	if (stundamageAccumulateUnit <= damageAccumulate)
 	{
 		damageAccumulate = 0;
 		bStunDamage = true;
-		GetWorld()->GetTimerManager().SetTimer(DamgeStunTimerHandle, [this]()
-			{
-				bStunDamage = false;
-			}, 2.f, false);
+		GetWorld()->GetTimerManager().SetTimer(DamgeStunTimerHandle, this, &ThisClass::DamageStunRelease, 2.f, false);
 	}
 
 	if (bHead)
 	{
 		bStunHeadShot = true;
-		GetWorld()->GetTimerManager().SetTimer(HeadStunTimerHandle, [this]()
-			{
-				bStunHeadShot = false;
-			}, 0.5f, false);
+		GetWorld()->GetTimerManager().SetTimer(HeadStunTimerHandle, this, &ThisClass::HeadStunRelease, 0.5f, false);
 	}
 
 	if (currentHealth <= 0)
@@ -78,8 +77,24 @@ void AEnemyAIController::UpdateBlackBoard()
 		BlackboardComp->SetValueAsBool(TEXT("bDeath"), bDeath);
 		BlackboardComp->SetValueAsBool(TEXT("bStunDamage"), bStunDamage);
 		BlackboardComp->SetValueAsBool(TEXT("bStunHeadShot"), bStunHeadShot);
+	}
+}
 
-		UE_LOG(LogTemp, Display, TEXT("UpdateBlackBoard"));
+void AEnemyAIController::HeadStunRelease()
+{
+	bStunHeadShot = false;
+	if (controlEnemy)
+	{
+		controlEnemy->StopHeadStunMontage();
+	}
+}
+
+void AEnemyAIController::DamageStunRelease()
+{
+	bStunDamage = false;
+	if (controlEnemy)
+	{
+		controlEnemy->StopDamageStunMontage();
 	}
 }
 
@@ -87,8 +102,11 @@ void AEnemyAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	
 	BlackboardComp = GetBlackboardComponent();
-	GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &ThisClass::UpdateBlackBoard , 0.1f, true);
+	GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyAIController::UpdateBlackBoard , 0.1f, true);
+
+	controlEnemy = Cast<AEnemyBase>(GetPawn());
 		
 }
 
