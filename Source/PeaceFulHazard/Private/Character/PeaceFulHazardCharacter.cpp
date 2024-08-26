@@ -580,6 +580,7 @@ bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
 		{
 			FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
 			EquipWeapon->AttachToComponent(GetMesh(), AttachmentRules, FName("PistolSocket"));
+			EquipWeapon->SetOwner(this);
 		}
 	}
 

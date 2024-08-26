@@ -21,6 +21,7 @@
 #include "Enemy/EnemyAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Engine/DamageEvents.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -31,7 +32,6 @@ AEnemyBase::AEnemyBase()
 	HeadBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HeadBox"));
 	HeadBox->SetupAttachment(RootComponent);
 	HeadBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("FX_Head"));
-
 
 
 
@@ -52,6 +52,44 @@ void AEnemyBase::PossessedBy(AController* NewController)
 		}
 	}
 }
+
+float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+    float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+    if (ActualDamage > 0.0f)
+    {
+        if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
+        {
+            FPointDamageEvent* PointDamageEvent = (FPointDamageEvent*)(&DamageEvent);
+
+            if (PointDamageEvent->HitInfo.BoneName == "Head")
+            {
+                ActualDamage *= 2.0f; // 헤드샷의 경우 데미지 2배
+                UE_LOG(LogTemp, Display, TEXT("Head Shot"));
+            }
+            else
+            {
+                UE_LOG(LogTemp, Display, TEXT("Body Shot"));
+
+            }
+
+            UE_LOG(LogTemp, Warning, TEXT("Received Point Damage: %f from %s"), ActualDamage, *DamageCauser->GetName());
+
+        }
+        else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
+        {
+
+        }
+        else
+        {
+
+        }
+    }
+
+    return ActualDamage;
+}
+
 
 // Called when the game starts or when spawned
 void AEnemyBase::BeginPlay()

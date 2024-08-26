@@ -74,6 +74,8 @@ protected:
 
 	EItemType currentItemType = EItemType::EIT_Bullet_Noraml;
 
+	void ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector ShotDirection, FName BoneName);
+
 public:
 	void Fire(FVector CameraPosition, FVector CameraNormalVector);
 

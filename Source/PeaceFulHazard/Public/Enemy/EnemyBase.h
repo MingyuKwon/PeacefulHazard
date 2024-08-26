@@ -33,6 +33,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "AI Parameter")
 	class UBehaviorTree* BehaviorTree = nullptr;
 
+	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 
 public:	
 	// Called every frame

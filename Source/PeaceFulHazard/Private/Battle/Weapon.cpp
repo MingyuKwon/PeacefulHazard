@@ -11,6 +11,7 @@
 #include "Battle/PistolShell.h"
 #include "Materials/MaterialInstance.h"
 #include "Enemy/EnemyBase.h"
+#include "Engine/DamageEvents.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -55,6 +56,44 @@ void AWeapon::ChangeBulletMode(EItemType itemType)
     }
 }
 
+void AWeapon::ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector ShotDirection, FName BoneName)
+{
+    float DamageAmount = 0.f;  
+
+    if (currentItemType == EItemType::EIT_Bullet_Big)
+    {
+        DamageAmount = BigBulletDamage;
+    }
+    else
+    {
+        DamageAmount = NormalBulletDamage;
+    }
+
+    FPointDamageEvent PointDamageEvent;
+    PointDamageEvent.Damage = DamageAmount;
+    PointDamageEvent.ShotDirection = ShotDirection;
+
+    PointDamageEvent.HitInfo.Location = HitLocation;
+    PointDamageEvent.HitInfo.BoneName = BoneName;
+
+    AActor* OwnerActor = GetOwner(); 
+    AController* OwnerController = nullptr;
+
+    if (OwnerActor)
+    {
+        APawn* OwnerPawn = Cast<APawn>(OwnerActor);
+        if (OwnerPawn)
+        {
+            OwnerController = OwnerPawn->GetController();  
+        }
+    }
+
+    if (OwnerController)
+    {
+        UGameplayStatics::ApplyPointDamage(TargetActor, DamageAmount, ShotDirection, PointDamageEvent.HitInfo, OwnerController, this, UDamageType::StaticClass());
+    }
+}
+
 void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
 {
     if (WeaponMesh == nullptr) return;
@@ -71,27 +110,30 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
 
     bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, Params);
 
-    AEnemyBase* hitEnemy;
-    if (HitResult.bBlockingHit)
-    {
-        hitEnemy = Cast<AEnemyBase>(HitResult.GetActor());
-
-        if (hitEnemy)
-        {
-            if (HitResult.GetComponent() == hitEnemy->HeadBox)
-            {
-                UE_LOG(LogTemp, Display, TEXT("Head Shot"));
-            }
-            else
-            {
-                UE_LOG(LogTemp, Display, TEXT("Body Shot"));
-
-            }
-        }
-    }
-
     if (bHit)
     {
+        FVector SocketLocation = WeaponMesh->GetSocketLocation(FName("ShellSocket"));
+        FRotator SocketRotation = WeaponMesh->GetSocketRotation(FName("ShellSocket"));
+
+        AEnemyBase* hitEnemy;
+        if (HitResult.bBlockingHit)
+        {
+            hitEnemy = Cast<AEnemyBase>(HitResult.GetActor());
+
+            if (hitEnemy)
+            {
+                if (HitResult.GetComponent() == hitEnemy->HeadBox)
+                {
+                    ShootAtEnemy(hitEnemy, HitResult.ImpactPoint, (HitResult.ImpactPoint - MuzzleLocation).GetSafeNormal(), FName("Head"));
+                }
+                else
+                {
+                    ShootAtEnemy(hitEnemy, HitResult.ImpactPoint, (HitResult.ImpactPoint - MuzzleLocation).GetSafeNormal(), FName("Body"));
+
+                }
+            }
+        }
+
         if (currentItemType == EItemType::EIT_Bullet_Big)
         {
             if (BigBulletHitImpact)
@@ -125,9 +167,6 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
             SpawnParams.Instigator = GetInstigator();
 
             APistolShell* shell = GetWorld()->SpawnActor<APistolShell>(ShellClass, SpawnParams);
-
-            FVector SocketLocation = WeaponMesh->GetSocketLocation(FName("ShellSocket"));
-            FRotator SocketRotation = WeaponMesh->GetSocketRotation(FName("ShellSocket"));
 
             if (shell)
             {
