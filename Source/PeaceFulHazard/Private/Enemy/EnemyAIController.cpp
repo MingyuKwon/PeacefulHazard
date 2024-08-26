@@ -82,6 +82,8 @@ void AEnemyAIController::UpdateBlackBoard()
 
 void AEnemyAIController::HeadStunRelease()
 {
+	if (bDeath) return;
+
 	bStunHeadShot = false;
 	if (controlEnemy)
 	{
@@ -91,6 +93,8 @@ void AEnemyAIController::HeadStunRelease()
 
 void AEnemyAIController::DamageStunRelease()
 {
+	if (bDeath) return;
+
 	bStunDamage = false;
 	if (controlEnemy)
 	{

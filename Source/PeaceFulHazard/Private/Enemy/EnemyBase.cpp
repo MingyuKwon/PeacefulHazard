@@ -22,6 +22,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Engine/DamageEvents.h"
+#include "Materials/MaterialInstance.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -137,7 +138,7 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
             GetCharacterMovement()->DisableMovement();  // 캐릭터의 모든 움직임 비활성화
             GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // 캡슐 콜리전 비활성화
 
-            SetLifeSpan(2.f);
+            SetLifeSpan(1.5f);
 
         }
         
@@ -212,6 +213,31 @@ void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+    GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyBase::UpdateValue, 0.1f, true);
+
+}
+
+void AEnemyBase::UpdateValue()
+{
+    if (EnemyAIController)
+    {
+        if (EnemyAIController->bDeath)
+        {
+            dissolvePercent += 0.1f;
+        }
+        else
+        {
+            dissolvePercent -= 0.1f;
+        }
+
+        dissolvePercent = FMath::Clamp(dissolvePercent, 0.f, 1.f);
+
+        if (!(dissolvePercent <= 0 || dissolvePercent >= 1))
+        {
+            GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
+        }
+    }
+
 }
 
 // Called every frame

@@ -25,10 +25,17 @@ public:
 	void StopDamageStunMontage();
 
 protected:
+	FTimerHandle updateTimerHandle;
+	UFUNCTION()
+	void UpdateValue();
+
+	float dissolvePercent = 1.f;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	virtual void PossessedBy(AController* NewController) override;
+
 
 	UPROPERTY()
 	class AEnemyAIController* EnemyAIController;
