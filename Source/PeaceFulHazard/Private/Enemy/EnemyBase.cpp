@@ -34,10 +34,18 @@ AEnemyBase::AEnemyBase()
 	HeadBox->SetupAttachment(RootComponent);
 	HeadBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("FX_Head"));
 
+    bUseControllerRotationYaw = false;
+    bUseControllerRotationPitch = false;
+    bUseControllerRotationRoll = false;
 
-
+    GetCharacterMovement()->bUseRVOAvoidance = true;
 }
 
+void AEnemyBase::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+    MatchYawWithController(DeltaTime);
+}
 
 void AEnemyBase::PossessedBy(AController* NewController)
 {
@@ -52,6 +60,18 @@ void AEnemyBase::PossessedBy(AController* NewController)
 			EnemyAIController->RunBehaviorTree(BehaviorTree);
 		}
 	}
+}
+
+void AEnemyBase::MatchYawWithController(float DeltaTime)
+{
+    FRotator CurrentRotation = GetActorRotation();
+
+    FRotator ControlRotation = GetControlRotation();
+
+    float NewYaw = FMath::FInterpTo(CurrentRotation.Yaw, ControlRotation.Yaw, DeltaTime, 5.f);
+
+    FRotator NewRotation(0, NewYaw, 0);
+    SetActorRotation(NewRotation);
 }
 
 void AEnemyBase::StopHeadStunMontage()
@@ -240,12 +260,6 @@ void AEnemyBase::UpdateValue()
 
 }
 
-// Called every frame
-void AEnemyBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 // Called to bind functionality to input
 void AEnemyBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

@@ -10,6 +10,7 @@
 #include "Perception/AISense_Hearing.h"
 #include "Character/PeaceFulHazardCharacter.h"
 #include "Enemy/EnemyBase.h"
+#include "DrawDebugHelpers.h"
 
 AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent")))
@@ -76,6 +77,8 @@ void AEnemyAIController::UpdateBlackBoard()
 	{
 		TargetLocation = Target->GetActorLocation();
 	}
+
+	DrawDebugSphere(GetWorld(), TargetLocation, 100.f, 30, FColor::Blue, false, 0.1f);
 
 	if (BlackboardComp)
 	{
