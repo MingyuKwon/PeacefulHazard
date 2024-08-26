@@ -223,11 +223,11 @@ void AEnemyBase::UpdateValue()
     {
         if (EnemyAIController->bDeath)
         {
-            dissolvePercent += 0.07f;
+            dissolvePercent += 0.09f;
         }
         else
         {
-            dissolvePercent -= 0.07f;
+            dissolvePercent -= 0.09f;
         }
 
         dissolvePercent = FMath::Clamp(dissolvePercent, 0.f, 1.f);

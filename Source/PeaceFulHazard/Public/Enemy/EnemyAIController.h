@@ -13,6 +13,7 @@ class UBehaviorTreeComponent;
 class UBlackboardComponent;
 struct FAIStimulus;
 class AEnemyBase;
+class APeaceFulHazardCharacter;
 
 UCLASS()
 class PEACEFULHAZARD_API AEnemyAIController : public AAIController
@@ -45,7 +46,12 @@ public:
 
 	void EnemyTakeDamge(float Damage, bool bHead);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	FVector TargetLocation = FVector::ZeroVector;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	APeaceFulHazardCharacter* Target;
+	
 protected:
 
 	UFUNCTION()

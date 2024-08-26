@@ -72,11 +72,19 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 
 void AEnemyAIController::UpdateBlackBoard()
 {
+	if (Target)
+	{
+		TargetLocation = Target->GetActorLocation();
+	}
+
 	if (BlackboardComp)
 	{
 		BlackboardComp->SetValueAsBool(TEXT("bDeath"), bDeath);
 		BlackboardComp->SetValueAsBool(TEXT("bStunDamage"), bStunDamage);
 		BlackboardComp->SetValueAsBool(TEXT("bStunHeadShot"), bStunHeadShot);
+		BlackboardComp->SetValueAsVector(TEXT("TargetLocation"), TargetLocation);
+
+
 	}
 }
 
@@ -133,6 +141,8 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Sense In: %s"), *Actor->GetName());
 
+		Target = Cast<APeaceFulHazardCharacter>(Actor);
+
 		if (BlackboardComp)
 		{
 			BlackboardComp->SetValueAsObject(TEXT("Target"), Actor);
@@ -141,6 +151,8 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Sense Out: %s"), *Actor->GetName());
+
+		Target = nullptr;
 
 		if (BlackboardComp)
 		{

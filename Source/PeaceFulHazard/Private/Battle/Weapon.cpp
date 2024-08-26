@@ -12,6 +12,7 @@
 #include "Materials/MaterialInstance.h"
 #include "Enemy/EnemyBase.h"
 #include "Engine/DamageEvents.h"
+#include "Perception/AISense_Damage.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -91,6 +92,15 @@ void AWeapon::ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector Sho
     if (OwnerController)
     {
         UGameplayStatics::ApplyPointDamage(TargetActor, DamageAmount, ShotDirection, PointDamageEvent.HitInfo, OwnerController, this, UDamageType::StaticClass());
+
+        UAISense_Damage::ReportDamageEvent(
+            GetWorld(),
+            TargetActor,  // Damaged actor
+            OwnerActor,  // Instigator (damage causer)
+            DamageAmount,  // Damage amount
+            GetActorLocation(),  // Event location
+            HitLocation  // Hit location (optional)
+        );
     }
 }
 
