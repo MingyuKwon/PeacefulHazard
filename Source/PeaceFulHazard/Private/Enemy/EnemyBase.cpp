@@ -59,9 +59,11 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 
     if (ActualDamage > 0.0f)
     {
+        FVector ShotDirection;
         if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
         {
             FPointDamageEvent* PointDamageEvent = (FPointDamageEvent*)(&DamageEvent);
+            ShotDirection = PointDamageEvent->ShotDirection;
 
             if (PointDamageEvent->HitInfo.BoneName == "Head")
             {
@@ -71,23 +73,80 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
             else
             {
                 UE_LOG(LogTemp, Display, TEXT("Body Shot"));
-
             }
 
             UE_LOG(LogTemp, Warning, TEXT("Received Point Damage: %f from %s"), ActualDamage, *DamageCauser->GetName());
-
         }
         else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
         {
-
+            // Radial damage handling code here (e.g., explosions)
         }
         else
         {
-
+            // General damage handling code here
         }
+
+        PlayHitMontage(ShotDirection);
     }
 
     return ActualDamage;
+}
+
+void AEnemyBase::PlayHitMontage(FVector ShotDirection)
+{
+    // Calculate the direction the shot came from relative to the enemy's forward direction
+    FVector ForwardVector = GetActorForwardVector();
+    FVector ToShotDirection = ShotDirection.GetSafeNormal();
+
+    // Calculate the angle between the shot direction and the forward vector
+    float Angle = FMath::Acos(FVector::DotProduct(ForwardVector, ToShotDirection)) * (180.0f / PI);
+
+    // Determine the direction from which the shot came
+    FVector CrossProduct = FVector::CrossProduct(ForwardVector, ToShotDirection);
+    if (CrossProduct.Z < 0)
+    {
+        Angle = -Angle;
+    }
+
+    // Play appropriate hit montage based on the angle
+    if (Angle >= -45.0f && Angle <= 45.0f)
+    {
+        // Back hit
+        if (HitBackMontage)
+        {
+            PlayAnimMontage(HitBackMontage);
+            UE_LOG(LogTemp, Display, TEXT("Hit from Back"));
+        }
+
+    }
+    else if (Angle > 45.0f && Angle <= 135.0f)
+    {
+        // Left hit
+        if (HitLeftMontage)
+        {
+            PlayAnimMontage(HitLeftMontage);
+            UE_LOG(LogTemp, Display, TEXT("Hit from Left"));
+        }
+    }
+    else if (Angle < -45.0f && Angle >= -135.0f)
+    {
+        // Right hit
+        if (HitRightMontage)
+        {
+            PlayAnimMontage(HitRightMontage);
+            UE_LOG(LogTemp, Display, TEXT("Hit from Right"));
+        }
+    }
+    else
+    {
+        // Forward hit
+        if (HitFwdMontage)
+        {
+            PlayAnimMontage(HitFwdMontage);
+            UE_LOG(LogTemp, Display, TEXT("Hit from Front"));
+        }
+    }
+
 }
 
 
@@ -111,4 +170,6 @@ void AEnemyBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+
 

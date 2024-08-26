@@ -7,6 +7,7 @@
 #include "EnemyBase.generated.h"
 
 class UBoxComponent;
+class UAnimMontage;
 
 UCLASS()
 class PEACEFULHAZARD_API AEnemyBase : public ACharacter
@@ -35,6 +36,20 @@ protected:
 
 	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 
+
+	UPROPERTY(EditAnywhere, Category = "Anim Para")
+	UAnimMontage* HitRightMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Anim Para")
+	UAnimMontage* HitLeftMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Anim Para")
+	UAnimMontage* HitBackMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Anim Para")
+	UAnimMontage* HitFwdMontage;
+
+	void PlayHitMontage(FVector ShotDirection);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
