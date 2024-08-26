@@ -58,7 +58,7 @@ void AEnemyBase::StopHeadStunMontage()
 {
     if (HeadStunMontage)
     {
-        GetMesh()->GetAnimInstance()->Montage_Stop(0.1f, HeadStunMontage);
+        GetMesh()->GetAnimInstance()->Montage_Stop(0.2f, HeadStunMontage);
     }
 }
 
@@ -223,11 +223,11 @@ void AEnemyBase::UpdateValue()
     {
         if (EnemyAIController->bDeath)
         {
-            dissolvePercent += 0.1f;
+            dissolvePercent += 0.07f;
         }
         else
         {
-            dissolvePercent -= 0.1f;
+            dissolvePercent -= 0.07f;
         }
 
         dissolvePercent = FMath::Clamp(dissolvePercent, 0.f, 1.f);
