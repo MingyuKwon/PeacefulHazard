@@ -22,25 +22,25 @@ class PEACEFULHAZARD_API AEnemyAIController : public AAIController
 public:
 	AEnemyAIController(const FObjectInitializer& ObjectInitializer);
 
-	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	float currentHealth = 100.f;
 
-	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	float maxHealth = 100.f;
 
-	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	float damageAccumulate = 0.f;
 
-	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	float stundamageAccumulateUnit = 50.f;
 
-	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	bool bStunHeadShot = false;
 
-	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	bool bStunDamage = false;
 
-	UPROPERTY(EditAnywhere, Category = "Enemy Pawn Para")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	bool bDeath = false;
 
 	void EnemyTakeDamge(float Damage, bool bHead);

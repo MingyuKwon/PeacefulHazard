@@ -124,11 +124,26 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
                 PlayAnimMontage(DamageStunMontage);
             }
         }
+
+
+        if (EnemyAIController->bDeath)
+        {
+            if (EnemyAIController)
+            {
+                EnemyAIController->UnPossess(); 
+            }
+
+            GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));  // 충돌 설정을 Ragdoll로 변경
+            GetCharacterMovement()->DisableMovement();  // 캐릭터의 모든 움직임 비활성화
+            GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // 캡슐 콜리전 비활성화
+
+            SetLifeSpan(2.f);
+
+        }
         
     }
 
     PlayHitMontage(ShotDirection);
-
 
     // 여기에 bDeath true 이면 죽는 애니메이션 진행 하도록 하자
 
@@ -191,7 +206,6 @@ void AEnemyBase::PlayHitMontage(FVector ShotDirection)
     }
 
 }
-
 
 // Called when the game starts or when spawned
 void AEnemyBase::BeginPlay()

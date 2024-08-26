@@ -57,12 +57,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Anim Para")
 	UAnimMontage* DamageStunMontage;
 
-	UPROPERTY(EditAnywhere, Category = "Anim Para")
-	UAnimMontage* DeathMontage;
-
-
 
 	void PlayHitMontage(FVector ShotDirection);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
