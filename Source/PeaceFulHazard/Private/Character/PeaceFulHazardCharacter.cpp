@@ -496,6 +496,7 @@ bool APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
 
 bool APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
 {
+	if (bDeath) return false;
 
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
@@ -714,7 +715,10 @@ bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
 void APeaceFulHazardCharacter::Death()
 {
 	bDeath = true;
-	SetLifeSpan(3.f);
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayerDeathEvent.Broadcast();
+	}
 }
 
 void APeaceFulHazardCharacter::ReloadEndTrigger()

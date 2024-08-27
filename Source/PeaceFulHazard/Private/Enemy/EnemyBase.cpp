@@ -278,7 +278,9 @@ void AEnemyBase::BeginPlay()
 
     HeadBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("FX_Head"));
 
+
 }
+
 
 void AEnemyBase::UpdateValue()
 {

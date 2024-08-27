@@ -16,6 +16,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FInteractWithItemUIEvent, EItemType
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractSituationEvent, EInteractSituationType, situationType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FItemBoxInteractEvent, bool, bInventroyToBox, int32, index, EItemType, itemtype, int32, count );
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNoticeUIShowEvent, bool, bVisible, FString&, noticeText);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeathEvent);
 
 
 UCLASS(minimalapi)
@@ -50,7 +51,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FNoticeUIShowEvent NoticeUIShowEvent;
 
-	
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FPlayerDeathEvent PlayerDeathEvent;
+
 };
 
 

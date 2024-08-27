@@ -15,6 +15,7 @@ struct FAIStimulus;
 class AEnemyBase;
 class APeaceFulHazardCharacter;
 class AEnemyRoutePivot;
+class APeaceFulHazardGameMode;
 
 UCLASS()
 class PEACEFULHAZARD_API AEnemyAIController : public AAIController
@@ -72,6 +73,9 @@ public:
 	void TriggerResetPivotIndex(bool BFollowingLastPosition);
 
 protected:
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+	UFUNCTION()
+	void PlayerDeathCallback();
 
 	void Attack();
 

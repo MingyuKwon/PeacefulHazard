@@ -13,6 +13,8 @@
 #include "DrawDebugHelpers.h"
 #include "System/EnemyRoutePivot.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameMode/PeaceFulHazardGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent")))
@@ -120,6 +122,14 @@ void AEnemyAIController::TriggerResetPivotIndex(bool bFollowingLastPosition)
 	}
 }
 
+void AEnemyAIController::PlayerDeathCallback()
+{
+	Target = nullptr;
+	bFollowingLastPositon = false;
+	TriggerResetPivotIndex(bFollowingLastPositon);
+
+}
+
 void AEnemyAIController::Attack()
 {
 	bNowAttacking = true;
@@ -223,6 +233,10 @@ void AEnemyAIController::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyAIController::UpdateBlackBoard , 0.1f, true);
 
 	controlEnemy = Cast<AEnemyBase>(GetPawn());
+
+	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
+	PeaceFulHazardGameMode->PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeathCallback);
+
 		
 }
 
