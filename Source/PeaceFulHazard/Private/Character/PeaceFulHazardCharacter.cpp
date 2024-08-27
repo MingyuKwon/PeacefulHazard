@@ -90,6 +90,62 @@ void APeaceFulHazardCharacter::Tick(float deltaTime)
 
 }
 
+void APeaceFulHazardCharacter::PlayHitReactMontage(AActor* DamageCauser)
+{
+	FVector ForwardVector = GetActorForwardVector();
+	FVector ToShotDirection = (DamageCauser->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+
+	float Angle = FMath::Acos(FVector::DotProduct(ForwardVector, ToShotDirection)) * (180.0f / PI);
+
+	FVector CrossProduct = FVector::CrossProduct(ForwardVector, ToShotDirection);
+	if (CrossProduct.Z < 0)
+	{
+		Angle = -Angle;
+	}
+
+	if (Angle >= -45.0f && Angle <= 45.0f)
+	{
+		// Forward hit
+		if (HitForwardMontage)
+		{
+			PlayAnimMontage(HitForwardMontage);
+		}
+
+		UE_LOG(LogTemp, Display, TEXT("Hit from Front"));
+
+	}
+	else if (Angle > 45.0f && Angle <= 135.0f)
+	{
+		// Right hit
+		if (HitRightMontage)
+		{
+			PlayAnimMontage(HitRightMontage);
+		}
+		UE_LOG(LogTemp, Display, TEXT("Hit from Right"));
+
+
+	}
+	else if (Angle < -45.0f && Angle >= -135.0f)
+	{
+		// Left hit
+		if (HitLeftMontage)
+		{
+			PlayAnimMontage(HitLeftMontage);
+		}
+		UE_LOG(LogTemp, Display, TEXT("Hit from Left"));
+
+	}
+	else
+	{
+		if (HitBackwardMontage)
+		{
+			PlayAnimMontage(HitBackwardMontage);
+		}
+		UE_LOG(LogTemp, Display, TEXT("Hit from Back"));
+	}
+
+}
+
 void APeaceFulHazardCharacter::AimingLerp(float deltaTime)
 {
 	if (GetIsAiming())
@@ -162,7 +218,6 @@ void APeaceFulHazardCharacter::BeginPlay()
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
 
 }
-
 
 
 void APeaceFulHazardCharacter::SetWeaponEquip(bool isEquiped)
@@ -293,17 +348,25 @@ void APeaceFulHazardCharacter::SetCurrentActionItem()
 
 float APeaceFulHazardCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	if (bNowDamaging) return 0; 
+	if (bNowUnDamagable) return 0;
 
 	bNowDamaging = true;
+	bNowUnDamagable = true;
 	
 	GetWorld()->GetTimerManager().SetTimer(DamagedTimerHandle, [this]()
 		{
 			bNowDamaging = false;
+		}, 0.5f, false);
+
+	GetWorld()->GetTimerManager().SetTimer(UnDamagableTimerHandle, [this]()
+		{
+			bNowUnDamagable = false;
 		}, 1.5f, false);
-
-
+	
+	
 	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	PlayHitReactMontage(DamageCauser);
 
 	UE_LOG(LogTemp, Display, TEXT("Damage applied to: %s %f"), *GetName(), ActualDamage);
 

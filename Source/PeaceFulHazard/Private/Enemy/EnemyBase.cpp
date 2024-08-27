@@ -238,7 +238,6 @@ void AEnemyBase::PlayHitMontage(FVector ShotDirection)
         if (HitBackMontage)
         {
             PlayAnimMontage(HitBackMontage);
-            UE_LOG(LogTemp, Display, TEXT("Hit from Back"));
         }
 
     }
@@ -248,7 +247,6 @@ void AEnemyBase::PlayHitMontage(FVector ShotDirection)
         if (HitLeftMontage)
         {
             PlayAnimMontage(HitLeftMontage);
-            UE_LOG(LogTemp, Display, TEXT("Hit from Left"));
         }
     }
     else if (Angle < -45.0f && Angle >= -135.0f)
@@ -257,7 +255,6 @@ void AEnemyBase::PlayHitMontage(FVector ShotDirection)
         if (HitRightMontage)
         {
             PlayAnimMontage(HitRightMontage);
-            UE_LOG(LogTemp, Display, TEXT("Hit from Right"));
         }
     }
     else
@@ -266,7 +263,6 @@ void AEnemyBase::PlayHitMontage(FVector ShotDirection)
         if (HitFwdMontage)
         {
             PlayAnimMontage(HitFwdMontage);
-            UE_LOG(LogTemp, Display, TEXT("Hit from Front"));
         }
     }
 

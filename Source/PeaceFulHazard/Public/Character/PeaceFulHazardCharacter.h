@@ -123,6 +123,21 @@ protected:
 	UAnimMontage* AimBulletChangeMontage;
 
 
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UAnimMontage* HitForwardMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UAnimMontage* HitBackwardMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UAnimMontage* HitLeftMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UAnimMontage* HitRightMontage;
+
+
+	void PlayHitReactMontage(AActor* DamageCauser);
+
 	// this is used for Aiming start and end. using Camera Arm distance lerping (min 0, max 1)
 	float AimingPercent = 0.f;
 
@@ -177,7 +192,11 @@ protected:
 
 	bool bNowDamaging = false;
 
+	bool bNowUnDamagable = false;
+
+
 	FTimerHandle DamagedTimerHandle;
+	FTimerHandle UnDamagableTimerHandle;
 
 	float PistolFireDelay = 1.f;
 	float PistolPowerFireDelay = 1.5f;
