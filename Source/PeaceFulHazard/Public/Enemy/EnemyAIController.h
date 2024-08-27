@@ -52,6 +52,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	int32 routeIndex = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	bool bIsVisuallySensingTarget = false;
 
 	void EnemyTakeDamge(float Damage, bool bHead);
 

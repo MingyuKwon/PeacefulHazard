@@ -33,7 +33,6 @@ AEnemyBase::AEnemyBase()
 
 	HeadBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HeadBox"));
 	HeadBox->SetupAttachment(RootComponent);
-	HeadBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("FX_Head"));
 
     bUseControllerRotationYaw = false;
     bUseControllerRotationPitch = false;
@@ -117,8 +116,6 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
         {
             UE_LOG(LogTemp, Display, TEXT("Body Shot"));
         }
-
-        UE_LOG(LogTemp, Warning, TEXT("Received Point Damage: %f from %s"), ActualDamage, *DamageCauser->GetName());
     }
     else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
     {
@@ -233,6 +230,9 @@ void AEnemyBase::BeginPlay()
 	
     GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyBase::UpdateValue, 0.1f, true);
     FindEnemyRoutes();
+
+    HeadBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("FX_Head"));
+
 }
 
 void AEnemyBase::UpdateValue()

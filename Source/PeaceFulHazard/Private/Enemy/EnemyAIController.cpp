@@ -85,8 +85,6 @@ void AEnemyAIController::TriggerRoute(TArray<AEnemyRoutePivot*> Pivots)
 
 void AEnemyAIController::TriggerResetPivotIndex(bool bFollowingLastPosition)
 {
-	UE_LOG(LogTemp, Warning, TEXT("TriggerResetPivotIndex"));
-
 	if (bFollowingLastPosition)
 	{
 		if (GetPawn() && RoutePivots.Num() > 0)
@@ -128,9 +126,6 @@ bool AEnemyAIController::CheckMovetoDestination()
 	FVector PawnPosition = GetPawn()->GetActorLocation();
 
 	float distance = FVector::Dist2D(PawnPosition, TargetLocation);
-
-	UE_LOG(LogTemp, Warning, TEXT("%s, %f"), *GetName(), distance);
-
 
 	return distance <= 40.f;
 }
@@ -213,18 +208,51 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 {
 	if (!Actor->IsA(APeaceFulHazardCharacter::StaticClass())) return;
 
-	if (Stimulus.WasSuccessfullySensed())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Sense In: %s"), *Actor->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *Stimulus.Type.Name.ToString());
 
-		bFollowingLastPositon = false;
-		Target = Cast<APeaceFulHazardCharacter>(Actor);
+
+	if (Stimulus.Type.Name == "Default__AISense_Sight")
+	{
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Sight Sense In: %s"), *Actor->GetName());
+
+			bFollowingLastPositon = false;
+			Target = Cast<APeaceFulHazardCharacter>(Actor);
+			bIsVisuallySensingTarget = true; // 시각 자극 활성화
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Sight Sense Out: %s"), *Actor->GetName());
+			bIsVisuallySensingTarget = false; // 시각 자극 비활성화
+
+			if (!bFollowingLastPositon) // 시각이 아닌 다른 감지 방법에 의해 타겟을 추적하는 중이 아닌 경우
+			{
+				bFollowingLastPositon = true;
+				Target = nullptr;
+			}
+		}
 	}
-	else
+	else if (Stimulus.Type.Name == "Default__AISense_Damage")
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Sense Out: %s"), *Actor->GetName());
-		bFollowingLastPositon = true;
-		Target = nullptr;
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Damage Sense In: %s"), *Actor->GetName());
 
+			bFollowingLastPositon = false;
+			Target = Cast<APeaceFulHazardCharacter>(Actor);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Damage Sense Out: %s"), *Actor->GetName());
+
+			// 시각 자극이 활성화된 상태라면 Damage Sense Out을 무시
+			if (!bIsVisuallySensingTarget)
+			{
+				bFollowingLastPositon = true;
+				Target = nullptr;
+			}
+		}
+		
 	}
 }
