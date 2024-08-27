@@ -78,6 +78,10 @@ void APeaceFulHazardCharacter::Tick(float deltaTime)
 		SetMoveInputLerp(0.f, 0.f);
 	}
 
+	if (bDeath)
+	{
+		DeathCameraLerp(deltaTime);
+	}
 
 	AimingLerp(deltaTime);
 	AimingPitchLerp(deltaTime);
@@ -173,6 +177,34 @@ void APeaceFulHazardCharacter::AimingLerp(float deltaTime)
 
 }
 
+void APeaceFulHazardCharacter::DeathCameraLerp(float DeltaTime)
+{
+	if (FollowCamera)
+	{
+		FVector CurrentLocation = FollowCamera->GetComponentLocation();
+		FRotator CurrentRotation = FollowCamera->GetRelativeRotation();
+
+		float RotationThreshold = 0.5f;
+		if (FMath::Abs(CurrentRotation.Pitch - DeathCameraRotation.Pitch) < RotationThreshold &&
+			FMath::Abs(CurrentRotation.Yaw - DeathCameraRotation.Yaw) < RotationThreshold &&
+			FMath::Abs(CurrentRotation.Roll - DeathCameraRotation.Roll) < RotationThreshold)
+		{
+
+			float NewZ = FMath::FInterpTo(CurrentLocation.Z, CurrentLocation.Z + 50.0f, DeltaTime, 0.5f);  
+			CurrentLocation.Z = NewZ;
+
+			FollowCamera->SetWorldLocation(CurrentLocation);
+		}
+		else
+		{
+			FRotator NewRotation = FMath::RInterpTo(CurrentRotation, DeathCameraRotation, DeltaTime, 3.0f);
+			FollowCamera->SetRelativeRotation(NewRotation);
+
+		}
+
+	}
+}
+
 void APeaceFulHazardCharacter::AimingPitchLerp(float deltaTime)
 {
 	if (!GetIsAiming()) return;
@@ -201,6 +233,8 @@ void APeaceFulHazardCharacter::AimingPitchLerp(float deltaTime)
 
 	}
 }
+
+
 
 void APeaceFulHazardCharacter::BeginPlay()
 {

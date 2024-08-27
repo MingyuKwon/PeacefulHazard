@@ -161,6 +161,8 @@ protected:
 	void AimingLerp(float deltaTime);
 	void AimingPitchLerp(float deltaTime);
 
+	FRotator DeathCameraRotation = FRotator(-45.f, -10.f, 0.f);
+	void DeathCameraLerp(float deltaTime);
 
 	float moveXInput = 0.f;
 	float moveYInput = 0.f;

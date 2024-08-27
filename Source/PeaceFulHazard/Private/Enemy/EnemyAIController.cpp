@@ -257,6 +257,8 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *Stimulus.Type.Name.ToString());
 
+	APeaceFulHazardCharacter* InputTarget = Cast<APeaceFulHazardCharacter>(Actor);
+	if (InputTarget->bDeath) return;
 
 	if (Stimulus.Type.Name == "Default__AISense_Sight")
 	{
@@ -265,7 +267,7 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 			UE_LOG(LogTemp, Warning, TEXT("Sight Sense In: %s"), *Actor->GetName());
 
 			bFollowingLastPositon = false;
-			Target = Cast<APeaceFulHazardCharacter>(Actor);
+			Target = InputTarget;
 			bIsVisuallySensingTarget = true;
 		}
 		else
@@ -287,7 +289,7 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 			UE_LOG(LogTemp, Warning, TEXT("Damage Sense In: %s"), *Actor->GetName());
 
 			bFollowingLastPositon = false;
-			Target = Cast<APeaceFulHazardCharacter>(Actor);
+			Target = InputTarget;
 		}
 		else
 		{
