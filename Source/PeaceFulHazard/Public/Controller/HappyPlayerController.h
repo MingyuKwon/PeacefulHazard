@@ -170,6 +170,12 @@ protected:
 
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TMap<ETutorialType, FString> TutorialMap;
+
+	UFUNCTION(BlueprintCallable)
+	void TutorialShow(ETutorialType tutorialType);
+
 
 	FCharacterInventoty CharacterInventoty;
 	FCharacterItemBox CharacterItemBox;

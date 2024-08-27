@@ -19,6 +19,14 @@ enum class EItemType : uint8
 };
 
 UENUM(BlueprintType)
+enum class ETutorialType : uint8
+{
+    ETT_None,
+    ETT_MoveTutorial,
+    ETT_Max
+};
+
+UENUM(BlueprintType)
 enum class EInteractSituationType : uint8
 {
     EIST_None,

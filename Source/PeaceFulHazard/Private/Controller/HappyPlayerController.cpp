@@ -81,6 +81,10 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->ItemBoxInteractEvent.AddDynamic(this, &ThisClass::ChangeItemBox);
 
         PeaceFulHazardGameMode->NoticeUIShowEvent.AddDynamic(this, &ThisClass::ShowNoticeUI);
+
+        PeaceFulHazardGameMode->TutorialEvent.AddDynamic(this, &ThisClass::TutorialShow);
+
+        
     }
 
     InitializeInventory();
@@ -552,6 +556,8 @@ void AHappyPlayerController::SituationInteract(EInteractSituationType situationT
     CloseAllUI();
 }
 
+
+
 bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
 {
     if (bReplace)
@@ -682,6 +688,12 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
     }
 }
 
+void AHappyPlayerController::TutorialShow(ETutorialType tutorialType)
+{
+    if (!TutorialMap.Contains(tutorialType)) return;
+
+    ShowNoticeUI(true, TutorialMap[tutorialType]);
+}
 
 bool AHappyPlayerController::ChangeItemInventoryMap(EItemType itemType, int32 count)
 {
