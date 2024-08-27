@@ -175,6 +175,10 @@ protected:
 
 	bool bFireLock = false;
 
+	bool bNowDamaging = false;
+
+	FTimerHandle DamagedTimerHandle;
+
 	float PistolFireDelay = 1.f;
 	float PistolPowerFireDelay = 1.5f;
 
@@ -197,6 +201,9 @@ protected:
 	void SetUIUpdateTick();
 
 	void SetCurrentActionItem();
+
+	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
+
 
 public:
 	/** Returns CameraBoom subobject **/

@@ -91,7 +91,6 @@ void AEnemyBase::AttackImpact(int32 index)
         if (TargetCharacter)
         {
             UGameplayStatics::ApplyDamage(TargetCharacter, EnemyDamageAmount, GetController(), this, UDamageType::StaticClass());
-            UE_LOG(LogTemp, Display, TEXT("Damage applied to: %s"), *TargetCharacter->GetName());
         }
     }
 }

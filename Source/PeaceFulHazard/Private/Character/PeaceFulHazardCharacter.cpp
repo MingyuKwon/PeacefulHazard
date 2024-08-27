@@ -181,7 +181,8 @@ void APeaceFulHazardCharacter::SetUIUpdateTick()
 
 bool APeaceFulHazardCharacter::GetIsAiming() const
 {
-	return bNowAiming && !GetCharacterMovement()->IsFalling() && !bReloading;
+	return bNowAiming && !GetCharacterMovement()->IsFalling() && !bReloading && !bNowDamaging;
+	;
 }
 
 float APeaceFulHazardCharacter::GetMoveXInput() const
@@ -290,6 +291,25 @@ void APeaceFulHazardCharacter::SetCurrentActionItem()
 	}
 }
 
+float APeaceFulHazardCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (bNowDamaging) return 0; 
+
+	bNowDamaging = true;
+	
+	GetWorld()->GetTimerManager().SetTimer(DamagedTimerHandle, [this]()
+		{
+			bNowDamaging = false;
+		}, 1.5f, false);
+
+
+	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	UE_LOG(LogTemp, Display, TEXT("Damage applied to: %s %f"), *GetName(), ActualDamage);
+
+	return ActualDamage;
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -371,6 +391,8 @@ void APeaceFulHazardCharacter::SetShouldPlayerFollowCamera()
 
 bool APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
 {
+	if (bNowDamaging) return false;
+
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 	MovementVector = MovementVector.GetSafeNormal();
@@ -456,6 +478,8 @@ bool APeaceFulHazardCharacter::AimEnd(const FInputActionValue& Value)
 
 bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 {
+	if (bNowDamaging) return false;
+
 	if (!bShootableAimState) return false;
 	if (bFireLock) return false;
 
@@ -517,6 +541,8 @@ bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 
 bool APeaceFulHazardCharacter::TriggerInteract()
 {
+	if (bNowDamaging) return false;
+
 	if (currentActionableItem == nullptr) return false;
 
 	currentActionableItem->InteractWithPlayer(this);
@@ -534,6 +560,7 @@ bool APeaceFulHazardCharacter::ShiftStart(const FInputActionValue& Value)
 
 bool APeaceFulHazardCharacter::ShiftEnd(const FInputActionValue& Value)
 {
+
 	bNowShifting = false;
 
 	return true;
@@ -544,6 +571,7 @@ bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
 {
 	if (GetIsAiming()) return false;
 	if (bReloading) return false;
+	if (bNowDamaging) return false;
 
 	bEquiped = !bEquiped;
 
@@ -579,6 +607,7 @@ bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
 {
 	if (!bEquiped) return false;
 	if (bReloading) return false;
+	if (bNowDamaging) return false;
 
 	bReloading = true;
 	
@@ -622,6 +651,8 @@ bool APeaceFulHazardCharacter::ChangeBullet()
 {
 	if (!bEquiped) return false;
 	if (bReloading) return false;
+	if (bNowDamaging) return false;
+
 
 	bReloading = true;
 
