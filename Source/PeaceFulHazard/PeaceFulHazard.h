@@ -14,6 +14,7 @@ enum class EItemType : uint8
     EIT_HealPack_Big,
     EIT_KeyNormal,
     EIT_KeyBig,
+    EIT_Bag,
 
     EIT_Max
 };

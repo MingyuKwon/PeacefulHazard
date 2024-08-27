@@ -36,6 +36,7 @@ void UNoticePanelWidget::OkUIInputTrigger()
 
 void UNoticePanelWidget::UpdateNoticeDisplay(FString& noticeText)
 {
+	UE_LOG(LogTemp, Display, TEXT("Notice Text: %s"), *noticeText);
 	FText TempText = FText::FromString(noticeText);
 	NoticeText->SetText(TempText);
 }

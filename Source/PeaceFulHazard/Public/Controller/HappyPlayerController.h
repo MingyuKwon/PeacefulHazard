@@ -223,6 +223,10 @@ protected:
 	void ChangeItemInventory(EItemType itemType, int32 count);
 
 	UFUNCTION(BlueprintCallable)
+	void InventorySizeUpgrade(int32 count);
+
+
+	UFUNCTION(BlueprintCallable)
 	void ChangeItemBoxInContrller(int32 index, EItemType itemType, int32 count);
 
 	void ReArrangeBox();

@@ -547,7 +547,15 @@ void AHappyPlayerController::UseItem(EItemType itemType, bool bItem)
 
 void AHappyPlayerController::InteractWithItemUI(EItemType itemtype, int32 count)
 {
-    ChangeItemInventory(itemtype, count);
+    if (itemtype == EItemType::EIT_Bag)
+    {
+        InventorySizeUpgrade(count);
+    }
+    else
+    {
+        ChangeItemInventory(itemtype, count);
+    }
+
     CloseAllUI();
 }
 
@@ -594,6 +602,32 @@ void AHappyPlayerController::ChangeItemInventory(EItemType itemType, int32 count
     if (!ChangeItemInventoryArray(itemType, count)) return;
     if (!ChangeItemInventoryMap(itemType, count)) return;
     
+    UpdateAllUI();
+}
+
+void AHappyPlayerController::InventorySizeUpgrade(int32 count)
+{
+    int32 Lockindex = 0;
+    for (bool Lock : CharacterInventoty.ItemLockArray)
+    {
+        if (Lock)
+        {
+            break;
+        }
+
+        Lockindex++;
+    }
+
+    Lockindex = FMath::Clamp(Lockindex, 0, CharacterInventoty.ItemLockArray.Num()-1);
+
+    while (count > 0)
+    {
+        CharacterInventoty.ItemLockArray[Lockindex] = false;
+        Lockindex++;
+        Lockindex = FMath::Clamp(Lockindex, 0, CharacterInventoty.ItemLockArray.Num() - 1);
+        count--;
+    }
+
     UpdateAllUI();
 }
 
