@@ -24,6 +24,7 @@
 #include "Engine/DamageEvents.h"
 #include "Materials/MaterialInstance.h"
 #include "System/EnemyRoutePivot.h"
+#include "Character/PeaceFulHazardCharacter.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -34,6 +35,10 @@ AEnemyBase::AEnemyBase()
 	HeadBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HeadBox"));
 	HeadBox->SetupAttachment(RootComponent);
 
+    AttackRangeBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackRangeBox"));
+    AttackRangeBox->SetupAttachment(RootComponent);
+
+    
     bUseControllerRotationYaw = false;
     bUseControllerRotationPitch = false;
     bUseControllerRotationRoll = false;
@@ -41,6 +46,7 @@ AEnemyBase::AEnemyBase()
     GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
     HeadBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+    AttackRangeBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
     GetCharacterMovement()->bUseRVOAvoidance = true;
 }
@@ -76,7 +82,18 @@ void AEnemyBase::Attack()
 
 void AEnemyBase::AttackImpact(int32 index)
 {
-    UE_LOG(LogTemp, Display, TEXT("AttackImpact"));
+    TArray<AActor*> OverlappingActors;
+    AttackRangeBox->GetOverlappingActors(OverlappingActors);
+
+    for (AActor* Actor : OverlappingActors)
+    {
+        APeaceFulHazardCharacter* TargetCharacter = Cast<APeaceFulHazardCharacter>(Actor);
+        if (TargetCharacter)
+        {
+            UGameplayStatics::ApplyDamage(TargetCharacter, EnemyDamageAmount, GetController(), this, UDamageType::StaticClass());
+            UE_LOG(LogTemp, Display, TEXT("Damage applied to: %s"), *TargetCharacter->GetName());
+        }
+    }
 }
 
 void AEnemyBase::AttackEnd()
