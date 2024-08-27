@@ -23,6 +23,11 @@ enum class ETutorialType : uint8
 {
     ETT_None,
     ETT_MoveTutorial,
+    ETT_Fire,
+    ETT_InteractWithItem,
+    ETT_InteractWithSituation,
+    ETT_InteractWithOneWayDoor,
+
     ETT_Max
 };
 
