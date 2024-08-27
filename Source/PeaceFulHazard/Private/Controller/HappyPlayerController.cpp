@@ -185,6 +185,20 @@ void AHappyPlayerController::TriggerItemBox()
     }
 }
 
+void AHappyPlayerController::TakeDamge(float damage)
+{
+    currentHealth -= damage;
+    currentHealth = FMath::Clamp(currentHealth, 0, 200);
+
+    if (ControlledCharacter)
+    {
+        if (currentHealth <= 0)
+        {
+            ControlledCharacter->Death();
+        }
+    }
+}
+
 void AHappyPlayerController::PauseGame(bool flag)
 {
     if (flag)

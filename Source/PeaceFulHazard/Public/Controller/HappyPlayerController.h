@@ -177,8 +177,12 @@ protected:
 	bool nowPausing = false;
 	void SetGamePause(bool flag);
 
-	int32 currentBullet = 10;
 	int32 maxBullet = 10;
+
+	float currentHealth = 20.f;
+
+
+	int32 currentBullet = 10;
 
 	int32 normalBulletMax = 10;
 	int32 BigBulletMax = 5;
@@ -237,6 +241,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void TriggerItemBox();
+
+	UFUNCTION()
+	void TakeDamge(float damage);
 
 	UFUNCTION(BlueprintCallable)
 	EItemType GetcurrentBulletType() { return currentBulletType; }

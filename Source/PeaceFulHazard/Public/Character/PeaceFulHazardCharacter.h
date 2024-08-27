@@ -76,6 +76,10 @@ public:
 	bool Reload(const FInputActionValue& Value);
 
 
+	void Death();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
+	bool bDeath = false;
+
 	bool TriggerInteract();
 
 	bool ChangeBullet();
@@ -193,7 +197,6 @@ protected:
 	bool bNowDamaging = false;
 
 	bool bNowUnDamagable = false;
-
 
 	FTimerHandle DamagedTimerHandle;
 	FTimerHandle UnDamagableTimerHandle;

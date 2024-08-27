@@ -237,8 +237,8 @@ void APeaceFulHazardCharacter::SetUIUpdateTick()
 
 bool APeaceFulHazardCharacter::GetIsAiming() const
 {
-	return bNowAiming && !GetCharacterMovement()->IsFalling() && !bReloading && !bNowDamaging;
-	;
+	return bNowAiming && !GetCharacterMovement()->IsFalling() && !bReloading && !bNowDamaging && !bDeath;
+	
 }
 
 float APeaceFulHazardCharacter::GetMoveXInput() const
@@ -350,6 +350,7 @@ void APeaceFulHazardCharacter::SetCurrentActionItem()
 float APeaceFulHazardCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	if (bNowUnDamagable) return 0;
+	if (bDeath) return 0;
 
 	bNowDamaging = true;
 	bNowUnDamagable = true;
@@ -362,13 +363,17 @@ float APeaceFulHazardCharacter::TakeDamage(float DamageAmount, FDamageEvent cons
 	GetWorld()->GetTimerManager().SetTimer(UnDamagableTimerHandle, [this]()
 		{
 			bNowUnDamagable = false;
-		}, 1.5f, false);
+		}, 1.0f, false);
 	
 	
 	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	PlayHitReactMontage(DamageCauser);
 
+	if (HappyPlayerController)
+	{
+		HappyPlayerController->TakeDamge(ActualDamage);
+	}
 	UE_LOG(LogTemp, Display, TEXT("Damage applied to: %s %f"), *GetName(), ActualDamage);
 
 	return ActualDamage;
@@ -456,6 +461,7 @@ void APeaceFulHazardCharacter::SetShouldPlayerFollowCamera()
 bool APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
 {
 	if (bNowDamaging) return false;
+	if (bDeath) return false;
 
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
@@ -543,6 +549,7 @@ bool APeaceFulHazardCharacter::AimEnd(const FInputActionValue& Value)
 bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 {
 	if (bNowDamaging) return false;
+	if (bDeath) return false;
 
 	if (!bShootableAimState) return false;
 	if (bFireLock) return false;
@@ -606,6 +613,7 @@ bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 bool APeaceFulHazardCharacter::TriggerInteract()
 {
 	if (bNowDamaging) return false;
+	if (bDeath) return false;
 
 	if (currentActionableItem == nullptr) return false;
 
@@ -636,6 +644,7 @@ bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
 	if (GetIsAiming()) return false;
 	if (bReloading) return false;
 	if (bNowDamaging) return false;
+	if (bDeath) return false;
 
 	bEquiped = !bEquiped;
 
@@ -672,6 +681,7 @@ bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
 	if (!bEquiped) return false;
 	if (bReloading) return false;
 	if (bNowDamaging) return false;
+	if (bDeath) return false;
 
 	bReloading = true;
 	
@@ -701,6 +711,12 @@ bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
 	return false;
 }
 
+void APeaceFulHazardCharacter::Death()
+{
+	bDeath = true;
+	SetLifeSpan(3.f);
+}
+
 void APeaceFulHazardCharacter::ReloadEndTrigger()
 {
 	bReloading = false;
@@ -716,6 +732,7 @@ bool APeaceFulHazardCharacter::ChangeBullet()
 	if (!bEquiped) return false;
 	if (bReloading) return false;
 	if (bNowDamaging) return false;
+	if (bDeath) return false;
 
 
 	bReloading = true;
