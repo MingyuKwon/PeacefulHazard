@@ -108,10 +108,11 @@ void APeaceFulHazardCharacter::PlayHitReactMontage(AActor* DamageCauser)
 		// Forward hit
 		if (HitForwardMontage)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Hit from Front"));
+
 			PlayAnimMontage(HitForwardMontage);
 		}
 
-		UE_LOG(LogTemp, Display, TEXT("Hit from Front"));
 
 	}
 	else if (Angle > 45.0f && Angle <= 135.0f)
