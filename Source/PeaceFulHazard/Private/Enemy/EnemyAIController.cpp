@@ -120,14 +120,37 @@ void AEnemyAIController::TriggerResetPivotIndex(bool bFollowingLastPosition)
 	}
 }
 
+void AEnemyAIController::Attack()
+{
+	bNowAttacking = true;
+
+	UE_LOG(LogTemp, Display, TEXT("Attack"));
+	if (controlEnemy)
+	{
+		controlEnemy->Attack();
+	}
+}
+
 bool AEnemyAIController::CheckMovetoDestination()
 {
 	if (GetPawn() == nullptr ) return false;
 	FVector PawnPosition = GetPawn()->GetActorLocation();
 
 	float distance = FVector::Dist2D(PawnPosition, TargetLocation);
+	
+	if (GEngine)
+	{
+		FString text = FString::Printf(TEXT("distance : %f"), distance);
+		GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Blue, text);
+	}
 
-	return distance <= 40.f;
+	if (controlEnemy)
+	{
+		return distance <= ((Target == nullptr) ? controlEnemy->PatrolMoveToRange : controlEnemy->AttackRange);
+
+	}
+
+	return false;
 }
 
 void AEnemyAIController::UpdateBlackBoard()
@@ -135,6 +158,14 @@ void AEnemyAIController::UpdateBlackBoard()
 	if (Target)
 	{
 		TargetLocation = Target->GetActorLocation();
+
+		if (CheckMovetoDestination())
+		{
+			if (!bNowAttacking && !bDeath && !bStunDamage && !bStunHeadShot)
+			{
+				Attack();
+			}
+		}
 
 	}
 	else
@@ -152,11 +183,13 @@ void AEnemyAIController::UpdateBlackBoard()
 		BlackboardComp->SetValueAsBool(TEXT("bDeath"), bDeath);
 		BlackboardComp->SetValueAsBool(TEXT("bStunDamage"), bStunDamage);
 		BlackboardComp->SetValueAsBool(TEXT("bStunHeadShot"), bStunHeadShot);
+		BlackboardComp->SetValueAsBool(TEXT("bNowAttacking"), bNowAttacking);
+
 		BlackboardComp->SetValueAsVector(TEXT("TargetLocation"), TargetLocation);
 		BlackboardComp->SetValueAsObject(TEXT("Target"), Target);
 
+	}	
 
-	}
 }
 
 void AEnemyAIController::HeadStunRelease()
@@ -219,14 +252,14 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 
 			bFollowingLastPositon = false;
 			Target = Cast<APeaceFulHazardCharacter>(Actor);
-			bIsVisuallySensingTarget = true; // 시각 자극 활성화
+			bIsVisuallySensingTarget = true;
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Sight Sense Out: %s"), *Actor->GetName());
-			bIsVisuallySensingTarget = false; // 시각 자극 비활성화
+			bIsVisuallySensingTarget = false;
 
-			if (!bFollowingLastPositon) // 시각이 아닌 다른 감지 방법에 의해 타겟을 추적하는 중이 아닌 경우
+			if (!bFollowingLastPositon) 
 			{
 				bFollowingLastPositon = true;
 				Target = nullptr;
@@ -246,7 +279,6 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Damage Sense Out: %s"), *Actor->GetName());
 
-			// 시각 자극이 활성화된 상태라면 Damage Sense Out을 무시
 			if (!bIsVisuallySensingTarget)
 			{
 				bFollowingLastPositon = true;

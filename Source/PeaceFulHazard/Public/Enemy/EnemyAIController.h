@@ -45,6 +45,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	bool bDeath = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	bool bNowAttacking = false;
+
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	bool bFollowingLastPositon = false;
@@ -67,8 +71,9 @@ public:
 
 	void TriggerResetPivotIndex(bool BFollowingLastPosition);
 
-
 protected:
+
+	void Attack();
 
 	UFUNCTION()
 	bool CheckMovetoDestination();

@@ -73,18 +73,6 @@ void APeaceFulHazardCharacter::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
-	if (GEngine)
-	{
-		FString text = FString::Printf(TEXT("x : %f"), moveXInput);
-		GEngine->AddOnScreenDebugMessage(1, 0.f, FColor::Blue, text);
-	}
-
-	if (GEngine)
-	{
-		FString text = FString::Printf(TEXT("y : %f"), moveYInput);
-		GEngine->AddOnScreenDebugMessage(2, 0.f, FColor::Red, text);
-	}
-
 	if (GetCharacterMovement()->Velocity.Length() <= 0)
 	{
 		SetMoveInputLerp(0.f, 0.f);

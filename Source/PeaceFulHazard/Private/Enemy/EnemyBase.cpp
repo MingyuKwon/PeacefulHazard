@@ -38,6 +38,10 @@ AEnemyBase::AEnemyBase()
     bUseControllerRotationPitch = false;
     bUseControllerRotationRoll = false;
 
+    GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+    GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+    HeadBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
     GetCharacterMovement()->bUseRVOAvoidance = true;
 }
 
@@ -60,6 +64,29 @@ void AEnemyBase::PossessedBy(AController* NewController)
 			EnemyAIController->RunBehaviorTree(BehaviorTree);
 		}
 	}
+}
+
+void AEnemyBase::Attack()
+{
+    if (AttackMontage)
+    {
+        GetMesh()->GetAnimInstance()->Montage_Play(AttackMontage);
+    }
+}
+
+void AEnemyBase::AttackImpact(int32 index)
+{
+    UE_LOG(LogTemp, Display, TEXT("AttackImpact"));
+}
+
+void AEnemyBase::AttackEnd()
+{
+    UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
+
+    if (EnemyAIController)
+    {
+        EnemyAIController->bNowAttacking = false;
+    }
 }
 
 void AEnemyBase::MatchYawWithController(float DeltaTime)
@@ -91,6 +118,8 @@ void AEnemyBase::StopDamageStunMontage()
         GetMesh()->GetAnimInstance()->Montage_Stop(0.2f, DamageStunMontage);
     }
 }
+
+
 
 float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
@@ -134,6 +163,8 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
         {
             if (HeadStunMontage)
             {
+                StopAnimMontage(AttackMontage);
+                AttackEnd();
                 PlayAnimMontage(HeadStunMontage);
             }
         }
@@ -142,6 +173,8 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
         {
             if (DamageStunMontage)
             {
+                StopAnimMontage(AttackMontage);
+                AttackEnd();
                 PlayAnimMontage(DamageStunMontage);
             }
         }

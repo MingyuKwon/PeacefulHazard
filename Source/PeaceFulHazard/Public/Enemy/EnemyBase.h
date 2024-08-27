@@ -22,8 +22,24 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* HeadBox;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
+	float PatrolMoveToRange = 40;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
+	float AttackRange = 100;
+
 	void StopHeadStunMontage();
 	void StopDamageStunMontage();
+
+	UFUNCTION(BlueprintCallable)
+	void Attack();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackImpact(int32 index);
+
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
@@ -75,6 +91,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Anim Para")
 	UAnimMontage* DamageStunMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Anim Para")
+	UAnimMontage* AttackMontage;
 
 
 	void PlayHitMontage(FVector ShotDirection);
