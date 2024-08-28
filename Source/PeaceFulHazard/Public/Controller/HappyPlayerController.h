@@ -184,18 +184,21 @@ protected:
 	void TutorialShow(ETutorialType tutorialType);
 
 
+	// Map Loading Needed Para
 	FCharacterInventoty CharacterInventoty;
 	FCharacterItemBox CharacterItemBox;
 
-	bool nowPausing = false;
-	void SetGamePause(bool flag);
-
 	int32 maxBullet = 10;
+	int32 currentBullet = 10;
 
 	float currentHealth = 50.f;
 
 
-	int32 currentBullet = 10;
+	// Map Loading Needed Para
+
+	bool nowPausing = false;
+	void SetGamePause(bool flag);
+
 
 	int32 normalBulletMax = 10;
 	int32 BigBulletMax = 5;

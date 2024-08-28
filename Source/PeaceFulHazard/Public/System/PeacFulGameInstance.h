@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "PeaceFulHazard/PeaceFulHazard.h"
+#include "Controller/HappyPlayerController.h"
 #include "PeacFulGameInstance.generated.h"
 
 /**
@@ -21,8 +22,19 @@ public:
 
 	bool checkIsTutorialAlready(ETutorialType tutorial);
 
+	void SaveParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet,float currentHealth);
+	bool GetParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth);
+
+
 protected:
 	virtual void Init() override;
 
+	FCharacterInventoty SavedCharacterInventory;
+	FCharacterItemBox SavedCharacterItemBox;
+	int32 SavedMaxBullet;
+	int32 SavedCurrentBullet;
+	float SavedCurrentHealth;
+
+	bool bBeforeWasMap = false;
 };
 

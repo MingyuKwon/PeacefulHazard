@@ -13,6 +13,33 @@ bool UPeacFulGameInstance::checkIsTutorialAlready(ETutorialType tutorial)
     return temp;
 }
 
+void UPeacFulGameInstance::SaveParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth)
+{
+    bBeforeWasMap = true;
+
+    SavedCharacterInventory = CharacterInventoty;
+    SavedCharacterItemBox = CharacterItemBox;
+    SavedMaxBullet = maxBullet;
+    SavedCurrentBullet = currentBullet;
+    SavedCurrentHealth = currentHealth;
+
+}
+
+bool UPeacFulGameInstance::GetParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth)
+{
+    if (!bBeforeWasMap) return false;
+
+    CharacterInventoty = SavedCharacterInventory;
+    CharacterItemBox = SavedCharacterItemBox;
+    maxBullet = SavedMaxBullet;
+    currentBullet = SavedCurrentBullet;
+    currentHealth = SavedCurrentHealth;
+
+    bBeforeWasMap = false;
+
+    return true;
+}
+
 void UPeacFulGameInstance::Init()
 {
     Super::Init();

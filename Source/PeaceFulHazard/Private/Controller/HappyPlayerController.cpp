@@ -92,6 +92,12 @@ void AHappyPlayerController::BeginPlay()
 
     InitializeInventory();
 
+    if (PeacFulGameInstance)
+    {
+        PeacFulGameInstance->GetParaAfterWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth);
+    }
+
+
     if (PlayerHUD)
     {
         UpdateAllUI();
@@ -732,7 +738,9 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
     FString MapName = TravelMap[warptarget];
 
     if (MapName.IsEmpty()) return;
+    if (PeacFulGameInstance == nullptr) return;
 
+    PeacFulGameInstance->SaveParaBeforeWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth);
     UGameplayStatics::OpenLevel(this, FName(*MapName));
 
 }
