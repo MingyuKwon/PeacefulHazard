@@ -20,6 +20,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeathEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTutorialEvent, ETutorialType, tutorialType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMapTravelEvent, EWarpTarget, warptarget);
 
+class UPeacFulGameInstance;
 
 
 UCLASS(minimalapi)
@@ -62,6 +63,16 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FMapTravelEvent MapTravelEvent;
+
+	EWarpTarget currentMapType = EWarpTarget::EWT_None;
+
+protected:
+	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+
+	virtual void BeginPlay() override;
+
+
+	UPeacFulGameInstance* PeacFulGameInstance;
 
 };
 

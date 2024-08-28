@@ -25,6 +25,8 @@ public:
 	void SaveParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet,float currentHealth, EItemType currentBulletType, bool Equipped);
 	bool GetParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped);
 
+	EWarpTarget beforeMapType = EWarpTarget::EWT_None;
+
 
 protected:
 	virtual void Init() override;
