@@ -173,8 +173,12 @@ protected:
 
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<ETutorialType, FString> TutorialMap;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
+	TMap<EWarpTarget, FString> TravelMap;
+
 
 	UFUNCTION(BlueprintCallable)
 	void TutorialShow(ETutorialType tutorialType);
@@ -188,7 +192,7 @@ protected:
 
 	int32 maxBullet = 10;
 
-	float currentHealth = 20.f;
+	float currentHealth = 50.f;
 
 
 	int32 currentBullet = 10;
@@ -239,6 +243,11 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void ShowNoticeUI(bool bVisible, FString& noticeText);
+
+	UFUNCTION(BlueprintCallable)
+	void WarpTravel(EWarpTarget warptarget);
+
+	
 
 	
 public:

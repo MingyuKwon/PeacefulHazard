@@ -22,5 +22,6 @@ void UPeacFulGameInstance::Init()
     TutorialCheckMap.Add(ETutorialType::ETT_InteractWithItem, false);
     TutorialCheckMap.Add(ETutorialType::ETT_InteractWithSituation, false);
     TutorialCheckMap.Add(ETutorialType::ETT_InteractWithOneWayDoor, false);
+    TutorialCheckMap.Add(ETutorialType::ETT_InteractItemBox, false);
 
 }

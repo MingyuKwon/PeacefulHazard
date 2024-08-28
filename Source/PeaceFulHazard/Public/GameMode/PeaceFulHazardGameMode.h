@@ -18,6 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FItemBoxInteractEvent, bool, bInve
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNoticeUIShowEvent, bool, bVisible, FString&, noticeText);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeathEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTutorialEvent, ETutorialType, tutorialType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMapTravelEvent, EWarpTarget, warptarget);
 
 
 
@@ -59,7 +60,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FTutorialEvent TutorialEvent;
 
-	
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FMapTravelEvent MapTravelEvent;
+
 };
 
 

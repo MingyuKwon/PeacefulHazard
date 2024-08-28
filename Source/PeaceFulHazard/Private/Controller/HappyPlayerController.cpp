@@ -85,6 +85,7 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->NoticeUIShowEvent.AddDynamic(this, &ThisClass::ShowNoticeUI);
 
         PeaceFulHazardGameMode->TutorialEvent.AddDynamic(this, &ThisClass::TutorialShow);
+        PeaceFulHazardGameMode->MapTravelEvent.AddDynamic(this, &ThisClass::WarpTravel);
 
         
     }
@@ -722,6 +723,18 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
             PlayerHUD->SetNoticeDisplay(false);
         }
     }
+}
+
+void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
+{
+    if (!TravelMap.Contains(warptarget)) return;
+
+    FString MapName = TravelMap[warptarget];
+
+    if (MapName.IsEmpty()) return;
+
+    UGameplayStatics::OpenLevel(this, FName(*MapName));
+
 }
 
 void AHappyPlayerController::TutorialShow(ETutorialType tutorialType)
