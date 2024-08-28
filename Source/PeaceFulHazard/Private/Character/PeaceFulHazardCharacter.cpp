@@ -388,6 +388,7 @@ float APeaceFulHazardCharacter::TakeDamage(float DamageAmount, FDamageEvent cons
 
 	bNowDamaging = true;
 	bNowUnDamagable = true;
+	bReloading = false;
 	
 	GetWorld()->GetTimerManager().SetTimer(DamagedTimerHandle, [this]()
 		{

@@ -23,18 +23,15 @@ AActor* APeaceFulHazardGameMode::ChoosePlayerStart_Implementation(AController* P
 
     if (PeacFulGameInstance)
     {
-        if (PeacFulGameInstance->beforeMapType != EWarpTarget::EWT_None)
+        for (AActor* playerStart : PlayerStarts)
         {
-            for (AActor* playerStart : PlayerStarts)
+            APeaceFulPlayerStart* temp = Cast<APeaceFulPlayerStart>(playerStart);
+
+            if (temp->mapType == PeacFulGameInstance->beforeMapType)
             {
-                APeaceFulPlayerStart* temp = Cast<APeaceFulPlayerStart>(playerStart);
-
-                if (temp->mapType == PeacFulGameInstance->beforeMapType)
-                {
-                    return playerStart;
-                }
-
+                return playerStart;
             }
+
         }
     }
 

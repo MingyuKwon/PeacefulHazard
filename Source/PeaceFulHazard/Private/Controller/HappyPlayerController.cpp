@@ -137,6 +137,8 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
 {
     if (PlayerHUD)
     {
+        if (currentUIState == EUIState::EUIS_Notice) return;
+
         if (nowPausing)
         {
             PlayerHUD->SetInventoryDisplay(false);
@@ -720,9 +722,12 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
     {
         if (PlayerHUD)
         {
-            PauseGame(true);
+            
+            currentUIState = EUIState::EUIS_Notice;
             PlayerHUD->UpdateNoticeDisplay(noticeText);
             PlayerHUD->SetNoticeDisplay(true);
+            SetGamePause(true);
+
         }
         
         
@@ -731,8 +736,9 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
     {
         if (PlayerHUD)
         {
-            PauseGame(false);
             PlayerHUD->SetNoticeDisplay(false);
+            SetGamePause(false);
+
         }
     }
 }
