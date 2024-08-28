@@ -13,6 +13,10 @@
 #include "UI/PlayerHUD.h"
 #include "Controller/HappyPlayerController.h"
 #include "Battle/Weapon.h"
+#include "Components/BoxComponent.h"
+#include "Item/HappyInteractableItem.h"
+#include "GameMode/PeaceFulHazardGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -54,31 +58,30 @@ APeaceFulHazardCharacter::APeaceFulHazardCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
+	InteractBox = CreateDefaultSubobject<UBoxComponent>(TEXT("InteractBox"));
+	InteractBox->SetupAttachment(RootComponent); 
+
+	actiontBox = CreateDefaultSubobject<UBoxComponent>(TEXT("actiontBox"));
+	actiontBox->SetupAttachment(RootComponent);
+
+	
+
 }
 
 void APeaceFulHazardCharacter::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
-	if (GEngine)
-	{
-		FString text = FString::Printf(TEXT("x : %f"), moveXInput);
-		GEngine->AddOnScreenDebugMessage(1, 0.f, FColor::Blue, text);
-	}
-
-	if (GEngine)
-	{
-		FString text = FString::Printf(TEXT("y : %f"), moveYInput);
-		GEngine->AddOnScreenDebugMessage(2, 0.f, FColor::Red, text);
-	}
-
 	if (GetCharacterMovement()->Velocity.Length() <= 0)
 	{
 		SetMoveInputLerp(0.f, 0.f);
 	}
 
+	if (bDeath)
+	{
+		DeathCameraLerp(deltaTime);
+	}
 
 	AimingLerp(deltaTime);
 	AimingPitchLerp(deltaTime);
@@ -88,6 +91,63 @@ void APeaceFulHazardCharacter::Tick(float deltaTime)
 	SetMoveSpeed();
 	SetShouldRotate();
 	SetShouldPlayerFollowCamera();
+
+}
+
+void APeaceFulHazardCharacter::PlayHitReactMontage(AActor* DamageCauser)
+{
+	FVector ForwardVector = GetActorForwardVector();
+	FVector ToShotDirection = (DamageCauser->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+
+	float Angle = FMath::Acos(FVector::DotProduct(ForwardVector, ToShotDirection)) * (180.0f / PI);
+
+	FVector CrossProduct = FVector::CrossProduct(ForwardVector, ToShotDirection);
+	if (CrossProduct.Z < 0)
+	{
+		Angle = -Angle;
+	}
+
+	if (Angle >= -45.0f && Angle <= 45.0f)
+	{
+		// Forward hit
+		if (HitForwardMontage)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hit from Front"));
+
+			PlayAnimMontage(HitForwardMontage);
+		}
+
+
+	}
+	else if (Angle > 45.0f && Angle <= 135.0f)
+	{
+		// Right hit
+		if (HitRightMontage)
+		{
+			PlayAnimMontage(HitRightMontage);
+		}
+		UE_LOG(LogTemp, Display, TEXT("Hit from Right"));
+
+
+	}
+	else if (Angle < -45.0f && Angle >= -135.0f)
+	{
+		// Left hit
+		if (HitLeftMontage)
+		{
+			PlayAnimMontage(HitLeftMontage);
+		}
+		UE_LOG(LogTemp, Display, TEXT("Hit from Left"));
+
+	}
+	else
+	{
+		if (HitBackwardMontage)
+		{
+			PlayAnimMontage(HitBackwardMontage);
+		}
+		UE_LOG(LogTemp, Display, TEXT("Hit from Back"));
+	}
 
 }
 
@@ -115,6 +175,34 @@ void APeaceFulHazardCharacter::AimingLerp(float deltaTime)
 	CameraBoom->SocketOffset = LerpSocketPosition;
 
 
+}
+
+void APeaceFulHazardCharacter::DeathCameraLerp(float DeltaTime)
+{
+	if (FollowCamera)
+	{
+		FVector CurrentLocation = FollowCamera->GetComponentLocation();
+		FRotator CurrentRotation = FollowCamera->GetRelativeRotation();
+
+		float RotationThreshold = 0.5f;
+		if (FMath::Abs(CurrentRotation.Pitch - DeathCameraRotation.Pitch) < RotationThreshold &&
+			FMath::Abs(CurrentRotation.Yaw - DeathCameraRotation.Yaw) < RotationThreshold &&
+			FMath::Abs(CurrentRotation.Roll - DeathCameraRotation.Roll) < RotationThreshold)
+		{
+
+			float NewZ = FMath::FInterpTo(CurrentLocation.Z, CurrentLocation.Z + 50.0f, DeltaTime, 0.5f);  
+			CurrentLocation.Z = NewZ;
+
+			FollowCamera->SetWorldLocation(CurrentLocation);
+		}
+		else
+		{
+			FRotator NewRotation = FMath::RInterpTo(CurrentRotation, DeathCameraRotation, DeltaTime, 3.0f);
+			FollowCamera->SetRelativeRotation(NewRotation);
+
+		}
+
+	}
 }
 
 void APeaceFulHazardCharacter::AimingPitchLerp(float deltaTime)
@@ -146,9 +234,10 @@ void APeaceFulHazardCharacter::AimingPitchLerp(float deltaTime)
 	}
 }
 
+
+
 void APeaceFulHazardCharacter::BeginPlay()
 {
-	// Call the base class  
 	Super::BeginPlay();
 
 	if (GetController())
@@ -160,7 +249,11 @@ void APeaceFulHazardCharacter::BeginPlay()
 	{
 		PlayerHUD = Cast<APlayerHUD>(HappyPlayerController->GetHUD());
 	}
+
+	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
+
 }
+
 
 void APeaceFulHazardCharacter::SetWeaponEquip(bool isEquiped)
 {
@@ -178,7 +271,8 @@ void APeaceFulHazardCharacter::SetUIUpdateTick()
 
 bool APeaceFulHazardCharacter::GetIsAiming() const
 {
-	return bNowAiming && !GetCharacterMovement()->IsFalling() && !bReloading;
+	return bNowAiming && !GetCharacterMovement()->IsFalling() && !bReloading && !bNowDamaging && !bDeath;
+	
 }
 
 float APeaceFulHazardCharacter::GetMoveXInput() const
@@ -207,6 +301,116 @@ float APeaceFulHazardCharacter::GetAimPitch() const
 	}
 
 	return Pitch;
+}
+
+void APeaceFulHazardCharacter::AddCurrentActionableItem(AHappyInteractableItem* item)
+{
+	if (item == nullptr) return;
+
+	if (!ActionableItems.Contains(item))
+	{
+		ActionableItems.Add(item);
+	}
+
+	SetCurrentActionItem();
+}
+
+void APeaceFulHazardCharacter::RemoveCurrentActionableItem(AHappyInteractableItem* item)
+{
+	if (item == nullptr) return;
+
+	if (ActionableItems.Contains(item))
+	{
+		ActionableItems.Remove(item);
+	}
+
+	if (ActionableItems.Num() <= 0)
+	{
+		currentActionableItem = nullptr;
+		item->SetbActionable(false);
+	}
+	else
+	{
+		SetCurrentActionItem();
+	}
+}
+
+
+void APeaceFulHazardCharacter::SetCurrentActionItem()
+{
+	if (ActionableItems.Num() <= 0)
+	{
+		if (currentActionableItem)
+		{
+			currentActionableItem->SetbActionable(false);
+		}
+
+		currentActionableItem = nullptr;
+		return;
+	}
+
+	float MinDistance = FLT_MAX;
+	AHappyInteractableItem* ClosestItem = nullptr;
+
+	FVector PlayerLocation = GetActorLocation();
+
+	for (AHappyInteractableItem* Item : ActionableItems)
+	{
+		if (Item)
+		{
+			float Distance = FVector::Dist(PlayerLocation, Item->GetActorLocation());
+
+			if (Distance < MinDistance)
+			{
+				MinDistance = Distance;
+				ClosestItem = Item;
+			}
+		}
+	}
+
+	if (currentActionableItem)
+	{
+		currentActionableItem->SetbActionable(false);
+	}
+
+	currentActionableItem = ClosestItem;
+
+	if (currentActionableItem)
+	{
+		currentActionableItem->SetbActionable(true);
+	}
+}
+
+float APeaceFulHazardCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (bNowUnDamagable) return 0;
+	if (bDeath) return 0;
+
+	bNowDamaging = true;
+	bNowUnDamagable = true;
+	
+	GetWorld()->GetTimerManager().SetTimer(DamagedTimerHandle, [this]()
+		{
+			bNowDamaging = false;
+		}, 0.5f, false);
+
+	GetWorld()->GetTimerManager().SetTimer(UnDamagableTimerHandle, [this]()
+		{
+			bNowUnDamagable = false;
+		}, 1.0f, false);
+	
+	
+	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	PlayHitReactMontage(DamageCauser);
+
+	if (HappyPlayerController)
+	{
+		HappyPlayerController->TakeDamge(ActualDamage);
+	}
+	UE_LOG(LogTemp, Display, TEXT("Damage applied to: %s %f"), *GetName(), ActualDamage);
+
+	return ActualDamage;
 }
 
 
@@ -265,27 +469,34 @@ void APeaceFulHazardCharacter::SetShouldRotate()
 
 void APeaceFulHazardCharacter::SetShouldPlayerFollowCamera()
 {
-	if (GetIsAiming())
-	{
-		FRotator NewRotation = Controller->GetControlRotation();
-		NewRotation.Pitch = 0;
-		SetActorRotation(NewRotation);
-	}
+    if (GetIsAiming())
+    {
+        FRotator CurrentRotation = GetActorRotation();
+        FRotator TargetRotation = Controller->GetControlRotation();
+        TargetRotation.Pitch = 0;
 
-	if (bEquiped)
-	{
-		if (!bNowShifting && GetCharacterMovement()->Velocity.Length() > 0)
-		{
-			FRotator NewRotation = Controller->GetControlRotation();
-			NewRotation.Pitch = 0;
-			SetActorRotation(NewRotation);
+        SetActorRotation(TargetRotation);
+    }
 
-		}
-	}
+    if (bEquiped)
+    {
+        if (!bNowShifting && GetCharacterMovement()->Velocity.Length() > 0)
+        {
+            FRotator CurrentRotation = GetActorRotation();
+            FRotator TargetRotation = Controller->GetControlRotation();
+            TargetRotation.Pitch = 0;
+
+            SetActorRotation(TargetRotation);
+        }
+    }
 }
+
 
 bool APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
 {
+	if (bNowDamaging) return false;
+	if (bDeath) return false;
+
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 	MovementVector = MovementVector.GetSafeNormal();
@@ -319,6 +530,7 @@ bool APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
 
 bool APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
 {
+	if (bDeath) return false;
 
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
@@ -349,6 +561,11 @@ bool APeaceFulHazardCharacter::AimStart(const FInputActionValue& Value)
 	if (!bEquiped) return false;
 
 	bNowAiming = true;
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->NowAimingEvent.Broadcast(true);
+	}
+	
 
 	return true;
 }
@@ -356,16 +573,29 @@ bool APeaceFulHazardCharacter::AimStart(const FInputActionValue& Value)
 bool APeaceFulHazardCharacter::AimEnd(const FInputActionValue& Value)
 {
 	bNowAiming = false;
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->NowAimingEvent.Broadcast(false);
+	}
 	return true;
 
 }
 
 bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 {
+	if (bNowDamaging) return false;
+	if (bDeath) return false;
+
 	if (!bShootableAimState) return false;
 	if (bFireLock) return false;
 
+	bool bNormalFire = true;
+
 	bFireLock = true;
+	if (HappyPlayerController)
+	{
+		bNormalFire = HappyPlayerController->GetcurrentBulletType() == EItemType::EIT_Bullet_Noraml;
+	}
 
 	if (EquipWeapon)
 	{
@@ -383,21 +613,46 @@ bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 		EquipWeapon->Fire(WorldLocation, WorldDirection);
 	}
 
-	if (FireMontage && GetMesh())
+	if (bNormalFire)
 	{
-		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-		if (AnimInstance)
+		if (FireMontage && GetMesh())
 		{
-			AnimInstance->Montage_Play(FireMontage);
+			UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+			if (AnimInstance)
+			{
+				AnimInstance->Montage_Play(FireMontage);
+			}
 		}
 	}
-
+	else
+	{
+		if (StrongFireMontage && GetMesh())
+		{
+			UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+			if (AnimInstance)
+			{
+				AnimInstance->Montage_Play(StrongFireMontage);
+			}
+		}
+	}
 
 	FTimerHandle FireDelayHandle;
 	GetWorld()->GetTimerManager().SetTimer(FireDelayHandle, [this]()
 		{
 			bFireLock = false;
-		}, PistolFireDelay, false);
+		}, bNormalFire ? PistolFireDelay : PistolPowerFireDelay, false);
+
+	return true;
+}
+
+bool APeaceFulHazardCharacter::TriggerInteract()
+{
+	if (bNowDamaging) return false;
+	if (bDeath) return false;
+
+	if (currentActionableItem == nullptr) return false;
+
+	currentActionableItem->InteractWithPlayer(this);
 
 	return true;
 }
@@ -412,7 +667,9 @@ bool APeaceFulHazardCharacter::ShiftStart(const FInputActionValue& Value)
 
 bool APeaceFulHazardCharacter::ShiftEnd(const FInputActionValue& Value)
 {
+
 	bNowShifting = false;
+
 	return true;
 
 }
@@ -420,6 +677,9 @@ bool APeaceFulHazardCharacter::ShiftEnd(const FInputActionValue& Value)
 bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
 {
 	if (GetIsAiming()) return false;
+	if (bReloading) return false;
+	if (bNowDamaging) return false;
+	if (bDeath) return false;
 
 	bEquiped = !bEquiped;
 
@@ -444,6 +704,7 @@ bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
 		{
 			FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
 			EquipWeapon->AttachToComponent(GetMesh(), AttachmentRules, FName("PistolSocket"));
+			EquipWeapon->SetOwner(this);
 		}
 	}
 
@@ -454,6 +715,8 @@ bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
 {
 	if (!bEquiped) return false;
 	if (bReloading) return false;
+	if (bNowDamaging) return false;
+	if (bDeath) return false;
 
 	bReloading = true;
 	
@@ -470,10 +733,26 @@ bool APeaceFulHazardCharacter::Reload(const FInputActionValue& Value)
 
 		}
 
+		if (EquipWeapon)
+		{
+			EquipWeapon->ReloadTrigger();
+		}
+
+
 		return true;
 	}
 
+
 	return false;
+}
+
+void APeaceFulHazardCharacter::Death()
+{
+	bDeath = true;
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayerDeathEvent.Broadcast();
+	}
 }
 
 void APeaceFulHazardCharacter::ReloadEndTrigger()
@@ -483,6 +762,53 @@ void APeaceFulHazardCharacter::ReloadEndTrigger()
 	if (HappyPlayerController)
 	{
 		HappyPlayerController->SetBulletCount(false);
+	}
+}
+
+bool APeaceFulHazardCharacter::ChangeBullet()
+{
+	if (!bEquiped) return false;
+	if (bReloading) return false;
+	if (bNowDamaging) return false;
+	if (bDeath) return false;
+
+
+	bReloading = true;
+
+	if (GetMesh())
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+		if (AnimInstance)
+		{
+			if (AimBulletChangeMontage)
+			{
+				AnimInstance->Montage_Play(AimBulletChangeMontage);
+			}
+
+		}
+
+		if (EquipWeapon)
+		{
+			EquipWeapon->ReloadTrigger();
+		}
+
+		return true;
+	}
+
+
+	return false;
+}
+
+void APeaceFulHazardCharacter::ChangeBulletEndTrigger()
+{
+	bReloading = false;
+
+	if (EquipWeapon && HappyPlayerController)
+	{
+		HappyPlayerController->SetBulletChangeCount();
+		EquipWeapon->ChangeBulletMode(HappyPlayerController->GetcurrentBulletType());
+
 	}
 }
 

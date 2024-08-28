@@ -8,7 +8,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
 #include "NiagaraDataInterfaceArrayFunctionLibrary.h"
-
+#include "Battle/PistolShell.h"
+#include "Materials/MaterialInstance.h"
+#include "Enemy/EnemyBase.h"
+#include "Engine/DamageEvents.h"
+#include "Perception/AISense_Damage.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -32,6 +36,74 @@ void AWeapon::BeginPlay()
 
 }
 
+void AWeapon::ChangeBulletMode(EItemType itemType)
+{
+    currentItemType = itemType;
+
+    if (itemType == EItemType::EIT_Bullet_Noraml)
+    {
+        if (NormalMaterial)
+        {
+            WeaponMesh->SetMaterial(0, NormalMaterial);
+        }
+    }
+    else
+    {
+       
+        if (BigMaterial)
+        {
+            WeaponMesh->SetMaterial(0, BigMaterial);
+        }
+    }
+}
+
+void AWeapon::ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector ShotDirection, FName BoneName)
+{
+    float DamageAmount = 0.f;  
+
+    if (currentItemType == EItemType::EIT_Bullet_Big)
+    {
+        DamageAmount = BigBulletDamage;
+    }
+    else
+    {
+        DamageAmount = NormalBulletDamage;
+    }
+
+    FPointDamageEvent PointDamageEvent;
+    PointDamageEvent.Damage = DamageAmount;
+    PointDamageEvent.ShotDirection = ShotDirection;
+
+    PointDamageEvent.HitInfo.Location = HitLocation;
+    PointDamageEvent.HitInfo.BoneName = BoneName;
+
+    AActor* OwnerActor = GetOwner(); 
+    AController* OwnerController = nullptr;
+
+    if (OwnerActor)
+    {
+        APawn* OwnerPawn = Cast<APawn>(OwnerActor);
+        if (OwnerPawn)
+        {
+            OwnerController = OwnerPawn->GetController();  
+        }
+    }
+
+    if (OwnerController)
+    {
+        UGameplayStatics::ApplyPointDamage(TargetActor, DamageAmount, ShotDirection, PointDamageEvent.HitInfo, OwnerController, this, UDamageType::StaticClass());
+
+        UAISense_Damage::ReportDamageEvent(
+            GetWorld(),
+            TargetActor,  // Damaged actor
+            OwnerActor,  // Instigator (damage causer)
+            DamageAmount,  // Damage amount
+            GetActorLocation(),  // Event location
+            HitLocation  // Hit location (optional)
+        );
+    }
+}
+
 void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
 {
     if (WeaponMesh == nullptr) return;
@@ -50,47 +122,107 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
 
     if (bHit)
     {
-        if (BulletHitImpact)
+        FVector SocketLocation = WeaponMesh->GetSocketLocation(FName("ShellSocket"));
+        FRotator SocketRotation = WeaponMesh->GetSocketRotation(FName("ShellSocket"));
+
+        AEnemyBase* hitEnemy;
+        if (HitResult.bBlockingHit)
         {
-            UNiagaraComponent* bulletHit = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-                GetWorld(),
-                BulletHitImpact,
-                HitResult.ImpactPoint,
-                HitResult.ImpactNormal.Rotation()
-            );
+            hitEnemy = Cast<AEnemyBase>(HitResult.GetActor());
 
-            /*
-
-            UNiagaraComponent* bulletTrail = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-                GetWorld(),
-                BulletTrail,
-                MuzzleLocation
-            );
-
-            if (bulletTrail)
+            if (hitEnemy)
             {
-                bulletTrail->SetVectorParameter(FName("TrailStart"), MuzzleLocation);
-                bulletTrail->SetVectorParameter(FName("TrailEnd"), HitResult.ImpactPoint);
+                if (HitResult.GetComponent() == hitEnemy->HeadBox)
+                {
+                    ShootAtEnemy(hitEnemy, HitResult.ImpactPoint, (HitResult.ImpactPoint - MuzzleLocation).GetSafeNormal(), FName("Head"));
+                }
+                else
+                {
+                    ShootAtEnemy(hitEnemy, HitResult.ImpactPoint, (HitResult.ImpactPoint - MuzzleLocation).GetSafeNormal(), FName("Body"));
+
+                }
             }
+        }
 
-            */
+        if (currentItemType == EItemType::EIT_Bullet_Big)
+        {
+            if (BigBulletHitImpact)
+            {
+                UNiagaraComponent* bulletHit = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+                    GetWorld(),
+                    BigBulletHitImpact,
+                    HitResult.ImpactPoint,
+                    HitResult.ImpactNormal.Rotation()
+                );
+            }
+        }
+        else
+        {
+            if (BulletHitImpact)
+            {
+                UNiagaraComponent* bulletHit = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+                    GetWorld(),
+                    BulletHitImpact,
+                    HitResult.ImpactPoint,
+                    HitResult.ImpactNormal.Rotation()
+                );
+            }
+        }
 
 
+        if (ShellClass)
+        {
+            FActorSpawnParameters SpawnParams;
+            SpawnParams.Owner = this;
+            SpawnParams.Instigator = GetInstigator();
 
+            APistolShell* shell = GetWorld()->SpawnActor<APistolShell>(ShellClass, SpawnParams);
+
+            if (shell)
+            {
+                shell->SetActorLocation(SocketLocation);
+                shell->SetActorRotation(SocketRotation);
+
+                shell->SetLifeSpan(3.f);
+
+                UStaticMeshComponent* ShellMesh = Cast<UStaticMeshComponent>(shell->GetComponentByClass(UStaticMeshComponent::StaticClass()));
+                if (ShellMesh)
+                {
+                    FVector ImpulseDirection = FVector(0.0f, 1.0f, 0.0f);  
+                    float ImpulseStrength = 70.0f;
+
+                    ShellMesh->AddImpulse(ImpulseDirection * ImpulseStrength, NAME_None, true);
+                }
+            }
         }
 
     }
 
-
-    if (MuzzleEffect)
+    if (currentItemType == EItemType::EIT_Bullet_Big)
     {
-        UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-            GetWorld(),
-            MuzzleEffect,
-            MuzzleLocation,
-            MuzzleRotation
-        );
+        if (BigMuzzleEffect)
+        {
+            UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+                GetWorld(),
+                BigMuzzleEffect,
+                MuzzleLocation,
+                MuzzleRotation
+            );
+        }
     }
+    else
+    {
+        if (MuzzleEffect)
+        {
+            UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+                GetWorld(),
+                MuzzleEffect,
+                MuzzleLocation,
+                MuzzleRotation
+            );
+        }
+    }
+
 
     if (FireMontage)
     {
@@ -98,6 +230,36 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
         if (AnimInstance)
         {
             AnimInstance->Montage_Play(FireMontage);
+        }
+    }
+
+
+
+    /*
+
+UNiagaraComponent* bulletTrail = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+    GetWorld(),
+    BulletTrail,
+    MuzzleLocation
+);
+
+if (bulletTrail)
+{
+    bulletTrail->SetVectorParameter(FName("TrailStart"), MuzzleLocation);
+    bulletTrail->SetVectorParameter(FName("TrailEnd"), HitResult.ImpactPoint);
+}
+
+*/
+}
+
+void AWeapon::ReloadTrigger()
+{
+    if (ReloadMontage)
+    {
+        UAnimInstance* AnimInstance = WeaponMesh->GetAnimInstance();
+        if (AnimInstance)
+        {
+            AnimInstance->Montage_Play(ReloadMontage);
         }
     }
 }

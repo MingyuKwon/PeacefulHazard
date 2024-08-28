@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Item/ItemInformation.h"
 #include "DefaultPlayerWidget.generated.h"
 
 class UTextBlock;
@@ -26,8 +27,32 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* CurrentBulletText;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftBulletText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftAnotherBulletText;
+
+	
+	UPROPERTY(meta = (BindWidget))
+	UImage* PistolImage;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* PistolBulletImage;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* PistolAnotherBulletImage;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* NowBackGround;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* AnotherBackGround;
+
+	
+	
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void SetBulletUI(int32 currentBullet, int32 maxBullet);
+	void UpdateBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet);
 };

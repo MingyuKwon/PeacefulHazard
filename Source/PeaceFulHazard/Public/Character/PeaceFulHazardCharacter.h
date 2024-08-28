@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "PeaceFulHazard/PeaceFulHazard.h"
 #include "PeaceFulHazardCharacter.generated.h"
+
 
 class USpringArmComponent;
 class UCameraComponent;
@@ -16,8 +18,12 @@ struct FInputActionValue;
 class AHappyPlayerController;
 class AWeapon;
 class UAnimMontage;
+class UBoxComponent;
+class AHappyInteractableItem;
+class APeaceFulHazardGameMode;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
+
 
 UCLASS(config = Game)
 class APeaceFulHazardCharacter : public ACharacter
@@ -33,6 +39,14 @@ public:
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	/** Camera boom positioning the camera behind the character */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* InteractBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* actiontBox;
+
 
 	/** Called for movement input */
 	bool Move(const FInputActionValue& Value);
@@ -62,12 +76,23 @@ public:
 	bool Reload(const FInputActionValue& Value);
 
 
+	void Death();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
+	bool bDeath = false;
+
+	bool TriggerInteract();
+
+	bool ChangeBullet();
+
 	APeaceFulHazardCharacter();
 
 	virtual void Tick(float deltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
 	void ReloadEndTrigger();
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeBulletEndTrigger();
 
 protected:
 
@@ -91,21 +116,39 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	UAnimMontage* FireMontage;
 
-	UPROPERTY(EditAnywhere, Category = "Bullet Para")
-	UAnimMontage* NoAimReloadMontage;
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UAnimMontage* StrongFireMontage;
+
 
 	UPROPERTY(EditAnywhere, Category = "Bullet Para")
 	UAnimMontage* AimReloadMontage;
 
+	UPROPERTY(EditAnywhere, Category = "Bullet Para")
+	UAnimMontage* AimBulletChangeMontage;
 
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UAnimMontage* HitForwardMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UAnimMontage* HitBackwardMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UAnimMontage* HitLeftMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UAnimMontage* HitRightMontage;
+
+
+	void PlayHitReactMontage(AActor* DamageCauser);
 
 	// this is used for Aiming start and end. using Camera Arm distance lerping (min 0, max 1)
 	float AimingPercent = 0.f;
 
 	float DefaultArmLength = 110.f;
-	float AimArmLength = 60.f;
-	float AimUpArmLength = 20.0f;
-	float AimDownArmLength = 60.f;
+	float AimArmLength = 70.f;
+	float AimUpArmLength = 30.0f;
+	float AimDownArmLength = 70.f;
 
 	FVector DefaultSocketPosition = FVector(0.f, 40.f, 65.f);
 	FVector AimSocketPosition = FVector(0.f, 45.f, 50.f);
@@ -118,6 +161,8 @@ protected:
 	void AimingLerp(float deltaTime);
 	void AimingPitchLerp(float deltaTime);
 
+	FRotator DeathCameraRotation = FRotator(-45.f, -10.f, 0.f);
+	void DeathCameraLerp(float deltaTime);
 
 	float moveXInput = 0.f;
 	float moveYInput = 0.f;
@@ -139,13 +184,27 @@ protected:
 
 	AHappyPlayerController* HappyPlayerController;
 
+	AHappyInteractableItem* currentActionableItem;
+	TArray<AHappyInteractableItem*> ActionableItems;
+
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+
 	AWeapon* EquipWeapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Class Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeapon> PistolClass;
 
 	bool bFireLock = false;
+
+	bool bNowDamaging = false;
+
+	bool bNowUnDamagable = false;
+
+	FTimerHandle DamagedTimerHandle;
+	FTimerHandle UnDamagableTimerHandle;
+
 	float PistolFireDelay = 1.f;
+	float PistolPowerFireDelay = 1.5f;
 
 
 	void SetWeaponEquip(bool isEquiped);
@@ -163,8 +222,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Action", meta = (AllowPrivateAccess = "true"))
 	bool bNowShifting = false;
 
-
 	void SetUIUpdateTick();
+
+	void SetCurrentActionItem();
+
+	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
+
 
 public:
 	/** Returns CameraBoom subobject **/
@@ -191,9 +254,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetAimPitch() const;
 
+	UFUNCTION(BlueprintCallable)
+	void AddCurrentActionableItem(AHappyInteractableItem* item);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveCurrentActionableItem(AHappyInteractableItem* item);
 
 	UFUNCTION(BlueprintCallable)
 	bool GetIsShootable() const { return bShootableAimState; }
+
 
 };
 
