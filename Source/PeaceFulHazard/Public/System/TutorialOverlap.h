@@ -9,7 +9,6 @@
 
 class UBoxComponent;
 class APeaceFulHazardGameMode;
-class UPeacFulGameInstance;
 
 UCLASS()
 class PEACEFULHAZARD_API ATutorialOverlap : public AActor
@@ -29,8 +28,6 @@ protected:
 	ETutorialType tutorialType;
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
-
-	UPeacFulGameInstance* PeacFulGameInstance;
 
 	virtual void BeginPlay() override;
 

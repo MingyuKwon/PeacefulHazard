@@ -19,6 +19,7 @@ class AWeapon;
 class UAnimMontage;
 class APeaceFulHazardGameMode;
 class AHappyInteractableItem;
+class UPeacFulGameInstance;
 
 USTRUCT(BlueprintType)
 struct FCharacterInventoty
@@ -151,6 +152,8 @@ protected:
 	class APlayerHUD* PlayerHUD;
 	class APeaceFulHazardCharacter* ControlledCharacter;
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+
+	UPeacFulGameInstance* PeacFulGameInstance;
 
 	UFUNCTION(BlueprintCallable)
 	void CloseAllUI();

@@ -18,6 +18,7 @@
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Item/HappyInteractableItem.h"
+#include "System/PeacFulGameInstance.h"
 
 void AHappyPlayerController::SetupInputComponent()
 {
@@ -70,6 +71,7 @@ void AHappyPlayerController::BeginPlay()
     PlayerHUD = Cast<APlayerHUD>(GetHUD());
     ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn());
     PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+    PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
 
     if (PeaceFulHazardGameMode)
     {
@@ -725,8 +727,13 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
 void AHappyPlayerController::TutorialShow(ETutorialType tutorialType)
 {
     if (!TutorialMap.Contains(tutorialType)) return;
+    if (PeacFulGameInstance == nullptr) return;
 
-    ShowNoticeUI(true, TutorialMap[tutorialType]);
+    if (!PeacFulGameInstance->checkIsTutorialAlready(tutorialType))
+    {
+        ShowNoticeUI(true, TutorialMap[tutorialType]);
+    }
+
 }
 
 bool AHappyPlayerController::ChangeItemInventoryMap(EItemType itemType, int32 count)
