@@ -13,7 +13,7 @@ bool UPeacFulGameInstance::checkIsTutorialAlready(ETutorialType tutorial)
     return temp;
 }
 
-void UPeacFulGameInstance::SaveParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth)
+void UPeacFulGameInstance::SaveParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped)
 {
     bBeforeWasMap = true;
 
@@ -22,10 +22,12 @@ void UPeacFulGameInstance::SaveParaBeforeWarp(FCharacterInventoty CharacterInven
     SavedMaxBullet = maxBullet;
     SavedCurrentBullet = currentBullet;
     SavedCurrentHealth = currentHealth;
+    SavedcurrentBulletType = currentBulletType;
+    SavedEquipped = Equipped;
 
 }
 
-bool UPeacFulGameInstance::GetParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth)
+bool UPeacFulGameInstance::GetParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped)
 {
     if (!bBeforeWasMap) return false;
 
@@ -34,8 +36,9 @@ bool UPeacFulGameInstance::GetParaAfterWarp(FCharacterInventoty& CharacterInvent
     maxBullet = SavedMaxBullet;
     currentBullet = SavedCurrentBullet;
     currentHealth = SavedCurrentHealth;
-
+    currentBulletType = SavedcurrentBulletType;
     bBeforeWasMap = false;
+    Equipped = SavedEquipped;
 
     return true;
 }

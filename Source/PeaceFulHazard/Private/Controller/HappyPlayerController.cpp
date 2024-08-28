@@ -94,7 +94,13 @@ void AHappyPlayerController::BeginPlay()
 
     if (PeacFulGameInstance)
     {
-        PeacFulGameInstance->GetParaAfterWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth);
+        bool bEquipped = false;
+        PeacFulGameInstance->GetParaAfterWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped);
+
+        if (bEquipped && ControlledCharacter)
+        {
+            ControlledCharacter->EquipTrigger(currentBulletType);
+        }
     }
 
 
@@ -348,7 +354,7 @@ void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
-        bSuccess = ControlledCharacter->EquipTrigger(Value);
+        bSuccess = ControlledCharacter->EquipTrigger(currentBulletType);
     }
 }
 
@@ -740,7 +746,10 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
     if (MapName.IsEmpty()) return;
     if (PeacFulGameInstance == nullptr) return;
 
-    PeacFulGameInstance->SaveParaBeforeWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth);
+    if (ControlledCharacter)
+    {
+        PeacFulGameInstance->SaveParaBeforeWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
+    }
     UGameplayStatics::OpenLevel(this, FName(*MapName));
 
 }

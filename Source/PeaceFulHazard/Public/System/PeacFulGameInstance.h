@@ -22,8 +22,8 @@ public:
 
 	bool checkIsTutorialAlready(ETutorialType tutorial);
 
-	void SaveParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet,float currentHealth);
-	bool GetParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth);
+	void SaveParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet,float currentHealth, EItemType currentBulletType, bool Equipped);
+	bool GetParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped);
 
 
 protected:
@@ -34,6 +34,8 @@ protected:
 	int32 SavedMaxBullet;
 	int32 SavedCurrentBullet;
 	float SavedCurrentHealth;
+	EItemType SavedcurrentBulletType;
+	bool SavedEquipped;
 
 	bool bBeforeWasMap = false;
 };

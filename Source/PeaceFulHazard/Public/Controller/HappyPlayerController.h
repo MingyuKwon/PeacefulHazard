@@ -147,7 +147,6 @@ protected:
 
 
 	EUIState currentUIState = EUIState::EUIS_None;
-	EItemType currentBulletType = EItemType::EIT_Bullet_Noraml;
 
 	class APlayerHUD* PlayerHUD;
 	class APeaceFulHazardCharacter* ControlledCharacter;
@@ -193,6 +192,7 @@ protected:
 
 	float currentHealth = 50.f;
 
+	EItemType currentBulletType = EItemType::EIT_Bullet_Noraml;
 
 	// Map Loading Needed Para
 
