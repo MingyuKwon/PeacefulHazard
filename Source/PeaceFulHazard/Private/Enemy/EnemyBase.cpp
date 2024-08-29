@@ -203,6 +203,8 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
             if (PeaceFulHazardGameMode)
             {
                 PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+                PeaceFulHazardGameMode->SetEnemyRefCount(false);
+
             }
 
             SetLifeSpan(1.5f);
@@ -320,12 +322,8 @@ void AEnemyBase::MapStartCallBack()
 
     if (PeaceFulHazardGameMode->GetEnemyStats(GetName(), enemyHealth, enemyLocation, enemyRotation))
     {
-        UE_LOG(LogTemp, Warning, TEXT("Set Saved Enemy Stats  2"));
-
         if (EnemyAIController)
         {
-            UE_LOG(LogTemp, Warning, TEXT("Set Saved Enemy Stats 3"));
-
             EnemyAIController->currentHealth = enemyHealth;
             SetActorLocation(enemyLocation);
             SetActorRotation(enemyRotation);
