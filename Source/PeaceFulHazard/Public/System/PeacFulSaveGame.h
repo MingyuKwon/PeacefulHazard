@@ -31,6 +31,20 @@ public:
 
 };
 
+USTRUCT(BlueprintType)
+struct FSaveArrayContainer
+{
+    GENERATED_BODY()
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Parameter")
+    TArray<FString> interactedItemNames;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Parameter")
+    TMap<FString, FEnemySave> enemySaves;
+
+    
+};
 
 UCLASS()
 class PEACEFULHAZARD_API UPeacFulSaveGame : public USaveGame
@@ -69,11 +83,11 @@ public:
 
     // 여기서 자기자 이미 상호작용 했거나 죽었는지 아닌지 자기 이름보고 확인함
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
-    TMap<EWarpTarget, FString> MapInteractSaveMap;
+    TMap<EWarpTarget, FSaveArrayContainer> MapInteractSaveMap;
 
     // 적은 위에서 자기가 안죽었다고 판단되면 여기에 데이터를 저장함
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
-    TMap<EWarpTarget, FEnemySave> EnemySaveMap;
+    TMap<EWarpTarget, FSaveArrayContainer> EnemySaveMap;
 
 
 };

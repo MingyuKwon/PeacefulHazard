@@ -53,6 +53,7 @@ void AHappyInteractableItem::BeginPlay()
     {
         PeaceFulHazardGameMode->NowAimingEvent.AddDynamic(this, &ThisClass::AImVisibleUI);
         PeaceFulHazardGameMode->CloseAllUIEvent.AddDynamic(this, &ThisClass::UICloseAllInteractWithItemOver);
+        PeaceFulHazardGameMode->MapStartEvent.AddDynamic(this, &ThisClass::MapStartCallBack);
     }
 
 }
@@ -108,6 +109,14 @@ void AHappyInteractableItem::DestroyItem()
     }
     Destroy();
 
+}
+
+void AHappyInteractableItem::MapStartCallBack()
+{
+    if (PeaceFulHazardGameMode->CheckAleradyInteract(GetName()))
+    {
+        AfterInteraction();
+    }
 }
 
 void AHappyInteractableItem::AfterInteraction()

@@ -52,6 +52,32 @@ bool APeaceFulHazardGameMode::GetPlayerParaAfterWarp(FCharacterInventoty& Charac
     return true;
 }
 
+bool APeaceFulHazardGameMode::CheckAleradyInteract(FString name)
+{
+    if (PeacFulGameInstance == nullptr) return true;
+    UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
+
+    TArray<FString> tempInteractMap = gameSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames;
+
+    UE_LOG(LogTemp, Warning, TEXT("%s CheckAleradyInteract %s"), currentMapType == EWarpTarget::EWT_None ? *FString("EWT_Nonw") : *FString("EWT_Not Nonw"), *name);
+
+    return tempInteractMap.Contains(name);
+}
+
+void APeaceFulHazardGameMode::SetAleradyInteract(FString name)
+{
+    if (PeacFulGameInstance == nullptr) return;
+    UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
+
+    TArray<FString> tempInteractMap = gameSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames;
+
+    if (!tempInteractMap.Contains(name))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("SetAleradyInteract %s"), *name);
+        gameSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames.Add(name);
+    }
+}
+
 void APeaceFulHazardGameMode::OpenMap(FString MapName)
 {
     PeacFulGameInstance->beforeMapType = currentMapType;
@@ -99,6 +125,6 @@ void APeaceFulHazardGameMode::BeginPlay()
         currentMapType = mapStore->mapType;
     }
 
-
+    MapStartEvent.Broadcast();
 
 }

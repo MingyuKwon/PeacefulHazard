@@ -32,7 +32,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	FString DoorInteractkeyName = FString("");
 
-
 	UCanInteractWidget* CanInteractWidget;
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
@@ -76,6 +75,10 @@ protected:
 	void AImVisibleUI(bool flag);
 
 	void DestroyItem();
+
+	UFUNCTION()
+	void MapStartCallBack();
+
 
 public:	
 	// Called every frame

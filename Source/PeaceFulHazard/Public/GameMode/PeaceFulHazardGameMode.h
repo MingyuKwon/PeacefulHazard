@@ -20,6 +20,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNoticeUIShowEvent, bool, bVisible,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeathEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTutorialEvent, ETutorialType, tutorialType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMapTravelEvent, EWarpTarget, warptarget);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapStartEvent);
 
 class UPeacFulGameInstance;
 
@@ -65,11 +66,18 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FMapTravelEvent MapTravelEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FMapStartEvent MapStartEvent;
+
+	
 	EWarpTarget currentMapType = EWarpTarget::EWT_None;
 
 
 	void SavePlayerParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped);
 	bool GetPlayerParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped);
+
+	bool CheckAleradyInteract(FString name);
+	void SetAleradyInteract(FString name);
 
 	void OpenMap(FString MapName);
 protected:

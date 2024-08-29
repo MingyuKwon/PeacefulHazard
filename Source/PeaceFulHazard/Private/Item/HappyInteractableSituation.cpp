@@ -58,6 +58,12 @@ void AHappyInteractableSituation::CheckBroadCastItemIsMe(EInteractSituationType 
 	if (!bInteractWithUI) return;
 
 	bAlreadyInteract = true;
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+	}
+
 	AfterInteraction();
 }
 
@@ -94,6 +100,10 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 					if (PeaceFulHazardGameMode)
 					{
 						FString string = FString("Doors Open in the Right Direction");
+						if (PeaceFulHazardGameMode)
+						{
+							PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+						}
 						PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
 					}
 					AfterInteraction();
