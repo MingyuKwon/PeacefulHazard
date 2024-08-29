@@ -82,7 +82,7 @@ void AEnemyAIController::TriggerRoute(TArray<AEnemyRoutePivot*> Pivots)
 
 	RoutePivots = Pivots;
 
-	TriggerResetPivotIndex(false);
+	TriggerResetPivotIndex(true);
 }
 
 void AEnemyAIController::TriggerResetPivotIndex(bool bFollowingLastPosition)

@@ -287,6 +287,23 @@ void AEnemyBase::BeginPlay()
             Destroy();
             return;
         }
+        else
+        {
+            float enemyHealth = 0; 
+            FVector enemyLocation = GetActorLocation(); 
+            FRotator enemyRotation = GetActorRotation();
+
+            if (PeaceFulHazardGameMode->GetEnemyStats(GetName(), enemyHealth, enemyLocation, enemyRotation))
+            {
+                if (EnemyAIController)
+                {
+                    EnemyAIController->currentHealth = enemyHealth;
+                    SetActorLocation(enemyLocation);
+                    SetActorRotation(enemyRotation);
+                }
+            }
+            
+        }
     }
 
     GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyBase::UpdateValue, 0.1f, true);

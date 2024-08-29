@@ -13,6 +13,8 @@ APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 
 }
 
+
+
 void APeaceFulHazardGameMode::SavePlayerParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped)
 {
     if (PeacFulGameInstance == nullptr) return;
@@ -52,14 +54,45 @@ bool APeaceFulHazardGameMode::GetPlayerParaAfterWarp(FCharacterInventoty& Charac
     return true;
 }
 
+
+bool APeaceFulHazardGameMode::GetEnemyStats(FString name, float& enemyHealth, FVector& enemyLocation, FRotator& enemyRotation)
+{
+    if (PeacFulGameInstance == nullptr) return false;
+
+    UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
+
+    TMap<FString, FEnemySave> tempEnemyMap = gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves;
+
+    if (!tempEnemyMap.Contains(name)) return false;
+    
+    enemyHealth = tempEnemyMap[name].enemyHealth;
+    enemyLocation = tempEnemyMap[name].enemyLocation;
+    enemyRotation = tempEnemyMap[name].enemyRotation;
+
+    return true;
+
+}
+
+void APeaceFulHazardGameMode::SaveEnemyStats(FString name, float enemyHealth, FVector enemyLocation, FRotator enemyRotation)
+{
+    if (PeacFulGameInstance == nullptr) return;
+
+    UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
+
+    TMap<FString, FEnemySave> tempEnemyMap = gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves;
+
+    enemyHealth = tempEnemyMap.FindOrAdd(name).enemyHealth;
+    enemyLocation = tempEnemyMap.FindOrAdd(name).enemyLocation;
+    enemyRotation = tempEnemyMap.FindOrAdd(name).enemyRotation;
+
+}
+
 bool APeaceFulHazardGameMode::CheckAleradyInteract(FString name)
 {
     if (PeacFulGameInstance == nullptr) return true;
     UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
 
     TArray<FString> tempInteractMap = gameSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames;
-
-    UE_LOG(LogTemp, Warning, TEXT("%s CheckAleradyInteract %s"), currentMapType == EWarpTarget::EWT_None ? *FString("EWT_Nonw") : *FString("EWT_Not Nonw"), *name);
 
     return tempInteractMap.Contains(name);
 }

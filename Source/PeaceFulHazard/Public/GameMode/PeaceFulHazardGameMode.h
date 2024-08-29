@@ -79,6 +79,9 @@ public:
 	bool CheckAleradyInteract(FString name);
 	void SetAleradyInteract(FString name);
 
+	bool GetEnemyStats(FString name, float& enemyHealth, FVector& enemyLocation, FRotator& enemyRotation);
+	void SaveEnemyStats(FString name, float enemyHealth, FVector enemyLocation, FRotator enemyRotation);
+
 	void OpenMap(FString MapName);
 protected:
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;

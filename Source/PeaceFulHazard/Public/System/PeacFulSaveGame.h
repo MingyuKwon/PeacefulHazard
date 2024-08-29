@@ -18,16 +18,13 @@ struct FEnemySave
 
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Parameter")
-    FString enemyName;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Parameter")
     float enemyHealth;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Parameter")
     FVector enemyLocation;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Parameter")
-    FString enemyRotation;
+    FRotator enemyRotation;
 
 };
 
