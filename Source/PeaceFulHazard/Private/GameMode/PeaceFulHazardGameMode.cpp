@@ -15,6 +15,43 @@ APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 
 
 
+void APeaceFulHazardGameMode::SetEnemyRefCount(bool bPlus)
+{
+    if (bPlus)
+    {
+        enemyRefCount++;
+    }
+    else
+    {
+        enemyRefCount--;
+    }
+
+    if (enemyRefCount <= 0)
+    {
+        if (ReceivedMapName.IsEmpty()) return;
+
+        UGameplayStatics::OpenLevel(this, FName(*ReceivedMapName));
+    }
+}
+
+void APeaceFulHazardGameMode::OpenMap(FString MapName)
+{
+    PeacFulGameInstance->beforeMapType = currentMapType;
+    ReceivedMapName = MapName;
+
+    if (enemyRefCount <= 0)
+    {
+        if (ReceivedMapName.IsEmpty()) return;
+
+        UGameplayStatics::OpenLevel(this, FName(*ReceivedMapName));
+    }
+    else
+    {
+        MapEndEvent.Broadcast();
+    }
+}
+
+
 void APeaceFulHazardGameMode::SavePlayerParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped)
 {
     if (PeacFulGameInstance == nullptr) return;
@@ -77,13 +114,16 @@ void APeaceFulHazardGameMode::SaveEnemyStats(FString name, float enemyHealth, FV
 {
     if (PeacFulGameInstance == nullptr) return;
 
+    UE_LOG(LogTemp, Warning, TEXT("SaveEnemyStats"));
+
+
     UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
 
     TMap<FString, FEnemySave> tempEnemyMap = gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves;
 
-    enemyHealth = tempEnemyMap.FindOrAdd(name).enemyHealth;
-    enemyLocation = tempEnemyMap.FindOrAdd(name).enemyLocation;
-    enemyRotation = tempEnemyMap.FindOrAdd(name).enemyRotation;
+    gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves.FindOrAdd(name).enemyHealth = enemyHealth;
+    gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves.FindOrAdd(name).enemyLocation = enemyLocation;
+    gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves.FindOrAdd(name).enemyRotation = enemyRotation;
 
 }
 
@@ -109,13 +149,6 @@ void APeaceFulHazardGameMode::SetAleradyInteract(FString name)
         UE_LOG(LogTemp, Warning, TEXT("SetAleradyInteract %s"), *name);
         gameSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames.Add(name);
     }
-}
-
-void APeaceFulHazardGameMode::OpenMap(FString MapName)
-{
-    PeacFulGameInstance->beforeMapType = currentMapType;
-    UGameplayStatics::OpenLevel(this, FName(*MapName));
-
 }
 
 AActor* APeaceFulHazardGameMode::ChoosePlayerStart_Implementation(AController* Player)

@@ -97,8 +97,6 @@ void AEnemyBase::AttackImpact(int32 index)
 
 void AEnemyBase::AttackEnd()
 {
-    UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
-
     if (EnemyAIController)
     {
         EnemyAIController->bNowAttacking = false;
@@ -289,20 +287,9 @@ void AEnemyBase::BeginPlay()
         }
         else
         {
-            float enemyHealth = 0; 
-            FVector enemyLocation = GetActorLocation(); 
-            FRotator enemyRotation = GetActorRotation();
-
-            if (PeaceFulHazardGameMode->GetEnemyStats(GetName(), enemyHealth, enemyLocation, enemyRotation))
-            {
-                if (EnemyAIController)
-                {
-                    EnemyAIController->currentHealth = enemyHealth;
-                    SetActorLocation(enemyLocation);
-                    SetActorRotation(enemyRotation);
-                }
-            }
-            
+            PeaceFulHazardGameMode->SetEnemyRefCount(true);
+            PeaceFulHazardGameMode->MapEndEvent.AddDynamic(this, &ThisClass::MapEndCallBack);
+            PeaceFulHazardGameMode->MapStartEvent.AddDynamic(this, &ThisClass::MapStartCallBack);            
         }
     }
 
@@ -314,6 +301,38 @@ void AEnemyBase::BeginPlay()
 
 }
 
+
+void AEnemyBase::MapEndCallBack()
+{
+    if (EnemyAIController)
+    {
+        PeaceFulHazardGameMode->SaveEnemyStats(GetName(), EnemyAIController->currentHealth, GetActorLocation(), GetActorRotation());
+    }
+        
+    PeaceFulHazardGameMode->SetEnemyRefCount(false);
+}
+
+void AEnemyBase::MapStartCallBack()
+{
+    float enemyHealth = 0;
+    FVector enemyLocation = GetActorLocation();
+    FRotator enemyRotation = GetActorRotation();
+
+    if (PeaceFulHazardGameMode->GetEnemyStats(GetName(), enemyHealth, enemyLocation, enemyRotation))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Set Saved Enemy Stats  2"));
+
+        if (EnemyAIController)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Set Saved Enemy Stats 3"));
+
+            EnemyAIController->currentHealth = enemyHealth;
+            SetActorLocation(enemyLocation);
+            SetActorRotation(enemyRotation);
+        }
+    }
+
+}
 
 void AEnemyBase::UpdateValue()
 {

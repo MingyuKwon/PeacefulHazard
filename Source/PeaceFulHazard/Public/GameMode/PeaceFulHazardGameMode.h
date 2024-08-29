@@ -21,6 +21,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeathEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTutorialEvent, ETutorialType, tutorialType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMapTravelEvent, EWarpTarget, warptarget);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapStartEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapEndEvent);
 
 class UPeacFulGameInstance;
 
@@ -69,7 +70,13 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FMapStartEvent MapStartEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FMapEndEvent MapEndEvent;
+
 	
+
+	void SetEnemyRefCount(bool bPlus);
+
 	EWarpTarget currentMapType = EWarpTarget::EWT_None;
 
 
@@ -88,6 +95,9 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	int32 enemyRefCount = 0;
+
+	FString ReceivedMapName = FString("");
 
 	UPeacFulGameInstance* PeacFulGameInstance;
 

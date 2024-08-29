@@ -60,6 +60,12 @@ protected:
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 	
+	UFUNCTION(BlueprintCallable)
+	void MapEndCallBack();
+
+	UFUNCTION()
+	void MapStartCallBack();
+
 
 	FTimerHandle updateTimerHandle;
 	UFUNCTION()
