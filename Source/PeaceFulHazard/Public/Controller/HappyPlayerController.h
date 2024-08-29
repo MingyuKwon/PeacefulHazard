@@ -157,6 +157,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void CloseAllUI();
 
+	UFUNCTION(BlueprintCallable)
+	void MapStartCallBack();
+
 
 	UFUNCTION(BlueprintCallable)
 	void OuterUIChange(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace);

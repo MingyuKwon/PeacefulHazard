@@ -86,6 +86,9 @@ void AHappyPlayerController::BeginPlay()
 
         PeaceFulHazardGameMode->TutorialEvent.AddDynamic(this, &ThisClass::TutorialShow);
         PeaceFulHazardGameMode->MapTravelEvent.AddDynamic(this, &ThisClass::WarpTravel);
+        PeaceFulHazardGameMode->MapStartEvent.AddDynamic(this, &ThisClass::MapStartCallBack);
+        UE_LOG(LogTemp, Warning, TEXT("AddDynamic(this, &ThisClass::MapStartCallBack"));
+
 
         InitializeInventory();
 
@@ -554,6 +557,13 @@ void AHappyPlayerController::CloseAllUI()
     SetGamePause(false);
 }
 
+void AHappyPlayerController::MapStartCallBack()
+{
+    UE_LOG(LogTemp, Warning, TEXT("MapStartCallBack"));
+
+    TutorialShow(ETutorialType::ETT_MoveTutorial);
+}
+
 void AHappyPlayerController::OuterUIChange(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
 {
     if (itemCount == 0) return;
@@ -768,11 +778,18 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
 
 void AHappyPlayerController::TutorialShow(ETutorialType tutorialType)
 {
+    UE_LOG(LogTemp, Warning, TEXT("TutorialShow 1"));
     if (!TutorialMap.Contains(tutorialType)) return;
+    UE_LOG(LogTemp, Warning, TEXT("TutorialShow 2"));
+
     if (PeacFulGameInstance == nullptr) return;
+
+    UE_LOG(LogTemp, Warning, TEXT("TutorialShow 3"));
 
     if (!PeacFulGameInstance->checkIsTutorialAlready(tutorialType))
     {
+        UE_LOG(LogTemp, Warning, TEXT("TutorialShow 4"));
+
         ShowNoticeUI(true, TutorialMap[tutorialType]);
     }
 

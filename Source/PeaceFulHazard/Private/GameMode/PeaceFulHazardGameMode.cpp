@@ -125,6 +125,11 @@ void APeaceFulHazardGameMode::BeginPlay()
         currentMapType = mapStore->mapType;
     }
 
-    MapStartEvent.Broadcast();
+
+    FTimerHandle startDelayHandle;
+    GetWorld()->GetTimerManager().SetTimer(startDelayHandle, [this]()
+        {
+            MapStartEvent.Broadcast();
+        }, 0.2f, false);
 
 }
