@@ -761,11 +761,8 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
     if (ControlledCharacter && PeaceFulHazardGameMode)
     {
         PeaceFulHazardGameMode->SavePlayerParaBeforeWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
-        PeacFulGameInstance->beforeMapType = PeaceFulHazardGameMode->currentMapType;
-
-        UE_LOG(LogTemp, Warning, TEXT("%s"), (PeacFulGameInstance->beforeMapType == EWarpTarget::EWT_None) ? *FString("Warp target None") : *FString("Warp target Not None"));
+        PeaceFulHazardGameMode->OpenMap(MapName);
     }
-    UGameplayStatics::OpenLevel(this, FName(*MapName));
 
 }
 

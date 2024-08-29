@@ -52,6 +52,13 @@ bool APeaceFulHazardGameMode::GetPlayerParaAfterWarp(FCharacterInventoty& Charac
     return true;
 }
 
+void APeaceFulHazardGameMode::OpenMap(FString MapName)
+{
+    PeacFulGameInstance->beforeMapType = currentMapType;
+    UGameplayStatics::OpenLevel(this, FName(*MapName));
+
+}
+
 AActor* APeaceFulHazardGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
 

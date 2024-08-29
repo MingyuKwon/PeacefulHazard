@@ -71,7 +71,7 @@ public:
 	void SavePlayerParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped);
 	bool GetPlayerParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped);
 
-
+	void OpenMap(FString MapName);
 protected:
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
