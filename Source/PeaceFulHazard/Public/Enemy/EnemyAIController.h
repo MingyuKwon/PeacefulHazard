@@ -93,6 +93,8 @@ protected:
 	UFUNCTION()
 	void  DamageStunRelease();
 
+	FTimerHandle nonAttackTimerHandle;
+	bool nonAttackLock = true;
 
 	FTimerHandle updateTimerHandle;
 	FTimerHandle HeadStunTimerHandle;

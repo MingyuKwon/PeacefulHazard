@@ -55,6 +55,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Para")
 	float EnemyDamageAmount = 10;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI Para")
+	ERouteNum routeNum = ERouteNum::ERN_None;
+
+	
 
 	FTimerHandle updateTimerHandle;
 	UFUNCTION()

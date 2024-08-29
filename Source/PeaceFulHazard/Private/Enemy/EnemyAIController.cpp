@@ -87,6 +87,8 @@ void AEnemyAIController::TriggerRoute(TArray<AEnemyRoutePivot*> Pivots)
 
 void AEnemyAIController::TriggerResetPivotIndex(bool bFollowingLastPosition)
 {
+	if (RoutePivots.Num() <= 0) return;
+
 	if (bFollowingLastPosition)
 	{
 		if (GetPawn() && RoutePivots.Num() > 0)
@@ -173,6 +175,8 @@ void AEnemyAIController::UpdateBlackBoard()
 		{
 			if (!bNowAttacking && !bDeath && !bStunDamage && !bStunHeadShot)
 			{
+				if (nonAttackLock) return;
+
 				Attack();
 			}
 		}
@@ -232,6 +236,12 @@ void AEnemyAIController::BeginPlay()
 	BlackboardComp = GetBlackboardComponent();
 	GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyAIController::UpdateBlackBoard , 0.1f, true);
 
+	GetWorld()->GetTimerManager().SetTimer(nonAttackTimerHandle, [this]() {
+		nonAttackLock = false;
+		}, 2.f, false);
+
+
+	
 	controlEnemy = Cast<AEnemyBase>(GetPawn());
 
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));

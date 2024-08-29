@@ -320,47 +320,24 @@ void AEnemyBase::FindEnemyRoutes()
     TArray<AActor*> FoundActors;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyRoutePivot::StaticClass(), FoundActors);
 
-    AEnemyRoutePivot* ClosestPivot = nullptr;
-    float MinDistance = FLT_MAX;
+    ERouteNum TargetRouteNum = routeNum;
 
+    TArray<AEnemyRoutePivot*> EnemyRoutePivots;
     for (AActor* Actor : FoundActors)
     {
         AEnemyRoutePivot* RoutePivot = Cast<AEnemyRoutePivot>(Actor);
-        if (RoutePivot)
+        if (RoutePivot && RoutePivot->HitRightMontage == TargetRouteNum)
         {
-            float Distance = FVector::Dist(GetActorLocation(), RoutePivot->GetActorLocation());
-            if (Distance < MinDistance)
-            {
-                MinDistance = Distance;
-                ClosestPivot = RoutePivot;
-            }
+            EnemyRoutePivots.Add(RoutePivot);
         }
     }
 
-    if (ClosestPivot)
+    if (EnemyAIController)
     {
-        ERouteNum TargetRouteNum = ClosestPivot->HitRightMontage;
-
-        TArray<AEnemyRoutePivot*> EnemyRoutePivots;
-        for (AActor* Actor : FoundActors)
-        {
-            AEnemyRoutePivot* RoutePivot = Cast<AEnemyRoutePivot>(Actor);
-            if (RoutePivot && RoutePivot->HitRightMontage == TargetRouteNum)
-            {
-                EnemyRoutePivots.Add(RoutePivot);
-            }
-        }
-
-        for (AEnemyRoutePivot* RoutePivot : EnemyRoutePivots)
-        {
-            // 필요한 작업 수행
-        }
-
-        if (EnemyAIController)
-        {
-            EnemyAIController->TriggerRoute(EnemyRoutePivots);
-        }
+        EnemyAIController->TriggerRoute(EnemyRoutePivots);
     }
+
+    
 }
 
 
