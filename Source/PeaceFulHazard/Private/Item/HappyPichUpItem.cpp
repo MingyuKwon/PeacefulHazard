@@ -29,6 +29,11 @@ void AHappyPichUpItem::CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count)
 	{
 		if (bInteractWithUI)
 		{
+			if (PeaceFulHazardGameMode)
+			{
+				PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+			}
+
 			bAlreadyInteract = true;
 			AfterInteraction();
 

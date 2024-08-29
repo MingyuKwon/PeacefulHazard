@@ -5,8 +5,11 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "PeaceFulHazard/PeaceFulHazard.h"
+#include "Controller/HappyPlayerController.h"
+#include "System/PeacFulSaveGame.h"
 #include "PeacFulGameInstance.generated.h"
 
+class UPeacFulSaveGame;
 /**
  * 
  */
@@ -21,8 +24,19 @@ public:
 
 	bool checkIsTutorialAlready(ETutorialType tutorial);
 
+
+	EWarpTarget beforeMapType = EWarpTarget::EWT_None;
+
+
+	UPROPERTY();
+	UPeacFulSaveGame* tempSaveGame;
+	FString SelectedSaveSlot = FString("");
+
+	void resetTempSave();
+
 protected:
 	virtual void Init() override;
 
+	bool bBeforeWasMap = false;
 };
 

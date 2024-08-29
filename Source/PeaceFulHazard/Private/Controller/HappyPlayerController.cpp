@@ -18,6 +18,7 @@
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Item/HappyInteractableItem.h"
+#include "System/PeacFulGameInstance.h"
 
 void AHappyPlayerController::SetupInputComponent()
 {
@@ -70,6 +71,7 @@ void AHappyPlayerController::BeginPlay()
     PlayerHUD = Cast<APlayerHUD>(GetHUD());
     ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn());
     PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+    PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
 
     if (PeaceFulHazardGameMode)
     {
@@ -83,11 +85,33 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->NoticeUIShowEvent.AddDynamic(this, &ThisClass::ShowNoticeUI);
 
         PeaceFulHazardGameMode->TutorialEvent.AddDynamic(this, &ThisClass::TutorialShow);
+        PeaceFulHazardGameMode->MapTravelEvent.AddDynamic(this, &ThisClass::WarpTravel);
+        PeaceFulHazardGameMode->MapStartEvent.AddDynamic(this, &ThisClass::MapStartCallBack);
+        UE_LOG(LogTemp, Warning, TEXT("AddDynamic(this, &ThisClass::MapStartCallBack"));
 
+
+        InitializeInventory();
+
+
+        bool isSavedDataRemain = false;
+        bool bEquipped = false;
+
+        isSavedDataRemain = PeaceFulHazardGameMode->GetPlayerParaAfterWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped);
+
+        if (isSavedDataRemain)
+        {
+
+            if (bEquipped && ControlledCharacter)
+            {
+                ControlledCharacter->EquipTrigger(currentBulletType);
+            }
+        }
         
+
     }
 
-    InitializeInventory();
+
+
 
     if (PlayerHUD)
     {
@@ -122,6 +146,8 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
 {
     if (PlayerHUD)
     {
+        if (currentUIState == EUIState::EUIS_Notice) return;
+
         if (nowPausing)
         {
             PlayerHUD->SetInventoryDisplay(false);
@@ -339,7 +365,7 @@ void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
-        bSuccess = ControlledCharacter->EquipTrigger(Value);
+        bSuccess = ControlledCharacter->EquipTrigger(currentBulletType);
     }
 }
 
@@ -531,6 +557,11 @@ void AHappyPlayerController::CloseAllUI()
     SetGamePause(false);
 }
 
+void AHappyPlayerController::MapStartCallBack()
+{
+    TutorialShow(ETutorialType::ETT_MoveTutorial);
+}
+
 void AHappyPlayerController::OuterUIChange(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
 {
     if (itemCount == 0) return;
@@ -705,9 +736,12 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
     {
         if (PlayerHUD)
         {
-            PauseGame(true);
+            
+            currentUIState = EUIState::EUIS_Notice;
             PlayerHUD->UpdateNoticeDisplay(noticeText);
             PlayerHUD->SetNoticeDisplay(true);
+            SetGamePause(true);
+
         }
         
         
@@ -716,17 +750,39 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
     {
         if (PlayerHUD)
         {
-            PauseGame(false);
             PlayerHUD->SetNoticeDisplay(false);
+            SetGamePause(false);
+
         }
     }
+}
+
+void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
+{
+    if (!TravelMap.Contains(warptarget)) return;
+
+    FString MapName = TravelMap[warptarget];
+
+    if (MapName.IsEmpty()) return;
+    if (PeacFulGameInstance == nullptr) return;
+
+    if (ControlledCharacter && PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->SavePlayerParaBeforeWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
+        PeaceFulHazardGameMode->OpenMap(MapName);
+    }
+
 }
 
 void AHappyPlayerController::TutorialShow(ETutorialType tutorialType)
 {
     if (!TutorialMap.Contains(tutorialType)) return;
+    if (PeacFulGameInstance == nullptr) return;
+    if (!PeacFulGameInstance->checkIsTutorialAlready(tutorialType))
+    {
+        ShowNoticeUI(true, TutorialMap[tutorialType]);
+    }
 
-    ShowNoticeUI(true, TutorialMap[tutorialType]);
 }
 
 bool AHappyPlayerController::ChangeItemInventoryMap(EItemType itemType, int32 count)

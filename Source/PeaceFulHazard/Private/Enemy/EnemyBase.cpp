@@ -97,8 +97,6 @@ void AEnemyBase::AttackImpact(int32 index)
 
 void AEnemyBase::AttackEnd()
 {
-    UE_LOG(LogTemp, Display, TEXT("AttackEnd"));
-
     if (EnemyAIController)
     {
         EnemyAIController->bNowAttacking = false;
@@ -202,6 +200,13 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
             GetCharacterMovement()->DisableMovement();  // 캐릭터의 모든 움직임 비활성화
             GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // 캡슐 콜리전 비활성화
 
+            if (PeaceFulHazardGameMode)
+            {
+                PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+                PeaceFulHazardGameMode->SetEnemyRefCount(false);
+
+            }
+
             SetLifeSpan(1.5f);
 
         }
@@ -273,6 +278,23 @@ void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+    PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+    if (PeaceFulHazardGameMode)
+    {
+        if (PeaceFulHazardGameMode->CheckAleradyInteract(GetName()))
+        {
+            Destroy();
+            return;
+        }
+        else
+        {
+            PeaceFulHazardGameMode->SetEnemyRefCount(true);
+            PeaceFulHazardGameMode->MapEndEvent.AddDynamic(this, &ThisClass::MapEndCallBack);
+            PeaceFulHazardGameMode->MapStartEvent.AddDynamic(this, &ThisClass::MapStartCallBack);            
+        }
+    }
+
     GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyBase::UpdateValue, 0.1f, true);
     FindEnemyRoutes();
 
@@ -281,6 +303,34 @@ void AEnemyBase::BeginPlay()
 
 }
 
+
+void AEnemyBase::MapEndCallBack()
+{
+    if (EnemyAIController)
+    {
+        PeaceFulHazardGameMode->SaveEnemyStats(GetName(), EnemyAIController->currentHealth, GetActorLocation(), GetActorRotation());
+    }
+        
+    PeaceFulHazardGameMode->SetEnemyRefCount(false);
+}
+
+void AEnemyBase::MapStartCallBack()
+{
+    float enemyHealth = 0;
+    FVector enemyLocation = GetActorLocation();
+    FRotator enemyRotation = GetActorRotation();
+
+    if (PeaceFulHazardGameMode->GetEnemyStats(GetName(), enemyHealth, enemyLocation, enemyRotation))
+    {
+        if (EnemyAIController)
+        {
+            EnemyAIController->currentHealth = enemyHealth;
+            SetActorLocation(enemyLocation);
+            SetActorRotation(enemyRotation);
+        }
+    }
+
+}
 
 void AEnemyBase::UpdateValue()
 {
@@ -320,47 +370,24 @@ void AEnemyBase::FindEnemyRoutes()
     TArray<AActor*> FoundActors;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyRoutePivot::StaticClass(), FoundActors);
 
-    AEnemyRoutePivot* ClosestPivot = nullptr;
-    float MinDistance = FLT_MAX;
+    ERouteNum TargetRouteNum = routeNum;
 
+    TArray<AEnemyRoutePivot*> EnemyRoutePivots;
     for (AActor* Actor : FoundActors)
     {
         AEnemyRoutePivot* RoutePivot = Cast<AEnemyRoutePivot>(Actor);
-        if (RoutePivot)
+        if (RoutePivot && RoutePivot->HitRightMontage == TargetRouteNum)
         {
-            float Distance = FVector::Dist(GetActorLocation(), RoutePivot->GetActorLocation());
-            if (Distance < MinDistance)
-            {
-                MinDistance = Distance;
-                ClosestPivot = RoutePivot;
-            }
+            EnemyRoutePivots.Add(RoutePivot);
         }
     }
 
-    if (ClosestPivot)
+    if (EnemyAIController)
     {
-        ERouteNum TargetRouteNum = ClosestPivot->HitRightMontage;
-
-        TArray<AEnemyRoutePivot*> EnemyRoutePivots;
-        for (AActor* Actor : FoundActors)
-        {
-            AEnemyRoutePivot* RoutePivot = Cast<AEnemyRoutePivot>(Actor);
-            if (RoutePivot && RoutePivot->HitRightMontage == TargetRouteNum)
-            {
-                EnemyRoutePivots.Add(RoutePivot);
-            }
-        }
-
-        for (AEnemyRoutePivot* RoutePivot : EnemyRoutePivots)
-        {
-            // 필요한 작업 수행
-        }
-
-        if (EnemyAIController)
-        {
-            EnemyAIController->TriggerRoute(EnemyRoutePivots);
-        }
+        EnemyAIController->TriggerRoute(EnemyRoutePivots);
     }
+
+    
 }
 
 

@@ -28,8 +28,18 @@ enum class ETutorialType : uint8
     ETT_InteractWithItem,
     ETT_InteractWithSituation,
     ETT_InteractWithOneWayDoor,
+    ETT_InteractItemBox,
 
     ETT_Max
+};
+
+UENUM(BlueprintType)
+enum class EWarpTarget : uint8
+{
+    EWT_None,
+    EWT_MainHub,
+    EWT_Tutorial,
+    EWT_Max
 };
 
 UENUM(BlueprintType)

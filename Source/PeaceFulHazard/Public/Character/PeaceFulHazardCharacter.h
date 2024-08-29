@@ -70,7 +70,7 @@ public:
 	bool ShiftEnd(const FInputActionValue& Value);
 
 	/** Called for Fire input */
-	bool EquipTrigger(const FInputActionValue& Value);
+	bool EquipTrigger(EItemType BulletType);
 
 	/** Called for looking input */
 	bool Reload(const FInputActionValue& Value);

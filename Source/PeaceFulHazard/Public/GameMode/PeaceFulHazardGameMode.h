@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PeaceFulHazard/PeaceFulHazard.h"
 #include "Item/HappyInteractableItem.h"
+#include "Controller/HappyPlayerController.h"
 #include "PeaceFulHazardGameMode.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNowAimingEvent, bool, flag);
@@ -18,7 +19,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FItemBoxInteractEvent, bool, bInve
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNoticeUIShowEvent, bool, bVisible, FString&, noticeText);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeathEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTutorialEvent, ETutorialType, tutorialType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMapTravelEvent, EWarpTarget, warptarget);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapStartEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapEndEvent);
 
+class UPeacFulGameInstance;
 
 
 UCLASS(minimalapi)
@@ -59,7 +64,43 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FTutorialEvent TutorialEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FMapTravelEvent MapTravelEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FMapStartEvent MapStartEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FMapEndEvent MapEndEvent;
+
 	
+
+	void SetEnemyRefCount(bool bPlus);
+
+	EWarpTarget currentMapType = EWarpTarget::EWT_None;
+
+
+	void SavePlayerParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped);
+	bool GetPlayerParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped);
+
+	bool CheckAleradyInteract(FString name);
+	void SetAleradyInteract(FString name);
+
+	bool GetEnemyStats(FString name, float& enemyHealth, FVector& enemyLocation, FRotator& enemyRotation);
+	void SaveEnemyStats(FString name, float enemyHealth, FVector enemyLocation, FRotator enemyRotation);
+
+	void OpenMap(FString MapName);
+protected:
+	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+
+	virtual void BeginPlay() override;
+
+	int32 enemyRefCount = 0;
+
+	FString ReceivedMapName = FString("");
+
+	UPeacFulGameInstance* PeacFulGameInstance;
+
 };
 
 

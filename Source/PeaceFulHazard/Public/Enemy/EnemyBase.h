@@ -9,7 +9,7 @@
 
 class UBoxComponent;
 class UAnimMontage;
-
+class APeaceFulHazardGameMode;
 UCLASS()
 class PEACEFULHAZARD_API AEnemyBase : public ACharacter
 {
@@ -54,6 +54,17 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Para")
 	float EnemyDamageAmount = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI Para")
+	ERouteNum routeNum = ERouteNum::ERN_None;
+
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+	
+	UFUNCTION(BlueprintCallable)
+	void MapEndCallBack();
+
+	UFUNCTION()
+	void MapStartCallBack();
 
 
 	FTimerHandle updateTimerHandle;

@@ -6,7 +6,6 @@
 #include "Character/PeaceFulHazardCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameMode/PeaceFulHazardGameMode.h"
-#include "System/PeacFulGameInstance.h"
 
 // Sets default values
 ATutorialOverlap::ATutorialOverlap()
@@ -31,7 +30,6 @@ void ATutorialOverlap::BeginPlay()
 
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
 
-	PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
 }
 
 void ATutorialOverlap::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -42,13 +40,9 @@ void ATutorialOverlap::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 
         if (OverlappingCharacter)
         {
-			if (PeaceFulHazardGameMode && PeacFulGameInstance)
+			if (PeaceFulHazardGameMode)
 			{
-				if (!PeacFulGameInstance->checkIsTutorialAlready(tutorialType))
-				{
-					PeaceFulHazardGameMode->TutorialEvent.Broadcast(tutorialType);
-				}
-				
+				PeaceFulHazardGameMode->TutorialEvent.Broadcast(tutorialType);
 			}
         }
     }

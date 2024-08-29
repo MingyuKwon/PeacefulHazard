@@ -19,6 +19,7 @@ class AWeapon;
 class UAnimMontage;
 class APeaceFulHazardGameMode;
 class AHappyInteractableItem;
+class UPeacFulGameInstance;
 
 USTRUCT(BlueprintType)
 struct FCharacterInventoty
@@ -146,14 +147,18 @@ protected:
 
 
 	EUIState currentUIState = EUIState::EUIS_None;
-	EItemType currentBulletType = EItemType::EIT_Bullet_Noraml;
 
 	class APlayerHUD* PlayerHUD;
 	class APeaceFulHazardCharacter* ControlledCharacter;
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 
+	UPeacFulGameInstance* PeacFulGameInstance;
+
 	UFUNCTION(BlueprintCallable)
 	void CloseAllUI();
+
+	UFUNCTION(BlueprintCallable)
+	void MapStartCallBack();
 
 
 	UFUNCTION(BlueprintCallable)
@@ -170,25 +175,33 @@ protected:
 
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<ETutorialType, FString> TutorialMap;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
+	TMap<EWarpTarget, FString> TravelMap;
+
 
 	UFUNCTION(BlueprintCallable)
 	void TutorialShow(ETutorialType tutorialType);
 
 
+	// Map Loading Needed Para
 	FCharacterInventoty CharacterInventoty;
 	FCharacterItemBox CharacterItemBox;
+
+	int32 maxBullet = 10;
+	int32 currentBullet = 10;
+
+	float currentHealth = 50.f;
+
+	EItemType currentBulletType = EItemType::EIT_Bullet_Noraml;
+
+	// Map Loading Needed Para
 
 	bool nowPausing = false;
 	void SetGamePause(bool flag);
 
-	int32 maxBullet = 10;
-
-	float currentHealth = 20.f;
-
-
-	int32 currentBullet = 10;
 
 	int32 normalBulletMax = 10;
 	int32 BigBulletMax = 5;
@@ -236,6 +249,11 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void ShowNoticeUI(bool bVisible, FString& noticeText);
+
+	UFUNCTION(BlueprintCallable)
+	void WarpTravel(EWarpTarget warptarget);
+
+	
 
 	
 public:

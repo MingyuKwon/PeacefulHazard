@@ -388,6 +388,7 @@ float APeaceFulHazardCharacter::TakeDamage(float DamageAmount, FDamageEvent cons
 
 	bNowDamaging = true;
 	bNowUnDamagable = true;
+	bReloading = false;
 	
 	GetWorld()->GetTimerManager().SetTimer(DamagedTimerHandle, [this]()
 		{
@@ -674,7 +675,7 @@ bool APeaceFulHazardCharacter::ShiftEnd(const FInputActionValue& Value)
 
 }
 
-bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
+bool APeaceFulHazardCharacter::EquipTrigger(EItemType BulletType)
 {
 	if (GetIsAiming()) return false;
 	if (bReloading) return false;
@@ -705,7 +706,11 @@ bool APeaceFulHazardCharacter::EquipTrigger(const FInputActionValue& Value)
 			FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
 			EquipWeapon->AttachToComponent(GetMesh(), AttachmentRules, FName("PistolSocket"));
 			EquipWeapon->SetOwner(this);
+
+			EquipWeapon->ChangeBulletMode(BulletType);
+
 		}
+
 	}
 
 	return true;
