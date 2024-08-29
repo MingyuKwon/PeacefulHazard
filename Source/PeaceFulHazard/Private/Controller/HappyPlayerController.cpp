@@ -559,8 +559,6 @@ void AHappyPlayerController::CloseAllUI()
 
 void AHappyPlayerController::MapStartCallBack()
 {
-    UE_LOG(LogTemp, Warning, TEXT("MapStartCallBack"));
-
     TutorialShow(ETutorialType::ETT_MoveTutorial);
 }
 
@@ -778,18 +776,10 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
 
 void AHappyPlayerController::TutorialShow(ETutorialType tutorialType)
 {
-    UE_LOG(LogTemp, Warning, TEXT("TutorialShow 1"));
     if (!TutorialMap.Contains(tutorialType)) return;
-    UE_LOG(LogTemp, Warning, TEXT("TutorialShow 2"));
-
     if (PeacFulGameInstance == nullptr) return;
-
-    UE_LOG(LogTemp, Warning, TEXT("TutorialShow 3"));
-
     if (!PeacFulGameInstance->checkIsTutorialAlready(tutorialType))
     {
-        UE_LOG(LogTemp, Warning, TEXT("TutorialShow 4"));
-
         ShowNoticeUI(true, TutorialMap[tutorialType]);
     }
 

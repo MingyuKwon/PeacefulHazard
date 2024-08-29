@@ -202,6 +202,11 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
             GetCharacterMovement()->DisableMovement();  // 캐릭터의 모든 움직임 비활성화
             GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // 캡슐 콜리전 비활성화
 
+            if (PeaceFulHazardGameMode)
+            {
+                PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+            }
+
             SetLifeSpan(1.5f);
 
         }
@@ -273,6 +278,17 @@ void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+    PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+    if (PeaceFulHazardGameMode)
+    {
+        if (PeaceFulHazardGameMode->CheckAleradyInteract(GetName()))
+        {
+            Destroy();
+            return;
+        }
+    }
+
     GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyBase::UpdateValue, 0.1f, true);
     FindEnemyRoutes();
 
