@@ -13,6 +13,45 @@ APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 
 }
 
+void APeaceFulHazardGameMode::SavePlayerParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped)
+{
+    if (PeacFulGameInstance == nullptr) return;
+
+    UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
+
+    gameSave->SavedPlayerInventory = CharacterInventoty;
+    gameSave->SavedPlayerCharacterItemBox = CharacterItemBox;
+    gameSave->SavedPlayerMaxBullet = maxBullet;
+    gameSave->SavedPlayerCurrentBullet = currentBullet;
+    gameSave->SavedPlayerCurrentHealth = currentHealth;
+    gameSave->SavedPlayercurrentBulletType = currentBulletType;
+    gameSave->SavePlayerdEquipped = Equipped;
+}
+
+bool APeaceFulHazardGameMode::GetPlayerParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped)
+{
+    if (PeacFulGameInstance == nullptr) return false;
+
+    UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
+
+    if (gameSave->bFirstGame) {
+
+        gameSave->bFirstGame = false;
+        return false;
+    }
+
+    CharacterInventoty = gameSave->SavedPlayerInventory;
+    CharacterItemBox = gameSave->SavedPlayerCharacterItemBox;
+    maxBullet = gameSave->SavedPlayerMaxBullet;
+    currentBullet = gameSave->SavedPlayerCurrentBullet;
+    currentHealth = gameSave->SavedPlayerCurrentHealth;
+    currentBulletType = gameSave->SavedPlayercurrentBulletType;
+    Equipped = gameSave->SavePlayerdEquipped;
+
+
+    return true;
+}
+
 AActor* APeaceFulHazardGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
 

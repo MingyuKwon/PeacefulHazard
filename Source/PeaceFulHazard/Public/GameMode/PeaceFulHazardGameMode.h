@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PeaceFulHazard/PeaceFulHazard.h"
 #include "Item/HappyInteractableItem.h"
+#include "Controller/HappyPlayerController.h"
 #include "PeaceFulHazardGameMode.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNowAimingEvent, bool, flag);
@@ -65,6 +66,11 @@ public:
 	FMapTravelEvent MapTravelEvent;
 
 	EWarpTarget currentMapType = EWarpTarget::EWT_None;
+
+
+	void SavePlayerParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped);
+	bool GetPlayerParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped);
+
 
 protected:
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;

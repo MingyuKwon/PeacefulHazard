@@ -38,6 +38,8 @@ class PEACEFULHAZARD_API UPeacFulSaveGame : public USaveGame
 	GENERATED_BODY()
 	
 public:
+    bool bFirstGame = true;
+
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     FVector SavedPlayerLocation;
 
@@ -65,9 +67,11 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     bool SavePlayerdEquipped;
 
+    // 여기서 자기자 이미 상호작용 했거나 죽었는지 아닌지 자기 이름보고 확인함
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     TMap<EWarpTarget, FString> MapInteractSaveMap;
 
+    // 적은 위에서 자기가 안죽었다고 판단되면 여기에 데이터를 저장함
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     TMap<EWarpTarget, FEnemySave> EnemySaveMap;
 

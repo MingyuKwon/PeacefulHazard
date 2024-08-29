@@ -6,8 +6,10 @@
 #include "Engine/GameInstance.h"
 #include "PeaceFulHazard/PeaceFulHazard.h"
 #include "Controller/HappyPlayerController.h"
+#include "System/PeacFulSaveGame.h"
 #include "PeacFulGameInstance.generated.h"
 
+class UPeacFulSaveGame;
 /**
  * 
  */
@@ -22,22 +24,18 @@ public:
 
 	bool checkIsTutorialAlready(ETutorialType tutorial);
 
-	void SaveParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet,float currentHealth, EItemType currentBulletType, bool Equipped);
-	bool GetParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped);
 
 	EWarpTarget beforeMapType = EWarpTarget::EWT_None;
 
 
+	UPROPERTY();
+	UPeacFulSaveGame* tempSaveGame;
+	FString SelectedSaveSlot = FString("");
+
+	void resetTempSave();
+
 protected:
 	virtual void Init() override;
-
-	FCharacterInventoty SavedCharacterInventory;
-	FCharacterItemBox SavedCharacterItemBox;
-	int32 SavedMaxBullet;
-	int32 SavedCurrentBullet;
-	float SavedCurrentHealth;
-	EItemType SavedcurrentBulletType;
-	bool SavedEquipped;
 
 	bool bBeforeWasMap = false;
 };

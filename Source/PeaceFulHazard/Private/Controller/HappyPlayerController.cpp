@@ -87,21 +87,27 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->TutorialEvent.AddDynamic(this, &ThisClass::TutorialShow);
         PeaceFulHazardGameMode->MapTravelEvent.AddDynamic(this, &ThisClass::WarpTravel);
 
-        
-    }
+        InitializeInventory();
 
-    InitializeInventory();
 
-    if (PeacFulGameInstance)
-    {
+        bool isSavedDataRemain = false;
         bool bEquipped = false;
-        PeacFulGameInstance->GetParaAfterWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped);
 
-        if (bEquipped && ControlledCharacter)
+        isSavedDataRemain = PeaceFulHazardGameMode->GetPlayerParaAfterWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped);
+
+        if (isSavedDataRemain)
         {
-            ControlledCharacter->EquipTrigger(currentBulletType);
+
+            if (bEquipped && ControlledCharacter)
+            {
+                ControlledCharacter->EquipTrigger(currentBulletType);
+            }
         }
+        
+
     }
+
+
 
 
     if (PlayerHUD)
@@ -754,7 +760,7 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
 
     if (ControlledCharacter && PeaceFulHazardGameMode)
     {
-        PeacFulGameInstance->SaveParaBeforeWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
+        PeaceFulHazardGameMode->SavePlayerParaBeforeWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
         PeacFulGameInstance->beforeMapType = PeaceFulHazardGameMode->currentMapType;
 
         UE_LOG(LogTemp, Warning, TEXT("%s"), (PeacFulGameInstance->beforeMapType == EWarpTarget::EWT_None) ? *FString("Warp target None") : *FString("Warp target Not None"));

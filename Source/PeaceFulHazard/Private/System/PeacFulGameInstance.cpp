@@ -2,6 +2,7 @@
 
 
 #include "System/PeacFulGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 bool UPeacFulGameInstance::checkIsTutorialAlready(ETutorialType tutorial)
 {
@@ -13,34 +14,11 @@ bool UPeacFulGameInstance::checkIsTutorialAlready(ETutorialType tutorial)
     return temp;
 }
 
-void UPeacFulGameInstance::SaveParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped)
+
+void UPeacFulGameInstance::resetTempSave()
 {
-    bBeforeWasMap = true;
-
-    SavedCharacterInventory = CharacterInventoty;
-    SavedCharacterItemBox = CharacterItemBox;
-    SavedMaxBullet = maxBullet;
-    SavedCurrentBullet = currentBullet;
-    SavedCurrentHealth = currentHealth;
-    SavedcurrentBulletType = currentBulletType;
-    SavedEquipped = Equipped;
-
-}
-
-bool UPeacFulGameInstance::GetParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped)
-{
-    if (!bBeforeWasMap) return false;
-
-    CharacterInventoty = SavedCharacterInventory;
-    CharacterItemBox = SavedCharacterItemBox;
-    maxBullet = SavedMaxBullet;
-    currentBullet = SavedCurrentBullet;
-    currentHealth = SavedCurrentHealth;
-    currentBulletType = SavedcurrentBulletType;
-    bBeforeWasMap = false;
-    Equipped = SavedEquipped;
-
-    return true;
+    tempSaveGame = nullptr;
+    SelectedSaveSlot = TEXT("");
 }
 
 void UPeacFulGameInstance::Init()
@@ -54,4 +32,5 @@ void UPeacFulGameInstance::Init()
     TutorialCheckMap.Add(ETutorialType::ETT_InteractWithOneWayDoor, false);
     TutorialCheckMap.Add(ETutorialType::ETT_InteractItemBox, false);
 
+    tempSaveGame = Cast<UPeacFulSaveGame>(UGameplayStatics::CreateSaveGameObject(UPeacFulSaveGame::StaticClass()));
 }
