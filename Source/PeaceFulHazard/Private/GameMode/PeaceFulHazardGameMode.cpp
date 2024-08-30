@@ -98,8 +98,28 @@ void APeaceFulHazardGameMode::SaveTempToSlot()
     SaveFinishedEvent.Broadcast();
 }
 
-void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName)
+void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
 {
+    if (bNewGame)
+    {
+        PeacFulGameInstance->tempSaveGame = Cast<UPeacFulSaveGame>(UGameplayStatics::CreateSaveGameObject(UPeacFulSaveGame::StaticClass()));
+    }
+    else
+    {
+        if (!slotName.IsEmpty())
+        {
+            UPeacFulSaveGame* LoadedGame = Cast<UPeacFulSaveGame>(UGameplayStatics::LoadGameFromSlot(slotName, 0));
+
+            if (LoadedGame)
+            {
+                PeacFulGameInstance->tempSaveGame = LoadedGame;
+            }
+        }
+    }
+
+    FName CurrentLevelName = *GetWorld()->GetMapName();
+    UGameplayStatics::OpenLevel(this, CurrentLevelName);
+
 
 }
 
@@ -113,9 +133,11 @@ void APeaceFulHazardGameMode::DeleteDataFromSlot(FString slotName)
 
 }
 
-void APeaceFulHazardGameMode::SavePlayerParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped)
+void APeaceFulHazardGameMode::SavePlayerPara(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped)
 {
     if (PeacFulGameInstance == nullptr) return;
+
+    UE_LOG(LogTemp, Warning, TEXT("SavePlayerParaBeforeWarp"));
 
     UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
 
@@ -128,7 +150,7 @@ void APeaceFulHazardGameMode::SavePlayerParaBeforeWarp(FCharacterInventoty Chara
     gameSave->SavePlayerdEquipped = Equipped;
 }
 
-bool APeaceFulHazardGameMode::GetPlayerParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped)
+bool APeaceFulHazardGameMode::GetPlayerPara(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped)
 {
     if (PeacFulGameInstance == nullptr) return false;
 

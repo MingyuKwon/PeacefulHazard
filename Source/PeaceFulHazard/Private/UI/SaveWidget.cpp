@@ -72,7 +72,7 @@ void USaveWidget::OnSaveButtonClicked()
 	}
 	else
 	{
-		PeaceFulHazardGameMode->LoadDataFromSlot(HoveringSaveButton->GetName());
+		PeaceFulHazardGameMode->LoadDataFromSlot(HoveringSaveButton->GetName(), false);
 	}
 }
 
@@ -144,6 +144,11 @@ void USaveWidget::OnNewButtonClicked()
 {
 	if (bSaveMode) return;
 
+	if (HoveringSaveButton == nullptr) return;
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	PeaceFulHazardGameMode->LoadDataFromSlot(HoveringSaveButton->GetName(), true);
+
 }
 
 void USaveWidget::NativeConstruct()
@@ -189,7 +194,6 @@ void USaveWidget::NativeConstruct()
 
 void USaveWidget::UpdateAllUI()
 {
-	UE_LOG(LogTemp, Display, TEXT("UpdateAllUI"));
 	for (int32 i = 0; i < SaveButtons.Num(); i++)
 	{
 		if (SaveButtons[i])
@@ -231,13 +235,13 @@ void USaveWidget::UpdateAllUI()
 
 	if (bSaveMode)
 	{
-		NewSaveButton->SetVisibility(ESlateVisibility::Hidden);
+		NewSaveButton->SetIsEnabled(false);
 		SaveModeBackGround->SetBrushColor(FLinearColor::Blue);
 		SaveModeText->SetText(FText::FromString(FString("Save")));
 	}
 	else
 	{
-		NewSaveButton->SetVisibility(ESlateVisibility::Visible);
+		NewSaveButton->SetIsEnabled(true);
 		SaveModeBackGround->SetBrushColor(FLinearColor::Red);
 		SaveModeText->SetText(FText::FromString(FString("Load")));
 	}

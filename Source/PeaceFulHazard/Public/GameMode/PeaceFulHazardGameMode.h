@@ -90,7 +90,7 @@ public:
 
 	
 	void SaveDataToSlot(FString slotName);
-	void LoadDataFromSlot(FString slotName);
+	void LoadDataFromSlot(FString slotName, bool bNewGame);
 	void DeleteDataFromSlot(FString slotName);
 
 	void SetEnemyRefCount(bool bPlus);
@@ -99,8 +99,8 @@ public:
 	EWarpTarget currentMapType = EWarpTarget::EWT_None;
 
 
-	void SavePlayerParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped);
-	bool GetPlayerParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped);
+	void SavePlayerPara(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped);
+	bool GetPlayerPara(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped);
 
 	bool CheckAleradyInteract(FString name);
 	void SetAleradyInteract(FString name);

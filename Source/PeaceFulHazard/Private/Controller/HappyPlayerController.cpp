@@ -95,7 +95,7 @@ void AHappyPlayerController::BeginPlay()
         bool isSavedDataRemain = false;
         bool bEquipped = false;
 
-        isSavedDataRemain = PeaceFulHazardGameMode->GetPlayerParaAfterWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped);
+        isSavedDataRemain = PeaceFulHazardGameMode->GetPlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped);
 
         if (isSavedDataRemain)
         {
@@ -175,11 +175,11 @@ void AHappyPlayerController::Menu(const FInputActionValue& Value)
 
         if (currentUIState == EUIState::EUIS_Menu)
         {
-            PlayerHUD->SetMainMenuDisplay(true, true);
+            PlayerHUD->SetMainMenuDisplay(true, false);
         }
         else
         {
-            PlayerHUD->SetMainMenuDisplay(false, true);
+            PlayerHUD->SetMainMenuDisplay(false, false);
         }
 
     }
@@ -564,7 +564,8 @@ void AHappyPlayerController::WantToSaveCallBack()
 {
     if (ControlledCharacter && PeaceFulHazardGameMode)
     {
-        PeaceFulHazardGameMode->SavePlayerParaBeforeWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
+        PeaceFulHazardGameMode->SavePlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
+
     }
 
     PeaceFulHazardGameMode->SetEnemySaveRefCount(false);
@@ -861,7 +862,7 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
 
     if (ControlledCharacter && PeaceFulHazardGameMode)
     {
-        PeaceFulHazardGameMode->SavePlayerParaBeforeWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
+        PeaceFulHazardGameMode->SavePlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
         PeaceFulHazardGameMode->OpenMap(MapName);
     }
 
