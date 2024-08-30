@@ -99,10 +99,20 @@ void AHappyPlayerController::BeginPlay()
         bool isSavedDataRemain = false;
         bool bEquipped = false;
 
-        isSavedDataRemain = PeaceFulHazardGameMode->GetPlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped);
+        FVector Positoin;
+        FRotator Rotation;
+
+        isSavedDataRemain = PeaceFulHazardGameMode->GetPlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped, Positoin, Rotation);
 
         if (isSavedDataRemain)
         {
+            if (ControlledCharacter)
+            {
+                ControlledCharacter->SetActorLocation(Positoin);
+                ControlledCharacter->SetActorRotation(Rotation);
+            }
+            
+
             if (bEquipped && ControlledCharacter)
             {
                 ControlledCharacter->EquipTrigger(currentBulletType);
@@ -568,7 +578,7 @@ void AHappyPlayerController::WantToSaveCallBack()
 {
     if (ControlledCharacter && PeaceFulHazardGameMode)
     {
-        PeaceFulHazardGameMode->SavePlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
+        PeaceFulHazardGameMode->SavePlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped(), ControlledCharacter->GetActorLocation(), ControlledCharacter->GetActorRotation());
 
     }
 
@@ -866,7 +876,7 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
 
     if (ControlledCharacter && PeaceFulHazardGameMode)
     {
-        PeaceFulHazardGameMode->SavePlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
+        PeaceFulHazardGameMode->SavePlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped(), ControlledCharacter->GetActorLocation(), ControlledCharacter->GetActorRotation());
         PeaceFulHazardGameMode->OpenMap(MapName);
     }
 

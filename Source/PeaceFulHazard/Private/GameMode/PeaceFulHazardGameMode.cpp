@@ -139,7 +139,7 @@ void APeaceFulHazardGameMode::DeleteDataFromSlot(FString slotName)
 
 }
 
-void APeaceFulHazardGameMode::SavePlayerPara(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped)
+void APeaceFulHazardGameMode::SavePlayerPara(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped, FVector PlayerPosition, FRotator PlayerRotation)
 {
     if (PeacFulGameInstance == nullptr) return;
 
@@ -155,9 +155,11 @@ void APeaceFulHazardGameMode::SavePlayerPara(FCharacterInventoty CharacterInvent
     gameSave->SavedPlayerCurrentHealth = currentHealth;
     gameSave->SavedPlayercurrentBulletType = currentBulletType;
     gameSave->SavePlayerdEquipped = Equipped;
+    gameSave->SavedPlayerLocation = PlayerPosition;
+    gameSave->SavedPlayerRotation = PlayerRotation;
 }
 
-bool APeaceFulHazardGameMode::GetPlayerPara(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped)
+bool APeaceFulHazardGameMode::GetPlayerPara(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped, FVector& PlayerPosition, FRotator& PlayerRotation)
 {
     if (PeacFulGameInstance == nullptr) return false;
 
@@ -181,6 +183,8 @@ bool APeaceFulHazardGameMode::GetPlayerPara(FCharacterInventoty& CharacterInvent
     currentHealth = gameSave->SavedPlayerCurrentHealth;
     currentBulletType = gameSave->SavedPlayercurrentBulletType;
     Equipped = gameSave->SavePlayerdEquipped;
+    PlayerPosition = gameSave->SavedPlayerLocation;
+    PlayerRotation = gameSave->SavedPlayerRotation;
 
 
     return true;
