@@ -112,26 +112,37 @@ void USaveWidget::UpdateAllUI()
 	{
 		if (SaveButtons[i])
 		{
-			SaveButtons[i]->bIsEnabled = true;
+			SaveButtons[i]->SetIsEnabled(true);
 
 			FString SlotName = SaveButtons[i]->GetName();
 
-			if (UGameplayStatics::DoesSaveGameExist(SlotName, 0) && bSaveMode)
+			if (UGameplayStatics::DoesSaveGameExist(SlotName, 0))
 			{
-				if (DeleteButtons.IsValidIndex(i) && DeleteButtons[i])
+				if (bSaveMode)
 				{
-					DeleteButtons[i]->SetVisibility(ESlateVisibility::Visible);
+					if (DeleteButtons.IsValidIndex(i) && DeleteButtons[i])
+					{
+						DeleteButtons[i]->SetVisibility(ESlateVisibility::Visible);
+					}
 				}
+				else
+				{
+					if (DeleteButtons.IsValidIndex(i) && DeleteButtons[i])
+					{
+						DeleteButtons[i]->SetVisibility(ESlateVisibility::Hidden);
+					}
+				}
+
 			}
 			else
 			{
-				SaveButtons[i]->bIsEnabled = bSaveMode;
-
+				SaveButtons[i]->SetIsEnabled(bSaveMode);
 
 				if (DeleteButtons.IsValidIndex(i) && DeleteButtons[i])
 				{
 					DeleteButtons[i]->SetVisibility(ESlateVisibility::Hidden);
 				}
+				
 			}
 		}
 	}

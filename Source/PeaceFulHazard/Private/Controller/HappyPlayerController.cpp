@@ -177,7 +177,7 @@ void AHappyPlayerController::Menu(const FInputActionValue& Value)
 
         if (currentUIState == EUIState::EUIS_Menu)
         {
-            PlayerHUD->SetMainMenuDisplay(true, true);
+            PlayerHUD->SetMainMenuDisplay(true, false);
         }
         else
         {
@@ -831,7 +831,7 @@ void AHappyPlayerController::ShowMainMenuUI(bool bVisible)
 
         if (currentUIState == EUIState::EUIS_Menu)
         {
-            PlayerHUD->SetMainMenuDisplay(true, true);
+            PlayerHUD->SetMainMenuDisplay(true, false);
         }
         else
         {

@@ -28,6 +28,7 @@ public:
 
 	bool bSaveMode = true;
 
+	void UpdateAllUI();
 
 protected:
 
@@ -51,7 +52,6 @@ protected:
 
 	virtual void NativeConstruct() override;
 
-	void UpdateAllUI();
 
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* UISaveInteractCanvas;
