@@ -152,6 +152,10 @@ protected:
 	AItemInformation* ItemInformation;
 
 
+	UFUNCTION(BlueprintCallable)
+	void WantToSaveCallBack();
+
+
 	EUIState currentUIState = EUIState::EUIS_None;
 
 	void ChangeUiState(EUIState uiState, bool bLock);

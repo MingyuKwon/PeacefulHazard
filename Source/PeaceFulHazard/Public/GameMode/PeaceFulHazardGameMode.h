@@ -23,6 +23,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMapTravelEvent, EWarpTarget, warpta
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapStartEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapEndEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMenuUIChangeEvent, bool, bVisible);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSaveFinishedEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWantSaveEvent);
 
 class UPeacFulGameInstance;
 
@@ -63,6 +65,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FMenuUIChangeEvent MenuUIChangeEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FSaveFinishedEvent SaveFinishedEvent;
 
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -80,9 +84,17 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FMapEndEvent MapEndEvent;
 
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FWantSaveEvent WantSaveEvent;
+
 	
+	void SaveDataToSlot(FString slotName);
+	void LoadDataFromSlot(FString slotName);
+	void DeleteDataFromSlot(FString slotName);
 
 	void SetEnemyRefCount(bool bPlus);
+	void SetEnemySaveRefCount(bool bPlus);
 
 	EWarpTarget currentMapType = EWarpTarget::EWT_None;
 
@@ -102,9 +114,15 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	void SaveTempToSlot();
+
 	int32 enemyRefCount = 0;
 
+	int32 enemySaveRefCount = 0;
+
 	FString ReceivedMapName = FString("");
+
+	FString ReceivedSlotName = FString("");
 
 	UPeacFulGameInstance* PeacFulGameInstance;
 

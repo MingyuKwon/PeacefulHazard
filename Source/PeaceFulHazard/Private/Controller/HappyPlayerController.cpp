@@ -86,6 +86,7 @@ void AHappyPlayerController::BeginPlay()
 
         PeaceFulHazardGameMode->MenuUIChangeEvent.AddDynamic(this, &ThisClass::ShowMainMenuUI);
 
+        PeaceFulHazardGameMode->WantSaveEvent.AddDynamic(this, &ThisClass::WantToSaveCallBack);
 
 
         InitializeInventory();
@@ -98,14 +99,11 @@ void AHappyPlayerController::BeginPlay()
 
         if (isSavedDataRemain)
         {
-
             if (bEquipped && ControlledCharacter)
             {
                 ControlledCharacter->EquipTrigger(currentBulletType);
             }
         }
-        
-
     }
 
 
@@ -177,11 +175,11 @@ void AHappyPlayerController::Menu(const FInputActionValue& Value)
 
         if (currentUIState == EUIState::EUIS_Menu)
         {
-            PlayerHUD->SetMainMenuDisplay(true, false);
+            PlayerHUD->SetMainMenuDisplay(true, true);
         }
         else
         {
-            PlayerHUD->SetMainMenuDisplay(false, false);
+            PlayerHUD->SetMainMenuDisplay(false, true);
         }
 
     }
@@ -560,6 +558,17 @@ void AHappyPlayerController::SetBulletChangeCount()
     UpdateAllUI();
 }
 
+
+
+void AHappyPlayerController::WantToSaveCallBack()
+{
+    if (ControlledCharacter && PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->SavePlayerParaBeforeWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
+    }
+
+    PeaceFulHazardGameMode->SetEnemySaveRefCount(false);
+}
 
 void AHappyPlayerController::ChangeUiState(EUIState uiState, bool bLock)
 {

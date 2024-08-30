@@ -13,8 +13,6 @@ APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 
 }
 
-
-
 void APeaceFulHazardGameMode::SetEnemyRefCount(bool bPlus)
 {
     if (bPlus)
@@ -31,6 +29,23 @@ void APeaceFulHazardGameMode::SetEnemyRefCount(bool bPlus)
         if (ReceivedMapName.IsEmpty()) return;
 
         UGameplayStatics::OpenLevel(this, FName(*ReceivedMapName));
+    }
+}
+
+void APeaceFulHazardGameMode::SetEnemySaveRefCount(bool bPlus)
+{
+    if (bPlus)
+    {
+        enemySaveRefCount++;
+    }
+    else
+    {
+        enemySaveRefCount--;
+    }
+
+    if (enemySaveRefCount <= 0)
+    {
+        SaveTempToSlot();
     }
 }
 
@@ -51,6 +66,52 @@ void APeaceFulHazardGameMode::OpenMap(FString MapName)
     }
 }
 
+
+void APeaceFulHazardGameMode::SaveDataToSlot(FString slotName)
+{
+    enemySaveRefCount = enemyRefCount + 1;
+    ReceivedSlotName = slotName;
+
+    if (enemySaveRefCount <= 0 )
+    {
+        SaveTempToSlot();
+    }
+    else
+    {
+        WantSaveEvent.Broadcast();
+    }
+}
+
+void APeaceFulHazardGameMode::SaveTempToSlot()
+{
+    if (ReceivedSlotName.IsEmpty()) return;
+
+    UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
+
+    if (gameSave)
+    {
+        UGameplayStatics::SaveGameToSlot(gameSave, ReceivedSlotName, 0);
+    }
+
+    enemySaveRefCount = 0;
+    ReceivedSlotName = FString("");
+    SaveFinishedEvent.Broadcast();
+}
+
+void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName)
+{
+
+}
+
+void APeaceFulHazardGameMode::DeleteDataFromSlot(FString slotName)
+{
+    if (!slotName.IsEmpty())
+    {
+        UGameplayStatics::DeleteGameInSlot(slotName, 0);
+        SaveFinishedEvent.Broadcast();
+    }
+
+}
 
 void APeaceFulHazardGameMode::SavePlayerParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped)
 {
@@ -91,6 +152,22 @@ bool APeaceFulHazardGameMode::GetPlayerParaAfterWarp(FCharacterInventoty& Charac
     return true;
 }
 
+void APeaceFulHazardGameMode::SaveEnemyStats(FString name, float enemyHealth, FVector enemyLocation, FRotator enemyRotation)
+{
+    if (PeacFulGameInstance == nullptr) return;
+
+    UE_LOG(LogTemp, Warning, TEXT("SaveEnemyStats"));
+
+
+    UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
+
+    TMap<FString, FEnemySave> tempEnemyMap = gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves;
+
+    gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves.FindOrAdd(name).enemyHealth = enemyHealth;
+    gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves.FindOrAdd(name).enemyLocation = enemyLocation;
+    gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves.FindOrAdd(name).enemyRotation = enemyRotation;
+
+}
 
 bool APeaceFulHazardGameMode::GetEnemyStats(FString name, float& enemyHealth, FVector& enemyLocation, FRotator& enemyRotation)
 {
@@ -110,22 +187,7 @@ bool APeaceFulHazardGameMode::GetEnemyStats(FString name, float& enemyHealth, FV
 
 }
 
-void APeaceFulHazardGameMode::SaveEnemyStats(FString name, float enemyHealth, FVector enemyLocation, FRotator enemyRotation)
-{
-    if (PeacFulGameInstance == nullptr) return;
 
-    UE_LOG(LogTemp, Warning, TEXT("SaveEnemyStats"));
-
-
-    UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
-
-    TMap<FString, FEnemySave> tempEnemyMap = gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves;
-
-    gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves.FindOrAdd(name).enemyHealth = enemyHealth;
-    gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves.FindOrAdd(name).enemyLocation = enemyLocation;
-    gameSave->EnemySaveMap.FindOrAdd(currentMapType).enemySaves.FindOrAdd(name).enemyRotation = enemyRotation;
-
-}
 
 bool APeaceFulHazardGameMode::CheckAleradyInteract(FString name)
 {
@@ -199,3 +261,5 @@ void APeaceFulHazardGameMode::BeginPlay()
         }, 0.2f, false);
 
 }
+
+

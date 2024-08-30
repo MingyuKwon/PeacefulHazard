@@ -63,7 +63,17 @@ void USaveWidget::ChangeNowHoveringButton(UButton* button, bool bSaveButtons)
 
 void USaveWidget::OnSaveButtonClicked()
 {
+	if (HoveringSaveButton == nullptr) return;
+	if (PeaceFulHazardGameMode == nullptr) return;
 
+	if (bSaveMode)
+	{
+		PeaceFulHazardGameMode->SaveDataToSlot(HoveringSaveButton->GetName());
+	}
+	else
+	{
+		PeaceFulHazardGameMode->LoadDataFromSlot(HoveringSaveButton->GetName());
+	}
 }
 
 void USaveWidget::OnSaveButtonHovered()
@@ -90,13 +100,20 @@ void USaveWidget::OnSaveButtonUnhovered()
 
 void USaveWidget::OnDeleteButtonClicked()
 {
-	if (bSaveMode) return;
+	if (!bSaveMode) return;
+	if (HoveringDeleteButton == nullptr) return;
 
+	int32 index = GetButtonIndex(HoveringDeleteButton, false);
+
+	if (bSaveMode)
+	{
+		PeaceFulHazardGameMode->DeleteDataFromSlot(SaveButtons[index]->GetName());
+	}
 }
 
 void USaveWidget::OnDeleteButtonHovered()
 {
-	if (bSaveMode) return;
+	if (!bSaveMode) return;
 
 	UButton* FindButton = nullptr;
 
@@ -116,7 +133,7 @@ void USaveWidget::OnDeleteButtonHovered()
 
 void USaveWidget::OnDeleteButtonUnhovered()
 {
-	if (bSaveMode) return;
+	if (!bSaveMode) return;
 
 	ChangeNowHoveringButton(nullptr, false);
 
@@ -134,6 +151,11 @@ void USaveWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->SaveFinishedEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
+	}
 
 	InitArrays();
 
@@ -167,6 +189,7 @@ void USaveWidget::NativeConstruct()
 
 void USaveWidget::UpdateAllUI()
 {
+	UE_LOG(LogTemp, Display, TEXT("UpdateAllUI"));
 	for (int32 i = 0; i < SaveButtons.Num(); i++)
 	{
 		if (SaveButtons[i])
@@ -195,7 +218,7 @@ void USaveWidget::UpdateAllUI()
 			}
 			else
 			{
-				SaveButtons[i]->SetIsEnabled(true);
+				SaveButtons[i]->SetIsEnabled(bSaveMode);
 
 				if (DeleteButtons.IsValidIndex(i) && DeleteButtons[i])
 				{

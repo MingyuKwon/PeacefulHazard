@@ -66,6 +66,9 @@ protected:
 	UFUNCTION()
 	void MapStartCallBack();
 
+	UFUNCTION(BlueprintCallable)
+	void WantToSaveCallBack();
+
 
 	FTimerHandle updateTimerHandle;
 	UFUNCTION()

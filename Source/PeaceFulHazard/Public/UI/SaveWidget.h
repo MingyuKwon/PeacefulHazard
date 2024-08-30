@@ -28,6 +28,7 @@ public:
 
 	bool bSaveMode = true;
 
+	UFUNCTION(BlueprintCallable)
 	void UpdateAllUI();
 
 protected:

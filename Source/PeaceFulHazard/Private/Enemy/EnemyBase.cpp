@@ -291,7 +291,9 @@ void AEnemyBase::BeginPlay()
         {
             PeaceFulHazardGameMode->SetEnemyRefCount(true);
             PeaceFulHazardGameMode->MapEndEvent.AddDynamic(this, &ThisClass::MapEndCallBack);
-            PeaceFulHazardGameMode->MapStartEvent.AddDynamic(this, &ThisClass::MapStartCallBack);            
+            PeaceFulHazardGameMode->MapStartEvent.AddDynamic(this, &ThisClass::MapStartCallBack);      
+            PeaceFulHazardGameMode->WantSaveEvent.AddDynamic(this, &ThisClass::WantToSaveCallBack);
+
         }
     }
 
@@ -329,6 +331,17 @@ void AEnemyBase::MapStartCallBack()
             SetActorRotation(enemyRotation);
         }
     }
+
+}
+
+void AEnemyBase::WantToSaveCallBack()
+{
+    if (EnemyAIController)
+    {
+        PeaceFulHazardGameMode->SaveEnemyStats(GetName(), EnemyAIController->currentHealth, GetActorLocation(), GetActorRotation());
+    }
+
+    PeaceFulHazardGameMode->SetEnemySaveRefCount(false);
 
 }
 
