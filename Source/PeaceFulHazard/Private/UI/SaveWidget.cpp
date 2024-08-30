@@ -102,7 +102,8 @@ void USaveWidget::NativeConstruct()
 	{
 		NewSaveButton->OnClicked.AddDynamic(this, &ThisClass::OnNewButtonClicked);
 	}
-
+	
+	UpdateAllUI();
 }
 
 void USaveWidget::UpdateAllUI()

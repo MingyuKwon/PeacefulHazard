@@ -594,7 +594,7 @@ void AHappyPlayerController::ChangeUiState(EUIState uiState, bool bLock)
     }
 
     FString EnumAsString = UEnum::GetValueAsString(currentUIState);
-    UE_LOG(LogTemp, Display, TEXT("Current UI State: %s"), *EnumAsString);
+    UE_LOG(LogTemp, Warning, TEXT("Current UI State: %s"), *EnumAsString);
 
     if (currentUIState == EUIState::EUIS_None)
     {
@@ -820,18 +820,24 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
 
 void AHappyPlayerController::ShowMainMenuUI(bool bVisible)
 {
-    if (bVisible)
+    if (PlayerHUD)
     {
+        if (currentUIState == EUIState::EUIS_Notice) return;
 
-    }
-    else
-    {
-        if (PlayerHUD)
+        UpdateAllUI();
+
+        ChangeUiState(EUIState::EUIS_Menu, bVisible);
+
+
+        if (currentUIState == EUIState::EUIS_Menu)
+        {
+            PlayerHUD->SetMainMenuDisplay(true, true);
+        }
+        else
         {
             PlayerHUD->SetMainMenuDisplay(false, false);
-            SetGamePause(false);
-
         }
+
     }
 }
 
