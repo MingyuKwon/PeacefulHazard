@@ -117,8 +117,8 @@ void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
         }
     }
 
-    FName CurrentLevelName = *GetWorld()->GetMapName();
-    UGameplayStatics::OpenLevel(this, CurrentLevelName);
+    
+    UGameplayStatics::OpenLevel(this, *TravelMap[currentMapType]);
 
 
 }
@@ -154,6 +154,8 @@ bool APeaceFulHazardGameMode::GetPlayerPara(FCharacterInventoty& CharacterInvent
 {
     if (PeacFulGameInstance == nullptr) return false;
 
+    UE_LOG(LogTemp, Warning, TEXT("GetPlayerPara"));
+
     UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
 
     if (gameSave->bFirstGame) {
@@ -161,6 +163,9 @@ bool APeaceFulHazardGameMode::GetPlayerPara(FCharacterInventoty& CharacterInvent
         gameSave->bFirstGame = false;
         return false;
     }
+
+    UE_LOG(LogTemp, Warning, TEXT("GetPlayerPara 2"));
+
 
     CharacterInventoty = gameSave->SavedPlayerInventory;
     CharacterItemBox = gameSave->SavedPlayerCharacterItemBox;

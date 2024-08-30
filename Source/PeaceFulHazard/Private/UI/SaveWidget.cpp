@@ -144,10 +144,9 @@ void USaveWidget::OnNewButtonClicked()
 {
 	if (bSaveMode) return;
 
-	if (HoveringSaveButton == nullptr) return;
 	if (PeaceFulHazardGameMode == nullptr) return;
 
-	PeaceFulHazardGameMode->LoadDataFromSlot(HoveringSaveButton->GetName(), true);
+	PeaceFulHazardGameMode->LoadDataFromSlot(FString(""), true);
 
 }
 

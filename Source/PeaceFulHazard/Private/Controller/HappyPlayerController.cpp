@@ -64,6 +64,10 @@ void AHappyPlayerController::BeginPlay()
 
     ItemInformation = GetWorld()->SpawnActor<AItemInformation>(ItemInformationClass);
 
+    bShowMouseCursor = false;
+    SetInputMode(FInputModeGameOnly());
+
+
     PlayerHUD = Cast<APlayerHUD>(GetHUD());
     ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn());
     PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));

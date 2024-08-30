@@ -110,6 +110,10 @@ public:
 
 	void OpenMap(FString MapName);
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
+	TMap<EWarpTarget, FString> TravelMap;
+
+
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
 	virtual void BeginPlay() override;
