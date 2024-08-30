@@ -28,22 +28,64 @@ void USaveWidget::OkUIInputTrigger()
 
 }
 
+int32 USaveWidget::GetButtonIndex(UButton* button, bool bSaveButtons)
+{
+	int32 index = 0;
+
+	TArray<UButton*> tempArray = bSaveButtons ? SaveButtons : DeleteButtons;
+
+	for (UButton* Button : tempArray)
+	{
+		if (Button == button)
+		{
+			break;
+		}
+
+		index++;
+	}
+
+	return index < 8 ? index : -1;
+}
+
+void USaveWidget::ChangeNowHoveringButton(UButton* button, bool bSaveButtons)
+{
+	if (bSaveButtons)
+	{
+		HoveringSaveButton = button;
+	}
+	else
+	{
+		HoveringDeleteButton = button;
+	}
+
+	UpdateAllUI();
+}
+
 void USaveWidget::OnSaveButtonClicked()
 {
-	if (!bSaveMode) return;
 
 }
 
 void USaveWidget::OnSaveButtonHovered()
 {
-	if (!bSaveMode) return;
+	UButton* FindButton = nullptr;
+
+	for (UButton* Button : SaveButtons)
+	{
+		if (Button->IsHovered())
+		{
+			FindButton = Button;
+			break;
+		}
+	}
+
+	ChangeNowHoveringButton(FindButton, true);
 
 }
 
 void USaveWidget::OnSaveButtonUnhovered()
 {
-	if (!bSaveMode) return;
-
+	ChangeNowHoveringButton(nullptr, true);
 }
 
 void USaveWidget::OnDeleteButtonClicked()
@@ -56,11 +98,28 @@ void USaveWidget::OnDeleteButtonHovered()
 {
 	if (bSaveMode) return;
 
+	UButton* FindButton = nullptr;
+
+	for (UButton* Button : DeleteButtons)
+	{
+		if (Button->IsHovered())
+		{
+			FindButton = Button;
+			break;
+		}
+	}
+
+	ChangeNowHoveringButton(FindButton, false);
+
+
 }
 
 void USaveWidget::OnDeleteButtonUnhovered()
 {
 	if (bSaveMode) return;
+
+	ChangeNowHoveringButton(nullptr, false);
+
 
 }
 
@@ -136,7 +195,7 @@ void USaveWidget::UpdateAllUI()
 			}
 			else
 			{
-				SaveButtons[i]->SetIsEnabled(bSaveMode);
+				SaveButtons[i]->SetIsEnabled(true);
 
 				if (DeleteButtons.IsValidIndex(i) && DeleteButtons[i])
 				{
@@ -158,8 +217,25 @@ void USaveWidget::UpdateAllUI()
 		NewSaveButton->SetVisibility(ESlateVisibility::Visible);
 		SaveModeBackGround->SetBrushColor(FLinearColor::Red);
 		SaveModeText->SetText(FText::FromString(FString("Load")));
+	}
 
 
+	if (HoveringSaveButton == nullptr)
+	{
+		UISaveInteractCanvas->SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
+
+	if (UCanvasPanelSlot* ButtonSlot = Cast<UCanvasPanelSlot>(HoveringSaveButton->Slot))
+	{
+		UISaveInteractCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+		FVector2D ButtonPosition = ButtonSlot->GetPosition();
+
+		if (UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(UISaveInteractCanvas->Slot))
+		{
+			CanvasSlot->SetPosition(ButtonPosition);
+		}
 	}
 }
 

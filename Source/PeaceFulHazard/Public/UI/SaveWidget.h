@@ -32,6 +32,9 @@ public:
 
 protected:
 
+	int32 GetButtonIndex(UButton* button, bool bSaveButtons);
+
+	void ChangeNowHoveringButton(UButton* button, bool bSaveButtons);
 
 	UFUNCTION()
 	void OnSaveButtonClicked();
@@ -55,6 +58,9 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* UISaveInteractCanvas;
+
+	UButton* HoveringSaveButton;
+	UButton* HoveringDeleteButton;
 
 	TArray<UButton*> SaveButtons;
 	TArray<UButton*> DeleteButtons;
