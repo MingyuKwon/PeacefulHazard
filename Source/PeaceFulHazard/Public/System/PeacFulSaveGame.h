@@ -50,6 +50,9 @@ class PEACEFULHAZARD_API UPeacFulSaveGame : public USaveGame
 	
 public:
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
+    TMap<ETutorialType, bool> TutorialCheckMap;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     bool bFirstGame = true;
 
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
