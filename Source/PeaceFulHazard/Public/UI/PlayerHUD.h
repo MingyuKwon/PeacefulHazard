@@ -13,6 +13,7 @@ class UDefaultPlayerWidget;
 class UInventoryWidget;
 class UItemBoxWidget;
 class UNoticePanelWidget;
+class USaveWidget;
 /**
  *
  */
@@ -31,6 +32,8 @@ public:
 	void SetItemBoxDisplay(bool bVisible);
 
 	void SetNoticeDisplay(bool bVisible);
+
+	void SetMainMenuDisplay(bool bVisible, bool bSavePanelSave);
 
 
 	void SetGetItemDisplay(bool bVisible, EItemType itemType = EItemType::EIT_None, int32 count = 0);
@@ -73,6 +76,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UNoticePanelWidget> NoticePanelWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<USaveWidget> SaveWidgetClass;
+
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Parameter")
 	TSubclassOf<AItemInformation> ItemInformationClass;
@@ -89,6 +96,8 @@ protected:
 	UItemBoxWidget* ItemBoxWidget;
 
 	UNoticePanelWidget* NoticePanelWidget;
+
+	USaveWidget* SaveWidget;
 
 	int32 beforeCurrentBulle = -1;
 	int32 beforeMaxBullet = -1;

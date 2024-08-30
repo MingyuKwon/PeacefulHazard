@@ -22,6 +22,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTutorialEvent, ETutorialType, tutor
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMapTravelEvent, EWarpTarget, warptarget);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapStartEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapEndEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMenuUIChangeEvent, bool, bVisible);
 
 class UPeacFulGameInstance;
 
@@ -55,8 +56,14 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FItemBoxInteractEvent ItemBoxInteractEvent;
 
+
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FNoticeUIShowEvent NoticeUIShowEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FMenuUIChangeEvent MenuUIChangeEvent;
+
+
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FPlayerDeathEvent PlayerDeathEvent;

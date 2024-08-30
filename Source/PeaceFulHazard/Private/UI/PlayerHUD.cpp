@@ -7,6 +7,7 @@
 #include "UI/InventoryWidget.h"
 #include "UI/ItemBoxWidget.h"
 #include "UI/NoticePanelWidget.h"
+#include "UI/SaveWidget.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -87,6 +88,24 @@ void APlayerHUD::SetNoticeDisplay(bool bVisible)
         NoticePanelWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     }
 
+}
+
+void APlayerHUD::SetMainMenuDisplay(bool bVisible, bool bSavePanelSave)
+{
+    if (!bVisible)
+    {
+        if (SaveWidget)
+        {
+            SaveWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+        return;
+    }
+
+    if (SaveWidget)
+    {
+        SaveWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+        SaveWidget->bSaveMode = bSavePanelSave;
+    }
 }
 
 void APlayerHUD::SetGetItemDisplay(bool bVisible, EItemType itemType, int32 count)
@@ -201,6 +220,11 @@ void APlayerHUD::BackUIInputTrigger()
     {
         NoticePanelWidget->BackUIInputTrigger();
     }
+
+    if (SaveWidget)
+    {
+        SaveWidget->BackUIInputTrigger();
+    }
 }
 
 void APlayerHUD::OkUIInputTrigger()
@@ -218,6 +242,11 @@ void APlayerHUD::OkUIInputTrigger()
     if (NoticePanelWidget)
     {
         NoticePanelWidget->OkUIInputTrigger();
+    }
+
+    if (SaveWidget)
+    {
+        SaveWidget->OkUIInputTrigger();
     }
 }
 
@@ -301,6 +330,16 @@ void APlayerHUD::BeginPlay()
 
     }
 
+    if (SaveWidgetClass != nullptr)
+    {
+        SaveWidget = CreateWidget<USaveWidget>(GetWorld(), SaveWidgetClass);
+        if (SaveWidget != nullptr)
+        {
+            SaveWidget->AddToViewport();
+            SaveWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+    }
+    
     
 
     SetItemInformationToDisplay();

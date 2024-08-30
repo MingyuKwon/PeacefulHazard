@@ -48,6 +48,7 @@ enum class EInteractSituationType : uint8
     EIST_None,
     EIST_OneWayDoor,
     EIST_ItemBox,
+    EIST_SaveBox,
     EIST_NormalDoor,
     EIST_Max
 };
@@ -60,6 +61,8 @@ enum class EUIState : uint8
     EUIS_Inventory,
     EUIS_ItemGet,
     EUIS_Notice,
+
+    EUIS_Menu,
 
     EUIS_Max
 };

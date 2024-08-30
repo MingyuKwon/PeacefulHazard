@@ -48,12 +48,8 @@ void AHappyPlayerController::SetupInputComponent()
         EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &ThisClass::Reload);
         EnhancedInputComponent->BindAction(BulletChangeAction, ETriggerEvent::Started, this, &ThisClass::ChangeBullet);
 
-
-        
         EnhancedInputComponent->BindAction(TabAction, ETriggerEvent::Started, this, &ThisClass::Tab);
-
-
-        
+        EnhancedInputComponent->BindAction(MenuAction, ETriggerEvent::Started, this, &ThisClass::Menu);
 
     }
     else
@@ -87,7 +83,9 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->TutorialEvent.AddDynamic(this, &ThisClass::TutorialShow);
         PeaceFulHazardGameMode->MapTravelEvent.AddDynamic(this, &ThisClass::WarpTravel);
         PeaceFulHazardGameMode->MapStartEvent.AddDynamic(this, &ThisClass::MapStartCallBack);
-        UE_LOG(LogTemp, Warning, TEXT("AddDynamic(this, &ThisClass::MapStartCallBack"));
+
+        PeaceFulHazardGameMode->MenuUIChangeEvent.AddDynamic(this, &ThisClass::ShowMainMenuUI);
+
 
 
         InitializeInventory();
@@ -164,6 +162,18 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
 
         }
 
+    }
+}
+
+void AHappyPlayerController::Menu(const FInputActionValue& Value)
+{
+    if (PlayerHUD)
+    {
+        UpdateAllUI();
+
+        currentUIState = EUIState::EUIS_Menu;
+        PlayerHUD->SetMainMenuDisplay(true, true);
+        SetGamePause(true);
     }
 }
 
@@ -751,6 +761,23 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
         if (PlayerHUD)
         {
             PlayerHUD->SetNoticeDisplay(false);
+            SetGamePause(false);
+
+        }
+    }
+}
+
+void AHappyPlayerController::ShowMainMenuUI(bool bVisible)
+{
+    if (bVisible)
+    {
+
+    }
+    else
+    {
+        if (PlayerHUD)
+        {
+            PlayerHUD->SetMainMenuDisplay(false, false);
             SetGamePause(false);
 
         }

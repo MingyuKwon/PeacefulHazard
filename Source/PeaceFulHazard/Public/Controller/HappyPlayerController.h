@@ -96,6 +96,9 @@ protected:
 
 	void Tab(const FInputActionValue& Value);
 
+	void Menu(const FInputActionValue& Value);
+
+
 	void PauseGame(bool flag);
 
 	int32 GetReloadBulletCount();
@@ -138,6 +141,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* TabAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* MenuAction;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Parameter")
@@ -249,6 +255,10 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void ShowNoticeUI(bool bVisible, FString& noticeText);
+
+	UFUNCTION(BlueprintCallable)
+	void ShowMainMenuUI(bool bVisible);
+
 
 	UFUNCTION(BlueprintCallable)
 	void WarpTravel(EWarpTarget warptarget);
