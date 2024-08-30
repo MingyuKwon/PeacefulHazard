@@ -144,22 +144,21 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
 {
     if (PlayerHUD)
     {
-        if (currentUIState == EUIState::EUIS_Notice) return;
+        if (currentUIState == EUIState::EUIS_Notice || currentUIState == EUIState::EUIS_Menu) return;
 
-        if (nowPausing)
-        {
-            PlayerHUD->SetInventoryDisplay(false);
-            SetGamePause(false);
+        ChangeUiState(EUIState::EUIS_Inventory, currentUIState != EUIState::EUIS_Inventory);
 
-        }
-        else
+        if (currentUIState == EUIState::EUIS_Inventory)
         {
             UpdateAllUI();
 
             currentUIState = EUIState::EUIS_Inventory;
             PlayerHUD->SetInventoryDisplay(true);
-            SetGamePause(true);
 
+        }
+        else
+        {
+            PlayerHUD->SetInventoryDisplay(false);
         }
 
     }
@@ -169,11 +168,22 @@ void AHappyPlayerController::Menu(const FInputActionValue& Value)
 {
     if (PlayerHUD)
     {
+        if (currentUIState == EUIState::EUIS_Notice) return;
+
         UpdateAllUI();
 
-        currentUIState = EUIState::EUIS_Menu;
-        PlayerHUD->SetMainMenuDisplay(true, true);
-        SetGamePause(true);
+        ChangeUiState(EUIState::EUIS_Menu, currentUIState != EUIState::EUIS_Menu);
+
+
+        if (currentUIState == EUIState::EUIS_Menu)
+        {
+            PlayerHUD->SetMainMenuDisplay(true, true);
+        }
+        else
+        {
+            PlayerHUD->SetMainMenuDisplay(false, false);
+        }
+
     }
 }
 
@@ -184,9 +194,9 @@ void AHappyPlayerController::GetItem(EItemType itemType, int32 count)
     {
         UpdateAllUI();
 
-        currentUIState = EUIState::EUIS_ItemGet;
+        ChangeUiState(EUIState::EUIS_ItemGet, true);
+
         PlayerHUD->SetGetItemDisplay(true, itemType, count);
-        SetGamePause(true);
     }
 }
 
@@ -196,9 +206,9 @@ void AHappyPlayerController::TriggerSituation(EInteractSituationType situtaionTy
     {
         UpdateAllUI();
 
-        currentUIState = EUIState::EUIS_ItemGet;
+        ChangeUiState(EUIState::EUIS_ItemGet, true);
+
         PlayerHUD->showSituationUI(true, situtaionType);
-        SetGamePause(true);
     }
 }
 
@@ -206,22 +216,21 @@ void AHappyPlayerController::TriggerItemBox()
 {
     if (PlayerHUD)
     {
-        if (nowPausing)
-        {
-            PlayerHUD->SetInventoryDisplay(false);
-            SetGamePause(false);
+        if (currentUIState == EUIState::EUIS_Notice) return;
 
+        UpdateAllUI();
+
+        ChangeUiState(EUIState::EUIS_ItemBox, currentUIState != EUIState::EUIS_ItemBox);
+
+
+        if (currentUIState == EUIState::EUIS_ItemBox)
+        {
+            PlayerHUD->SetItemBoxDisplay(true);
         }
         else
         {
-            UpdateAllUI();
-
-            currentUIState = EUIState::EUIS_ItemBox;
-            PlayerHUD->SetItemBoxDisplay(true);
-            SetGamePause(true);
-
+            PlayerHUD->SetInventoryDisplay(false);
         }
-
     }
 }
 
@@ -419,11 +428,6 @@ void AHappyPlayerController::SetGamePause(bool flag)
 {
     nowPausing = flag;
     PauseGame(nowPausing);
-
-    if (!flag)
-    {
-        currentUIState = EUIState::EUIS_None;
-    }
 }
 
 int32 AHappyPlayerController::GetLeftBullet()
@@ -557,14 +561,66 @@ void AHappyPlayerController::SetBulletChangeCount()
 }
 
 
+void AHappyPlayerController::ChangeUiState(EUIState uiState, bool bLock)
+{
+    if (uiState == EUIState::EUIS_Notice)
+    {
+        bNoticeLock = bLock;
+    }
+    else if (uiState == EUIState::EUIS_Menu)
+    {
+        bMenuLock = bLock;
+    }
+    else 
+    {
+        bTabLock = bLock;
+    }
+
+    if (bNoticeLock)
+    {
+        currentUIState = EUIState::EUIS_Notice;
+    }
+    else if (bMenuLock)
+    {
+        currentUIState = EUIState::EUIS_Menu;
+    }
+    else if (bTabLock)
+    {
+        currentUIState = uiState;
+    }
+    else
+    {
+        currentUIState = EUIState::EUIS_None;
+    }
+
+    FString EnumAsString = UEnum::GetValueAsString(currentUIState);
+    UE_LOG(LogTemp, Display, TEXT("Current UI State: %s"), *EnumAsString);
+
+    if (currentUIState == EUIState::EUIS_None)
+    {
+        PauseGame(false);
+    }
+    else
+    {
+        if (!nowPausing)
+        {
+            PauseGame(true);
+        }
+    }
+}
+
 void AHappyPlayerController::CloseAllUI()
 {
-    PlayerHUD->SetGetItemDisplay(false);
-    PlayerHUD->SetInventoryDisplay(false);
-    PlayerHUD->showSituationUI(false);
-    PlayerHUD->SetItemBoxDisplay(false);
+    ChangeUiState(EUIState::EUIS_None, false);
 
-    SetGamePause(false);
+    if (currentUIState == EUIState::EUIS_None)
+    {
+        PlayerHUD->SetGetItemDisplay(false);
+        PlayerHUD->SetInventoryDisplay(false);
+        PlayerHUD->showSituationUI(false);
+        PlayerHUD->SetItemBoxDisplay(false);
+
+    }
 }
 
 void AHappyPlayerController::MapStartCallBack()
@@ -742,26 +798,21 @@ void AHappyPlayerController::ChangeItemBox(bool bInventroyToBox, int32 index, EI
 
 void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
 {
+    ChangeUiState(EUIState::EUIS_Notice, bVisible);
+
     if (bVisible)
     {
         if (PlayerHUD)
         {
-            
-            currentUIState = EUIState::EUIS_Notice;
             PlayerHUD->UpdateNoticeDisplay(noticeText);
             PlayerHUD->SetNoticeDisplay(true);
-            SetGamePause(true);
-
         }
-        
-        
     }
     else
     {
         if (PlayerHUD)
         {
             PlayerHUD->SetNoticeDisplay(false);
-            SetGamePause(false);
 
         }
     }

@@ -154,6 +154,12 @@ protected:
 
 	EUIState currentUIState = EUIState::EUIS_None;
 
+	void ChangeUiState(EUIState uiState, bool bLock);
+
+	bool bNoticeLock = false;
+	bool bMenuLock = false;
+	bool bTabLock = false;
+
 	class APlayerHUD* PlayerHUD;
 	class APeaceFulHazardCharacter* ControlledCharacter;
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
