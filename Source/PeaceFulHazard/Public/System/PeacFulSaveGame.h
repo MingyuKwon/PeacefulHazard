@@ -49,6 +49,7 @@ class PEACEFULHAZARD_API UPeacFulSaveGame : public USaveGame
 	GENERATED_BODY()
 	
 public:
+    UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     bool bFirstGame = true;
 
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")

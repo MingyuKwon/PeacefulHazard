@@ -91,6 +91,8 @@ void APeaceFulHazardGameMode::SaveTempToSlot()
     if (gameSave)
     {
         UGameplayStatics::SaveGameToSlot(gameSave, ReceivedSlotName, 0);
+        UE_LOG(LogTemp, Display, TEXT("%s"), gameSave->bFirstGame ? *FString("gameSave True") : *FString("gameSave False"));
+
     }
 
     enemySaveRefCount = 0;
@@ -113,6 +115,7 @@ void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
             if (LoadedGame)
             {
                 PeacFulGameInstance->tempSaveGame = LoadedGame;
+                UE_LOG(LogTemp, Display, TEXT("%s"), PeacFulGameInstance->tempSaveGame->bFirstGame ? *FString("tempSaveGame->bFirstGame True") : *FString("tempSaveGame->bFirstGame False"));
             }
         }
     }
@@ -141,6 +144,7 @@ void APeaceFulHazardGameMode::SavePlayerPara(FCharacterInventoty CharacterInvent
 
     UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
 
+    gameSave->bFirstGame = false;
     gameSave->SavedPlayerInventory = CharacterInventoty;
     gameSave->SavedPlayerCharacterItemBox = CharacterItemBox;
     gameSave->SavedPlayerMaxBullet = maxBullet;
