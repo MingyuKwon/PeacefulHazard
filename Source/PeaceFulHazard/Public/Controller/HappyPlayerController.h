@@ -270,6 +270,7 @@ protected:
 	void ShowNoticeUI(bool bVisible, FString& noticeText);
 
 
+
 	UFUNCTION(BlueprintCallable)
 	void WarpTravel(EWarpTarget warptarget);
 
@@ -277,6 +278,10 @@ protected:
 
 	
 public:
+	UFUNCTION(BlueprintCallable)
+	void ShowInformationUI(bool bVisible, FString& noticeText);
+
+
 	void SetBulletCount(bool bFire);
 	void SetBulletChangeCount();
 

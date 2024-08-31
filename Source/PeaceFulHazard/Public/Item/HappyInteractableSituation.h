@@ -32,6 +32,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
 	EInteractSituationType situationType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
+	FString NoteText;
+
+
 	virtual void BeginPlay() override;
 
 	virtual void AfterInteraction() override;

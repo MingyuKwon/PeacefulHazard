@@ -83,6 +83,7 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->ItemBoxInteractEvent.AddDynamic(this, &ThisClass::ChangeItemBox);
 
         PeaceFulHazardGameMode->NoticeUIShowEvent.AddDynamic(this, &ThisClass::ShowNoticeUI);
+        PeaceFulHazardGameMode->InformationUIShowEvent.AddDynamic(this, &ThisClass::ShowInformationUI);
 
         PeaceFulHazardGameMode->TutorialEvent.AddDynamic(this, &ThisClass::TutorialShow);
         PeaceFulHazardGameMode->MapTravelEvent.AddDynamic(this, &ThisClass::WarpTravel);
@@ -889,6 +890,28 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
         if (PlayerHUD)
         {
             PlayerHUD->SetNoticeDisplay(false);
+
+        }
+    }
+}
+
+void AHappyPlayerController::ShowInformationUI(bool bVisible, FString& noticeText)
+{
+    ChangeUiState(EUIState::EUIS_Menu, bVisible);
+
+    if (bVisible)
+    {
+        if (PlayerHUD)
+        {
+            PlayerHUD->UpdateInformationDisplay(noticeText);
+            PlayerHUD->SetInformationDisplay(true);
+        }
+    }
+    else
+    {
+        if (PlayerHUD)
+        {
+            PlayerHUD->SetInformationDisplay(false);
 
         }
     }

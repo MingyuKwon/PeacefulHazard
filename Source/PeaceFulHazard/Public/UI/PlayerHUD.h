@@ -14,6 +14,7 @@ class UInventoryWidget;
 class UItemBoxWidget;
 class UNoticePanelWidget;
 class USaveWidget;
+class UInformationPanelWidget;
 /**
  *
  */
@@ -32,6 +33,9 @@ public:
 	void SetItemBoxDisplay(bool bVisible);
 
 	void SetNoticeDisplay(bool bVisible);
+
+	void SetInformationDisplay(bool bVisible);
+
 
 	void SetMainMenuDisplay(bool bVisible, bool bSavePanelSave);
 
@@ -52,6 +56,7 @@ public:
 
 	void UpdateNoticeDisplay(FString& noticeText);
 
+	void UpdateInformationDisplay(FString& noticeText);
 
 	
 
@@ -81,6 +86,9 @@ protected:
 	TSubclassOf<UNoticePanelWidget> NoticePanelWidgetClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UInformationPanelWidget> InformationPanelWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<USaveWidget> SaveWidgetClass;
 
 	
@@ -101,7 +109,11 @@ protected:
 
 	UNoticePanelWidget* NoticePanelWidget;
 
+	UInformationPanelWidget* InformationPanelWidget;
+
 	USaveWidget* SaveWidget;
+
+
 
 	int32 beforeCurrentBulle = -1;
 	int32 beforeMaxBullet = -1;

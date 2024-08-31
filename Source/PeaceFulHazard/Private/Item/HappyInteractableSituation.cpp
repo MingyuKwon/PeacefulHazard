@@ -82,6 +82,10 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		{
 			playerController->TriggerMenu_Save(true);
 		}
+		else if (situationType == EInteractSituationType::EIST_Note)
+		{
+			playerController->ShowInformationUI(true, NoteText);
+		}
 		else if (situationType == EInteractSituationType::EIST_OneWayDoor)
 		{
 			if (character && OneWayAllow && OneWayNotAllow)

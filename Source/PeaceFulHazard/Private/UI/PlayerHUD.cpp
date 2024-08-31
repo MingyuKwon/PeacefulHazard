@@ -8,6 +8,7 @@
 #include "UI/ItemBoxWidget.h"
 #include "UI/NoticePanelWidget.h"
 #include "UI/SaveWidget.h"
+#include "UI/InformationPanelWidget.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -88,6 +89,23 @@ void APlayerHUD::SetNoticeDisplay(bool bVisible)
         NoticePanelWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     }
 
+}
+
+void APlayerHUD::SetInformationDisplay(bool bVisible)
+{
+    if (!bVisible)
+    {
+        if (InformationPanelWidget)
+        {
+            InformationPanelWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+        return;
+    }
+
+    if (InformationPanelWidget)
+    {
+        InformationPanelWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+    }
 }
 
 void APlayerHUD::SetMainMenuDisplay(bool bVisible, bool bSavePanelSave)
@@ -225,6 +243,14 @@ void APlayerHUD::UpdateNoticeDisplay(FString& noticeText)
 
 }
 
+void APlayerHUD::UpdateInformationDisplay(FString& noticeText)
+{
+    if (InformationPanelWidget)
+    {
+        InformationPanelWidget->UpdateNoticeDisplay(noticeText);
+    }
+}
+
 void APlayerHUD::BackUIInputTrigger()
 {
     if (InventoryWidget)
@@ -240,6 +266,11 @@ void APlayerHUD::BackUIInputTrigger()
     if (NoticePanelWidget)
     {
         NoticePanelWidget->BackUIInputTrigger();
+    }
+
+    if (InformationPanelWidget)
+    {
+        InformationPanelWidget->BackUIInputTrigger();
     }
 
     if (SaveWidget)
@@ -263,6 +294,11 @@ void APlayerHUD::OkUIInputTrigger()
     if (NoticePanelWidget)
     {
         NoticePanelWidget->OkUIInputTrigger();
+    }
+
+    if (InformationPanelWidget)
+    {
+        InformationPanelWidget->OkUIInputTrigger();
     }
 
     if (SaveWidget)
@@ -356,6 +392,16 @@ void APlayerHUD::BeginPlay()
             NoticePanelWidget->SetVisibility(ESlateVisibility::Hidden);
         }
 
+    }
+
+    if (InformationPanelWidgetClass != nullptr)
+    {
+        InformationPanelWidget = CreateWidget<UInformationPanelWidget>(GetWorld(), InformationPanelWidgetClass);
+        if (InformationPanelWidget != nullptr)
+        {
+            InformationPanelWidget->AddToViewport();
+            InformationPanelWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
     }
 
     if (SaveWidgetClass != nullptr)
