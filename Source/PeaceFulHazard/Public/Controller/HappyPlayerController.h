@@ -96,6 +96,9 @@ protected:
 
 	void Tab(const FInputActionValue& Value);
 
+	void Menu(const FInputActionValue& Value);
+
+
 	void PauseGame(bool flag);
 
 	int32 GetReloadBulletCount();
@@ -139,6 +142,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* TabAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* MenuAction;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Parameter")
 	TSubclassOf<AItemInformation> ItemInformationClass;
@@ -146,7 +152,17 @@ protected:
 	AItemInformation* ItemInformation;
 
 
+	UFUNCTION(BlueprintCallable)
+	void WantToSaveCallBack();
+
+
 	EUIState currentUIState = EUIState::EUIS_None;
+
+	void ChangeUiState(EUIState uiState, bool bLock);
+
+	bool bNoticeLock = false;
+	bool bMenuLock = false;
+	bool bTabLock = false;
 
 	class APlayerHUD* PlayerHUD;
 	class APeaceFulHazardCharacter* ControlledCharacter;
@@ -156,6 +172,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void CloseAllUI();
+
+	UFUNCTION(BlueprintCallable)
+	void ShowMainMenuUI(bool bVisible);
 
 	UFUNCTION(BlueprintCallable)
 	void MapStartCallBack();
@@ -250,6 +269,8 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ShowNoticeUI(bool bVisible, FString& noticeText);
 
+
+
 	UFUNCTION(BlueprintCallable)
 	void WarpTravel(EWarpTarget warptarget);
 
@@ -257,6 +278,10 @@ protected:
 
 	
 public:
+	UFUNCTION(BlueprintCallable)
+	void ShowInformationUI(bool bVisible, FString& noticeText);
+
+
 	void SetBulletCount(bool bFire);
 	void SetBulletChangeCount();
 
@@ -269,6 +294,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void TriggerItemBox();
+
+	UFUNCTION(BlueprintCallable)
+	void TriggerMenu_Save(bool bSave);
+
 
 	UFUNCTION()
 	void TakeDamge(float damage);

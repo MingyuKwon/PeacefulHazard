@@ -16,12 +16,19 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCloseAllUIEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FInteractWithItemUIEvent, EItemType, itemtype , int32, count);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractSituationEvent, EInteractSituationType, situationType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FItemBoxInteractEvent, bool, bInventroyToBox, int32, index, EItemType, itemtype, int32, count );
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNoticeUIShowEvent, bool, bVisible, FString&, noticeText);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FInformationUIShowEvent, bool, bVisible, FString&, noticeText);
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeathEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTutorialEvent, ETutorialType, tutorialType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMapTravelEvent, EWarpTarget, warptarget);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapStartEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapEndEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMenuUIChangeEvent, bool, bVisible);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSaveFinishedEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWantSaveEvent);
 
 class UPeacFulGameInstance;
 
@@ -55,8 +62,20 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FItemBoxInteractEvent ItemBoxInteractEvent;
 
+
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FNoticeUIShowEvent NoticeUIShowEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FInformationUIShowEvent InformationUIShowEvent;
+
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FMenuUIChangeEvent MenuUIChangeEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FSaveFinishedEvent SaveFinishedEvent;
+
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FPlayerDeathEvent PlayerDeathEvent;
@@ -73,15 +92,23 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FMapEndEvent MapEndEvent;
 
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FWantSaveEvent WantSaveEvent;
+
 	
+	void SaveDataToSlot(FString slotName);
+	void LoadDataFromSlot(FString slotName, bool bNewGame);
+	void DeleteDataFromSlot(FString slotName);
 
 	void SetEnemyRefCount(bool bPlus);
+	void SetEnemySaveRefCount(bool bPlus);
 
 	EWarpTarget currentMapType = EWarpTarget::EWT_None;
 
 
-	void SavePlayerParaBeforeWarp(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped);
-	bool GetPlayerParaAfterWarp(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped);
+	void SavePlayerPara(FCharacterInventoty CharacterInventoty, FCharacterItemBox CharacterItemBox, int32 maxBullet, int32 currentBullet, float currentHealth, EItemType currentBulletType, bool Equipped, FVector PlayerPosition, FRotator PlayerRotation);
+	bool GetPlayerPara(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped, FVector& PlayerPosition, FRotator& PlayerRotation, EWarpTarget& saveMap);
 
 	bool CheckAleradyInteract(FString name);
 	void SetAleradyInteract(FString name);
@@ -91,13 +118,23 @@ public:
 
 	void OpenMap(FString MapName);
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
+	TMap<EWarpTarget, FString> TravelMap;
+
+
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
 	virtual void BeginPlay() override;
 
+	void SaveTempToSlot();
+
 	int32 enemyRefCount = 0;
 
+	int32 enemySaveRefCount = 0;
+
 	FString ReceivedMapName = FString("");
+
+	FString ReceivedSlotName = FString("");
 
 	UPeacFulGameInstance* PeacFulGameInstance;
 

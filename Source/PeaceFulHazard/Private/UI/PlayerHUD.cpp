@@ -7,6 +7,8 @@
 #include "UI/InventoryWidget.h"
 #include "UI/ItemBoxWidget.h"
 #include "UI/NoticePanelWidget.h"
+#include "UI/SaveWidget.h"
+#include "UI/InformationPanelWidget.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -89,6 +91,54 @@ void APlayerHUD::SetNoticeDisplay(bool bVisible)
 
 }
 
+void APlayerHUD::SetInformationDisplay(bool bVisible)
+{
+    if (!bVisible)
+    {
+        if (InformationPanelWidget)
+        {
+            InformationPanelWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+        return;
+    }
+
+    if (InformationPanelWidget)
+    {
+        InformationPanelWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+    }
+}
+
+void APlayerHUD::SetMainMenuDisplay(bool bVisible, bool bSavePanelSave)
+{
+    if (!bVisible)
+    {
+        if (SaveWidget)
+        {
+            SaveWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+        return;
+    }
+
+    if (SaveWidget)
+    {
+        SaveWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+        SaveWidget->bSaveMode = bSavePanelSave;
+        SaveWidget->UpdateAllUI();
+    }
+}
+
+void APlayerHUD::ShowLoadingUI(bool bVisible)
+{
+    if (DefaultPlayerWidget)
+    {
+        DefaultPlayerWidget->ShowLoadingUI(bVisible);
+    }
+    else
+    {
+        bBeforeLoadingShow = true;
+    }
+}
+
 void APlayerHUD::SetGetItemDisplay(bool bVisible, EItemType itemType, int32 count)
 {
     if (!bVisible)
@@ -151,6 +201,14 @@ void APlayerHUD::UpdateBulletDisplay(int32 currentBullet, int32 maxBullet, int32
     }
 }
 
+void APlayerHUD::UpdateTodoUI()
+{
+    if (DefaultPlayerWidget != nullptr)
+    {
+        DefaultPlayerWidget->UpdateTodoUI();
+    }
+}
+
 void APlayerHUD::UpdateInventoryDisplay(FCharacterInventoty* inventory)
 {
     if (InventoryWidget)
@@ -185,6 +243,14 @@ void APlayerHUD::UpdateNoticeDisplay(FString& noticeText)
 
 }
 
+void APlayerHUD::UpdateInformationDisplay(FString& noticeText)
+{
+    if (InformationPanelWidget)
+    {
+        InformationPanelWidget->UpdateNoticeDisplay(noticeText);
+    }
+}
+
 void APlayerHUD::BackUIInputTrigger()
 {
     if (InventoryWidget)
@@ -200,6 +266,16 @@ void APlayerHUD::BackUIInputTrigger()
     if (NoticePanelWidget)
     {
         NoticePanelWidget->BackUIInputTrigger();
+    }
+
+    if (InformationPanelWidget)
+    {
+        InformationPanelWidget->BackUIInputTrigger();
+    }
+
+    if (SaveWidget)
+    {
+        SaveWidget->BackUIInputTrigger();
     }
 }
 
@@ -218,6 +294,16 @@ void APlayerHUD::OkUIInputTrigger()
     if (NoticePanelWidget)
     {
         NoticePanelWidget->OkUIInputTrigger();
+    }
+
+    if (InformationPanelWidget)
+    {
+        InformationPanelWidget->OkUIInputTrigger();
+    }
+
+    if (SaveWidget)
+    {
+        SaveWidget->OkUIInputTrigger();
     }
 }
 
@@ -255,6 +341,13 @@ void APlayerHUD::BeginPlay()
             {
                 UpdateBulletDisplay(beforeCurrentBulle, beforeMaxBullet, beforeLeftBullet, beforeBulletType, beforeanotherBullet);
             }
+
+            if (bBeforeLoadingShow)
+            {
+                DefaultPlayerWidget->ShowLoadingUI(true);
+                bBeforeLoadingShow = false;
+            }
+   
 
         }
     }
@@ -301,6 +394,26 @@ void APlayerHUD::BeginPlay()
 
     }
 
+    if (InformationPanelWidgetClass != nullptr)
+    {
+        InformationPanelWidget = CreateWidget<UInformationPanelWidget>(GetWorld(), InformationPanelWidgetClass);
+        if (InformationPanelWidget != nullptr)
+        {
+            InformationPanelWidget->AddToViewport();
+            InformationPanelWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+    }
+
+    if (SaveWidgetClass != nullptr)
+    {
+        SaveWidget = CreateWidget<USaveWidget>(GetWorld(), SaveWidgetClass);
+        if (SaveWidget != nullptr)
+        {
+            SaveWidget->AddToViewport();
+            SaveWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+    }
+    
     
 
     SetItemInformationToDisplay();

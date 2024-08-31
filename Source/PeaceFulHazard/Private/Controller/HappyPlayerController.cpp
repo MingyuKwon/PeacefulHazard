@@ -48,12 +48,8 @@ void AHappyPlayerController::SetupInputComponent()
         EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &ThisClass::Reload);
         EnhancedInputComponent->BindAction(BulletChangeAction, ETriggerEvent::Started, this, &ThisClass::ChangeBullet);
 
-
-        
         EnhancedInputComponent->BindAction(TabAction, ETriggerEvent::Started, this, &ThisClass::Tab);
-
-
-        
+        EnhancedInputComponent->BindAction(MenuAction, ETriggerEvent::Started, this, &ThisClass::Menu);
 
     }
     else
@@ -67,6 +63,10 @@ void AHappyPlayerController::BeginPlay()
     Super::BeginPlay();
 
     ItemInformation = GetWorld()->SpawnActor<AItemInformation>(ItemInformationClass);
+
+    bShowMouseCursor = false;
+    SetInputMode(FInputModeGameOnly());
+
 
     PlayerHUD = Cast<APlayerHUD>(GetHUD());
     ControlledCharacter = Cast<APeaceFulHazardCharacter>(GetPawn());
@@ -83,39 +83,43 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->ItemBoxInteractEvent.AddDynamic(this, &ThisClass::ChangeItemBox);
 
         PeaceFulHazardGameMode->NoticeUIShowEvent.AddDynamic(this, &ThisClass::ShowNoticeUI);
+        PeaceFulHazardGameMode->InformationUIShowEvent.AddDynamic(this, &ThisClass::ShowInformationUI);
 
         PeaceFulHazardGameMode->TutorialEvent.AddDynamic(this, &ThisClass::TutorialShow);
         PeaceFulHazardGameMode->MapTravelEvent.AddDynamic(this, &ThisClass::WarpTravel);
         PeaceFulHazardGameMode->MapStartEvent.AddDynamic(this, &ThisClass::MapStartCallBack);
-        UE_LOG(LogTemp, Warning, TEXT("AddDynamic(this, &ThisClass::MapStartCallBack"));
+
+        PeaceFulHazardGameMode->MenuUIChangeEvent.AddDynamic(this, &ThisClass::ShowMainMenuUI);
+
+        PeaceFulHazardGameMode->WantSaveEvent.AddDynamic(this, &ThisClass::WantToSaveCallBack);
 
 
         InitializeInventory();
-
-
-        bool isSavedDataRemain = false;
-        bool bEquipped = false;
-
-        isSavedDataRemain = PeaceFulHazardGameMode->GetPlayerParaAfterWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped);
-
-        if (isSavedDataRemain)
-        {
-
-            if (bEquipped && ControlledCharacter)
-            {
-                ControlledCharacter->EquipTrigger(currentBulletType);
-            }
-        }
-        
-
     }
-
-
-
 
     if (PlayerHUD)
     {
         UpdateAllUI();
+
+        PlayerHUD->ShowLoadingUI(true);
+
+        bShowMouseCursor = true;
+
+        FInputModeGameAndUI InputMode;
+        InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+        SetInputMode(InputMode);
+
+        FTimerHandle loadingHandle;
+        GetWorld()->GetTimerManager().SetTimer(loadingHandle, [this]()
+            {
+                bShowMouseCursor = false;
+                SetInputMode(FInputModeGameOnly());
+
+                PlayerHUD->ShowLoadingUI(false);
+                TutorialShow(ETutorialType::ETT_MoveTutorial);
+
+            }, 0.5f, false);
+
     }
 
 }
@@ -146,22 +150,44 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
 {
     if (PlayerHUD)
     {
-        if (currentUIState == EUIState::EUIS_Notice) return;
+        if (currentUIState == EUIState::EUIS_Notice || currentUIState == EUIState::EUIS_Menu) return;
 
-        if (nowPausing)
-        {
-            PlayerHUD->SetInventoryDisplay(false);
-            SetGamePause(false);
+        ChangeUiState(EUIState::EUIS_Inventory, currentUIState != EUIState::EUIS_Inventory);
 
-        }
-        else
+        if (currentUIState == EUIState::EUIS_Inventory)
         {
             UpdateAllUI();
 
             currentUIState = EUIState::EUIS_Inventory;
             PlayerHUD->SetInventoryDisplay(true);
-            SetGamePause(true);
 
+        }
+        else
+        {
+            PlayerHUD->SetInventoryDisplay(false);
+        }
+
+    }
+}
+
+void AHappyPlayerController::Menu(const FInputActionValue& Value)
+{
+    if (PlayerHUD)
+    {
+        if (currentUIState == EUIState::EUIS_Notice) return;
+
+        UpdateAllUI();
+
+        ChangeUiState(EUIState::EUIS_Menu, currentUIState != EUIState::EUIS_Menu);
+
+
+        if (currentUIState == EUIState::EUIS_Menu)
+        {
+            PlayerHUD->SetMainMenuDisplay(true, false);
+        }
+        else
+        {
+            PlayerHUD->SetMainMenuDisplay(false, false);
         }
 
     }
@@ -174,9 +200,9 @@ void AHappyPlayerController::GetItem(EItemType itemType, int32 count)
     {
         UpdateAllUI();
 
-        currentUIState = EUIState::EUIS_ItemGet;
+        ChangeUiState(EUIState::EUIS_ItemGet, true);
+
         PlayerHUD->SetGetItemDisplay(true, itemType, count);
-        SetGamePause(true);
     }
 }
 
@@ -186,9 +212,9 @@ void AHappyPlayerController::TriggerSituation(EInteractSituationType situtaionTy
     {
         UpdateAllUI();
 
-        currentUIState = EUIState::EUIS_ItemGet;
+        ChangeUiState(EUIState::EUIS_ItemGet, true);
+
         PlayerHUD->showSituationUI(true, situtaionType);
-        SetGamePause(true);
     }
 }
 
@@ -196,20 +222,42 @@ void AHappyPlayerController::TriggerItemBox()
 {
     if (PlayerHUD)
     {
-        if (nowPausing)
-        {
-            PlayerHUD->SetInventoryDisplay(false);
-            SetGamePause(false);
+        if (currentUIState == EUIState::EUIS_Notice) return;
 
+        UpdateAllUI();
+
+        ChangeUiState(EUIState::EUIS_ItemBox, currentUIState != EUIState::EUIS_ItemBox);
+
+
+        if (currentUIState == EUIState::EUIS_ItemBox)
+        {
+            PlayerHUD->SetItemBoxDisplay(true);
         }
         else
         {
-            UpdateAllUI();
+            PlayerHUD->SetInventoryDisplay(false);
+        }
+    }
+}
 
-            currentUIState = EUIState::EUIS_ItemBox;
-            PlayerHUD->SetItemBoxDisplay(true);
-            SetGamePause(true);
+void AHappyPlayerController::TriggerMenu_Save(bool bSave)
+{
+    if (PlayerHUD)
+    {
+        if (currentUIState == EUIState::EUIS_Notice) return;
 
+        UpdateAllUI();
+
+        ChangeUiState(EUIState::EUIS_Menu, true);
+
+
+        if (currentUIState == EUIState::EUIS_Menu)
+        {
+            PlayerHUD->SetMainMenuDisplay(true, bSave);
+        }
+        else
+        {
+            PlayerHUD->SetMainMenuDisplay(false, bSave);
         }
 
     }
@@ -409,11 +457,6 @@ void AHappyPlayerController::SetGamePause(bool flag)
 {
     nowPausing = flag;
     PauseGame(nowPausing);
-
-    if (!flag)
-    {
-        currentUIState = EUIState::EUIS_None;
-    }
 }
 
 int32 AHappyPlayerController::GetLeftBullet()
@@ -491,6 +534,7 @@ void AHappyPlayerController::UpdateDefaultUI()
     if (PlayerHUD)
     {
         PlayerHUD->UpdateBulletDisplay(currentBullet, maxBullet, GetLeftBullet(), currentBulletType, GetAnotherBullet());
+        PlayerHUD->UpdateTodoUI();
     }
 }
 
@@ -547,19 +591,118 @@ void AHappyPlayerController::SetBulletChangeCount()
 }
 
 
+
+void AHappyPlayerController::WantToSaveCallBack()
+{
+    if (ControlledCharacter && PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->SavePlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped(), ControlledCharacter->GetActorLocation(), ControlledCharacter->GetActorRotation());
+
+    }
+
+    PeaceFulHazardGameMode->SetEnemySaveRefCount(false);
+}
+
+void AHappyPlayerController::ChangeUiState(EUIState uiState, bool bLock)
+{
+    if (uiState == EUIState::EUIS_Notice)
+    {
+        bNoticeLock = bLock;
+    }
+    else if (uiState == EUIState::EUIS_Menu)
+    {
+        bMenuLock = bLock;
+    }
+    else 
+    {
+        bTabLock = bLock;
+    }
+
+    if (bNoticeLock)
+    {
+        currentUIState = EUIState::EUIS_Notice;
+    }
+    else if (bMenuLock)
+    {
+        currentUIState = EUIState::EUIS_Menu;
+    }
+    else if (bTabLock)
+    {
+        currentUIState = uiState;
+    }
+    else
+    {
+        currentUIState = EUIState::EUIS_None;
+    }
+
+    FString EnumAsString = UEnum::GetValueAsString(currentUIState);
+    UE_LOG(LogTemp, Warning, TEXT("Current UI State: %s"), *EnumAsString);
+
+    if (currentUIState == EUIState::EUIS_None)
+    {
+        PauseGame(false);
+    }
+    else
+    {
+        if (!nowPausing)
+        {
+            PauseGame(true);
+        }
+    }
+}
+
 void AHappyPlayerController::CloseAllUI()
 {
-    PlayerHUD->SetGetItemDisplay(false);
-    PlayerHUD->SetInventoryDisplay(false);
-    PlayerHUD->showSituationUI(false);
-    PlayerHUD->SetItemBoxDisplay(false);
+    ChangeUiState(EUIState::EUIS_None, false);
 
-    SetGamePause(false);
+    if (currentUIState == EUIState::EUIS_None)
+    {
+        PlayerHUD->SetGetItemDisplay(false);
+        PlayerHUD->SetInventoryDisplay(false);
+        PlayerHUD->showSituationUI(false);
+        PlayerHUD->SetItemBoxDisplay(false);
+
+    }
 }
 
 void AHappyPlayerController::MapStartCallBack()
 {
-    TutorialShow(ETutorialType::ETT_MoveTutorial);
+    bool isSavedDataRemain = false;
+    bool bEquipped = false;
+
+    FVector Positoin;
+    FRotator Rotation;
+    EWarpTarget warptarget;
+
+    isSavedDataRemain = PeaceFulHazardGameMode->GetPlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped, Positoin, Rotation, warptarget);
+
+    if (isSavedDataRemain)
+    {
+        if (GEngine)
+        {
+            FString WarpTargetString = UEnum::GetValueAsString(warptarget);
+            FString CurrentMapTypeString = UEnum::GetValueAsString(PeaceFulHazardGameMode->currentMapType);
+
+            UE_LOG(LogTemp, Warning, TEXT("WarpTarget: %s, CurrentMapType: %s"), *WarpTargetString, *CurrentMapTypeString);
+        }
+
+        if (warptarget == PeaceFulHazardGameMode->currentMapType)
+        {
+            if (ControlledCharacter)
+            {
+                ControlledCharacter->SetActorLocation(Positoin);
+                ControlledCharacter->SetActorRotation(Rotation);
+            }
+        }
+
+        if (bEquipped && ControlledCharacter)
+        {
+            ControlledCharacter->EquipTrigger(currentBulletType);
+        }
+    }
+
+    UpdateAllUI();
+
 }
 
 void AHappyPlayerController::OuterUIChange(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
@@ -732,28 +875,68 @@ void AHappyPlayerController::ChangeItemBox(bool bInventroyToBox, int32 index, EI
 
 void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
 {
+    ChangeUiState(EUIState::EUIS_Notice, bVisible);
+
     if (bVisible)
     {
         if (PlayerHUD)
         {
-            
-            currentUIState = EUIState::EUIS_Notice;
             PlayerHUD->UpdateNoticeDisplay(noticeText);
             PlayerHUD->SetNoticeDisplay(true);
-            SetGamePause(true);
-
         }
-        
-        
     }
     else
     {
         if (PlayerHUD)
         {
             PlayerHUD->SetNoticeDisplay(false);
-            SetGamePause(false);
 
         }
+    }
+}
+
+void AHappyPlayerController::ShowInformationUI(bool bVisible, FString& noticeText)
+{
+    ChangeUiState(EUIState::EUIS_Menu, bVisible);
+
+    if (bVisible)
+    {
+        if (PlayerHUD)
+        {
+            PlayerHUD->UpdateInformationDisplay(noticeText);
+            PlayerHUD->SetInformationDisplay(true);
+        }
+    }
+    else
+    {
+        if (PlayerHUD)
+        {
+            PlayerHUD->SetInformationDisplay(false);
+
+        }
+    }
+}
+
+void AHappyPlayerController::ShowMainMenuUI(bool bVisible)
+{
+    if (PlayerHUD)
+    {
+        if (currentUIState == EUIState::EUIS_Notice) return;
+
+        UpdateAllUI();
+
+        ChangeUiState(EUIState::EUIS_Menu, bVisible);
+
+
+        if (currentUIState == EUIState::EUIS_Menu)
+        {
+            PlayerHUD->SetMainMenuDisplay(true, false);
+        }
+        else
+        {
+            PlayerHUD->SetMainMenuDisplay(false, false);
+        }
+
     }
 }
 
@@ -768,7 +951,7 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
 
     if (ControlledCharacter && PeaceFulHazardGameMode)
     {
-        PeaceFulHazardGameMode->SavePlayerParaBeforeWarp(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped());
+        PeaceFulHazardGameMode->SavePlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped(), ControlledCharacter->GetActorLocation(), ControlledCharacter->GetActorRotation());
         PeaceFulHazardGameMode->OpenMap(MapName);
     }
 

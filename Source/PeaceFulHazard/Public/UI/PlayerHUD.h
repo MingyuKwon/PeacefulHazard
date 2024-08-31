@@ -13,6 +13,8 @@ class UDefaultPlayerWidget;
 class UInventoryWidget;
 class UItemBoxWidget;
 class UNoticePanelWidget;
+class USaveWidget;
+class UInformationPanelWidget;
 /**
  *
  */
@@ -32,6 +34,13 @@ public:
 
 	void SetNoticeDisplay(bool bVisible);
 
+	void SetInformationDisplay(bool bVisible);
+
+
+	void SetMainMenuDisplay(bool bVisible, bool bSavePanelSave);
+
+	void ShowLoadingUI(bool bVisible);
+
 
 	void SetGetItemDisplay(bool bVisible, EItemType itemType = EItemType::EIT_None, int32 count = 0);
 
@@ -39,12 +48,15 @@ public:
 
 	void UpdateBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet);
 
+	void UpdateTodoUI();
+
 	void UpdateInventoryDisplay(FCharacterInventoty* inventory);
 
 	void UpdateItemBoxDisplay(FCharacterInventoty* inventory, FCharacterItemBox* itemBox);
 
 	void UpdateNoticeDisplay(FString& noticeText);
 
+	void UpdateInformationDisplay(FString& noticeText);
 
 	
 
@@ -73,6 +85,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UNoticePanelWidget> NoticePanelWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UInformationPanelWidget> InformationPanelWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<USaveWidget> SaveWidgetClass;
+
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Parameter")
 	TSubclassOf<AItemInformation> ItemInformationClass;
@@ -90,10 +109,18 @@ protected:
 
 	UNoticePanelWidget* NoticePanelWidget;
 
+	UInformationPanelWidget* InformationPanelWidget;
+
+	USaveWidget* SaveWidget;
+
+
+
 	int32 beforeCurrentBulle = -1;
 	int32 beforeMaxBullet = -1;
 	int32 beforeLeftBullet = -1;
 	int32 beforeanotherBullet = -1;
+
+	bool bBeforeLoadingShow = false;
 
 	EItemType beforeBulletType = EItemType::EIT_Bullet_Noraml;
 
