@@ -157,6 +157,34 @@ protected:
 
 
 
+	TArray<UTextBlock*> TimeTexts;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TimeText1;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TimeText2;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TimeText3;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TimeText4;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TimeText5;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TimeText6;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TimeText7;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TimeText8;
+
+	
+
 	TArray<UBorder*> SaveSlotBackgrounds;
 
 	UPROPERTY(meta = (BindWidget))
