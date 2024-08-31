@@ -14,6 +14,21 @@ bool UPeacFulGameInstance::checkIsTutorialAlready(ETutorialType tutorial)
     return temp;
 }
 
+void UPeacFulGameInstance::RefreshGame()
+{
+    TutorialCheckMap.Empty();
+
+    TutorialCheckMap.Add(ETutorialType::ETT_MoveTutorial, false);
+    TutorialCheckMap.Add(ETutorialType::ETT_Fire, false);
+    TutorialCheckMap.Add(ETutorialType::ETT_InteractWithItem, false);
+    TutorialCheckMap.Add(ETutorialType::ETT_InteractWithSituation, false);
+    TutorialCheckMap.Add(ETutorialType::ETT_InteractWithOneWayDoor, false);
+    TutorialCheckMap.Add(ETutorialType::ETT_InteractItemBox, false);
+
+    tempSaveGame = Cast<UPeacFulSaveGame>(UGameplayStatics::CreateSaveGameObject(UPeacFulSaveGame::StaticClass()));
+
+}
+
 
 void UPeacFulGameInstance::resetTempSave()
 {
@@ -25,12 +40,6 @@ void UPeacFulGameInstance::Init()
 {
     Super::Init();
 
-    TutorialCheckMap.Add(ETutorialType::ETT_MoveTutorial, false);
-    TutorialCheckMap.Add(ETutorialType::ETT_Fire, false);
-    TutorialCheckMap.Add(ETutorialType::ETT_InteractWithItem, false);
-    TutorialCheckMap.Add(ETutorialType::ETT_InteractWithSituation, false);
-    TutorialCheckMap.Add(ETutorialType::ETT_InteractWithOneWayDoor, false);
-    TutorialCheckMap.Add(ETutorialType::ETT_InteractItemBox, false);
+    RefreshGame();
 
-    tempSaveGame = Cast<UPeacFulSaveGame>(UGameplayStatics::CreateSaveGameObject(UPeacFulSaveGame::StaticClass()));
 }

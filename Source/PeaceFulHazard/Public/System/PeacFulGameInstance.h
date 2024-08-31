@@ -24,9 +24,7 @@ public:
 
 	bool checkIsTutorialAlready(ETutorialType tutorial);
 
-
-	EWarpTarget beforeMapType = EWarpTarget::EWT_None;
-
+	void RefreshGame();
 
 	UPROPERTY();
 	UPeacFulSaveGame* tempSaveGame;

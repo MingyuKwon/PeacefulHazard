@@ -7,6 +7,7 @@
 #include "System/PeaceFulPlayerStart.h"
 #include "System/PeacFulGameInstance.h"
 #include "System/MapNameStore.h"
+#include "System/PeacFulSaveGame.h"
 
 APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 {
@@ -51,7 +52,6 @@ void APeaceFulHazardGameMode::SetEnemySaveRefCount(bool bPlus)
 
 void APeaceFulHazardGameMode::OpenMap(FString MapName)
 {
-    PeacFulGameInstance->beforeMapType = currentMapType;
     ReceivedMapName = MapName;
 
     if (enemyRefCount <= 0)
@@ -105,7 +105,12 @@ void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
 {
     if (bNewGame)
     {
-        PeacFulGameInstance->tempSaveGame = Cast<UPeacFulSaveGame>(UGameplayStatics::CreateSaveGameObject(UPeacFulSaveGame::StaticClass()));
+        PeacFulGameInstance->RefreshGame();
+        
+        UE_LOG(LogTemp, Warning, TEXT("RefreshGame"));
+
+        UGameplayStatics::OpenLevel(this, *TravelMap[EWarpTarget::EWT_Tutorial]);
+
     }
     else
     {
@@ -117,14 +122,14 @@ void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
             {
                 PeacFulGameInstance->tempSaveGame = LoadedGame;
                 PeacFulGameInstance->TutorialCheckMap = LoadedGame->TutorialCheckMap;
-
-                UE_LOG(LogTemp, Display, TEXT("%s"), PeacFulGameInstance->tempSaveGame->bFirstGame ? *FString("tempSaveGame->bFirstGame True") : *FString("tempSaveGame->bFirstGame False"));
             }
+
+            UGameplayStatics::OpenLevel(this, *TravelMap[LoadedGame->saveMapName]);
+
         }
     }
 
     
-    UGameplayStatics::OpenLevel(this, *TravelMap[currentMapType]);
 
 
 }
@@ -147,6 +152,8 @@ void APeaceFulHazardGameMode::SavePlayerPara(FCharacterInventoty CharacterInvent
 
     UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
 
+    gameSave->saveMapName = currentMapType;
+
     gameSave->bFirstGame = false;
     gameSave->SavedPlayerInventory = CharacterInventoty;
     gameSave->SavedPlayerCharacterItemBox = CharacterItemBox;
@@ -159,7 +166,7 @@ void APeaceFulHazardGameMode::SavePlayerPara(FCharacterInventoty CharacterInvent
     gameSave->SavedPlayerRotation = PlayerRotation;
 }
 
-bool APeaceFulHazardGameMode::GetPlayerPara(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped, FVector& PlayerPosition, FRotator& PlayerRotation)
+bool APeaceFulHazardGameMode::GetPlayerPara(FCharacterInventoty& CharacterInventoty, FCharacterItemBox& CharacterItemBox, int32& maxBullet, int32& currentBullet, float& currentHealth, EItemType& currentBulletType, bool& Equipped, FVector& PlayerPosition, FRotator& PlayerRotation, EWarpTarget& saveMap)
 {
     if (PeacFulGameInstance == nullptr) return false;
 
@@ -185,7 +192,7 @@ bool APeaceFulHazardGameMode::GetPlayerPara(FCharacterInventoty& CharacterInvent
     Equipped = gameSave->SavePlayerdEquipped;
     PlayerPosition = gameSave->SavedPlayerLocation;
     PlayerRotation = gameSave->SavedPlayerRotation;
-
+    saveMap = gameSave->saveMapName;
 
     return true;
 }
@@ -253,7 +260,6 @@ void APeaceFulHazardGameMode::SetAleradyInteract(FString name)
 
 AActor* APeaceFulHazardGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
-
     TArray<AActor*> PlayerStarts;
     UGameplayStatics::GetAllActorsOfClass(this, APeaceFulPlayerStart::StaticClass(), PlayerStarts);
 
@@ -264,8 +270,9 @@ AActor* APeaceFulHazardGameMode::ChoosePlayerStart_Implementation(AController* P
         for (AActor* playerStart : PlayerStarts)
         {
             APeaceFulPlayerStart* temp = Cast<APeaceFulPlayerStart>(playerStart);
+            UPeacFulSaveGame* tempSave = PeacFulGameInstance->tempSaveGame;
 
-            if (temp->mapType == PeacFulGameInstance->beforeMapType)
+            if (temp->mapType == tempSave->saveMapName)
             {
                 return playerStart;
             }
@@ -296,7 +303,7 @@ void APeaceFulHazardGameMode::BeginPlay()
     GetWorld()->GetTimerManager().SetTimer(startDelayHandle, [this]()
         {
             MapStartEvent.Broadcast();
-        }, 0.2f, false);
+        }, 0.1f, false);
 
 }
 

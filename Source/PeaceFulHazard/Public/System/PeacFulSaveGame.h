@@ -49,6 +49,10 @@ class PEACEFULHAZARD_API UPeacFulSaveGame : public USaveGame
 	GENERATED_BODY()
 	
 public:
+
+    UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
+    EWarpTarget saveMapName = EWarpTarget::EWT_None;
+
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     TMap<ETutorialType, bool> TutorialCheckMap;
 

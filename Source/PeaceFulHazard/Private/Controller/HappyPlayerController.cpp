@@ -94,34 +94,7 @@ void AHappyPlayerController::BeginPlay()
 
 
         InitializeInventory();
-
-
-        bool isSavedDataRemain = false;
-        bool bEquipped = false;
-
-        FVector Positoin;
-        FRotator Rotation;
-
-        isSavedDataRemain = PeaceFulHazardGameMode->GetPlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped, Positoin, Rotation);
-
-        if (isSavedDataRemain)
-        {
-            if (ControlledCharacter)
-            {
-                ControlledCharacter->SetActorLocation(Positoin);
-                ControlledCharacter->SetActorRotation(Rotation);
-            }
-            
-
-            if (bEquipped && ControlledCharacter)
-            {
-                ControlledCharacter->EquipTrigger(currentBulletType);
-            }
-        }
     }
-
-
-
 
     if (PlayerHUD)
     {
@@ -672,6 +645,34 @@ void AHappyPlayerController::CloseAllUI()
 
 void AHappyPlayerController::MapStartCallBack()
 {
+    bool isSavedDataRemain = false;
+    bool bEquipped = false;
+
+    FVector Positoin;
+    FRotator Rotation;
+    EWarpTarget warptarget;
+
+    isSavedDataRemain = PeaceFulHazardGameMode->GetPlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, bEquipped, Positoin, Rotation, warptarget);
+
+    if (isSavedDataRemain)
+    {
+        if (warptarget == PeaceFulHazardGameMode->currentMapType)
+        {
+            if (ControlledCharacter)
+            {
+                ControlledCharacter->SetActorLocation(Positoin);
+                ControlledCharacter->SetActorRotation(Rotation);
+            }
+        }
+
+        if (bEquipped && ControlledCharacter)
+        {
+            ControlledCharacter->EquipTrigger(currentBulletType);
+        }
+    }
+
+    UpdateAllUI();
+
     TutorialShow(ETutorialType::ETT_MoveTutorial);
 }
 
