@@ -157,6 +157,36 @@ protected:
 
 
 
+	TArray<UBorder*> SaveSlotBackgrounds;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* SaveSlotBackground1;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* SaveSlotBackground2;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* SaveSlotBackground3;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* SaveSlotBackground4;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* SaveSlotBackground5;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* SaveSlotBackground6;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* SaveSlotBackground7;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* SaveSlotBackground8;
+
+
+
+	
+
 	void InitArrays();
 
 

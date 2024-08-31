@@ -213,6 +213,8 @@ void USaveWidget::UpdateAllUI()
 				{
 					FString temp = PeacFulGameInstance->ToDoMap[PeacFulGameInstance->currentToDos[LoadedGame->saveTodoIndex]];
 					ToDoTexts[i]->SetText(FText::FromString(temp));
+
+					SaveSlotBackgrounds[i]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 				}
 				
 
@@ -235,6 +237,7 @@ void USaveWidget::UpdateAllUI()
 			else
 			{
 				ToDoTexts[i]->SetText(FText::FromString(FString("")));
+				SaveSlotBackgrounds[i]->SetVisibility(ESlateVisibility::Hidden);
 
 				SaveButtons[i]->SetIsEnabled(bSaveMode);
 
@@ -308,4 +311,14 @@ void USaveWidget::InitArrays()
 	ToDoTexts.Add(ToDoText6);
 	ToDoTexts.Add(ToDoText7);
 	ToDoTexts.Add(ToDoText8);
+
+	SaveSlotBackgrounds.Add(SaveSlotBackground1);
+	SaveSlotBackgrounds.Add(SaveSlotBackground2);
+	SaveSlotBackgrounds.Add(SaveSlotBackground3);
+	SaveSlotBackgrounds.Add(SaveSlotBackground4);
+	SaveSlotBackgrounds.Add(SaveSlotBackground5);
+	SaveSlotBackgrounds.Add(SaveSlotBackground6);
+	SaveSlotBackgrounds.Add(SaveSlotBackground7);
+	SaveSlotBackgrounds.Add(SaveSlotBackground8);
+
 }
