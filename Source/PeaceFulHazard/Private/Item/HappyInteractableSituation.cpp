@@ -78,6 +78,9 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		if (situationType == EInteractSituationType::EIST_ItemBox)
 		{
 			playerController->TriggerItemBox();
+		}else if(situationType == EInteractSituationType::EIST_SaveBox)
+		{
+			playerController->TriggerMenu_Save(true);
 		}
 		else if (situationType == EInteractSituationType::EIST_OneWayDoor)
 		{

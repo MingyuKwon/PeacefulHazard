@@ -246,6 +246,29 @@ void AHappyPlayerController::TriggerItemBox()
     }
 }
 
+void AHappyPlayerController::TriggerMenu_Save(bool bSave)
+{
+    if (PlayerHUD)
+    {
+        if (currentUIState == EUIState::EUIS_Notice) return;
+
+        UpdateAllUI();
+
+        ChangeUiState(EUIState::EUIS_Menu, true);
+
+
+        if (currentUIState == EUIState::EUIS_Menu)
+        {
+            PlayerHUD->SetMainMenuDisplay(true, bSave);
+        }
+        else
+        {
+            PlayerHUD->SetMainMenuDisplay(false, bSave);
+        }
+
+    }
+}
+
 void AHappyPlayerController::TakeDamge(float damage)
 {
     currentHealth -= damage;

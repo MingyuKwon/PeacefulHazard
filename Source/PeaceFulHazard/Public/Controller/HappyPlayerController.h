@@ -174,6 +174,9 @@ protected:
 	void CloseAllUI();
 
 	UFUNCTION(BlueprintCallable)
+	void ShowMainMenuUI(bool bVisible);
+
+	UFUNCTION(BlueprintCallable)
 	void MapStartCallBack();
 
 
@@ -266,9 +269,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ShowNoticeUI(bool bVisible, FString& noticeText);
 
-	UFUNCTION(BlueprintCallable)
-	void ShowMainMenuUI(bool bVisible);
-
 
 	UFUNCTION(BlueprintCallable)
 	void WarpTravel(EWarpTarget warptarget);
@@ -289,6 +289,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void TriggerItemBox();
+
+	UFUNCTION(BlueprintCallable)
+	void TriggerMenu_Save(bool bSave);
+
 
 	UFUNCTION()
 	void TakeDamge(float damage);
