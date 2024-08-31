@@ -171,6 +171,14 @@ void APlayerHUD::UpdateBulletDisplay(int32 currentBullet, int32 maxBullet, int32
     }
 }
 
+void APlayerHUD::UpdateTodoUI()
+{
+    if (DefaultPlayerWidget != nullptr)
+    {
+        DefaultPlayerWidget->UpdateTodoUI();
+    }
+}
+
 void APlayerHUD::UpdateInventoryDisplay(FCharacterInventoty* inventory)
 {
     if (InventoryWidget)

@@ -42,6 +42,8 @@ public:
 
 	void UpdateBulletDisplay(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet);
 
+	void UpdateTodoUI();
+
 	void UpdateInventoryDisplay(FCharacterInventoty* inventory);
 
 	void UpdateItemBoxDisplay(FCharacterInventoty* inventory, FCharacterItemBox* itemBox);

@@ -84,3 +84,13 @@ enum class ERouteNum : uint8
 
     ERN_Max
 };
+
+UENUM(BlueprintType)
+enum class EPlayerToDo : uint8
+{
+    EPTD_None,
+    EPTD_GetOutTutorialRoom,
+    EPTD_LookAroundMainHub,
+
+    EPTD_Max
+};

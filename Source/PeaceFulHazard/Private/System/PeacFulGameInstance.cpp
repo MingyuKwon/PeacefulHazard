@@ -4,6 +4,23 @@
 #include "System/PeacFulGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
+void UPeacFulGameInstance::UpdateToDo()
+{
+    todoIndex++;
+
+    todoIndex = FMath::Clamp(todoIndex, 0, currentToDos.Num() - 1);
+
+}
+
+EPlayerToDo UPeacFulGameInstance::GetCurrentToDo(FString& TodoString)
+{
+    todoIndex = FMath::Clamp(todoIndex, 0, currentToDos.Num() - 1);
+
+    TodoString = ToDoMap[currentToDos[todoIndex]];
+
+    return currentToDos[todoIndex];
+}
+
 bool UPeacFulGameInstance::checkIsTutorialAlready(ETutorialType tutorial)
 {
     if (!TutorialCheckMap.Contains(tutorial)) return true;
@@ -33,6 +50,7 @@ void UPeacFulGameInstance::RefreshGame()
 void UPeacFulGameInstance::resetTempSave()
 {
     tempSaveGame = nullptr;
+    todoIndex = 0;
     SelectedSaveSlot = TEXT("");
 }
 
@@ -41,5 +59,13 @@ void UPeacFulGameInstance::Init()
     Super::Init();
 
     RefreshGame();
+
+    todoIndex = 0;
+
+    currentToDos.Add(EPlayerToDo::EPTD_GetOutTutorialRoom);
+    currentToDos.Add(EPlayerToDo::EPTD_LookAroundMainHub);
+
+    ToDoMap.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString("find a way to get out of this building"));
+    ToDoMap.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString("Look around for anything that might provide information about the treasure."));
 
 }

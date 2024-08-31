@@ -22,6 +22,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	TMap<ETutorialType, bool> TutorialCheckMap;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TArray<EPlayerToDo> currentToDos;
+	int32 todoIndex = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TMap<EPlayerToDo, FString> ToDoMap;
+
+	void UpdateToDo();
+
+	EPlayerToDo GetCurrentToDo(FString& TodoString);
+
 	bool checkIsTutorialAlready(ETutorialType tutorial);
 
 	void RefreshGame();

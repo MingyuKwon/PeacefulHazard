@@ -7,10 +7,13 @@
 #include "Item/ItemInformation.h"
 #include "DefaultPlayerWidget.generated.h"
 
+class UButton;
 class UTextBlock;
-class UCanvasPanel;
 class UImage;
-
+class UCanvasPanel;
+class UBorder;
+class APeaceFulHazardGameMode;
+class UPeacFulGameInstance;
 /**
  * 
  */
@@ -20,6 +23,13 @@ class PEACEFULHAZARD_API UDefaultPlayerWidget : public UUserWidget
 	GENERATED_BODY()
 	
 protected:
+
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+
+	UPeacFulGameInstance* PeacFulGameInstance;
+
+	virtual void NativeConstruct() override;
+
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* MaxBulletText;
@@ -49,10 +59,16 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UImage* AnotherBackGround;
 
-	
-	
+
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TodoText;
+
 public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateTodoUI();
 };

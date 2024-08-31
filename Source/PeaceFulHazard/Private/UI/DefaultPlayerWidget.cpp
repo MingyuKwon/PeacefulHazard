@@ -2,9 +2,25 @@
 
 
 #include "UI/DefaultPlayerWidget.h"
-#include "Components/TextBlock.h"
-#include "Components/CanvasPanel.h"
 #include "Components/Image.h"
+#include "Components/Button.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Components/Border.h"
+#include "Components/TextBlock.h"
+#include "GameMode/PeaceFulHazardGameMode.h"
+#include "Kismet/GameplayStatics.h"
+#include "System/PeacFulSaveGame.h"
+#include "System/PeacFulGameInstance.h"
+
+void UDefaultPlayerWidget::NativeConstruct()
+{
+    Super::NativeConstruct();
+
+    PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+    PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
+
+}
 
 void UDefaultPlayerWidget::UpdateBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet)
 {
@@ -101,5 +117,17 @@ void UDefaultPlayerWidget::UpdateBulletUI(int32 currentBullet, int32 maxBullet, 
         }
     }
 
+
+}
+
+void UDefaultPlayerWidget::UpdateTodoUI()
+{
+    if (PeaceFulHazardGameMode == nullptr) return;
+    if (PeacFulGameInstance == nullptr) return;
+
+    FString temp;
+    PeacFulGameInstance->GetCurrentToDo(temp);
+
+    TodoText->SetText(FText::FromString(temp));
 
 }

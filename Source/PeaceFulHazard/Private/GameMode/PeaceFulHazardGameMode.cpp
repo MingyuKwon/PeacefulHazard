@@ -14,6 +14,30 @@ APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 
 }
 
+void APeaceFulHazardGameMode::OpenMap(FString MapName)
+{
+    ReceivedMapName = MapName;
+
+    if (enemyRefCount <= 0)
+    {
+        if (ReceivedMapName.IsEmpty()) return;
+
+        if (PeacFulGameInstance)
+        {
+            FString temp;
+            if (PeacFulGameInstance->GetCurrentToDo(temp) == EPlayerToDo::EPTD_GetOutTutorialRoom)
+            {
+                PeacFulGameInstance->UpdateToDo();
+            }
+        }
+        UGameplayStatics::OpenLevel(this, FName(*ReceivedMapName));
+    }
+    else
+    {
+        MapEndEvent.Broadcast();
+    }
+}
+
 void APeaceFulHazardGameMode::SetEnemyRefCount(bool bPlus)
 {
     if (bPlus)
@@ -29,6 +53,14 @@ void APeaceFulHazardGameMode::SetEnemyRefCount(bool bPlus)
     {
         if (ReceivedMapName.IsEmpty()) return;
 
+        if (PeacFulGameInstance)
+        {
+            FString temp;
+            if (PeacFulGameInstance->GetCurrentToDo(temp) == EPlayerToDo::EPTD_GetOutTutorialRoom)
+            {
+                PeacFulGameInstance->UpdateToDo();
+            }
+        }
         UGameplayStatics::OpenLevel(this, FName(*ReceivedMapName));
     }
 }
@@ -50,21 +82,7 @@ void APeaceFulHazardGameMode::SetEnemySaveRefCount(bool bPlus)
     }
 }
 
-void APeaceFulHazardGameMode::OpenMap(FString MapName)
-{
-    ReceivedMapName = MapName;
 
-    if (enemyRefCount <= 0)
-    {
-        if (ReceivedMapName.IsEmpty()) return;
-
-        UGameplayStatics::OpenLevel(this, FName(*ReceivedMapName));
-    }
-    else
-    {
-        MapEndEvent.Broadcast();
-    }
-}
 
 
 void APeaceFulHazardGameMode::SaveDataToSlot(FString slotName)
@@ -91,9 +109,10 @@ void APeaceFulHazardGameMode::SaveTempToSlot()
     if (gameSave)
     {
         gameSave->TutorialCheckMap = PeacFulGameInstance->TutorialCheckMap;
-        UGameplayStatics::SaveGameToSlot(gameSave, ReceivedSlotName, 0);
-        UE_LOG(LogTemp, Display, TEXT("%s"), gameSave->bFirstGame ? *FString("gameSave True") : *FString("gameSave False"));
+        gameSave->saveMapName = currentMapType;
+        gameSave->saveTodoIndex = PeacFulGameInstance->todoIndex;
 
+        UGameplayStatics::SaveGameToSlot(gameSave, ReceivedSlotName, 0);
     }
 
     enemySaveRefCount = 0;
@@ -122,6 +141,7 @@ void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
             {
                 PeacFulGameInstance->tempSaveGame = LoadedGame;
                 PeacFulGameInstance->TutorialCheckMap = LoadedGame->TutorialCheckMap;
+                PeacFulGameInstance->todoIndex = LoadedGame->saveTodoIndex;
             }
 
             UGameplayStatics::OpenLevel(this, *TravelMap[LoadedGame->saveMapName]);
@@ -151,8 +171,6 @@ void APeaceFulHazardGameMode::SavePlayerPara(FCharacterInventoty CharacterInvent
     UE_LOG(LogTemp, Warning, TEXT("SavePlayerParaBeforeWarp"));
 
     UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
-
-    gameSave->saveMapName = currentMapType;
 
     gameSave->bFirstGame = false;
     gameSave->SavedPlayerInventory = CharacterInventoty;

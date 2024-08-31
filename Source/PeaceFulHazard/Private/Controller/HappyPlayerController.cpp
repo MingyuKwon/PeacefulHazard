@@ -513,6 +513,7 @@ void AHappyPlayerController::UpdateDefaultUI()
     if (PlayerHUD)
     {
         PlayerHUD->UpdateBulletDisplay(currentBullet, maxBullet, GetLeftBullet(), currentBulletType, GetAnotherBullet());
+        PlayerHUD->UpdateTodoUI();
     }
 }
 
