@@ -951,6 +951,15 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
 
     if (ControlledCharacter && PeaceFulHazardGameMode)
     {
+        PlayerHUD->ShowLoadingUI(true);
+
+        bShowMouseCursor = true;
+
+        FInputModeGameAndUI InputMode;
+        InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+        SetInputMode(InputMode);
+
+
         PeaceFulHazardGameMode->SavePlayerPara(CharacterInventoty, CharacterItemBox, maxBullet, currentBullet, currentHealth, currentBulletType, ControlledCharacter->GetIEquipped(), ControlledCharacter->GetActorLocation(), ControlledCharacter->GetActorRotation());
         PeaceFulHazardGameMode->OpenMap(MapName);
     }
