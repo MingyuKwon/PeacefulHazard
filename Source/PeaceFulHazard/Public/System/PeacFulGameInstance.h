@@ -29,6 +29,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	TMap<EPlayerToDo, FString> ToDoMap;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TMap<EWarpTarget, FString> MapName;
+
+
 	void UpdateToDo();
 
 	EPlayerToDo GetCurrentToDo(FString& TodoString);

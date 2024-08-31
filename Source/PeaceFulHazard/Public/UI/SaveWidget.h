@@ -183,6 +183,34 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* TimeText8;
 
+
+	TArray<UTextBlock*> SaveSpotTexts;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SaveSpotText1;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SaveSpotText2;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SaveSpotText3;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SaveSpotText4;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SaveSpotText5;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SaveSpotText6;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SaveSpotText7;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SaveSpotText8;
+
+
 	
 
 	TArray<UBorder*> SaveSlotBackgrounds;

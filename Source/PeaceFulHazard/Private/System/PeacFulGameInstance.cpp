@@ -68,4 +68,7 @@ void UPeacFulGameInstance::Init()
     ToDoMap.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString("find a way to get out of this building"));
     ToDoMap.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString("Look around for anything that might provide information about the treasure."));
 
+    MapName.Add(EWarpTarget::EWT_Tutorial, FString("Tutorial Room"));
+    MapName.Add(EWarpTarget::EWT_MainHub, FString("Main Hub"));
+
 }
