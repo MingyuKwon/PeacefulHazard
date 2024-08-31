@@ -111,6 +111,7 @@ void APeaceFulHazardGameMode::SaveTempToSlot()
         gameSave->TutorialCheckMap = PeacFulGameInstance->TutorialCheckMap;
         gameSave->saveMapName = currentMapType;
         gameSave->saveTodoIndex = PeacFulGameInstance->todoIndex;
+        gameSave->SaveTime = FDateTime::Now();
 
         UGameplayStatics::SaveGameToSlot(gameSave, ReceivedSlotName, 0);
     }

@@ -11,6 +11,7 @@
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "System/PeacFulSaveGame.h"
+#include "System/PeacFulGameInstance.h"
 
 void USaveWidget::BackUIInputTrigger()
 {
@@ -155,6 +156,8 @@ void USaveWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
 
 	if (PeaceFulHazardGameMode)
 	{
@@ -203,6 +206,16 @@ void USaveWidget::UpdateAllUI()
 
 			if (UGameplayStatics::DoesSaveGameExist(SlotName, 0))
 			{
+
+				UPeacFulSaveGame* LoadedGame = Cast<UPeacFulSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
+				
+				if (PeacFulGameInstance)
+				{
+					FString temp = PeacFulGameInstance->ToDoMap[PeacFulGameInstance->currentToDos[LoadedGame->saveTodoIndex]];
+					ToDoTexts[i]->SetText(FText::FromString(temp));
+				}
+				
+
 				if (bSaveMode)
 				{
 					if (DeleteButtons.IsValidIndex(i) && DeleteButtons[i])
@@ -221,6 +234,8 @@ void USaveWidget::UpdateAllUI()
 			}
 			else
 			{
+				ToDoTexts[i]->SetText(FText::FromString(FString("")));
+
 				SaveButtons[i]->SetIsEnabled(bSaveMode);
 
 				if (DeleteButtons.IsValidIndex(i) && DeleteButtons[i])
@@ -285,4 +300,12 @@ void USaveWidget::InitArrays()
 	DeleteButtons.Add(deleteButton7);
 	DeleteButtons.Add(deleteButton8);
 
+	ToDoTexts.Add(ToDoText1);
+	ToDoTexts.Add(ToDoText2);
+	ToDoTexts.Add(ToDoText3);
+	ToDoTexts.Add(ToDoText4);
+	ToDoTexts.Add(ToDoText5);
+	ToDoTexts.Add(ToDoText6);
+	ToDoTexts.Add(ToDoText7);
+	ToDoTexts.Add(ToDoText8);
 }

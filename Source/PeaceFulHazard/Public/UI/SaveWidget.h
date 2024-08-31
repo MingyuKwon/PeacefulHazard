@@ -12,7 +12,7 @@ class UImage;
 class UCanvasPanel;
 class UBorder;
 class APeaceFulHazardGameMode;
-
+class UPeacFulGameInstance;
 /**
  * 
  */
@@ -94,6 +94,7 @@ protected:
 	UButton* SaveButton8;
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+	UPeacFulGameInstance* PeacFulGameInstance;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* deleteButton1;
@@ -125,6 +126,36 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* SaveModeText;
+
+
+
+	TArray<UTextBlock*> ToDoTexts;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ToDoText1;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ToDoText2;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ToDoText3;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ToDoText4;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ToDoText5;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ToDoText6;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ToDoText7;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ToDoText8;
+
+
 
 	void InitArrays();
 

@@ -53,6 +53,8 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     int32 saveTodoIndex = 0;
 
+    UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
+    FDateTime SaveTime;
 
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     EWarpTarget saveMapName = EWarpTarget::EWT_None;
