@@ -32,6 +32,11 @@ protected:
 
 
 	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* LoadingCanvas;
+
+
+	
+	UPROPERTY(meta = (BindWidget))
 	UTextBlock* MaxBulletText;
 
 	UPROPERTY(meta = (BindWidget))
@@ -71,4 +76,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateTodoUI();
+
+	UFUNCTION(BlueprintCallable)
+	void ShowLoadingUI(bool bVisible);
 };

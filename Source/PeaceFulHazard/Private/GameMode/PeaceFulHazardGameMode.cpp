@@ -109,7 +109,6 @@ void APeaceFulHazardGameMode::SaveTempToSlot()
     if (gameSave)
     {
         gameSave->TutorialCheckMap = PeacFulGameInstance->TutorialCheckMap;
-        gameSave->saveMapName = currentMapType;
         gameSave->saveTodoIndex = PeacFulGameInstance->todoIndex;
         gameSave->SaveTime = FDateTime::Now();
 
@@ -172,6 +171,8 @@ void APeaceFulHazardGameMode::SavePlayerPara(FCharacterInventoty CharacterInvent
     UE_LOG(LogTemp, Warning, TEXT("SavePlayerParaBeforeWarp"));
 
     UPeacFulSaveGame* gameSave = PeacFulGameInstance->tempSaveGame;
+
+    gameSave->saveMapName = currentMapType;
 
     gameSave->bFirstGame = false;
     gameSave->SavedPlayerInventory = CharacterInventoty;

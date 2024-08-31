@@ -131,3 +131,15 @@ void UDefaultPlayerWidget::UpdateTodoUI()
     TodoText->SetText(FText::FromString(temp));
 
 }
+
+void UDefaultPlayerWidget::ShowLoadingUI(bool bVisible)
+{
+    if (bVisible)
+    {
+        LoadingCanvas->SetVisibility(ESlateVisibility::Visible);
+    }
+    else
+    {
+        LoadingCanvas->SetVisibility(ESlateVisibility::Hidden);
+    }
+}

@@ -99,6 +99,26 @@ void AHappyPlayerController::BeginPlay()
     if (PlayerHUD)
     {
         UpdateAllUI();
+
+        PlayerHUD->ShowLoadingUI(true);
+
+        bShowMouseCursor = true;
+
+        FInputModeGameAndUI InputMode;
+        InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+        SetInputMode(InputMode);
+
+        FTimerHandle loadingHandle;
+        GetWorld()->GetTimerManager().SetTimer(loadingHandle, [this]()
+            {
+                bShowMouseCursor = false;
+                SetInputMode(FInputModeGameOnly());
+
+                PlayerHUD->ShowLoadingUI(false);
+                TutorialShow(ETutorialType::ETT_MoveTutorial);
+
+            }, 0.5f, false);
+
     }
 
 }
@@ -657,6 +677,14 @@ void AHappyPlayerController::MapStartCallBack()
 
     if (isSavedDataRemain)
     {
+        if (GEngine)
+        {
+            FString WarpTargetString = UEnum::GetValueAsString(warptarget);
+            FString CurrentMapTypeString = UEnum::GetValueAsString(PeaceFulHazardGameMode->currentMapType);
+
+            UE_LOG(LogTemp, Warning, TEXT("WarpTarget: %s, CurrentMapType: %s"), *WarpTargetString, *CurrentMapTypeString);
+        }
+
         if (warptarget == PeaceFulHazardGameMode->currentMapType)
         {
             if (ControlledCharacter)
@@ -674,7 +702,6 @@ void AHappyPlayerController::MapStartCallBack()
 
     UpdateAllUI();
 
-    TutorialShow(ETutorialType::ETT_MoveTutorial);
 }
 
 void AHappyPlayerController::OuterUIChange(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)

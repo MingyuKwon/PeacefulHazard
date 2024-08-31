@@ -109,6 +109,18 @@ void APlayerHUD::SetMainMenuDisplay(bool bVisible, bool bSavePanelSave)
     }
 }
 
+void APlayerHUD::ShowLoadingUI(bool bVisible)
+{
+    if (DefaultPlayerWidget)
+    {
+        DefaultPlayerWidget->ShowLoadingUI(bVisible);
+    }
+    else
+    {
+        bBeforeLoadingShow = true;
+    }
+}
+
 void APlayerHUD::SetGetItemDisplay(bool bVisible, EItemType itemType, int32 count)
 {
     if (!bVisible)
@@ -293,6 +305,13 @@ void APlayerHUD::BeginPlay()
             {
                 UpdateBulletDisplay(beforeCurrentBulle, beforeMaxBullet, beforeLeftBullet, beforeBulletType, beforeanotherBullet);
             }
+
+            if (bBeforeLoadingShow)
+            {
+                DefaultPlayerWidget->ShowLoadingUI(true);
+                bBeforeLoadingShow = false;
+            }
+   
 
         }
     }

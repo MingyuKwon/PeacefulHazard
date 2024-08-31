@@ -35,6 +35,8 @@ public:
 
 	void SetMainMenuDisplay(bool bVisible, bool bSavePanelSave);
 
+	void ShowLoadingUI(bool bVisible);
+
 
 	void SetGetItemDisplay(bool bVisible, EItemType itemType = EItemType::EIT_None, int32 count = 0);
 
@@ -105,6 +107,8 @@ protected:
 	int32 beforeMaxBullet = -1;
 	int32 beforeLeftBullet = -1;
 	int32 beforeanotherBullet = -1;
+
+	bool bBeforeLoadingShow = false;
 
 	EItemType beforeBulletType = EItemType::EIT_Bullet_Noraml;
 
