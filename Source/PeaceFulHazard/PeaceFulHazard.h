@@ -41,6 +41,7 @@ enum class EWarpTarget : uint8
     EWT_Tutorial,
     EWT_MainCathedral,
     EWT_CrossOver,
+    EWT_GraveYard,
 
     EWT_Max
 };
