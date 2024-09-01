@@ -50,6 +50,8 @@ enum class EInteractSituationType : uint8
     EIST_ItemBox,
     EIST_SaveBox,
     EIST_NormalDoor,
+    EIST_BigDoor,
+
     EIST_Note,
 
     EIST_Max

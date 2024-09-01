@@ -25,6 +25,8 @@ void AHappyInteractableSituation::AfterInteraction()
 	switch (situationType)
 	{
 	case EInteractSituationType::EIST_NormalDoor:
+	case EInteractSituationType::EIST_BigDoor:
+
 		if (AdditiveStaticMesh1)
 		{
 			AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
