@@ -26,20 +26,10 @@ void AHappyInteractableSituation::AfterInteraction()
 	{
 	case EInteractSituationType::EIST_NormalDoor:
 	case EInteractSituationType::EIST_BigDoor:
-
-		if (AdditiveStaticMesh1)
-		{
-			AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
-		}
-
-		if (AdditiveStaticMesh2)
-		{
-			AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
-		}
-
-		break;
-
+	case EInteractSituationType::EIST_GraveYardDoor:
 	case EInteractSituationType::EIST_OneWayDoor:
+
+
 		if (AdditiveStaticMesh1)
 		{
 			AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
