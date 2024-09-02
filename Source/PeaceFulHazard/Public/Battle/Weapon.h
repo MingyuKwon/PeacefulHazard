@@ -67,10 +67,10 @@ protected:
 
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float NormalBulletDamage = 5.f;
+	float NormalBulletDamage = 10.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float BigBulletDamage = 10.f;
+	float BigBulletDamage = 20.f;
 
 	EItemType currentItemType = EItemType::EIT_Bullet_Noraml;
 

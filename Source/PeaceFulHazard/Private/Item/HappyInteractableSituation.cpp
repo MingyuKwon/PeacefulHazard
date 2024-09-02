@@ -30,6 +30,7 @@ void AHappyInteractableSituation::AfterInteraction()
 	case EInteractSituationType::EIST_OneWayDoor:
 	case EInteractSituationType::EIST_MainCatheralDoor:
 	case EInteractSituationType::EIST_CrossOverSecondDoor:
+	case EInteractSituationType::EIST_CrossOverFirstDoor:
 
 		if (AdditiveStaticMesh1)
 		{
