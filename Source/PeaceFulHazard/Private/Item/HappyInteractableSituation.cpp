@@ -28,7 +28,7 @@ void AHappyInteractableSituation::AfterInteraction()
 	case EInteractSituationType::EIST_BigDoor:
 	case EInteractSituationType::EIST_GraveYardDoor:
 	case EInteractSituationType::EIST_OneWayDoor:
-
+	case EInteractSituationType::EIST_MainCatheralDoor:
 
 		if (AdditiveStaticMesh1)
 		{
