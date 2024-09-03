@@ -263,10 +263,12 @@ void AHappyPlayerController::TriggerMenu_Save(bool bSave)
     }
 }
 
-void AHappyPlayerController::TakeDamge(float damage)
+void AHappyPlayerController::SetHealth(float changeAmount)
 {
-    currentHealth -= damage;
-    currentHealth = FMath::Clamp(currentHealth, 0, 200);
+    currentHealth += changeAmount;
+    currentHealth = FMath::Clamp(currentHealth, 0, 50);
+
+    UpdateDefaultUI();
 
     if (ControlledCharacter)
     {
@@ -275,6 +277,13 @@ void AHappyPlayerController::TakeDamge(float damage)
             ControlledCharacter->Death();
         }
     }
+}
+
+
+void AHappyPlayerController::TakeDamge(float damage)
+{
+    SetHealth(-damage);
+
 }
 
 void AHappyPlayerController::PauseGame(bool flag)
@@ -453,6 +462,7 @@ int32 AHappyPlayerController::GetReloadBulletCount()
 }
 
 
+
 void AHappyPlayerController::SetGamePause(bool flag)
 {
     nowPausing = flag;
@@ -535,6 +545,8 @@ void AHappyPlayerController::UpdateDefaultUI()
     {
         PlayerHUD->UpdateBulletDisplay(currentBullet, maxBullet, GetLeftBullet(), currentBulletType, GetAnotherBullet());
         PlayerHUD->UpdateTodoUI();
+        PlayerHUD->UpdateHealthUI(currentHealth / 50.f);
+        
     }
 }
 

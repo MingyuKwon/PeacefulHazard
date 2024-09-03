@@ -214,6 +214,8 @@ protected:
 
 	float currentHealth = 50.f;
 
+	void SetHealth(float changeAmount);
+
 	EItemType currentBulletType = EItemType::EIT_Bullet_Noraml;
 
 	// Map Loading Needed Para

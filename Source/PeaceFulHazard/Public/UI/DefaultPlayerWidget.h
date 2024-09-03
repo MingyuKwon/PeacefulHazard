@@ -14,6 +14,7 @@ class UCanvasPanel;
 class UBorder;
 class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
+class UProgressBar;
 /**
  * 
  */
@@ -29,6 +30,7 @@ protected:
 	UPeacFulGameInstance* PeacFulGameInstance;
 
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 
 	UPROPERTY(meta = (BindWidget))
@@ -64,10 +66,18 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UImage* AnotherBackGround;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TodoText;
 
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* TodoText;
+	UProgressBar* Healthbar;
+
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* HealthShadowbar;
+
+	float lerpHealth = 1.f;
+	float showHealth = 1.f;
 
 public:
 
@@ -79,4 +89,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ShowLoadingUI(bool bVisible);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateHealthUI(float health);
+
 };

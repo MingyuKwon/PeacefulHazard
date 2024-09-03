@@ -209,6 +209,14 @@ void APlayerHUD::UpdateTodoUI()
     }
 }
 
+void APlayerHUD::UpdateHealthUI(float health)
+{
+    if (DefaultPlayerWidget != nullptr)
+    {
+        DefaultPlayerWidget->UpdateHealthUI(health);
+    }
+}
+
 void APlayerHUD::UpdateInventoryDisplay(FCharacterInventoty* inventory)
 {
     if (InventoryWidget)

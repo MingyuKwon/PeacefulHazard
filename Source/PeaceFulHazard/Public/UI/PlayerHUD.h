@@ -50,6 +50,9 @@ public:
 
 	void UpdateTodoUI();
 
+	void UpdateHealthUI(float health);
+
+
 	void UpdateInventoryDisplay(FCharacterInventoty* inventory);
 
 	void UpdateItemBoxDisplay(FCharacterInventoty* inventory, FCharacterItemBox* itemBox);
