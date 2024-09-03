@@ -20,6 +20,7 @@ enum class EItemType : uint8
     EIT_CrossOverFirstDoorKey,
     EIT_CrossOverSecondDoorKey,
     EIT_GraveyardLockKey,
+    EIT_CathedralLockKey,
 
     EIT_Max
 };
@@ -69,6 +70,7 @@ enum class EInteractSituationType : uint8
     EIST_CrossOverFirstDoor,
     EIST_CrossOverSecondDoor,
     EIST_GraveyardLock,
+    EIST_CathedralLock,
 
     EIST_Note,
 
