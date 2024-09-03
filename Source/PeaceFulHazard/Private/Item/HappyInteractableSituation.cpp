@@ -31,6 +31,7 @@ void AHappyInteractableSituation::AfterInteraction()
 	case EInteractSituationType::EIST_MainCatheralDoor:
 	case EInteractSituationType::EIST_CrossOverSecondDoor:
 	case EInteractSituationType::EIST_CrossOverFirstDoor:
+	case EInteractSituationType::EIST_GraveyardLock:
 
 		if (AdditiveStaticMesh1)
 		{
