@@ -50,7 +50,7 @@ public:
 
 	void UpdateTodoUI();
 
-	void UpdateHealthUI(float health);
+	void UpdateHealthUI(float health, bool bForce);
 
 
 	void UpdateInventoryDisplay(FCharacterInventoty* inventory);

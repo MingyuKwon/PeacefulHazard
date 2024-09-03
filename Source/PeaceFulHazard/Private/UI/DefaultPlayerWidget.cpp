@@ -22,16 +22,6 @@ void UDefaultPlayerWidget::NativeConstruct()
     PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
     PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
 
-    FTimerHandle updateHandle;
-    GetWorld()->GetTimerManager().SetTimer(updateHandle, [this]()
-        {
-            lerpHealth = FMath::Lerp(showHealth, lerpHealth, 0.6f);
-
-            UE_LOG(LogTemp, Warning, TEXT("%f"), lerpHealth);
-
-            HealthShadowbar->SetPercent(lerpHealth);
-
-        },0.05f, true);
 }
 
 void UDefaultPlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -164,8 +154,10 @@ void UDefaultPlayerWidget::ShowLoadingUI(bool bVisible)
     }
 }
 
-void UDefaultPlayerWidget::UpdateHealthUI(float health)
+void UDefaultPlayerWidget::UpdateHealthUI(float health, bool bforce)
 {
     showHealth = health;
+
     Healthbar->SetPercent(showHealth);
 }
+

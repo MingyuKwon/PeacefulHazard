@@ -73,11 +73,10 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UProgressBar* Healthbar;
 
-	UPROPERTY(meta = (BindWidget))
-	UProgressBar* HealthShadowbar;
-
 	float lerpHealth = 1.f;
 	float showHealth = 1.f;
+
+	FTimerHandle updateHealthHandle;
 
 public:
 
@@ -91,6 +90,6 @@ public:
 	void ShowLoadingUI(bool bVisible);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateHealthUI(float health);
+	void UpdateHealthUI(float health, bool bforce);
 
 };

@@ -545,7 +545,7 @@ void AHappyPlayerController::UpdateDefaultUI()
     {
         PlayerHUD->UpdateBulletDisplay(currentBullet, maxBullet, GetLeftBullet(), currentBulletType, GetAnotherBullet());
         PlayerHUD->UpdateTodoUI();
-        PlayerHUD->UpdateHealthUI(currentHealth / 50.f);
+        PlayerHUD->UpdateHealthUI(currentHealth / 50.f, false);
         
     }
 }
@@ -712,6 +712,8 @@ void AHappyPlayerController::MapStartCallBack()
             ControlledCharacter->EquipTrigger(currentBulletType);
         }
     }
+
+    PlayerHUD->UpdateHealthUI(currentHealth / 50.f, true);
 
     UpdateAllUI();
 
