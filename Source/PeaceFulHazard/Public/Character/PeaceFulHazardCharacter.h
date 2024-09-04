@@ -21,6 +21,7 @@ class UAnimMontage;
 class UBoxComponent;
 class AHappyInteractableItem;
 class APeaceFulHazardGameMode;
+class UPeacFulGameInstance;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -188,6 +189,7 @@ protected:
 	TArray<AHappyInteractableItem*> ActionableItems;
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+	UPeacFulGameInstance* PeacFulGameInstance;
 
 	AWeapon* EquipWeapon;
 

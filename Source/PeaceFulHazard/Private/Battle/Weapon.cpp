@@ -57,7 +57,7 @@ void AWeapon::ChangeBulletMode(EItemType itemType)
     }
 }
 
-void AWeapon::ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector ShotDirection, FName BoneName)
+void AWeapon::ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector ShotDirection, FName BoneName, float damagepercent)
 {
     float DamageAmount = 0.f;  
 
@@ -69,6 +69,8 @@ void AWeapon::ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector Sho
     {
         DamageAmount = NormalBulletDamage;
     }
+
+    DamageAmount *= damagepercent;
 
     FPointDamageEvent PointDamageEvent;
     PointDamageEvent.Damage = DamageAmount;
@@ -104,7 +106,7 @@ void AWeapon::ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector Sho
     }
 }
 
-void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
+void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector, float damagepercent)
 {
     if (WeaponMesh == nullptr) return;
 
@@ -134,11 +136,11 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector)
             {
                 if (HitResult.GetComponent() == hitEnemy->HeadBox)
                 {
-                    ShootAtEnemy(hitEnemy, HitResult.ImpactPoint, (HitResult.ImpactPoint - MuzzleLocation).GetSafeNormal(), FName("Head"));
+                    ShootAtEnemy(hitEnemy, HitResult.ImpactPoint, (HitResult.ImpactPoint - MuzzleLocation).GetSafeNormal(), FName("Head"), damagepercent);
                 }
                 else
                 {
-                    ShootAtEnemy(hitEnemy, HitResult.ImpactPoint, (HitResult.ImpactPoint - MuzzleLocation).GetSafeNormal(), FName("Body"));
+                    ShootAtEnemy(hitEnemy, HitResult.ImpactPoint, (HitResult.ImpactPoint - MuzzleLocation).GetSafeNormal(), FName("Body"), damagepercent);
 
                 }
             }

@@ -74,10 +74,10 @@ protected:
 
 	EItemType currentItemType = EItemType::EIT_Bullet_Noraml;
 
-	void ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector ShotDirection, FName BoneName);
+	void ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector ShotDirection, FName BoneName, float damagepercent);
 
 public:
-	void Fire(FVector CameraPosition, FVector CameraNormalVector);
+	void Fire(FVector CameraPosition, FVector CameraNormalVector, float damagepercent);
 
 	void ReloadTrigger();
 

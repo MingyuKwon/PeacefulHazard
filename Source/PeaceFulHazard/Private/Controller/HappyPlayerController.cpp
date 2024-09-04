@@ -282,6 +282,13 @@ void AHappyPlayerController::SetHealth(float changeAmount)
 
 void AHappyPlayerController::TakeDamge(float damage)
 {
+    if (PeacFulGameInstance == nullptr) return;
+
+    int32 gap = GetPlayerForce() - PeacFulGameInstance->currentEnemyForce;
+    float percent = 1 - gap / 100.f;
+
+    damage *= percent;
+
     SetHealth(-damage);
 
 }

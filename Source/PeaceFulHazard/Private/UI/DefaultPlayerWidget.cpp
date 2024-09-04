@@ -162,8 +162,26 @@ void UDefaultPlayerWidget::UpdateHealthUI(float health, int32 currentForce)
 
     Healthbar->SetPercent(showHealth);
 
+    int32 gap = currentForce - PeacFulGameInstance->currentEnemyForce;
+
     myForceText->SetText(FText::AsNumber(currentForce));
-    ForceGapText->SetText(FText::AsNumber(currentForce - PeacFulGameInstance->currentEnemyForce));
+    ForceGapText->SetText(FText::AsNumber(gap));
+
+    if (gap < 0)
+    {
+        ForceGapText->SetColorAndOpacity(FLinearColor::Red);
+
+    }
+    else if (gap > 0)
+    {
+        ForceGapText->SetColorAndOpacity(FLinearColor::Green);
+
+    }
+    else
+    {
+        ForceGapText->SetColorAndOpacity(FLinearColor::Gray);
+
+    }
 
 }
 
