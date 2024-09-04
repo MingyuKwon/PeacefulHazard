@@ -82,6 +82,12 @@ enum class EInteractSituationType : uint8
     EIST_GraveyardTrigger,
     EIST_GraveyardTriggerDoor,
 
+    EIST_CathedralTrigger_1,
+    EIST_CathedralTriggerDoor_1,
+
+    EIST_CathedralTrigger_2,
+    EIST_CathedralTriggerDoor_2,
+
     EIST_CathedralTrigger,
     EIST_CathedralTriggerDoor,
 
