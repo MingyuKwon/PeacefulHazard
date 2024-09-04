@@ -79,6 +79,10 @@ enum class EInteractSituationType : uint8
 
     EIST_Note,
 
+    EIST_GraveyardTrigger,
+    EIST_GraveyardTriggerDoor,
+
+
     EIST_Max
 };
 

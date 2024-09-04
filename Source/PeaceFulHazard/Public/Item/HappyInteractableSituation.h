@@ -43,6 +43,9 @@ protected:
 	UFUNCTION()
 	void CheckBroadCastItemIsMe(EInteractSituationType _situationType);
 
+	UFUNCTION()
+	void ListenTirggerOn(EInteractSituationType _situationType);
+
 	
 public:
 	virtual void InteractWithPlayer(APeaceFulHazardCharacter* character) override;

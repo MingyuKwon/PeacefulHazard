@@ -14,8 +14,30 @@ void AHappyInteractableSituation::BeginPlay()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->InteractSituationEvent.AddDynamic(this, &ThisClass::CheckBroadCastItemIsMe);
+
+
+		if (situationType == EInteractSituationType::EIST_GraveyardTriggerDoor)
+		{
+			PeaceFulHazardGameMode->TriggerDoorEvent.AddDynamic(this, &ThisClass::ListenTirggerOn);
+		}
 	}
 
+}
+
+void AHappyInteractableSituation::ListenTirggerOn(EInteractSituationType _situationType)
+{
+	if (situationType == EInteractSituationType::EIST_GraveyardTriggerDoor && _situationType == EInteractSituationType::EIST_GraveyardTrigger)
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			FString string = FString("Some Door placed in this map opened!");
+			PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+			PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+		}
+
+		AfterInteraction();
+
+	}
 }
 
 void AHappyInteractableSituation::AfterInteraction()
@@ -59,6 +81,26 @@ void AHappyInteractableSituation::AfterInteraction()
 		}
 
 		break;
+
+
+	case EInteractSituationType::EIST_GraveyardTrigger:
+		// somethignt that can show tirgger is closed
+		StaticMeshComponent->SetVisibility(false);
+		break;
+
+	case EInteractSituationType::EIST_GraveyardTriggerDoor:
+	
+		if (AdditiveStaticMesh1)
+		{
+			AdditiveStaticMesh1->SetStaticMesh(nullptr);
+		}
+
+		if (AdditiveStaticMesh2)
+		{
+			AdditiveStaticMesh2->SetStaticMesh(nullptr);
+		}
+		break;
+
 	}
 }
 
@@ -76,6 +118,8 @@ void AHappyInteractableSituation::CheckBroadCastItemIsMe(EInteractSituationType 
 
 	AfterInteraction();
 }
+
+
 
 void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* character)
 {
@@ -95,6 +139,24 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		else if (situationType == EInteractSituationType::EIST_Note)
 		{
 			playerController->ShowInformationUI(true, NoteText);
+		}
+		else if (situationType == EInteractSituationType::EIST_GraveyardTrigger)
+		{
+			if (PeaceFulHazardGameMode)
+			{
+				PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+				PeaceFulHazardGameMode->TriggerDoorEvent.Broadcast(situationType);
+			}
+
+			AfterInteraction();
+		}
+		else if (situationType == EInteractSituationType::EIST_GraveyardTriggerDoor)
+		{
+			if (PeaceFulHazardGameMode)
+			{
+				FString string = FString("Door is Locked. You should trigger someting to open this door");
+				PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+			}
 		}
 		else if (situationType == EInteractSituationType::EIST_OneWayDoor)
 		{
