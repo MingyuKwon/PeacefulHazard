@@ -209,11 +209,11 @@ void APlayerHUD::UpdateTodoUI()
     }
 }
 
-void APlayerHUD::UpdateHealthUI(float health, bool bForce)
+void APlayerHUD::UpdateHealthUI(float health, int32 currentForce)
 {
     if (DefaultPlayerWidget != nullptr)
     {
-        DefaultPlayerWidget->UpdateHealthUI(health, bForce);
+        DefaultPlayerWidget->UpdateHealthUI(health, currentForce);
     }
 }
 

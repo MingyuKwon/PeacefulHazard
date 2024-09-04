@@ -32,6 +32,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	TMap<EWarpTarget, FString> MapName;
 
+	int32 currentEnemyForce = 0;
 
 	void UpdateToDo();
 

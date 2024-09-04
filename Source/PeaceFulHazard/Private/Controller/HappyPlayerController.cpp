@@ -469,6 +469,16 @@ void AHappyPlayerController::SetGamePause(bool flag)
     PauseGame(nowPausing);
 }
 
+int32 AHappyPlayerController::GetPlayerForce()
+{
+    if (CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Force))
+    {
+        return CharacterInventoty.ItemCountMap[EItemType::EIT_Force];
+    }
+
+    return 0;
+}
+
 int32 AHappyPlayerController::GetLeftBullet()
 {
     if (CharacterInventoty.ItemCountMap.Contains(currentBulletType))
@@ -545,7 +555,7 @@ void AHappyPlayerController::UpdateDefaultUI()
     {
         PlayerHUD->UpdateBulletDisplay(currentBullet, maxBullet, GetLeftBullet(), currentBulletType, GetAnotherBullet());
         PlayerHUD->UpdateTodoUI();
-        PlayerHUD->UpdateHealthUI(currentHealth / 50.f, false);
+        PlayerHUD->UpdateHealthUI(currentHealth / 50.f, GetPlayerForce());
         
     }
 }
@@ -712,8 +722,6 @@ void AHappyPlayerController::MapStartCallBack()
             ControlledCharacter->EquipTrigger(currentBulletType);
         }
     }
-
-    PlayerHUD->UpdateHealthUI(currentHealth / 50.f, true);
 
     UpdateAllUI();
 

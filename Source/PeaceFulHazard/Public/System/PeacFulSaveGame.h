@@ -49,6 +49,8 @@ class PEACEFULHAZARD_API UPeacFulSaveGame : public USaveGame
 	GENERATED_BODY()
 	
 public:
+    UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
+    int32 saveEnemyForce = 0;
 
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     int32 saveTodoIndex = 0;

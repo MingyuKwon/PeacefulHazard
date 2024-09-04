@@ -50,6 +50,13 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* LeftAnotherBulletText;
 
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ForceGapText;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* myForceText;
+
 	
 	UPROPERTY(meta = (BindWidget))
 	UImage* PistolImage;
@@ -90,6 +97,6 @@ public:
 	void ShowLoadingUI(bool bVisible);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateHealthUI(float health, bool bforce);
+	void UpdateHealthUI(float health, int32 currentForce);
 
 };

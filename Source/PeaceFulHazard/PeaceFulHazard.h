@@ -8,6 +8,8 @@ UENUM(BlueprintType)
 enum class EItemType : uint8
 {
     EIT_None,
+    EIT_Force,
+
     EIT_Bullet_Noraml,
     EIT_Bullet_Big,
     EIT_HealPack_Small,

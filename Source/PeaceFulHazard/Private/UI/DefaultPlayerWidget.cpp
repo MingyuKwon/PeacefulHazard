@@ -154,10 +154,16 @@ void UDefaultPlayerWidget::ShowLoadingUI(bool bVisible)
     }
 }
 
-void UDefaultPlayerWidget::UpdateHealthUI(float health, bool bforce)
+void UDefaultPlayerWidget::UpdateHealthUI(float health, int32 currentForce)
 {
+    if (PeacFulGameInstance == nullptr) return;
+
     showHealth = health;
 
     Healthbar->SetPercent(showHealth);
+
+    myForceText->SetText(FText::AsNumber(currentForce));
+    ForceGapText->SetText(FText::AsNumber(currentForce - PeacFulGameInstance->currentEnemyForce));
+
 }
 

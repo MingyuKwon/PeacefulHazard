@@ -223,6 +223,7 @@ protected:
 	bool nowPausing = false;
 	void SetGamePause(bool flag);
 
+	int32 GetPlayerForce();
 
 	int32 normalBulletMax = 10;
 	int32 BigBulletMax = 5;
