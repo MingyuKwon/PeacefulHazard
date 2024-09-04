@@ -192,7 +192,7 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		{
 			if (PeaceFulHazardGameMode)
 			{
-				FString string = FString("To Take the key, you should trigger two points in this floor");
+				FString string = FString("To Take the key, you should trigger the blue points in this floor");
 				PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
 			}
 		}
