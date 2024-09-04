@@ -28,6 +28,8 @@ void AHappyInteractableSituation::AfterInteraction()
 	case EInteractSituationType::EIST_BigDoor:
 	case EInteractSituationType::EIST_GraveYardDoor:
 	case EInteractSituationType::EIST_MainCatheralDoor:
+	case EInteractSituationType::EIST_MainCatheralDoor2:
+
 	case EInteractSituationType::EIST_CrossOverSecondDoor:
 	case EInteractSituationType::EIST_CrossOverFirstDoor:
 	case EInteractSituationType::EIST_GraveyardLock:
@@ -111,16 +113,11 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 				}
 				else
 				{
-					bAlreadyInteract = true;
 					if (PeaceFulHazardGameMode)
 					{
-						FString string = FString("Doors Open in the Right Direction");
-						if (PeaceFulHazardGameMode)
-						{
-							PeaceFulHazardGameMode->SetAleradyInteract(GetName());
-						}
-						PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+						PeaceFulHazardGameMode->SetAleradyInteract(GetName());
 					}
+
 					AfterInteraction();
 
 				}

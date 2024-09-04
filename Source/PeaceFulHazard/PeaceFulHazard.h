@@ -19,6 +19,8 @@ enum class EItemType : uint8
     EIT_Bag,
     EIT_GraveYardDoorKey,
     EIT_MainCatheralDoorKey,
+    EIT_MainCatheralDoorKey2,
+
     EIT_CrossOverFirstDoorKey,
     EIT_CrossOverSecondDoorKey,
     EIT_GraveyardLockKey,
@@ -48,7 +50,6 @@ enum class EWarpTarget : uint8
     EWT_MainHub,
     EWT_Tutorial,
     EWT_MainCathedral,
-    EWT_MainCathedralSecond,
 
     EWT_CrossOver,
     EWT_GraveYard,
@@ -69,6 +70,8 @@ enum class EInteractSituationType : uint8
     EIST_BigDoor,
     EIST_GraveYardDoor,
     EIST_MainCatheralDoor,
+    EIST_MainCatheralDoor2,
+
     EIST_CrossOverFirstDoor,
     EIST_CrossOverSecondDoor,
     EIST_GraveyardLock,
