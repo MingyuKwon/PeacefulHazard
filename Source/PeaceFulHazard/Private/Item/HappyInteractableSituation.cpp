@@ -16,7 +16,8 @@ void AHappyInteractableSituation::BeginPlay()
 		PeaceFulHazardGameMode->InteractSituationEvent.AddDynamic(this, &ThisClass::CheckBroadCastItemIsMe);
 
 
-		if (situationType == EInteractSituationType::EIST_GraveyardTriggerDoor)
+		if (situationType == EInteractSituationType::EIST_GraveyardTriggerDoor ||
+			situationType == EInteractSituationType::EIST_CathedralTriggerDoor)
 		{
 			PeaceFulHazardGameMode->TriggerDoorEvent.AddDynamic(this, &ThisClass::ListenTirggerOn);
 		}
@@ -27,6 +28,19 @@ void AHappyInteractableSituation::BeginPlay()
 void AHappyInteractableSituation::ListenTirggerOn(EInteractSituationType _situationType)
 {
 	if (situationType == EInteractSituationType::EIST_GraveyardTriggerDoor && _situationType == EInteractSituationType::EIST_GraveyardTrigger)
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			FString string = FString("Some Door placed in this map opened!");
+			PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+			PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+		}
+
+		AfterInteraction();
+
+	}
+
+	if (situationType == EInteractSituationType::EIST_CathedralTriggerDoor && _situationType == EInteractSituationType::EIST_CathedralTrigger)
 	{
 		if (PeaceFulHazardGameMode)
 		{
@@ -84,12 +98,15 @@ void AHappyInteractableSituation::AfterInteraction()
 
 
 	case EInteractSituationType::EIST_GraveyardTrigger:
+	case EInteractSituationType::EIST_CathedralTrigger:
+
 		// somethignt that can show tirgger is closed
 		StaticMeshComponent->SetVisibility(false);
 		break;
 
 	case EInteractSituationType::EIST_GraveyardTriggerDoor:
-	
+	case EInteractSituationType::EIST_CathedralTriggerDoor:
+
 		if (AdditiveStaticMesh1)
 		{
 			AdditiveStaticMesh1->SetStaticMesh(nullptr);
@@ -140,7 +157,8 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		{
 			playerController->ShowInformationUI(true, NoteText);
 		}
-		else if (situationType == EInteractSituationType::EIST_GraveyardTrigger)
+		else if (situationType == EInteractSituationType::EIST_GraveyardTrigger ||
+			situationType == EInteractSituationType::EIST_CathedralTrigger)
 		{
 			if (PeaceFulHazardGameMode)
 			{
@@ -155,6 +173,14 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 			if (PeaceFulHazardGameMode)
 			{
 				FString string = FString("Door is Locked. You should trigger someting to open this door");
+				PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+			}
+		}
+		else if (situationType == EInteractSituationType::EIST_CathedralTriggerDoor)
+		{
+			if (PeaceFulHazardGameMode)
+			{
+				FString string = FString("To Take the key, you should trigger two points in this floor");
 				PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
 			}
 		}
