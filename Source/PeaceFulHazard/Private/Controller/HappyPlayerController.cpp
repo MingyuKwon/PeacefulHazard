@@ -730,7 +730,16 @@ void AHappyPlayerController::OuterUIChange(int32 itemIndex, EItemType itemType, 
 
 void AHappyPlayerController::UseItem(EItemType itemType, bool bItem)
 {
+    switch (itemType)
+    {
+    case EItemType::EIT_HealPack_Small :
+        SetHealth(15);
+        break;
 
+    case EItemType::EIT_HealPack_Big:
+        SetHealth(40);
+        break;
+    }
 }
 
 void AHappyPlayerController::InteractWithItemUI(EItemType itemtype, int32 count)
