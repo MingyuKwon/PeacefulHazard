@@ -79,17 +79,17 @@ enum class EInteractSituationType : uint8
 
     EIST_Note,
 
-    EIST_GraveyardTrigger,
-    EIST_GraveyardTriggerDoor,
+    EIST_RedTrigger,
+    EIST_RedTriggerDoor,
 
-    EIST_CathedralTrigger_1,
-    EIST_CathedralTriggerDoor_1,
+    EIST_GreenTrigger,
+    EIST_GreenTriggerDoor,
 
-    EIST_CathedralTrigger_2,
-    EIST_CathedralTriggerDoor_2,
+    EIST_YellowTrigger,
+    EIST_YellowTriggerDoor,
 
-    EIST_CathedralTrigger,
-    EIST_CathedralTriggerDoor,
+    EIST_BlueTrigger,
+    EIST_BlueTriggerDoor,
 
     EIST_Max
 };
