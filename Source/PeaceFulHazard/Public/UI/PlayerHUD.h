@@ -63,6 +63,9 @@ public:
 
 	
 
+	void BackNoticeUIInputTrigger();
+
+	void BackMenuUIInputTrigger();
 
 	void BackUIInputTrigger();
 

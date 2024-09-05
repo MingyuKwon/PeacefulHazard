@@ -41,6 +41,12 @@ enum class ETutorialType : uint8
     ETT_InteractWithOneWayDoor,
     ETT_InteractItemBox,
 
+    ETT_UIItemBox,
+    ETT_UIGetItem,
+    ETT_UISituation,
+    ETT_UIMenu_Save,
+    ETT_UIShowInventory,
+
     ETT_Max
 };
 
@@ -100,14 +106,12 @@ UENUM(BlueprintType)
 enum class EUIState : uint8
 {
     EUIS_None,
-    EUIS_ItemBox,
-    EUIS_Inventory,
-    EUIS_ItemGet,
-    EUIS_Note,
 
-    EUIS_Notice,
+    EUIS_Tab,
 
     EUIS_Menu,
+
+    EUIS_Notice,
 
     EUIS_Max
 };

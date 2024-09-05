@@ -259,6 +259,22 @@ void APlayerHUD::UpdateInformationDisplay(FString& noticeText)
     }
 }
 
+void APlayerHUD::BackNoticeUIInputTrigger()
+{
+    if (NoticePanelWidget)
+    {
+        NoticePanelWidget->BackUIInputTrigger();
+    }
+}
+
+void APlayerHUD::BackMenuUIInputTrigger()
+{
+    if (SaveWidget)
+    {
+        SaveWidget->BackUIInputTrigger();
+    }
+}
+
 void APlayerHUD::BackUIInputTrigger()
 {
     if (InventoryWidget)
@@ -270,21 +286,14 @@ void APlayerHUD::BackUIInputTrigger()
     {
         ItemBoxWidget->BackUIInputTrigger();
     }
-    
-    if (NoticePanelWidget)
-    {
-        NoticePanelWidget->BackUIInputTrigger();
-    }
+
 
     if (InformationPanelWidget)
     {
         InformationPanelWidget->BackUIInputTrigger();
     }
 
-    if (SaveWidget)
-    {
-        SaveWidget->BackUIInputTrigger();
-    }
+
 }
 
 void APlayerHUD::OkUIInputTrigger()

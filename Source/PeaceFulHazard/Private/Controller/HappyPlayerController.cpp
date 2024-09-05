@@ -152,14 +152,18 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
     {
         if (currentUIState == EUIState::EUIS_Notice || currentUIState == EUIState::EUIS_Menu) return;
 
-        ChangeUiState(EUIState::EUIS_Inventory, currentUIState != EUIState::EUIS_Inventory);
+        ChangeUiState(EUIState::EUIS_Tab, currentUIState != EUIState::EUIS_Tab);
 
-        if (currentUIState == EUIState::EUIS_Inventory)
+        if (currentUIState == EUIState::EUIS_Tab)
         {
+
+
             UpdateAllUI();
 
-            currentUIState = EUIState::EUIS_Inventory;
             PlayerHUD->SetInventoryDisplay(true);
+
+            TutorialShow(ETutorialType::ETT_UIShowInventory);
+
 
         }
         else
@@ -198,11 +202,16 @@ void AHappyPlayerController::GetItem(EItemType itemType, int32 count)
 {
     if (PlayerHUD)
     {
+        ChangeUiState(EUIState::EUIS_Tab, true);
+
+
         UpdateAllUI();
 
-        ChangeUiState(EUIState::EUIS_ItemGet, true);
 
         PlayerHUD->SetGetItemDisplay(true, itemType, count);
+
+        TutorialShow(ETutorialType::ETT_UIGetItem);
+
     }
 }
 
@@ -210,11 +219,15 @@ void AHappyPlayerController::TriggerSituation(EInteractSituationType situtaionTy
 {
     if (PlayerHUD)
     {
+        ChangeUiState(EUIState::EUIS_Tab, true);
+
         UpdateAllUI();
 
-        ChangeUiState(EUIState::EUIS_ItemGet, true);
 
         PlayerHUD->showSituationUI(true, situtaionType);
+
+        TutorialShow(ETutorialType::ETT_UISituation);
+
     }
 }
 
@@ -224,12 +237,13 @@ void AHappyPlayerController::TriggerItemBox()
     {
         if (currentUIState == EUIState::EUIS_Notice) return;
 
+        ChangeUiState(EUIState::EUIS_Tab, true);
+
+
         UpdateAllUI();
 
-        ChangeUiState(EUIState::EUIS_ItemBox, currentUIState != EUIState::EUIS_ItemBox);
 
-
-        if (currentUIState == EUIState::EUIS_ItemBox)
+        if (currentUIState == EUIState::EUIS_Tab)
         {
             PlayerHUD->SetItemBoxDisplay(true);
         }
@@ -237,6 +251,10 @@ void AHappyPlayerController::TriggerItemBox()
         {
             PlayerHUD->SetInventoryDisplay(false);
         }
+
+
+        TutorialShow(ETutorialType::ETT_UIItemBox);
+
     }
 }
 
@@ -246,10 +264,9 @@ void AHappyPlayerController::TriggerMenu_Save(bool bSave)
     {
         if (currentUIState == EUIState::EUIS_Notice) return;
 
-        UpdateAllUI();
-
         ChangeUiState(EUIState::EUIS_Menu, true);
 
+        UpdateAllUI();
 
         if (currentUIState == EUIState::EUIS_Menu)
         {
@@ -344,7 +361,14 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
     {
         if (PlayerHUD)
         {
-            PlayerHUD->OkUIInputTrigger();
+            if (currentUIState == EUIState::EUIS_Notice)
+            {
+                PlayerHUD->BackNoticeUIInputTrigger();
+            }
+            else
+            {
+                PlayerHUD->OkUIInputTrigger();
+            }
         }
 
         return;
@@ -378,7 +402,22 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
     {
         if (PlayerHUD)
         {
-            PlayerHUD->BackUIInputTrigger();
+            FString EnumAsString = UEnum::GetValueAsString(currentUIState);
+            UE_LOG(LogTemp, Warning, TEXT("RIghtClickStart Current UI State: %s"), *EnumAsString);
+
+            if (currentUIState == EUIState::EUIS_Notice)
+            {
+                PlayerHUD->BackNoticeUIInputTrigger();
+            }
+            else if (currentUIState == EUIState::EUIS_Menu)
+            {
+                PlayerHUD->BackMenuUIInputTrigger();
+            }
+            else
+            {
+                PlayerHUD->BackUIInputTrigger();
+            }
+
         }
 
     }
@@ -634,6 +673,9 @@ void AHappyPlayerController::WantToSaveCallBack()
 
 void AHappyPlayerController::ChangeUiState(EUIState uiState, bool bLock)
 {
+    FString EnumAsString = UEnum::GetValueAsString(uiState);
+    UE_LOG(LogTemp, Warning, TEXT("Input UI State: %s, %s"), *EnumAsString, bLock ? *FString("bLock = true") : *FString("bLock = false"));
+
     if (uiState == EUIState::EUIS_Notice)
     {
         bNoticeLock = bLock;
@@ -647,9 +689,11 @@ void AHappyPlayerController::ChangeUiState(EUIState uiState, bool bLock)
         bTabLock = bLock;
     }
 
+
     if (bNoticeLock)
     {
         currentUIState = EUIState::EUIS_Notice;
+        
     }
     else if (bMenuLock)
     {
@@ -657,14 +701,15 @@ void AHappyPlayerController::ChangeUiState(EUIState uiState, bool bLock)
     }
     else if (bTabLock)
     {
-        currentUIState = uiState;
+
+        currentUIState = EUIState::EUIS_Tab;
     }
     else
     {
         currentUIState = EUIState::EUIS_None;
     }
 
-    FString EnumAsString = UEnum::GetValueAsString(currentUIState);
+    EnumAsString = UEnum::GetValueAsString(currentUIState);
     UE_LOG(LogTemp, Warning, TEXT("Current UI State: %s"), *EnumAsString);
 
     if (currentUIState == EUIState::EUIS_None)
@@ -682,6 +727,7 @@ void AHappyPlayerController::ChangeUiState(EUIState uiState, bool bLock)
 
 void AHappyPlayerController::CloseAllUI()
 {
+    UE_LOG(LogTemp, Display, TEXT("EUIState CloseAllUI"));
     ChangeUiState(EUIState::EUIS_None, false);
 
     if (currentUIState == EUIState::EUIS_None)
@@ -1006,8 +1052,6 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
 
 void AHappyPlayerController::TutorialShow(ETutorialType tutorialType)
 {
-
-
     if (PeacFulGameInstance == nullptr) return;
     if (!PeacFulGameInstance->TutorialMap.Contains(tutorialType)) return;
 
