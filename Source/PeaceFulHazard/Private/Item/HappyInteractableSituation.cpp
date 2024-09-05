@@ -74,6 +74,7 @@ void AHappyInteractableSituation::AfterInteraction()
 	case EInteractSituationType::EIST_CrossOverFirstDoor:
 	case EInteractSituationType::EIST_GraveyardLock:
 	case EInteractSituationType::EIST_CathedralLock:
+	case EInteractSituationType::EIST_GardenLock :
 
 		if (AdditiveStaticMesh1)
 		{
@@ -192,7 +193,13 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		{
 			if (PeaceFulHazardGameMode)
 			{
-				FString string = FString("To Take the key, you should trigger the blue points in this floor");
+				FString string = FString("Door is Locked. You should trigger someting to open this door");
+
+				if (PeaceFulHazardGameMode->currentMapType == EWarpTarget::EWT_MainCathedral)
+				{
+					string = FString("To Take the key, you should trigger the blue points in this floor");
+				}
+
 				PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
 			}
 		}
