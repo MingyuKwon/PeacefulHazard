@@ -1006,11 +1006,14 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
 
 void AHappyPlayerController::TutorialShow(ETutorialType tutorialType)
 {
-    if (!TutorialMap.Contains(tutorialType)) return;
+
+
     if (PeacFulGameInstance == nullptr) return;
+    if (!PeacFulGameInstance->TutorialMap.Contains(tutorialType)) return;
+
     if (!PeacFulGameInstance->checkIsTutorialAlready(tutorialType))
     {
-        ShowNoticeUI(true, TutorialMap[tutorialType]);
+        ShowNoticeUI(true, PeacFulGameInstance->TutorialMap[tutorialType]);
     }
 
 }

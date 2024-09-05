@@ -195,9 +195,6 @@ protected:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
-	TMap<ETutorialType, FString> TutorialMap;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<EWarpTarget, FString> TravelMap;
 
 
