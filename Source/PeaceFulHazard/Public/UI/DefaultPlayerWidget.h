@@ -14,6 +14,7 @@ class UCanvasPanel;
 class UBorder;
 class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
+class UProgressBar;
 /**
  * 
  */
@@ -29,6 +30,7 @@ protected:
 	UPeacFulGameInstance* PeacFulGameInstance;
 
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 
 	UPROPERTY(meta = (BindWidget))
@@ -48,6 +50,13 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* LeftAnotherBulletText;
 
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ForceGapText;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* myForceText;
+
 	
 	UPROPERTY(meta = (BindWidget))
 	UImage* PistolImage;
@@ -64,10 +73,17 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UImage* AnotherBackGround;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TodoText;
 
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* TodoText;
+	UProgressBar* Healthbar;
+
+	float lerpHealth = 1.f;
+	float showHealth = 1.f;
+
+	FTimerHandle updateHealthHandle;
 
 public:
 
@@ -79,4 +95,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ShowLoadingUI(bool bVisible);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateHealthUI(float health, int32 currentForce);
+
 };

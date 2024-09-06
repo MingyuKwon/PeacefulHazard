@@ -13,6 +13,8 @@
 #include "System/PeacFulSaveGame.h"
 #include "System/PeacFulGameInstance.h"
 
+#include "Components/ProgressBar.h"
+
 void UDefaultPlayerWidget::NativeConstruct()
 {
     Super::NativeConstruct();
@@ -21,6 +23,14 @@ void UDefaultPlayerWidget::NativeConstruct()
     PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
 
 }
+
+void UDefaultPlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+    Super::NativeTick(MyGeometry, InDeltaTime);
+
+}
+
+
 
 void UDefaultPlayerWidget::UpdateBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet)
 {
@@ -143,3 +153,35 @@ void UDefaultPlayerWidget::ShowLoadingUI(bool bVisible)
         LoadingCanvas->SetVisibility(ESlateVisibility::Hidden);
     }
 }
+
+void UDefaultPlayerWidget::UpdateHealthUI(float health, int32 currentForce)
+{
+    if (PeacFulGameInstance == nullptr) return;
+
+    showHealth = health;
+
+    Healthbar->SetPercent(showHealth);
+
+    int32 gap = currentForce - PeacFulGameInstance->currentEnemyForce;
+
+    myForceText->SetText(FText::AsNumber(currentForce));
+    ForceGapText->SetText(FText::AsNumber(gap));
+
+    if (gap < 0)
+    {
+        ForceGapText->SetColorAndOpacity(FLinearColor::Red);
+
+    }
+    else if (gap > 0)
+    {
+        ForceGapText->SetColorAndOpacity(FLinearColor::Green);
+
+    }
+    else
+    {
+        ForceGapText->SetColorAndOpacity(FLinearColor::Gray);
+
+    }
+
+}
+

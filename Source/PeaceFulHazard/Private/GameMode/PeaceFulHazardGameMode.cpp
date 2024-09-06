@@ -109,8 +109,10 @@ void APeaceFulHazardGameMode::SaveTempToSlot()
     if (gameSave)
     {
         gameSave->TutorialCheckMap = PeacFulGameInstance->TutorialCheckMap;
+        gameSave->saveEnemyForce = PeacFulGameInstance->currentEnemyForce;
         gameSave->saveTodoIndex = PeacFulGameInstance->todoIndex;
         gameSave->SaveTime = FDateTime::Now();
+
 
         UGameplayStatics::SaveGameToSlot(gameSave, ReceivedSlotName, 0);
     }
@@ -142,6 +144,7 @@ void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
                 PeacFulGameInstance->tempSaveGame = LoadedGame;
                 PeacFulGameInstance->TutorialCheckMap = LoadedGame->TutorialCheckMap;
                 PeacFulGameInstance->todoIndex = LoadedGame->saveTodoIndex;
+                PeacFulGameInstance->currentEnemyForce = LoadedGame->saveEnemyForce;
             }
 
             UGameplayStatics::OpenLevel(this, *TravelMap[LoadedGame->saveMapName]);

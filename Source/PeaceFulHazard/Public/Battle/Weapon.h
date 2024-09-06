@@ -67,17 +67,17 @@ protected:
 
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float NormalBulletDamage = 5.f;
+	float NormalBulletDamage = 10.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float BigBulletDamage = 10.f;
+	float BigBulletDamage = 20.f;
 
 	EItemType currentItemType = EItemType::EIT_Bullet_Noraml;
 
-	void ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector ShotDirection, FName BoneName);
+	void ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector ShotDirection, FName BoneName, float damagepercent);
 
 public:
-	void Fire(FVector CameraPosition, FVector CameraNormalVector);
+	void Fire(FVector CameraPosition, FVector CameraNormalVector, float damagepercent);
 
 	void ReloadTrigger();
 

@@ -195,9 +195,6 @@ protected:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
-	TMap<ETutorialType, FString> TutorialMap;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<EWarpTarget, FString> TravelMap;
 
 
@@ -213,6 +210,8 @@ protected:
 	int32 currentBullet = 10;
 
 	float currentHealth = 50.f;
+
+	void SetHealth(float changeAmount);
 
 	EItemType currentBulletType = EItemType::EIT_Bullet_Noraml;
 
@@ -284,6 +283,8 @@ public:
 
 	void SetBulletCount(bool bFire);
 	void SetBulletChangeCount();
+
+	int32 GetPlayerForce();
 
 
 	UFUNCTION(BlueprintCallable)

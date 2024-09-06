@@ -14,8 +14,48 @@ void AHappyInteractableSituation::BeginPlay()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->InteractSituationEvent.AddDynamic(this, &ThisClass::CheckBroadCastItemIsMe);
+
+
+		if (situationType == EInteractSituationType::EIST_RedTriggerDoor ||
+			situationType == EInteractSituationType::EIST_BlueTriggerDoor || 
+			situationType == EInteractSituationType::EIST_GreenTriggerDoor ||
+			situationType == EInteractSituationType::EIST_YellowTriggerDoor)
+		{
+			PeaceFulHazardGameMode->TriggerDoorEvent.AddDynamic(this, &ThisClass::ListenTirggerOn);
+		}
 	}
 
+}
+
+void AHappyInteractableSituation::ListenTirggerOn(EInteractSituationType _situationType)
+{
+	if ((situationType == EInteractSituationType::EIST_RedTriggerDoor && _situationType == EInteractSituationType::EIST_RedTrigger) || 
+		(situationType == EInteractSituationType::EIST_GreenTriggerDoor && _situationType == EInteractSituationType::EIST_GreenTrigger) ||
+		(situationType == EInteractSituationType::EIST_YellowTriggerDoor && _situationType == EInteractSituationType::EIST_YellowTrigger))
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			FString string = FString("Some Door placed in this map opened!");
+			PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+			PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+		}
+
+		AfterInteraction();
+
+	}
+
+	if (situationType == EInteractSituationType::EIST_BlueTriggerDoor && _situationType == EInteractSituationType::EIST_BlueTrigger)
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			FString string = FString("Now you can get the key!");
+			PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+			PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+		}
+
+		AfterInteraction();
+
+	}
 }
 
 void AHappyInteractableSituation::AfterInteraction()
@@ -25,6 +65,17 @@ void AHappyInteractableSituation::AfterInteraction()
 	switch (situationType)
 	{
 	case EInteractSituationType::EIST_NormalDoor:
+	case EInteractSituationType::EIST_BigDoor:
+	case EInteractSituationType::EIST_GraveYardDoor:
+	case EInteractSituationType::EIST_MainCatheralDoor:
+	case EInteractSituationType::EIST_MainCatheralDoor2:
+
+	case EInteractSituationType::EIST_CrossOverSecondDoor:
+	case EInteractSituationType::EIST_CrossOverFirstDoor:
+	case EInteractSituationType::EIST_GraveyardLock:
+	case EInteractSituationType::EIST_CathedralLock:
+	case EInteractSituationType::EIST_GardenLock :
+
 		if (AdditiveStaticMesh1)
 		{
 			AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
@@ -40,15 +91,42 @@ void AHappyInteractableSituation::AfterInteraction()
 	case EInteractSituationType::EIST_OneWayDoor:
 		if (AdditiveStaticMesh1)
 		{
-			AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
+			AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 		}
 
 		if (AdditiveStaticMesh2)
 		{
-			AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
+			AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 		}
 
 		break;
+
+
+	case EInteractSituationType::EIST_RedTrigger:
+	case EInteractSituationType::EIST_BlueTrigger:
+	case EInteractSituationType::EIST_GreenTrigger:
+	case EInteractSituationType::EIST_YellowTrigger:
+
+		// somethignt that can show tirgger is closed
+		StaticMeshComponent->SetVisibility(false);
+		break;
+
+	case EInteractSituationType::EIST_RedTriggerDoor:
+	case EInteractSituationType::EIST_BlueTriggerDoor:
+	case EInteractSituationType::EIST_GreenTriggerDoor:
+	case EInteractSituationType::EIST_YellowTriggerDoor:
+
+		if (AdditiveStaticMesh1)
+		{
+			AdditiveStaticMesh1->SetStaticMesh(nullptr);
+		}
+
+		if (AdditiveStaticMesh2)
+		{
+			AdditiveStaticMesh2->SetStaticMesh(nullptr);
+		}
+		break;
+
 	}
 }
 
@@ -66,6 +144,8 @@ void AHappyInteractableSituation::CheckBroadCastItemIsMe(EInteractSituationType 
 
 	AfterInteraction();
 }
+
+
 
 void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* character)
 {
@@ -86,6 +166,43 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		{
 			playerController->ShowInformationUI(true, NoteText);
 		}
+		else if (situationType == EInteractSituationType::EIST_RedTrigger ||
+			situationType == EInteractSituationType::EIST_BlueTrigger ||
+			situationType == EInteractSituationType::EIST_GreenTrigger ||
+			situationType == EInteractSituationType::EIST_YellowTrigger)
+		{
+			if (PeaceFulHazardGameMode)
+			{
+				PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+				PeaceFulHazardGameMode->TriggerDoorEvent.Broadcast(situationType);
+			}
+
+			AfterInteraction();
+		}
+		else if (situationType == EInteractSituationType::EIST_RedTriggerDoor ||
+			situationType == EInteractSituationType::EIST_GreenTriggerDoor ||
+			situationType == EInteractSituationType::EIST_YellowTriggerDoor)
+		{
+			if (PeaceFulHazardGameMode)
+			{
+				FString string = FString("Door is Locked. You should trigger someting to open this door");
+				PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+			}
+		}
+		else if (situationType == EInteractSituationType::EIST_BlueTriggerDoor)
+		{
+			if (PeaceFulHazardGameMode)
+			{
+				FString string = FString("Door is Locked. You should trigger someting to open this door");
+
+				if (PeaceFulHazardGameMode->currentMapType == EWarpTarget::EWT_MainCathedral)
+				{
+					string = FString("To Take the key, you should trigger the blue points in this floor");
+				}
+
+				PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+			}
+		}
 		else if (situationType == EInteractSituationType::EIST_OneWayDoor)
 		{
 			if (character && OneWayAllow && OneWayNotAllow)
@@ -103,16 +220,11 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 				}
 				else
 				{
-					bAlreadyInteract = true;
 					if (PeaceFulHazardGameMode)
 					{
-						FString string = FString("Doors Open in the Right Direction");
-						if (PeaceFulHazardGameMode)
-						{
-							PeaceFulHazardGameMode->SetAleradyInteract(GetName());
-						}
-						PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
+						PeaceFulHazardGameMode->SetAleradyInteract(GetName());
 					}
+
 					AfterInteraction();
 
 				}

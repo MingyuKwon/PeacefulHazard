@@ -20,6 +20,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FItemBoxInteractEvent, bool, bInve
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNoticeUIShowEvent, bool, bVisible, FString&, noticeText);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FInformationUIShowEvent, bool, bVisible, FString&, noticeText);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTriggerDoorEvent, EInteractSituationType, situationType);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeathEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTutorialEvent, ETutorialType, tutorialType);
@@ -29,6 +30,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMapEndEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMenuUIChangeEvent, bool, bVisible);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSaveFinishedEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWantSaveEvent);
+
+
+
 
 class UPeacFulGameInstance;
 
@@ -68,6 +72,10 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInformationUIShowEvent InformationUIShowEvent;
+
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FTriggerDoorEvent TriggerDoorEvent;
 
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")

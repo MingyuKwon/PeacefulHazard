@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "System/PeacFulSaveGame.h"
 #include "System/PeacFulGameInstance.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 void USaveWidget::BackUIInputTrigger()
 {
@@ -191,7 +192,120 @@ void USaveWidget::NativeConstruct()
 		NewSaveButton->OnClicked.AddDynamic(this, &ThisClass::OnNewButtonClicked);
 	}
 	
+
+	if (MapButton)
+	{
+		MapButton->OnClicked.AddDynamic(this, &ThisClass::OnMapButtonClicked);
+	}
+	if (SaveLoadButton)
+	{
+		SaveLoadButton->OnClicked.AddDynamic(this, &ThisClass::OnSaveLoadButtonClicked);
+	}
+	if (OptionButton)
+	{
+		OptionButton->OnClicked.AddDynamic(this, &ThisClass::OnOptionButtonClicked);
+	}
+	if (TitleButton)
+	{
+		TitleButton->OnClicked.AddDynamic(this, &ThisClass::OnExitButtonClicked);
+	}
+
 	UpdateAllUI();
+}
+
+void USaveWidget::OnMapButtonClicked()
+{
+	SetMainMenuDisplay(EMenuType::EMT_Map);
+}
+
+void USaveWidget::OnSaveLoadButtonClicked()
+{
+	SetMainMenuDisplay(EMenuType::EMT_Save);
+}
+
+void USaveWidget::OnOptionButtonClicked()
+{
+	SetMainMenuDisplay(EMenuType::EMT_Option);
+}
+
+void USaveWidget::OnExitButtonClicked()
+{
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	UKismetSystemLibrary::QuitGame(this, PlayerController, EQuitPreference::Quit, true);
+
+}
+
+void USaveWidget::ShowCurrentLocation()
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	MainHubBorder->SetBrushColor(FLinearColor::White);
+
+	GraveyardBorder->SetBrushColor(FLinearColor::White);
+
+	CathedralBorder->SetBrushColor(FLinearColor::White);
+	CathedralBorder2->SetBrushColor(FLinearColor::White);
+	CathedralBorder3->SetBrushColor(FLinearColor::White);
+	CathedralBorder4->SetBrushColor(FLinearColor::White);
+
+	TutorialBorder->SetBrushColor(FLinearColor::White);
+	TutorialBorder2->SetBrushColor(FLinearColor::White);
+	TutorialBorder3->SetBrushColor(FLinearColor::White);
+	TutorialBorder4->SetBrushColor(FLinearColor::White);
+	TutorialBorder5->SetBrushColor(FLinearColor::White);
+
+	CrossOverBorder->SetBrushColor(FLinearColor::White);
+	CrossOverBorder2->SetBrushColor(FLinearColor::White);
+	CrossOverBorder3->SetBrushColor(FLinearColor::White);
+	CrossOverBorder4->SetBrushColor(FLinearColor::White);
+	CrossOverBorder5->SetBrushColor(FLinearColor::White);
+
+	LeftGardenBorder->SetBrushColor(FLinearColor::White);
+
+	RightGardenBorder->SetBrushColor(FLinearColor::White);
+
+
+	switch (PeaceFulHazardGameMode->currentMapType)
+	{
+	case EWarpTarget::EWT_MainHub :
+		MainHubBorder->SetBrushColor(FLinearColor::Green);
+		break;
+	case EWarpTarget::EWT_GraveYard:
+		GraveyardBorder->SetBrushColor(FLinearColor::Green);
+		break;
+	case EWarpTarget::EWT_MainCathedral:
+		CathedralBorder->SetBrushColor(FLinearColor::Green);
+		CathedralBorder2->SetBrushColor(FLinearColor::Green);
+		CathedralBorder3->SetBrushColor(FLinearColor::Green);
+		CathedralBorder4->SetBrushColor(FLinearColor::Green);
+
+		break;
+	case EWarpTarget::EWT_Tutorial:
+		TutorialBorder->SetBrushColor(FLinearColor::Green);
+		TutorialBorder2->SetBrushColor(FLinearColor::Green);
+		TutorialBorder3->SetBrushColor(FLinearColor::Green);
+		TutorialBorder4->SetBrushColor(FLinearColor::Green);
+		TutorialBorder5->SetBrushColor(FLinearColor::Green);
+		break;
+
+	case EWarpTarget::EWT_CrossOver:
+		CrossOverBorder->SetBrushColor(FLinearColor::Green);
+		CrossOverBorder2->SetBrushColor(FLinearColor::Green);
+		CrossOverBorder3->SetBrushColor(FLinearColor::Green);
+		CrossOverBorder4->SetBrushColor(FLinearColor::Green);
+		CrossOverBorder5->SetBrushColor(FLinearColor::Green);
+		break;
+
+	case EWarpTarget::EWT_LeftGarden:
+		LeftGardenBorder->SetBrushColor(FLinearColor::Green);
+		break;
+
+	case EWarpTarget::EWT_RightGarden:
+		RightGardenBorder->SetBrushColor(FLinearColor::Green);
+		break;
+	}
+
+
 }
 
 void USaveWidget::UpdateAllUI()
@@ -270,25 +384,41 @@ void USaveWidget::UpdateAllUI()
 		SaveModeText->SetText(FText::FromString(FString("Load")));
 	}
 
-
-	if (HoveringSaveButton == nullptr)
-	{
-		UISaveInteractCanvas->SetVisibility(ESlateVisibility::Hidden);
-		return;
-	}
-
-	if (UCanvasPanelSlot* ButtonSlot = Cast<UCanvasPanelSlot>(HoveringSaveButton->Slot))
-	{
-		UISaveInteractCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-		FVector2D ButtonPosition = ButtonSlot->GetPosition();
-
-		if (UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(UISaveInteractCanvas->Slot))
-		{
-			CanvasSlot->SetPosition(ButtonPosition);
-		}
-	}
+	ShowCurrentLocation();
 }
+
+void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
+{
+	bSaveMode = bSavePanelSave;
+
+	MenuSelectCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	SaveShowPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	switch (menuType)
+	{
+	case EMenuType::EMT_Save :
+
+		SaveCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		MapCanvas->SetVisibility(ESlateVisibility::Hidden);
+
+		if (bSaveMode)
+		{
+			MenuSelectCanvas->SetVisibility(ESlateVisibility::Hidden);
+			SaveShowPanel->SetVisibility(ESlateVisibility::Hidden);
+		}
+
+		break;
+
+	case EMenuType::EMT_Map:
+		MapCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		SaveCanvas->SetVisibility(ESlateVisibility::Hidden);
+
+	}
+
+	UpdateAllUI();
+
+}
+
 
 void USaveWidget::InitArrays()
 {

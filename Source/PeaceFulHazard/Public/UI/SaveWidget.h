@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "PeaceFulHazard/PeaceFulHazard.h"
 #include "SaveWidget.generated.h"
 
 class UButton;
@@ -31,6 +32,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateAllUI();
 
+	void SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave = false);
+
 protected:
 
 	int32 GetButtonIndex(UButton* button, bool bSaveButtons);
@@ -56,15 +59,54 @@ protected:
 
 	virtual void NativeConstruct() override;
 
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* MenuSelectCanvas;
 
 	UPROPERTY(meta = (BindWidget))
-	UCanvasPanel* UISaveInteractCanvas;
+	UCanvasPanel* SaveCanvas;
 
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* MapCanvas;
+
+	
 	UButton* HoveringSaveButton;
 	UButton* HoveringDeleteButton;
 
 	TArray<UButton*> SaveButtons;
 	TArray<UButton*> DeleteButtons;
+
+
+	//////////////////////// menu select ///////////////////////////////////////////////
+
+	UFUNCTION()
+	void OnMapButtonClicked();
+	UFUNCTION()
+	void OnSaveLoadButtonClicked();
+	UFUNCTION()
+	void OnOptionButtonClicked();
+	UFUNCTION()
+	void OnExitButtonClicked();
+
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* MapButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* SaveLoadButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* OptionButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* TitleButton;
+
+	//////////////////////// menu select ///////////////////////////////////////////////
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* SaveShowPanel;
+
+
+
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* NewSaveButton;
@@ -240,8 +282,62 @@ protected:
 	UBorder* SaveSlotBackground8;
 
 
+	////////////////// MiniMap //////////////////////////////////
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* MainHubBorder;
+
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* GraveyardBorder;
+
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CathedralBorder;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CathedralBorder2;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CathedralBorder3;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CathedralBorder4;
+
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TutorialBorder;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TutorialBorder2;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TutorialBorder3;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TutorialBorder4;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TutorialBorder5;
+
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CrossOverBorder;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CrossOverBorder2;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CrossOverBorder3;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CrossOverBorder4;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CrossOverBorder5;
+
+
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* LeftGardenBorder;
 
 	
+	UPROPERTY(meta = (BindWidget))
+	UBorder* RightGardenBorder;
+
+	void ShowCurrentLocation();
+	
+
+	////////////////// MiniMap //////////////////////////////////
 
 	void InitArrays();
 

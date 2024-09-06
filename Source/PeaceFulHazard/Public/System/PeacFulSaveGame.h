@@ -49,6 +49,8 @@ class PEACEFULHAZARD_API UPeacFulSaveGame : public USaveGame
 	GENERATED_BODY()
 	
 public:
+    UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
+    int32 saveEnemyForce = 0;
 
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     int32 saveTodoIndex = 0;
@@ -92,11 +94,11 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     bool SavePlayerdEquipped;
 
-    // ¿©±â¼­ ÀÚ±âÀÚ ÀÌ¹Ì »óÈ£ÀÛ¿ë Çß°Å³ª Á×¾ú´ÂÁö ¾Æ´ÑÁö ÀÚ±â ÀÌ¸§º¸°í È®ÀÎÇÔ
+    // ï¿½ï¿½ï¿½â¼­ ï¿½Ú±ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ß°Å³ï¿½ ï¿½×¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ï¿½ï¿½ ï¿½Ú±ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     TMap<EWarpTarget, FSaveArrayContainer> MapInteractSaveMap;
 
-    // ÀûÀº À§¿¡¼­ ÀÚ±â°¡ ¾ÈÁ×¾ú´Ù°í ÆÇ´ÜµÇ¸é ¿©±â¿¡ µ¥ÀÌÅÍ¸¦ ÀúÀåÇÔ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú±â°¡ ï¿½ï¿½ï¿½×¾ï¿½ï¿½Ù°ï¿½ ï¿½Ç´ÜµÇ¸ï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     TMap<EWarpTarget, FSaveArrayContainer> EnemySaveMap;
 

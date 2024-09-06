@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "Controller/HappyPlayerController.h"
 #include "Item/ItemInformation.h"
+#include "PeaceFulHazard/PeaceFulHazard.h"
 #include "PlayerHUD.generated.h"
 
 class UAimCrossHairWidget;
@@ -37,7 +38,7 @@ public:
 	void SetInformationDisplay(bool bVisible);
 
 
-	void SetMainMenuDisplay(bool bVisible, bool bSavePanelSave);
+	void SetMainMenuDisplay(bool bVisible, EMenuType menuType, bool bSavePanelSave = false);
 
 	void ShowLoadingUI(bool bVisible);
 
@@ -50,6 +51,9 @@ public:
 
 	void UpdateTodoUI();
 
+	void UpdateHealthUI(float health, int32 currentForce);
+
+
 	void UpdateInventoryDisplay(FCharacterInventoty* inventory);
 
 	void UpdateItemBoxDisplay(FCharacterInventoty* inventory, FCharacterItemBox* itemBox);
@@ -60,6 +64,9 @@ public:
 
 	
 
+	void BackNoticeUIInputTrigger();
+
+	void BackMenuUIInputTrigger();
 
 	void BackUIInputTrigger();
 

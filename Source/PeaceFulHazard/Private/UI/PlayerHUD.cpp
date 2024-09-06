@@ -108,7 +108,7 @@ void APlayerHUD::SetInformationDisplay(bool bVisible)
     }
 }
 
-void APlayerHUD::SetMainMenuDisplay(bool bVisible, bool bSavePanelSave)
+void APlayerHUD::SetMainMenuDisplay(bool bVisible, EMenuType menuType, bool bSavePanelSave)
 {
     if (!bVisible)
     {
@@ -122,8 +122,9 @@ void APlayerHUD::SetMainMenuDisplay(bool bVisible, bool bSavePanelSave)
     if (SaveWidget)
     {
         SaveWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-        SaveWidget->bSaveMode = bSavePanelSave;
-        SaveWidget->UpdateAllUI();
+
+        SaveWidget->SetMainMenuDisplay(menuType, bSavePanelSave);
+      
     }
 }
 
@@ -209,6 +210,14 @@ void APlayerHUD::UpdateTodoUI()
     }
 }
 
+void APlayerHUD::UpdateHealthUI(float health, int32 currentForce)
+{
+    if (DefaultPlayerWidget != nullptr)
+    {
+        DefaultPlayerWidget->UpdateHealthUI(health, currentForce);
+    }
+}
+
 void APlayerHUD::UpdateInventoryDisplay(FCharacterInventoty* inventory)
 {
     if (InventoryWidget)
@@ -251,6 +260,22 @@ void APlayerHUD::UpdateInformationDisplay(FString& noticeText)
     }
 }
 
+void APlayerHUD::BackNoticeUIInputTrigger()
+{
+    if (NoticePanelWidget)
+    {
+        NoticePanelWidget->BackUIInputTrigger();
+    }
+}
+
+void APlayerHUD::BackMenuUIInputTrigger()
+{
+    if (SaveWidget)
+    {
+        SaveWidget->BackUIInputTrigger();
+    }
+}
+
 void APlayerHUD::BackUIInputTrigger()
 {
     if (InventoryWidget)
@@ -262,21 +287,14 @@ void APlayerHUD::BackUIInputTrigger()
     {
         ItemBoxWidget->BackUIInputTrigger();
     }
-    
-    if (NoticePanelWidget)
-    {
-        NoticePanelWidget->BackUIInputTrigger();
-    }
+
 
     if (InformationPanelWidget)
     {
         InformationPanelWidget->BackUIInputTrigger();
     }
 
-    if (SaveWidget)
-    {
-        SaveWidget->BackUIInputTrigger();
-    }
+
 }
 
 void APlayerHUD::OkUIInputTrigger()

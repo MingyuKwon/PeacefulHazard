@@ -29,6 +29,8 @@ protected:
 	UFUNCTION()
 	void CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count);
 
+	void EnalbleCustomDepth(bool bEnable);
+
 
 public:
 	virtual void InteractWithPlayer(APeaceFulHazardCharacter* character) override;

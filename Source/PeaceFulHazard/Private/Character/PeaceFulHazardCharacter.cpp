@@ -17,6 +17,7 @@
 #include "Item/HappyInteractableItem.h"
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "System/PeacFulGameInstance.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -251,6 +252,7 @@ void APeaceFulHazardCharacter::BeginPlay()
 	}
 
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
+	PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
 
 }
 
@@ -601,6 +603,7 @@ bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 	if (EquipWeapon)
 	{
 		if (HappyPlayerController == nullptr) return false;
+		if (PeacFulGameInstance == nullptr) return false;
 
 		int32 ViewportSizeX, ViewportSizeY;
 		HappyPlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
@@ -611,7 +614,10 @@ bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 		HappyPlayerController->DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, WorldLocation, WorldDirection);
 
 
-		EquipWeapon->Fire(WorldLocation, WorldDirection);
+		int32 gap = HappyPlayerController->GetPlayerForce() - PeacFulGameInstance->currentEnemyForce;
+		float percent = 1 + gap / 100.f;
+
+		EquipWeapon->Fire(WorldLocation, WorldDirection, percent);
 	}
 
 	if (bNormalFire)

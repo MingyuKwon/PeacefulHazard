@@ -41,6 +41,15 @@ void AHappyPichUpItem::CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count)
 	}
 }
 
+void AHappyPichUpItem::EnalbleCustomDepth(bool bEnable)
+{
+	if (StaticMeshComponent)
+	{
+		StaticMeshComponent->SetRenderCustomDepth(bEnable);
+	}
+	
+}
+
 void AHappyPichUpItem::InteractWithPlayer(APeaceFulHazardCharacter* character)
 {
 	AHappyPlayerController* playerController = Cast<AHappyPlayerController>(character->GetController());
@@ -55,4 +64,6 @@ void AHappyPichUpItem::InteractWithPlayer(APeaceFulHazardCharacter* character)
 AHappyPichUpItem::AHappyPichUpItem()
 {
 	StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	StaticMeshComponent->SetCustomDepthStencilValue(250);
+	StaticMeshComponent->SetRenderCustomDepth(true);
 }

@@ -8,6 +8,8 @@ UENUM(BlueprintType)
 enum class EItemType : uint8
 {
     EIT_None,
+    EIT_Force,
+
     EIT_Bullet_Noraml,
     EIT_Bullet_Big,
     EIT_HealPack_Small,
@@ -15,6 +17,15 @@ enum class EItemType : uint8
     EIT_KeyNormal,
     EIT_KeyBig,
     EIT_Bag,
+    EIT_GraveYardDoorKey,
+    EIT_MainCatheralDoorKey,
+    EIT_MainCatheralDoorKey2,
+
+    EIT_CrossOverFirstDoorKey,
+    EIT_CrossOverSecondDoorKey,
+    EIT_GraveyardLockKey,
+    EIT_CathedralLockKey,
+    EIST_GardenLockKey,
 
     EIT_Max
 };
@@ -30,6 +41,12 @@ enum class ETutorialType : uint8
     ETT_InteractWithOneWayDoor,
     ETT_InteractItemBox,
 
+    ETT_UIItemBox,
+    ETT_UIGetItem,
+    ETT_UISituation,
+    ETT_UIMenu_Save,
+    ETT_UIShowInventory,
+
     ETT_Max
 };
 
@@ -39,6 +56,13 @@ enum class EWarpTarget : uint8
     EWT_None,
     EWT_MainHub,
     EWT_Tutorial,
+    EWT_MainCathedral,
+
+    EWT_CrossOver,
+    EWT_GraveYard,
+    EWT_LeftGarden,
+    EWT_RightGarden,
+
     EWT_Max
 };
 
@@ -50,7 +74,30 @@ enum class EInteractSituationType : uint8
     EIST_ItemBox,
     EIST_SaveBox,
     EIST_NormalDoor,
+    EIST_BigDoor,
+    EIST_GraveYardDoor,
+    EIST_MainCatheralDoor,
+    EIST_MainCatheralDoor2,
+
+    EIST_CrossOverFirstDoor,
+    EIST_CrossOverSecondDoor,
+    EIST_GraveyardLock,
+    EIST_CathedralLock,
+    EIST_GardenLock,
+
     EIST_Note,
+
+    EIST_RedTrigger,
+    EIST_RedTriggerDoor,
+
+    EIST_GreenTrigger,
+    EIST_GreenTriggerDoor,
+
+    EIST_YellowTrigger,
+    EIST_YellowTriggerDoor,
+
+    EIST_BlueTrigger,
+    EIST_BlueTriggerDoor,
 
     EIST_Max
 };
@@ -59,16 +106,28 @@ UENUM(BlueprintType)
 enum class EUIState : uint8
 {
     EUIS_None,
-    EUIS_ItemBox,
-    EUIS_Inventory,
-    EUIS_ItemGet,
-    EUIS_Note,
 
-    EUIS_Notice,
+    EUIS_Tab,
 
     EUIS_Menu,
 
+    EUIS_Notice,
+
     EUIS_Max
+};
+
+UENUM(BlueprintType)
+enum class EMenuType : uint8
+{
+    EMT_None,
+
+    EMT_Map,
+
+    EMT_Save,
+
+    EMT_Option,
+
+    EMT_Max
 };
 
 UENUM(BlueprintType)
