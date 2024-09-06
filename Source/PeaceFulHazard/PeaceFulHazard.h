@@ -117,6 +117,20 @@ enum class EUIState : uint8
 };
 
 UENUM(BlueprintType)
+enum class EMenuType : uint8
+{
+    EMT_None,
+
+    EMT_Map,
+
+    EMT_Save,
+
+    EMT_Option,
+
+    EMT_Max
+};
+
+UENUM(BlueprintType)
 enum class ERouteNum : uint8
 {
     ERN_None,

@@ -187,11 +187,11 @@ void AHappyPlayerController::Menu(const FInputActionValue& Value)
 
         if (currentUIState == EUIState::EUIS_Menu)
         {
-            PlayerHUD->SetMainMenuDisplay(true, false);
+            PlayerHUD->SetMainMenuDisplay(true, EMenuType::EMT_Save ,false);
         }
         else
         {
-            PlayerHUD->SetMainMenuDisplay(false, false);
+            PlayerHUD->SetMainMenuDisplay(false, EMenuType::EMT_Save, false);
         }
 
     }
@@ -270,11 +270,11 @@ void AHappyPlayerController::TriggerMenu_Save(bool bSave)
 
         if (currentUIState == EUIState::EUIS_Menu)
         {
-            PlayerHUD->SetMainMenuDisplay(true, bSave);
+            PlayerHUD->SetMainMenuDisplay(true, EMenuType::EMT_Save, bSave);
         }
         else
         {
-            PlayerHUD->SetMainMenuDisplay(false, bSave);
+            PlayerHUD->SetMainMenuDisplay(false, EMenuType::EMT_Save, bSave);
         }
 
     }
@@ -1014,11 +1014,11 @@ void AHappyPlayerController::ShowMainMenuUI(bool bVisible)
 
         if (currentUIState == EUIState::EUIS_Menu)
         {
-            PlayerHUD->SetMainMenuDisplay(true, false);
+            PlayerHUD->SetMainMenuDisplay(true, EMenuType::EMT_Save, false);
         }
         else
         {
-            PlayerHUD->SetMainMenuDisplay(false, false);
+            PlayerHUD->SetMainMenuDisplay(false, EMenuType::EMT_Save, false);
         }
 
     }

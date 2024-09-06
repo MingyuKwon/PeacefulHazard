@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "PeaceFulHazard/PeaceFulHazard.h"
 #include "SaveWidget.generated.h"
 
 class UButton;
@@ -30,6 +31,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateAllUI();
+
+	void SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave);
 
 protected:
 
@@ -60,11 +63,38 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* UISaveInteractCanvas;
 
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* MenuSelectCanvas;
+
+	
 	UButton* HoveringSaveButton;
 	UButton* HoveringDeleteButton;
 
 	TArray<UButton*> SaveButtons;
 	TArray<UButton*> DeleteButtons;
+
+
+	//////////////////////// menu select ///////////////////////////////////////////////
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* MapButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* SaveLoadButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* OptionButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* TitleButton;
+
+	//////////////////////// menu select ///////////////////////////////////////////////
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* SaveShowPanel;
+
+
+
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* NewSaveButton;
@@ -239,9 +269,6 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UBorder* SaveSlotBackground8;
 
-
-
-	
 
 	void InitArrays();
 

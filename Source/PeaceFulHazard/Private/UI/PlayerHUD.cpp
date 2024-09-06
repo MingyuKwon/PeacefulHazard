@@ -108,7 +108,7 @@ void APlayerHUD::SetInformationDisplay(bool bVisible)
     }
 }
 
-void APlayerHUD::SetMainMenuDisplay(bool bVisible, bool bSavePanelSave)
+void APlayerHUD::SetMainMenuDisplay(bool bVisible, EMenuType menuType, bool bSavePanelSave)
 {
     if (!bVisible)
     {
@@ -122,8 +122,9 @@ void APlayerHUD::SetMainMenuDisplay(bool bVisible, bool bSavePanelSave)
     if (SaveWidget)
     {
         SaveWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-        SaveWidget->bSaveMode = bSavePanelSave;
-        SaveWidget->UpdateAllUI();
+
+        SaveWidget->SetMainMenuDisplay(menuType, bSavePanelSave);
+      
     }
 }
 

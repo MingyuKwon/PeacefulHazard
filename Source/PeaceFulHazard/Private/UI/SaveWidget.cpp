@@ -290,6 +290,34 @@ void USaveWidget::UpdateAllUI()
 	}
 }
 
+void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
+{
+	bSaveMode = bSavePanelSave;
+
+	switch (menuType)
+	{
+	case EMenuType::EMT_Save :
+
+
+		if (bSaveMode)
+		{
+			MenuSelectCanvas->SetVisibility(ESlateVisibility::Hidden);
+			SaveShowPanel->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else
+		{
+			MenuSelectCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			SaveShowPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		}
+
+		break;
+	}
+
+	UpdateAllUI();
+
+}
+
+
 void USaveWidget::InitArrays()
 {
 	SaveButtons.Add(SaveButton1);

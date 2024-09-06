@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "Controller/HappyPlayerController.h"
 #include "Item/ItemInformation.h"
+#include "PeaceFulHazard/PeaceFulHazard.h"
 #include "PlayerHUD.generated.h"
 
 class UAimCrossHairWidget;
@@ -37,7 +38,7 @@ public:
 	void SetInformationDisplay(bool bVisible);
 
 
-	void SetMainMenuDisplay(bool bVisible, bool bSavePanelSave);
+	void SetMainMenuDisplay(bool bVisible, EMenuType menuType, bool bSavePanelSave);
 
 	void ShowLoadingUI(bool bVisible);
 
