@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "System/PeacFulSaveGame.h"
 #include "System/PeacFulGameInstance.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 void USaveWidget::BackUIInputTrigger()
 {
@@ -191,7 +192,47 @@ void USaveWidget::NativeConstruct()
 		NewSaveButton->OnClicked.AddDynamic(this, &ThisClass::OnNewButtonClicked);
 	}
 	
+
+	if (MapButton)
+	{
+		MapButton->OnClicked.AddDynamic(this, &ThisClass::OnMapButtonClicked);
+	}
+	if (SaveLoadButton)
+	{
+		SaveLoadButton->OnClicked.AddDynamic(this, &ThisClass::OnSaveLoadButtonClicked);
+	}
+	if (OptionButton)
+	{
+		OptionButton->OnClicked.AddDynamic(this, &ThisClass::OnOptionButtonClicked);
+	}
+	if (TitleButton)
+	{
+		TitleButton->OnClicked.AddDynamic(this, &ThisClass::OnExitButtonClicked);
+	}
+
 	UpdateAllUI();
+}
+
+void USaveWidget::OnMapButtonClicked()
+{
+	SetMainMenuDisplay(EMenuType::EMT_Map);
+}
+
+void USaveWidget::OnSaveLoadButtonClicked()
+{
+	SetMainMenuDisplay(EMenuType::EMT_Save);
+}
+
+void USaveWidget::OnOptionButtonClicked()
+{
+	SetMainMenuDisplay(EMenuType::EMT_Option);
+}
+
+void USaveWidget::OnExitButtonClicked()
+{
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	UKismetSystemLibrary::QuitGame(this, PlayerController, EQuitPreference::Quit, true);
+
 }
 
 void USaveWidget::UpdateAllUI()
@@ -269,48 +310,34 @@ void USaveWidget::UpdateAllUI()
 		SaveModeBackGround->SetBrushColor(FLinearColor::Red);
 		SaveModeText->SetText(FText::FromString(FString("Load")));
 	}
-
-
-	if (HoveringSaveButton == nullptr)
-	{
-		UISaveInteractCanvas->SetVisibility(ESlateVisibility::Hidden);
-		return;
-	}
-
-	if (UCanvasPanelSlot* ButtonSlot = Cast<UCanvasPanelSlot>(HoveringSaveButton->Slot))
-	{
-		UISaveInteractCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-		FVector2D ButtonPosition = ButtonSlot->GetPosition();
-
-		if (UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(UISaveInteractCanvas->Slot))
-		{
-			CanvasSlot->SetPosition(ButtonPosition);
-		}
-	}
 }
 
 void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
 {
 	bSaveMode = bSavePanelSave;
 
+	MenuSelectCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	SaveShowPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
 	switch (menuType)
 	{
 	case EMenuType::EMT_Save :
 
+		SaveCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		MapCanvas->SetVisibility(ESlateVisibility::Hidden);
 
 		if (bSaveMode)
 		{
 			MenuSelectCanvas->SetVisibility(ESlateVisibility::Hidden);
 			SaveShowPanel->SetVisibility(ESlateVisibility::Hidden);
 		}
-		else
-		{
-			MenuSelectCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-			SaveShowPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		}
 
 		break;
+
+	case EMenuType::EMT_Map:
+		MapCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		SaveCanvas->SetVisibility(ESlateVisibility::Hidden);
+
 	}
 
 	UpdateAllUI();

@@ -38,7 +38,7 @@ public:
 	void SetInformationDisplay(bool bVisible);
 
 
-	void SetMainMenuDisplay(bool bVisible, EMenuType menuType, bool bSavePanelSave);
+	void SetMainMenuDisplay(bool bVisible, EMenuType menuType, bool bSavePanelSave = false);
 
 	void ShowLoadingUI(bool bVisible);
 

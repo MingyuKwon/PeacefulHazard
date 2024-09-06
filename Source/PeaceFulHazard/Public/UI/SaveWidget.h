@@ -32,7 +32,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateAllUI();
 
-	void SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave);
+	void SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave = false);
 
 protected:
 
@@ -59,12 +59,14 @@ protected:
 
 	virtual void NativeConstruct() override;
 
-
-	UPROPERTY(meta = (BindWidget))
-	UCanvasPanel* UISaveInteractCanvas;
-
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* MenuSelectCanvas;
+
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* SaveCanvas;
+
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* MapCanvas;
 
 	
 	UButton* HoveringSaveButton;
@@ -75,6 +77,16 @@ protected:
 
 
 	//////////////////////// menu select ///////////////////////////////////////////////
+
+	UFUNCTION()
+	void OnMapButtonClicked();
+	UFUNCTION()
+	void OnSaveLoadButtonClicked();
+	UFUNCTION()
+	void OnOptionButtonClicked();
+	UFUNCTION()
+	void OnExitButtonClicked();
+
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* MapButton;
