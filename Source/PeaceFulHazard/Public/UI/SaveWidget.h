@@ -282,6 +282,63 @@ protected:
 	UBorder* SaveSlotBackground8;
 
 
+	////////////////// MiniMap //////////////////////////////////
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* MainHubBorder;
+
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* GraveyardBorder;
+
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CathedralBorder;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CathedralBorder2;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CathedralBorder3;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CathedralBorder4;
+
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TutorialBorder;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TutorialBorder2;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TutorialBorder3;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TutorialBorder4;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* TutorialBorder5;
+
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CrossOverBorder;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CrossOverBorder2;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CrossOverBorder3;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CrossOverBorder4;
+	UPROPERTY(meta = (BindWidget))
+	UBorder* CrossOverBorder5;
+
+
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* LeftGardenBorder;
+
+	
+	UPROPERTY(meta = (BindWidget))
+	UBorder* RightGardenBorder;
+
+	void ShowCurrentLocation();
+	
+
+	////////////////// MiniMap //////////////////////////////////
+
 	void InitArrays();
 
 

@@ -235,6 +235,79 @@ void USaveWidget::OnExitButtonClicked()
 
 }
 
+void USaveWidget::ShowCurrentLocation()
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	MainHubBorder->SetBrushColor(FLinearColor::White);
+
+	GraveyardBorder->SetBrushColor(FLinearColor::White);
+
+	CathedralBorder->SetBrushColor(FLinearColor::White);
+	CathedralBorder2->SetBrushColor(FLinearColor::White);
+	CathedralBorder3->SetBrushColor(FLinearColor::White);
+	CathedralBorder4->SetBrushColor(FLinearColor::White);
+
+	TutorialBorder->SetBrushColor(FLinearColor::White);
+	TutorialBorder2->SetBrushColor(FLinearColor::White);
+	TutorialBorder3->SetBrushColor(FLinearColor::White);
+	TutorialBorder4->SetBrushColor(FLinearColor::White);
+	TutorialBorder5->SetBrushColor(FLinearColor::White);
+
+	CrossOverBorder->SetBrushColor(FLinearColor::White);
+	CrossOverBorder2->SetBrushColor(FLinearColor::White);
+	CrossOverBorder3->SetBrushColor(FLinearColor::White);
+	CrossOverBorder4->SetBrushColor(FLinearColor::White);
+	CrossOverBorder5->SetBrushColor(FLinearColor::White);
+
+	LeftGardenBorder->SetBrushColor(FLinearColor::White);
+
+	RightGardenBorder->SetBrushColor(FLinearColor::White);
+
+
+	switch (PeaceFulHazardGameMode->currentMapType)
+	{
+	case EWarpTarget::EWT_MainHub :
+		MainHubBorder->SetBrushColor(FLinearColor::Green);
+		break;
+	case EWarpTarget::EWT_GraveYard:
+		GraveyardBorder->SetBrushColor(FLinearColor::Green);
+		break;
+	case EWarpTarget::EWT_MainCathedral:
+		CathedralBorder->SetBrushColor(FLinearColor::Green);
+		CathedralBorder2->SetBrushColor(FLinearColor::Green);
+		CathedralBorder3->SetBrushColor(FLinearColor::Green);
+		CathedralBorder4->SetBrushColor(FLinearColor::Green);
+
+		break;
+	case EWarpTarget::EWT_Tutorial:
+		TutorialBorder->SetBrushColor(FLinearColor::Green);
+		TutorialBorder2->SetBrushColor(FLinearColor::Green);
+		TutorialBorder3->SetBrushColor(FLinearColor::Green);
+		TutorialBorder4->SetBrushColor(FLinearColor::Green);
+		TutorialBorder5->SetBrushColor(FLinearColor::Green);
+		break;
+
+	case EWarpTarget::EWT_CrossOver:
+		CrossOverBorder->SetBrushColor(FLinearColor::Green);
+		CrossOverBorder2->SetBrushColor(FLinearColor::Green);
+		CrossOverBorder3->SetBrushColor(FLinearColor::Green);
+		CrossOverBorder4->SetBrushColor(FLinearColor::Green);
+		CrossOverBorder5->SetBrushColor(FLinearColor::Green);
+		break;
+
+	case EWarpTarget::EWT_LeftGarden:
+		LeftGardenBorder->SetBrushColor(FLinearColor::Green);
+		break;
+
+	case EWarpTarget::EWT_RightGarden:
+		RightGardenBorder->SetBrushColor(FLinearColor::Green);
+		break;
+	}
+
+
+}
+
 void USaveWidget::UpdateAllUI()
 {
 	for (int32 i = 0; i < SaveButtons.Num(); i++)
@@ -310,6 +383,8 @@ void USaveWidget::UpdateAllUI()
 		SaveModeBackGround->SetBrushColor(FLinearColor::Red);
 		SaveModeText->SetText(FText::FromString(FString("Load")));
 	}
+
+	ShowCurrentLocation();
 }
 
 void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
