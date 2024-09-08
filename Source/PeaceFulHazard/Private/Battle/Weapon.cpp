@@ -12,9 +12,9 @@
 #include "Materials/MaterialInstance.h"
 #include "Enemy/EnemyBase.h"
 #include "Engine/DamageEvents.h"
-
 #include "Perception/AISense_Damage.h"
 #include "Perception/AISenseConfig_Hearing.h"
+#include "GameMode/PeaceFulHazardGameMode.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -35,7 +35,7 @@ AWeapon::AWeapon()
 void AWeapon::BeginPlay()
 {
     Super::BeginPlay();
-
+    PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
 }
 
 void AWeapon::ChangeBulletMode(EItemType itemType)
@@ -123,6 +123,21 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector, float dam
     Params.AddIgnoredActor(this);
 
     bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, Params);
+
+
+    if (PeaceFulHazardGameMode)
+    {
+        switch (currentItemType)
+        {
+        case EItemType::EIT_Bullet_Noraml :
+            PeaceFulHazardGameMode->PlaySoundInGameplay(NormalFireSound, GetActorLocation(), 1.f);
+            break;
+
+        case EItemType::EIT_Bullet_Big :
+            PeaceFulHazardGameMode->PlaySoundInGameplay(BigFireSound, GetActorLocation(), 1.5f);
+            break;
+        }
+    }
 
     UAISense_Hearing::ReportNoiseEvent(
         GetWorld(),

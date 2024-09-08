@@ -11,7 +11,8 @@ class UBoxComponent;
 class UNiagaraSystem;
 class UAnimMontage;
 class APistolShell;
-
+class USoundBase;
+class APeaceFulHazardGameMode;
 
 UCLASS()
 class PEACEFULHAZARD_API AWeapon : public AActor
@@ -24,6 +25,14 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* NormalFireSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* BigFireSound;
+
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
