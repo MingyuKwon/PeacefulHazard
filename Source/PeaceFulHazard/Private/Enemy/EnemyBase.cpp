@@ -103,6 +103,14 @@ void AEnemyBase::AttackEnd()
     }
 }
 
+void AEnemyBase::PlayAttackSound(int32 index)
+{
+    if (PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->PlaySoundInGameplay(AttackSound, GetActorLocation(), 1.f);
+    }
+}
+
 void AEnemyBase::MatchYawWithController(float DeltaTime)
 {
     float CurrentYaw = GetActorRotation().Yaw;

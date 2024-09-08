@@ -46,6 +46,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 
+	UFUNCTION(BlueprintCallable)
+	void PlayAttackSound(int32 index);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
@@ -56,6 +58,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* HeadHitSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* AttackSound;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
 	float PatrolMoveSpeed = 120;
