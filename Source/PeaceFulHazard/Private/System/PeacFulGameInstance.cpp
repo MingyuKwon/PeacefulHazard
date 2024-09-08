@@ -3,6 +3,8 @@
 
 #include "System/PeacFulGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/SoundBase.h"
+#include "Components/AudioComponent.h"
 
 void UPeacFulGameInstance::UpdateToDo()
 {
@@ -58,6 +60,44 @@ void UPeacFulGameInstance::resetTempSave()
     todoIndex = 0;
     SelectedSaveSlot = TEXT("");
 }
+
+void UPeacFulGameInstance::PlaySoundOnceInGamePlay(USoundBase* Sound, FVector Location, float VolumeScale)
+{
+    float Volume = SFXVolume * VolumeScale;
+
+    if (Sound)
+    {
+        UGameplayStatics::PlaySoundAtLocation(this, Sound, Location, Volume);
+    }
+}
+
+void UPeacFulGameInstance::PlayAudioComponent(EGameSoundType soundType, UAudioComponent* AudioComponent, USoundBase* Sound, float VolumeScale)
+{
+    float Volume = 1.f;
+
+    switch (soundType)
+    {
+    case EGameSoundType::EGST_BGM:
+        Volume = BGMVolume;
+
+    case EGameSoundType::EGST_UI:
+        Volume = UIVolume;
+
+    default:
+        break;
+    }
+
+    Volume *= VolumeScale;
+
+    if (Sound)
+    {
+        AudioComponent->SetSound(Sound);
+        AudioComponent->Play();
+    }
+    
+}
+
+
 
 void UPeacFulGameInstance::Init()
 {

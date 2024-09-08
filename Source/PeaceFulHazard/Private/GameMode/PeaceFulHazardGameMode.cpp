@@ -8,10 +8,20 @@
 #include "System/PeacFulGameInstance.h"
 #include "System/MapNameStore.h"
 #include "System/PeacFulSaveGame.h"
+#include "Sound/SoundBase.h"
+#include "Components/AudioComponent.h"
 
 APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 {
+    BGMAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("BackgroundMusicComponent"));
+    BGMAudioComponent->bAutoActivate = false;  
+    BGMAudioComponent->bIsUISound = true;
 
+    UIAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("UIAudioComponent"));
+    UIAudioComponent->bAutoActivate = false;
+    UIAudioComponent->bIsUISound = true;
+
+    
 }
 
 void APeaceFulHazardGameMode::OpenMap(FString MapName)
@@ -281,6 +291,7 @@ void APeaceFulHazardGameMode::SetAleradyInteract(FString name)
     }
 }
 
+
 AActor* APeaceFulHazardGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
     TArray<AActor*> PlayerStarts;
@@ -326,8 +337,38 @@ void APeaceFulHazardGameMode::BeginPlay()
     GetWorld()->GetTimerManager().SetTimer(startDelayHandle, [this]()
         {
             MapStartEvent.Broadcast();
+            PlayBGM();
         }, 0.1f, false);
 
+}
+
+void APeaceFulHazardGameMode::PlayBGM()
+{
+    if (currentMapType == EWarpTarget::EWT_None) return;
+    if (PeacFulGameInstance == nullptr) return;
+
+
+    if (BackgroundMusics.Contains(currentMapType))
+    {
+        PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_BGM ,BGMAudioComponent, BackgroundMusics[currentMapType], 1.f);
+    }
+    
+}
+
+void APeaceFulHazardGameMode::PlaySoundInGameplay(USoundBase* Sound, FVector Location, float VolumeScale)
+{
+    if (PeacFulGameInstance)
+    {
+        PeacFulGameInstance->PlaySoundOnceInGamePlay(Sound, Location, VolumeScale);
+    }
+}
+
+void APeaceFulHazardGameMode::PlayUISound(USoundBase* Sound, float VolumeScale)
+{
+    if (PeacFulGameInstance)
+    {
+        PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_UI, UIAudioComponent, Sound, VolumeScale);
+    }
 }
 
 

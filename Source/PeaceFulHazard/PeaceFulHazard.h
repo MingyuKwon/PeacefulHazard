@@ -31,6 +31,16 @@ enum class EItemType : uint8
 };
 
 UENUM(BlueprintType)
+enum class EGameSoundType : uint8
+{
+    EST_None,
+
+    EGST_SFX,
+    EGST_BGM,
+    EGST_UI,
+};
+
+UENUM(BlueprintType)
 enum class ETutorialType : uint8
 {
     ETT_None,

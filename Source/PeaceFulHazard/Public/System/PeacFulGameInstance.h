@@ -10,6 +10,9 @@
 #include "PeacFulGameInstance.generated.h"
 
 class UPeacFulSaveGame;
+class USoundBase;
+class UAudioComponent;
+
 /**
  * 
  */
@@ -50,9 +53,27 @@ public:
 
 	void resetTempSave();
 
+
+	void PlaySoundOnceInGamePlay(USoundBase* Sound, FVector Location, float VolumeScale);
+	void PlayAudioComponent(EGameSoundType soundType, UAudioComponent* AudioComponent, USoundBase* Sound, float VolumeScale);
+
+
 protected:
+
 	virtual void Init() override;
 
 	bool bBeforeWasMap = false;
+
+
+	// Sound
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	float SFXVolume = 0.8f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	float BGMVolume = 1.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	float UIVolume = 1.f;
+
 };
 
