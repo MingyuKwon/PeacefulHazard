@@ -19,8 +19,6 @@ void UInformationPanelWidget::BackUIInputTrigger()
 	{
 		FString str = FString("");
 		PeaceFulHazardGameMode->InformationUIShowEvent.Broadcast(false, str);
-
-		UE_LOG(LogTemp, Display, TEXT("BackUIInputTrigger in Information"));
 	}
 
 

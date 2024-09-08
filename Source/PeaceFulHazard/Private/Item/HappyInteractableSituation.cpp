@@ -38,6 +38,9 @@ void AHappyInteractableSituation::ListenTirggerOn(EInteractSituationType _situat
 			FString string = FString("Some Door placed in this map opened!");
 			PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
 			PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+
+			PeaceFulHazardGameMode->PlayUISound(InteractSuccessSound, 1.f);
+
 		}
 
 		AfterInteraction();
@@ -48,9 +51,18 @@ void AHappyInteractableSituation::ListenTirggerOn(EInteractSituationType _situat
 	{
 		if (PeaceFulHazardGameMode)
 		{
-			FString string = FString("Now you can get the key!");
+			FString string = FString("To Take the key, you should trigger the blue points in this floor");
+
+			if (PeaceFulHazardGameMode->currentMapType == EWarpTarget::EWT_MainCathedral)
+			{
+				string = FString("Now you can get the key!");
+			}
+
 			PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
 			PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+
+			PeaceFulHazardGameMode->PlayUISound(InteractSuccessSound, 1.f);
+
 		}
 
 		AfterInteraction();
@@ -140,6 +152,7 @@ void AHappyInteractableSituation::CheckBroadCastItemIsMe(EInteractSituationType 
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+		PeaceFulHazardGameMode->PlayUISound(InteractSuccessSound, 1.f);
 	}
 
 	AfterInteraction();
@@ -223,6 +236,8 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 					if (PeaceFulHazardGameMode)
 					{
 						PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+						PeaceFulHazardGameMode->PlayUISound(InteractSuccessSound, 1.f);
+
 					}
 
 					AfterInteraction();

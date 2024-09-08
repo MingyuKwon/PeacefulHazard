@@ -6,6 +6,8 @@
 #include "Item/HappyInteractableItem.h"
 #include "HappyInteractableSituation.generated.h"
 
+class USoundBase;
+
 /**
  * 
  */
@@ -15,6 +17,9 @@ class PEACEFULHAZARD_API AHappyInteractableSituation : public AHappyInteractable
 	GENERATED_BODY()
 	
 protected:
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* InteractSuccessSound;
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* AdditiveStaticMesh1;

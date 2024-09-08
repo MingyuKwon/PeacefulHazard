@@ -405,9 +405,6 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
     {
         if (PlayerHUD)
         {
-            FString EnumAsString = UEnum::GetValueAsString(currentUIState);
-            UE_LOG(LogTemp, Warning, TEXT("RIghtClickStart Current UI State: %s"), *EnumAsString);
-
             if (currentUIState == EUIState::EUIS_Notice)
             {
                 PlayerHUD->BackNoticeUIInputTrigger();
@@ -730,7 +727,6 @@ void AHappyPlayerController::ChangeUiState(EUIState uiState, bool bLock)
 
 void AHappyPlayerController::CloseAllUI()
 {
-    UE_LOG(LogTemp, Display, TEXT("EUIState CloseAllUI"));
     ChangeUiState(EUIState::EUIS_None, false);
 
     if (currentUIState == EUIState::EUIS_None)
@@ -998,8 +994,6 @@ void AHappyPlayerController::ShowInformationUI(bool bVisible, FString& noticeTex
     {
         if (PlayerHUD)
         {
-            UE_LOG(LogTemp, Warning, TEXT("ShowInformationUI false"));
-
             PlayerHUD->SetInformationDisplay(false);
 
         }
