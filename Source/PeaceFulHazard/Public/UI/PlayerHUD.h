@@ -92,6 +92,16 @@ protected:
 	USoundBase* InventoryUIShowSound;
 
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* BoxUIShowSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* AimUIShowSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* AimUICloseSound;
+
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* NoticeUIShowSound;
 
 	UPROPERTY(EditAnywhere, Category = "Sound Para")

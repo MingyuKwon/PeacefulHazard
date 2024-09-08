@@ -20,7 +20,6 @@ APeaceFulHazardGameMode::APeaceFulHazardGameMode()
     UIAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("UIAudioComponent"));
     UIAudioComponent->bAutoActivate = false;
     UIAudioComponent->bIsUISound = true;
-
     
 }
 
