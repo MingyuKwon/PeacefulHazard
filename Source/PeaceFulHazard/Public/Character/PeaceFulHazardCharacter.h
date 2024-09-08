@@ -91,6 +91,10 @@ public:
 	virtual void Tick(float deltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
+	void FootStepSoundPlay(bool bLeft, bool bRun);
+
+
+	UFUNCTION(BlueprintCallable)
 	void ReloadEndTrigger();
 
 	UFUNCTION(BlueprintCallable)
@@ -106,6 +110,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* UnEquipSound;
 
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* FootStepRun_L_Sound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* FootStepRun_R_Sound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* FootStep_L_Sound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* FootStep_R_Sound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
 	float AimMoveSpeed = 100.f;

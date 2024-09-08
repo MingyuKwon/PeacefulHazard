@@ -95,6 +95,36 @@ void APeaceFulHazardCharacter::Tick(float deltaTime)
 
 }
 
+void APeaceFulHazardCharacter::FootStepSoundPlay(bool bLeft, bool bRun)
+{
+	if (PeaceFulHazardGameMode)
+	{
+		if (bLeft)
+		{
+			if (bRun)
+			{
+				PeaceFulHazardGameMode->PlaySoundInGameplay(FootStepRun_L_Sound, GetActorLocation(), 1.0f);
+			}
+			else
+			{
+				PeaceFulHazardGameMode->PlaySoundInGameplay(FootStep_L_Sound, GetActorLocation(), 1.0f);
+			}
+		}
+		else
+		{
+			if (bRun)
+			{
+				PeaceFulHazardGameMode->PlaySoundInGameplay(FootStepRun_R_Sound, GetActorLocation(), 1.0f);
+
+			}
+			else
+			{
+				PeaceFulHazardGameMode->PlaySoundInGameplay(FootStep_R_Sound, GetActorLocation(), 1.0f);
+			}
+		}
+	}
+}
+
 void APeaceFulHazardCharacter::PlayHitReactMontage(AActor* DamageCauser)
 {
 	FVector ForwardVector = GetActorForwardVector();
