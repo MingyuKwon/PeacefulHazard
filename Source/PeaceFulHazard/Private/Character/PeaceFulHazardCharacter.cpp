@@ -409,6 +409,8 @@ float APeaceFulHazardCharacter::TakeDamage(float DamageAmount, FDamageEvent cons
 
 	if (HappyPlayerController)
 	{
+		PeaceFulHazardGameMode->PlaySoundInGameplay(HitSound, GetActorLocation(), 1.5f);
+
 		HappyPlayerController->TakeDamge(ActualDamage);
 	}
 	UE_LOG(LogTemp, Display, TEXT("Damage applied to: %s %f"), *GetName(), ActualDamage);

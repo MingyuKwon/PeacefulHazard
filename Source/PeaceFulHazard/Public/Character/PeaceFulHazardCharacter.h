@@ -22,6 +22,7 @@ class UBoxComponent;
 class AHappyInteractableItem;
 class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
+class USoundBase;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -96,6 +97,9 @@ public:
 	void ChangeBulletEndTrigger();
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* HitSound;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
 	float AimMoveSpeed = 100.f;
