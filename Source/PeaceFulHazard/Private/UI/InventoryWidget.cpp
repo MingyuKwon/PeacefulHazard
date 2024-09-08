@@ -57,6 +57,7 @@ void UInventoryWidget::OkUIInputTrigger()
 		if (PeaceFulHazardGameMode)
 		{
 			PeaceFulHazardGameMode->InteractWithItemUIEvent.Broadcast(beforeitemType, beforeitemcount);
+			PeaceFulHazardGameMode->PlayUISound(TakeItemSound, 1.f);
 		}
 	}
 }

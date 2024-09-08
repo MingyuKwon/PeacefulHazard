@@ -92,6 +92,7 @@ void UPeacFulGameInstance::PlayAudioComponent(EGameSoundType soundType, UAudioCo
     if (Sound)
     {
         AudioComponent->SetSound(Sound);
+        AudioComponent->SetVolumeMultiplier(Volume);
         AudioComponent->Play();
     }
     

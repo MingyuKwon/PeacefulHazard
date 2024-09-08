@@ -317,7 +317,7 @@ void APlayerHUD::BackNoticeUIInputTrigger()
 
         if (PeaceFulHazardGameMode)
         {
-            PeaceFulHazardGameMode->PlayUISound(BackUISound, 1.f);
+            PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
         }
     }
 }
@@ -330,7 +330,7 @@ void APlayerHUD::BackMenuUIInputTrigger()
 
         if (PeaceFulHazardGameMode)
         {
-            PeaceFulHazardGameMode->PlayUISound(BackUISound, 1.f);
+            PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
         }
     }
 
@@ -357,7 +357,7 @@ void APlayerHUD::BackUIInputTrigger()
 
     if (PeaceFulHazardGameMode)
     {
-        PeaceFulHazardGameMode->PlayUISound(BackUISound, 1.f);
+        PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
     }
 }
 

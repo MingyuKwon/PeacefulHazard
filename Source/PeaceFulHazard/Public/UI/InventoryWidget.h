@@ -12,6 +12,7 @@ class UImage;
 class UCanvasPanel;
 class UBorder;
 class APeaceFulHazardGameMode;
+class USoundBase;
 
 UCLASS()
 class PEACEFULHAZARD_API UInventoryWidget : public UUserWidget
@@ -46,6 +47,8 @@ public:
 
 protected:
 
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* TakeItemSound;
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 
