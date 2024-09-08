@@ -10,6 +10,8 @@
 class UBoxComponent;
 class UAnimMontage;
 class APeaceFulHazardGameMode;
+class USoundBase;
+
 UCLASS()
 class PEACEFULHAZARD_API AEnemyBase : public ACharacter
 {
@@ -46,6 +48,15 @@ public:
 
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* DeathSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* HitSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* HeadHitSound;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
 	float PatrolMoveSpeed = 120;
 

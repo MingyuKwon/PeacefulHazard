@@ -153,11 +153,18 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
         if (bHead)
         {
             ActualDamage *= 2.0f; // 헤드샷의 경우 데미지 2배
-            UE_LOG(LogTemp, Display, TEXT("Head Shot"));
+
+            if (PeaceFulHazardGameMode)
+            {
+                PeaceFulHazardGameMode->PlaySoundInGameplay(HeadHitSound, GetActorLocation(), 1.3f);
+            }
         }
         else
         {
-            UE_LOG(LogTemp, Display, TEXT("Body Shot"));
+            if (PeaceFulHazardGameMode)
+            {
+                PeaceFulHazardGameMode->PlaySoundInGameplay(HitSound, GetActorLocation(), 1.f);
+            }
         }
     }
     else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
@@ -204,7 +211,7 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
             {
                 PeaceFulHazardGameMode->SetAleradyInteract(GetName());
                 PeaceFulHazardGameMode->SetEnemyRefCount(false);
-
+                PeaceFulHazardGameMode->PlaySoundInGameplay(DeathSound, GetActorLocation(), 1.f);
             }
 
             SetLifeSpan(1.5f);
