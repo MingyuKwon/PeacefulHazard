@@ -984,7 +984,7 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
 
 void AHappyPlayerController::ShowInformationUI(bool bVisible, FString& noticeText)
 {
-    ChangeUiState(EUIState::EUIS_Menu, bVisible);
+    ChangeUiState(EUIState::EUIS_Notice, bVisible);
 
     if (bVisible)
     {
@@ -998,6 +998,8 @@ void AHappyPlayerController::ShowInformationUI(bool bVisible, FString& noticeTex
     {
         if (PlayerHUD)
         {
+            UE_LOG(LogTemp, Warning, TEXT("ShowInformationUI false"));
+
             PlayerHUD->SetInformationDisplay(false);
 
         }

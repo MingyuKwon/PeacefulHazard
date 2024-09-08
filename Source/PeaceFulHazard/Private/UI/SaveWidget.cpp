@@ -68,6 +68,11 @@ void USaveWidget::OnSaveButtonClicked()
 	if (HoveringSaveButton == nullptr) return;
 	if (PeaceFulHazardGameMode == nullptr) return;
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
+
 	if (bSaveMode)
 	{
 		PeaceFulHazardGameMode->SaveDataToSlot(HoveringSaveButton->GetName());
@@ -91,6 +96,11 @@ void USaveWidget::OnSaveButtonHovered()
 		}
 	}
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
+
 	ChangeNowHoveringButton(FindButton, true);
 
 }
@@ -106,6 +116,11 @@ void USaveWidget::OnDeleteButtonClicked()
 	if (HoveringDeleteButton == nullptr) return;
 
 	int32 index = GetButtonIndex(HoveringDeleteButton, false);
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 
 	if (bSaveMode)
 	{
@@ -128,6 +143,11 @@ void USaveWidget::OnDeleteButtonHovered()
 		}
 	}
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 0.3f);
+	}
+
 	ChangeNowHoveringButton(FindButton, false);
 
 
@@ -147,6 +167,11 @@ void USaveWidget::OnNewButtonClicked()
 	if (bSaveMode) return;
 
 	if (PeaceFulHazardGameMode == nullptr) return;
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 
 	PeaceFulHazardGameMode->LoadDataFromSlot(FString(""), true);
 
@@ -216,16 +241,31 @@ void USaveWidget::NativeConstruct()
 void USaveWidget::OnMapButtonClicked()
 {
 	SetMainMenuDisplay(EMenuType::EMT_Map);
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 }
 
 void USaveWidget::OnSaveLoadButtonClicked()
 {
 	SetMainMenuDisplay(EMenuType::EMT_Save);
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 }
 
 void USaveWidget::OnOptionButtonClicked()
 {
 	SetMainMenuDisplay(EMenuType::EMT_Option);
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 }
 
 void USaveWidget::OnExitButtonClicked()
@@ -233,6 +273,10 @@ void USaveWidget::OnExitButtonClicked()
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	UKismetSystemLibrary::QuitGame(this, PlayerController, EQuitPreference::Quit, true);
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 }
 
 void USaveWidget::ShowCurrentLocation()

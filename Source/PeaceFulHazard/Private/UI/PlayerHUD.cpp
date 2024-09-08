@@ -311,14 +311,24 @@ void APlayerHUD::UpdateInformationDisplay(FString& noticeText)
 
 void APlayerHUD::BackNoticeUIInputTrigger()
 {
-    if (NoticePanelWidget)
+    if (NoticePanelWidget->GetVisibility() != ESlateVisibility::Hidden)
     {
-        NoticePanelWidget->BackUIInputTrigger();
-
-        if (PeaceFulHazardGameMode)
+        if (NoticePanelWidget)
         {
-            PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
+            NoticePanelWidget->BackUIInputTrigger();
         }
+    }
+    else if (InformationPanelWidget->GetVisibility() != ESlateVisibility::Hidden)
+    {
+        if (InformationPanelWidget)
+        {
+            InformationPanelWidget->BackUIInputTrigger();
+        }
+    }
+    
+    if (PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
     }
 }
 

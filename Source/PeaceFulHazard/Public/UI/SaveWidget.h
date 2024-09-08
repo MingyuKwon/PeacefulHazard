@@ -14,6 +14,8 @@ class UCanvasPanel;
 class UBorder;
 class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
+class USoundBase;
+
 /**
  * 
  */
@@ -35,6 +37,16 @@ public:
 	void SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave = false);
 
 protected:
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonHoverSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonClickSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* BackSound;
+
 
 	int32 GetButtonIndex(UButton* button, bool bSaveButtons);
 
