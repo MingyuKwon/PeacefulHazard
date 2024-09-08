@@ -12,6 +12,7 @@
 #include "Materials/MaterialInstance.h"
 #include "Enemy/EnemyBase.h"
 #include "Engine/DamageEvents.h"
+
 #include "Perception/AISense_Damage.h"
 
 // Sets default values
@@ -102,6 +103,15 @@ void AWeapon::ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector Sho
             DamageAmount,  // Damage amount
             GetActorLocation(),  // Event location
             HitLocation  // Hit location (optional)
+        );
+
+        UAISense_Hearing::ReportNoiseEvent(
+            GetWorld(),
+            GetActorLocation(),  // 소리 발생 위치 (총의 위치)
+            1.0f,  // 소리의 크기 (Loudness), 상황에 맞게 조정 가능
+            OwnerActor,  // 소리를 발생시킨 액터 (총을 발사한 주체)
+            0.0f,  // 소리 지속 시간 (0이면 즉시 소리 이벤트 발생 후 종료)
+            TEXT("WeaponNoise")  // 소리의 타입 (원하는 경우 사용할 수 있는 태그)
         );
     }
 }
