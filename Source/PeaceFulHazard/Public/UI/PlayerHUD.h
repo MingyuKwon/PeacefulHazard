@@ -16,6 +16,9 @@ class UItemBoxWidget;
 class UNoticePanelWidget;
 class USaveWidget;
 class UInformationPanelWidget;
+class USoundBase;
+class APeaceFulHazardGameMode;
+
 /**
  *
  */
@@ -76,6 +79,27 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* GetItemUIShowSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* SituationUIShowSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* InventoryUIShowSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* NoticeUIShowSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* MenuUIShowSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* BackUISound;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UAimCrossHairWidget> AimCrossHairWidgetClass;

@@ -9,6 +9,8 @@
 #include "UI/NoticePanelWidget.h"
 #include "UI/SaveWidget.h"
 #include "UI/InformationPanelWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameMode/PeaceFulHazardGameMode.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -265,6 +267,11 @@ void APlayerHUD::BackNoticeUIInputTrigger()
     if (NoticePanelWidget)
     {
         NoticePanelWidget->BackUIInputTrigger();
+
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->PlaySoundInGameplay(BackUISound, GetActorLocation(), 1.f);
+        }
     }
 }
 
@@ -273,7 +280,14 @@ void APlayerHUD::BackMenuUIInputTrigger()
     if (SaveWidget)
     {
         SaveWidget->BackUIInputTrigger();
+
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->PlaySoundInGameplay(BackUISound, GetActorLocation(), 1.f);
+        }
     }
+
+    
 }
 
 void APlayerHUD::BackUIInputTrigger()
@@ -294,7 +308,10 @@ void APlayerHUD::BackUIInputTrigger()
         InformationPanelWidget->BackUIInputTrigger();
     }
 
-
+    if (PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->PlaySoundInGameplay(BackUISound, GetActorLocation(), 1.f);
+    }
 }
 
 void APlayerHUD::OkUIInputTrigger()
@@ -338,6 +355,8 @@ bool APlayerHUD::GetCanCloseTab()
 void APlayerHUD::BeginPlay()
 {
     Super::BeginPlay();
+
+    PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
 
     if (AimCrossHairWidgetClass != nullptr)
     {
