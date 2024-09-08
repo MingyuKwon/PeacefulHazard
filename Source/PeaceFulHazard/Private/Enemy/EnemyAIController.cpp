@@ -262,6 +262,7 @@ void AEnemyAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActor
 	}
 }
 
+// only visual perception will set target object, other perception will bring to impact point
 void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 	if (!Actor->IsA(APeaceFulHazardCharacter::StaticClass())) return;
@@ -271,6 +272,7 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 	APeaceFulHazardCharacter* InputTarget = Cast<APeaceFulHazardCharacter>(Actor);
 	if (InputTarget->bDeath) return;
 
+	// 矫阿 皑瘤 贸府
 	if (Stimulus.Type.Name == "Default__AISense_Sight")
 	{
 		if (Stimulus.WasSuccessfullySensed())
@@ -279,39 +281,53 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 
 			bFollowingLastPositon = false;
 			Target = InputTarget;
-			bIsVisuallySensingTarget = true;
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Sight Sense Out: %s"), *Actor->GetName());
-			bIsVisuallySensingTarget = false;
 
-			if (!bFollowingLastPositon) 
+			if (!bFollowingLastPositon)
 			{
 				bFollowingLastPositon = true;
 				Target = nullptr;
 			}
 		}
 	}
+	// 单固瘤 皑瘤 贸府
 	else if (Stimulus.Type.Name == "Default__AISense_Damage")
 	{
+		if (Target != nullptr) return; // if enemy is targetting, does not nees anymore
+
 		if (Stimulus.WasSuccessfullySensed())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Damage Sense In: %s"), *Actor->GetName());
 
-			bFollowingLastPositon = false;
-			Target = InputTarget;
+			bFollowingLastPositon = true;
+			TargetLocation = InputTarget->GetActorLocation();
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Damage Sense Out: %s"), *Actor->GetName());
 
-			if (!bIsVisuallySensingTarget)
-			{
-				bFollowingLastPositon = true;
-				Target = nullptr;
-			}
 		}
-		
+	}
+	// 家府 皑瘤 贸府
+	else if (Stimulus.Type.Name == "Default__AISense_Hearing")
+	{
+		if (Target != nullptr) return;  // if enemy is targetting, does not nees anymore
+
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hearing Sense In: %s"), *Actor->GetName());
+
+			bFollowingLastPositon = true;
+			TargetLocation = InputTarget->GetActorLocation();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hearing Sense Out: %s"), *Actor->GetName());
+
+
+		}
 	}
 }
