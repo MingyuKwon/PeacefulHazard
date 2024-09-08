@@ -14,6 +14,7 @@ class UImage;
 class UCanvasPanel;
 class UBorder;
 class APeaceFulHazardGameMode;
+class USoundBase;
 
 /**
  * 
@@ -43,6 +44,16 @@ public:
 	AItemInformation* ItemInformation;
 
 protected:
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonHoverSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonClickSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* BackSound;
+
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 

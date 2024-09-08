@@ -40,6 +40,12 @@ void UInventoryWidget::BackUIInputTrigger()
 		return;
 	}
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(BackSound, 0.3f);
+	}
+
+
 	SetAllUIUpdate();
 
 }
@@ -57,7 +63,7 @@ void UInventoryWidget::OkUIInputTrigger()
 		if (PeaceFulHazardGameMode)
 		{
 			PeaceFulHazardGameMode->InteractWithItemUIEvent.Broadcast(beforeitemType, beforeitemcount);
-			PeaceFulHazardGameMode->PlayUISound(TakeItemSound, 1.f);
+			PeaceFulHazardGameMode->PlayUISound(TakeItemSound, 0.3f);
 		}
 	}
 }
@@ -357,11 +363,21 @@ void UInventoryWidget::OnUseButtoClicked()
 		}
 	}
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
+
+
 }
 
 void UInventoryWidget::OnCombineButtoClicked()
 {
 	combineLock = true;
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 
 	SetAllUIUpdate();
 }
@@ -376,6 +392,11 @@ void UInventoryWidget::OnDiscardButtoClicked()
 
 	if (PeaceFulHazardGameMode)
 	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
+
+	if (PeaceFulHazardGameMode)
+	{
 		PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
 	}
 }
@@ -383,6 +404,11 @@ void UInventoryWidget::OnDiscardButtoClicked()
 void UInventoryWidget::OnMoveButtoClicked()
 {
 	MoveLock = true;
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
+
 	SetAllUIUpdate();
 
 }
@@ -529,6 +555,11 @@ void UInventoryWidget::OnItemButtonClicked()
 	if (!CanInteractButton(NowHoveringButton)) return;
 	if (LiteralHoveringButton == nullptr) return;
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
+
 	if (combineLock)
 	{
 		if (!CombineItem(LiteralHoveringButton, NowInteractButton)) return;
@@ -564,6 +595,10 @@ void UInventoryWidget::OnItemButtonHovered()
 		}
 	}
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
 	ChangeNowHoveringButton(FindButton);
 }
 
