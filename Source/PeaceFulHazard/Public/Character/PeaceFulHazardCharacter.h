@@ -100,6 +100,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* HitSound;
 
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* EquipSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* UnEquipSound;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
 	float AimMoveSpeed = 100.f;

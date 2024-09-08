@@ -719,6 +719,18 @@ bool APeaceFulHazardCharacter::EquipTrigger(EItemType BulletType)
 
 		}
 
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->PlaySoundInGameplay(EquipSound, GetActorLocation(), 1.f);
+		}
+
+	}
+	else
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->PlaySoundInGameplay(UnEquipSound, GetActorLocation(), 1.f);
+		}
 	}
 
 	return true;
