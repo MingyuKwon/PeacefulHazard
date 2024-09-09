@@ -282,6 +282,18 @@ void APeaceFulHazardCharacter::UpdateValue()
 
 	}
 
+	if (bNowDamaging)
+	{
+		SetMaterialParaLerp(false, 0.2f);
+	}
+	else
+	{
+		SetMaterialParaLerp(false, 0.f);
+
+	}
+
+
+
 }
 
 void APeaceFulHazardCharacter::SetMaterialParaLerp(bool bDissolve, float value)
@@ -298,6 +310,7 @@ void APeaceFulHazardCharacter::SetMaterialParaLerp(bool bDissolve, float value)
 	{
 		bool bReduce = value < damagePercent;
 
+		damagePercent = FMath::Lerp(damagePercent, value, bReduce ? 0.5f : 0.8f);
 		GetMesh()->SetScalarParameterValueOnMaterials("DamagePercent", damagePercent);
 
 	}
@@ -323,12 +336,15 @@ void APeaceFulHazardCharacter::BeginPlay()
 
 	GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &ThisClass::UpdateValue, 0.1f, true);
 
+}
+
+void APeaceFulHazardCharacter::MapStartInitialize()
+{
 	if (HappyPlayerController == nullptr) return;
 
 	float healthpercent = HappyPlayerController->GetHealthPercent();
 	dissolvePercent = 1 - (healthpercent * 0.7f + 0.3f);
 	GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
-
 
 }
 
@@ -912,4 +928,6 @@ void APeaceFulHazardCharacter::ChangeBulletEndTrigger()
 
 	}
 }
+
+
 

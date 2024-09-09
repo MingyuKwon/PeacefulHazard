@@ -778,6 +778,13 @@ void AHappyPlayerController::MapStartCallBack()
         {
             ControlledCharacter->EquipTrigger(currentBulletType);
         }
+
+        if (ControlledCharacter)
+        {
+            ControlledCharacter->MapStartInitialize();
+        }
+
+        
     }
 
     UpdateAllUI();

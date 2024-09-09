@@ -100,6 +100,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangeBulletEndTrigger();
 
+
+	UFUNCTION(BlueprintCallable)
+	void MapStartInitialize();
+
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* HitSound;
