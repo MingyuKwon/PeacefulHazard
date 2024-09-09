@@ -18,6 +18,7 @@
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "System/PeacFulGameInstance.h"
+#include "Materials/MaterialInstance.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -266,6 +267,41 @@ void APeaceFulHazardCharacter::AimingPitchLerp(float deltaTime)
 }
 
 
+void APeaceFulHazardCharacter::UpdateValue()
+{
+	if (HappyPlayerController == nullptr) return;
+
+	float healthpercent = HappyPlayerController->GetHealthPercent();
+	if (healthpercent > 0)
+	{
+		SetMaterialParaLerp(true, 1 - (healthpercent * 0.7f + 0.3f) );
+	}
+	else
+	{
+		SetMaterialParaLerp(true, 1.0 - healthpercent);
+
+	}
+
+}
+
+void APeaceFulHazardCharacter::SetMaterialParaLerp(bool bDissolve, float value)
+{
+	if (bDissolve)
+	{
+		bool bReduce = value < dissolvePercent;
+
+		dissolvePercent = FMath::Lerp(dissolvePercent, value, bReduce ? 0.1f : 0.2f);
+		GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
+
+	}
+	else
+	{
+		bool bReduce = value < damagePercent;
+
+		GetMesh()->SetScalarParameterValueOnMaterials("DamagePercent", damagePercent);
+
+	}
+}
 
 void APeaceFulHazardCharacter::BeginPlay()
 {
@@ -283,6 +319,16 @@ void APeaceFulHazardCharacter::BeginPlay()
 
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
 	PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
+
+
+	GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &ThisClass::UpdateValue, 0.1f, true);
+
+	if (HappyPlayerController == nullptr) return;
+
+	float healthpercent = HappyPlayerController->GetHealthPercent();
+	dissolvePercent = 1 - (healthpercent * 0.7f + 0.3f);
+	GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
+
 
 }
 

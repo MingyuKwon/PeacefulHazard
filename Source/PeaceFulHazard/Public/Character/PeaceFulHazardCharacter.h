@@ -200,6 +200,14 @@ protected:
 
 	FTimerHandle LookLock;
 
+	FTimerHandle updateTimerHandle;
+	UFUNCTION()
+	void UpdateValue();
+
+	float dissolvePercent = 0.f;
+	float damagePercent = 0.f;
+
+	void SetMaterialParaLerp(bool bDissolve, float value);
 
 protected:
 
