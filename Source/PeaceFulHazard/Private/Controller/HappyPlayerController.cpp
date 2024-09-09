@@ -490,6 +490,11 @@ void AHappyPlayerController::ChangeBullet(const FInputActionValue& Value)
 {
     bool bSuccess = false;
 
+    if (currentBulletType == EItemType::EIT_Bullet_Noraml && !CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Bullet_Big)) return;
+    if (currentBulletType == EItemType::EIT_Bullet_Big && !CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Bullet_Noraml)) return;
+
+    
+
     if (ControlledCharacter)
     {
         bSuccess = ControlledCharacter->ChangeBullet();
