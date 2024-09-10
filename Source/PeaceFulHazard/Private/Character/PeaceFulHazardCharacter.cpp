@@ -869,6 +869,8 @@ void APeaceFulHazardCharacter::Death()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->PlayerDeathEvent.Broadcast();
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 
