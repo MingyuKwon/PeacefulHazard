@@ -74,9 +74,21 @@ void AEnemyBase::PossessedBy(AController* NewController)
 
 void AEnemyBase::Attack()
 {
-    if (AttackMontage)
+    int32 RandomChoice = FMath::RandRange(0, 1);
+
+    if (RandomChoice == 0)
     {
-        GetMesh()->GetAnimInstance()->Montage_Play(AttackMontage);
+        if (AttackMontage)
+        {
+            GetMesh()->GetAnimInstance()->Montage_Play(AttackMontage);
+        }
+    }
+    else
+    {
+        if (AttackMontage2)
+        {
+            GetMesh()->GetAnimInstance()->Montage_Play(AttackMontage2);
+        }
     }
 }
 
@@ -193,6 +205,8 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
             if (HeadStunMontage)
             {
                 StopAnimMontage(AttackMontage);
+                StopAnimMontage(AttackMontage2);
+
                 AttackEnd();
                 PlayAnimMontage(HeadStunMontage);
             }
@@ -203,6 +217,7 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
             if (DamageStunMontage)
             {
                 StopAnimMontage(AttackMontage);
+                StopAnimMontage(AttackMontage2);
                 AttackEnd();
                 PlayAnimMontage(DamageStunMontage);
             }

@@ -133,6 +133,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Anim Para")
 	UAnimMontage* AttackMontage;
 
+	UPROPERTY(EditAnywhere, Category = "Anim Para")
+	UAnimMontage* AttackMontage2;
 
 	void PlayHitMontage(FVector ShotDirection);
 
