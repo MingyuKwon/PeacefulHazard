@@ -283,9 +283,11 @@ void AEnemyBase::PlayHitMontage(FVector ShotDirection)
         if (HitFwdMontage)
         {
             PlayAnimMontage(HitFwdMontage);
+
         }
     }
 
+    
 }
 
 // Called when the game starts or when spawned
