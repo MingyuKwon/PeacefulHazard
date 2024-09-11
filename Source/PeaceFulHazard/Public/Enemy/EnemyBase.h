@@ -55,6 +55,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PlayAttackSound(int32 index);
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
+	float PatrolMoveSpeed = 120;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
+	float ChasingMoveSpeed = 200;
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* DeathSound;
@@ -72,11 +79,6 @@ protected:
 	float MaxHealth = 130;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
-	float PatrolMoveSpeed = 120;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
-	float ChasingMoveSpeed = 200;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Para")
 	float EnemyDamageAmount = 10;
