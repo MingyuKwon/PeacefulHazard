@@ -182,11 +182,11 @@ void AEnemyAIController::UpdateBlackBoard()
 			}
 		}
 
-		if (Target->SpawnNiagaraPoint)
+		Target->ShowChasingNiagara();
+		if (controlEnemy)
 		{
-
+			controlEnemy->ShowChasingNiagara();
 		}
-		
 	}
 	else
 	{
@@ -279,7 +279,7 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 	APeaceFulHazardCharacter* InputTarget = Cast<APeaceFulHazardCharacter>(Actor);
 	if (InputTarget->bDeath) return;
 
-	// ½Ã°¢ °¨Áö Ã³¸®
+	// ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
 	if (Stimulus.Type.Name == "Default__AISense_Sight")
 	{
 		if (Stimulus.WasSuccessfullySensed())
@@ -300,7 +300,7 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 			}
 		}
 	}
-	// µ¥¹ÌÁö °¨Áö Ã³¸®
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
 	else if (Stimulus.Type.Name == "Default__AISense_Damage")
 	{
 		if (Target != nullptr) return; // if enemy is targetting, does not nees anymore
@@ -318,7 +318,7 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 
 		}
 	}
-	// ¼Ò¸® °¨Áö Ã³¸®
+	// ï¿½Ò¸ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
 	else if (Stimulus.Type.Name == "Default__AISense_Hearing")
 	{
 		if (Target != nullptr) return;  // if enemy is targetting, does not nees anymore

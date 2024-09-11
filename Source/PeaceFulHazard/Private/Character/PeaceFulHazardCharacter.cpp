@@ -19,6 +19,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "System/PeacFulGameInstance.h"
 #include "Materials/MaterialInstance.h"
+#include "NiagaraComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -67,7 +68,7 @@ APeaceFulHazardCharacter::APeaceFulHazardCharacter()
 	actiontBox = CreateDefaultSubobject<UBoxComponent>(TEXT("actiontBox"));
 	actiontBox->SetupAttachment(RootComponent);
 
-	SpawnNiagaraPoint = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnNiagaraPoint"));
+	SpawnNiagaraPoint = CreateDefaultSubobject<UNiagaraComponent>(TEXT("SpawnNiagaraPoint"));
 	SpawnNiagaraPoint->SetupAttachment(RootComponent);
 
 	
@@ -340,6 +341,11 @@ void APeaceFulHazardCharacter::BeginPlay()
 
 	GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &ThisClass::UpdateValue, 0.1f, true);
 
+	if (SpawnNiagaraPoint)
+	{
+		SpawnNiagaraPoint->Deactivate();
+	}
+
 }
 
 void APeaceFulHazardCharacter::MapStartInitialize()
@@ -592,6 +598,21 @@ void APeaceFulHazardCharacter::SetShouldPlayerFollowCamera()
     }
 }
 
+
+bool APeaceFulHazardCharacter::ShowChasingNiagara()
+{
+	if(SpawnNiagaraPoint == nullptr) return false;
+
+	if (SpawnNiagaraPoint->IsActive())
+	{
+		return false; 
+	}
+	else
+	{
+		SpawnNiagaraPoint->Activate();
+		return true;
+	}
+}
 
 bool APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
 {

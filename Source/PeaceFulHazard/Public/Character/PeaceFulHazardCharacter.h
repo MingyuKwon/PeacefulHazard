@@ -23,6 +23,7 @@ class AHappyInteractableItem;
 class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
 class USoundBase;
+class UNiagaraComponent;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -50,7 +51,9 @@ public:
 	UBoxComponent* actiontBox;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UBoxComponent* SpawnNiagaraPoint;
+	UNiagaraComponent* SpawnNiagaraPoint;
+
+	bool ShowChasingNiagara();
 
 
 	/** Called for movement input */

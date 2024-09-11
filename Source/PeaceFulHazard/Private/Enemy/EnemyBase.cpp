@@ -25,6 +25,7 @@
 #include "Materials/MaterialInstance.h"
 #include "System/EnemyRoutePivot.h"
 #include "Character/PeaceFulHazardCharacter.h"
+#include "NiagaraComponent.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -49,6 +50,10 @@ AEnemyBase::AEnemyBase()
     AttackRangeBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
     GetCharacterMovement()->bUseRVOAvoidance = true;
+
+    SpawnNiagaraPoint = CreateDefaultSubobject<UNiagaraComponent>(TEXT("SpawnNiagaraPoint"));
+    SpawnNiagaraPoint->SetupAttachment(RootComponent);
+
 }
 
 void AEnemyBase::Tick(float DeltaTime)
@@ -137,6 +142,21 @@ void AEnemyBase::MatchYawWithController(float DeltaTime)
     SetActorRotation(NewRotation);
 }
 
+bool AEnemyBase::ShowChasingNiagara()
+{
+    if (SpawnNiagaraPoint == nullptr) return false;
+
+    if (SpawnNiagaraPoint->IsActive())
+    {
+        return false;
+    }
+    else
+    {
+        SpawnNiagaraPoint->Activate();
+        return true;
+    }
+}
+
 void AEnemyBase::StopHeadStunMontage()
 {
     if (HeadStunMontage)
@@ -172,7 +192,7 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 
         if (bHead)
         {
-            ActualDamage *= 2.0f; // Çìµå¼¦ÀÇ °æ¿ì µ¥¹ÌÁö 2¹è
+            ActualDamage *= 2.0f; // ï¿½ï¿½å¼¦ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½
 
             if (PeaceFulHazardGameMode)
             {
@@ -226,9 +246,9 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 
         if (EnemyAIController->bDeath)
         {
-            GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));  // Ãæµ¹ ¼³Á¤À» Ragdoll·Î º¯°æ
-            GetCharacterMovement()->DisableMovement();  // Ä³¸¯ÅÍÀÇ ¸ðµç ¿òÁ÷ÀÓ ºñÈ°¼ºÈ­
-            GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // Ä¸½¶ ÄÝ¸®Àü ºñÈ°¼ºÈ­
+            GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));  // ï¿½æµ¹ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ragdollï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            GetCharacterMovement()->DisableMovement();  // Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
+            GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // Ä¸ï¿½ï¿½ ï¿½Ý¸ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
 
             if (PeaceFulHazardGameMode)
             {
@@ -245,7 +265,7 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 
     PlayHitMontage(ShotDirection);
 
-    // ¿©±â¿¡ bDeath true ÀÌ¸é Á×´Â ¾Ö´Ï¸ÞÀÌ¼Ç ÁøÇà ÇÏµµ·Ï ÇÏÀÚ
+    // ï¿½ï¿½ï¿½â¿¡ bDeath true ï¿½Ì¸ï¿½ ï¿½×´ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     return ActualDamage;
 }
@@ -354,7 +374,10 @@ void AEnemyBase::BeginPlay()
 
     HeadBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("FX_Head"));
 
-
+    if (SpawnNiagaraPoint)
+    {
+        SpawnNiagaraPoint->Deactivate();
+    }
 }
 
 

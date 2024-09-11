@@ -11,6 +11,7 @@ class UBoxComponent;
 class UAnimMontage;
 class APeaceFulHazardGameMode;
 class USoundBase;
+class UNiagaraComponent;
 
 UCLASS()
 class PEACEFULHAZARD_API AEnemyBase : public ACharacter
@@ -26,6 +27,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* AttackRangeBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UNiagaraComponent* SpawnNiagaraPoint;
+
+	bool ShowChasingNiagara();
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
