@@ -412,7 +412,7 @@ void AEnemyBase::UpdateValue()
 
         if (EnemyAIController->bStunDamage || EnemyAIController->bStunHeadShot && !EnemyAIController->bDeath)
         {
-            SetMaterialParaLerp(false, 0.3f);
+            SetMaterialParaLerp(false, 0.25f);
         }
         else
         {

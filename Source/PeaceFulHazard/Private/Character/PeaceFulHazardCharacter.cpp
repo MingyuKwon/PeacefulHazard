@@ -67,6 +67,10 @@ APeaceFulHazardCharacter::APeaceFulHazardCharacter()
 	actiontBox = CreateDefaultSubobject<UBoxComponent>(TEXT("actiontBox"));
 	actiontBox->SetupAttachment(RootComponent);
 
+	SpawnNiagaraPoint = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnNiagaraPoint"));
+	SpawnNiagaraPoint->SetupAttachment(RootComponent);
+
+	
 	
 
 }

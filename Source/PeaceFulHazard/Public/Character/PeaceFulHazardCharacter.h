@@ -49,6 +49,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* actiontBox;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* SpawnNiagaraPoint;
+
 
 	/** Called for movement input */
 	bool Move(const FInputActionValue& Value);
