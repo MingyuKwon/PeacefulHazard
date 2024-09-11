@@ -305,6 +305,26 @@ void AEnemyBase::PlayHitMontage(FVector ShotDirection)
     
 }
 
+void AEnemyBase::SetMaterialParaLerp(bool bDissolve, float value)
+{
+    if (bDissolve)
+    {
+        bool bReduce = value < dissolvePercent;
+
+        dissolvePercent = FMath::Lerp(dissolvePercent, value, bReduce ? 0.1f : 0.2f);
+        GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
+
+    }
+    else
+    {
+        bool bReduce = value < StunPercent;
+
+        StunPercent = FMath::Lerp(StunPercent, value, bReduce ? 0.5f : 0.8f);
+        GetMesh()->SetScalarParameterValueOnMaterials("Stun", StunPercent);
+
+    }
+}
+
 // Called when the game starts or when spawned
 void AEnemyBase::BeginPlay()
 {
@@ -390,6 +410,15 @@ void AEnemyBase::UpdateValue()
             GetCharacterMovement()->MaxWalkSpeed = PatrolMoveSpeed;
         }
 
+        if (EnemyAIController->bStunDamage || EnemyAIController->bStunHeadShot && !EnemyAIController->bDeath)
+        {
+            SetMaterialParaLerp(false, 0.3f);
+        }
+        else
+        {
+            SetMaterialParaLerp(false, 0.f);
+
+        }
 
         if (EnemyAIController->bDeath)
         {

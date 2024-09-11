@@ -138,6 +138,12 @@ protected:
 
 	void PlayHitMontage(FVector ShotDirection);
 
+
+	float StunPercent = 0.f;
+
+	void SetMaterialParaLerp(bool bDissolve, float value);
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
