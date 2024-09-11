@@ -68,6 +68,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* AttackSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
+	float MaxHealth = 130;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
 	float PatrolMoveSpeed = 120;

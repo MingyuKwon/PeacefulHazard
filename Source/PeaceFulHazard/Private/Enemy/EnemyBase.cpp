@@ -406,6 +406,10 @@ void AEnemyBase::MapStartCallBack()
             SetActorRotation(enemyRotation);
         }
     }
+    else
+    {
+        EnemyAIController->currentHealth = MaxHealth;
+    }
 
 }
 
