@@ -58,13 +58,13 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 	{
 		damageAccumulate = 0;
 		bStunDamage = true;
-		GetWorld()->GetTimerManager().SetTimer(DamgeStunTimerHandle, this, &ThisClass::DamageStunRelease, 2.f, false);
+		GetWorld()->GetTimerManager().SetTimer(DamgeStunTimerHandle, this, &ThisClass::DamageStunRelease, 1.2f, false);
 	}
 
 	if (bHead)
 	{
 		bStunHeadShot = true;
-		GetWorld()->GetTimerManager().SetTimer(HeadStunTimerHandle, this, &ThisClass::HeadStunRelease, 0.4f, false);
+		GetWorld()->GetTimerManager().SetTimer(HeadStunTimerHandle, this, &ThisClass::HeadStunRelease, 0.3f, false);
 	}
 
 	if (currentHealth <= 0)

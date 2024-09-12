@@ -33,10 +33,9 @@ void APeaceFulHazardGameMode::OpenMap(FString MapName)
 
         if (PeacFulGameInstance)
         {
-            FString temp;
-            if (PeacFulGameInstance->GetCurrentToDo(temp) == EPlayerToDo::EPTD_GetOutTutorialRoom)
+            if (GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
             {
-                PeacFulGameInstance->UpdateToDo();
+                ToDoUpdate(EPlayerToDo::EPTD_LookAroundMainHub);
             }
         }
         UGameplayStatics::OpenLevel(this, FName(*ReceivedMapName));
@@ -64,10 +63,9 @@ void APeaceFulHazardGameMode::SetEnemyRefCount(bool bPlus)
 
         if (PeacFulGameInstance)
         {
-            FString temp;
-            if (PeacFulGameInstance->GetCurrentToDo(temp) == EPlayerToDo::EPTD_GetOutTutorialRoom)
+            if (GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
             {
-                PeacFulGameInstance->UpdateToDo();
+                ToDoUpdate(EPlayerToDo::EPTD_LookAroundMainHub);
             }
         }
         UGameplayStatics::OpenLevel(this, FName(*ReceivedMapName));
@@ -381,11 +379,13 @@ EPlayerToDo APeaceFulHazardGameMode::GetPlayerToDo()
     return EPlayerToDo::EPTD_None;
 }
 
-void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo currentTodo)
+void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo targetTodo)
 {
     if (PeacFulGameInstance)
     {
-        return PeacFulGameInstance->UpdateToDo();
+        if (GetPlayerToDo() >= targetTodo) return;
+
+        PeacFulGameInstance->UpdateToDo(targetTodo);
     }
 }
 

@@ -39,7 +39,7 @@ public:
 
 	int32 currentEnemyForce = 0;
 
-	void UpdateToDo();
+	void UpdateToDo(EPlayerToDo targetTodo);
 
 	EPlayerToDo GetCurrentToDo(FString& TodoString);
 

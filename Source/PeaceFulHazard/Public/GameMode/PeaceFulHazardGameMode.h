@@ -132,7 +132,7 @@ public:
 
 	EPlayerToDo GetPlayerToDo();
 
-	void ToDoUpdate(EPlayerToDo currentTodo);
+	void ToDoUpdate(EPlayerToDo targetTodo);
 
 protected:
 

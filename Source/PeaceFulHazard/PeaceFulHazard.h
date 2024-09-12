@@ -164,6 +164,15 @@ enum class EPlayerToDo : uint8
     EPTD_None,
     EPTD_GetOutTutorialRoom,
     EPTD_LookAroundMainHub,
+    EPTD_FindKeyToGravetard,
+    EPTD_SearchGravetard,
+    EPTD_SearchRightGarden,
+    EPTD_SearchCathedral,
+    EPTD_FindKeytoLeftGarden,
+    EPTD_SearchLeftGarden,
+    EPTD_SearchCathedralSecondFloor,
+    EPTD_GetTreasure,
+    EPTD_Survive,
 
     EPTD_Max
 };
