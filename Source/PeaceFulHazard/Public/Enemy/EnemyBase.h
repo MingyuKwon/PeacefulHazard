@@ -78,6 +78,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
 	float MaxHealth = 130;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
+	EPlayerToDo spawnProgress = EPlayerToDo::EPTD_GetOutTutorialRoom;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Para")

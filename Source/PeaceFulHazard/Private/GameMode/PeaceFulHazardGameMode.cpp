@@ -370,4 +370,23 @@ void APeaceFulHazardGameMode::PlayUISound(USoundBase* Sound, float VolumeScale)
     }
 }
 
+EPlayerToDo APeaceFulHazardGameMode::GetPlayerToDo()
+{
+    if (PeacFulGameInstance)
+    {
+        FString temp;
+        return PeacFulGameInstance->GetCurrentToDo(temp);
+    }
+
+    return EPlayerToDo::EPTD_None;
+}
+
+void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo currentTodo)
+{
+    if (PeacFulGameInstance)
+    {
+        return PeacFulGameInstance->UpdateToDo();
+    }
+}
+
 

@@ -354,6 +354,14 @@ void AEnemyBase::BeginPlay()
 
     if (PeaceFulHazardGameMode)
     {
+        // If it is not time to enemy spawn
+        if (PeaceFulHazardGameMode->GetPlayerToDo() < spawnProgress)
+        {
+            Destroy();
+            return;
+        }
+
+
         if (PeaceFulHazardGameMode->CheckAleradyInteract(GetName()))
         {
             Destroy();

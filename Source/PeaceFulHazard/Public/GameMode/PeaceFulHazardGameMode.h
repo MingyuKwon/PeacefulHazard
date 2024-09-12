@@ -130,7 +130,9 @@ public:
 	void PlaySoundInGameplay(USoundBase* Sound, FVector Location, float VolumeScale);
 	void PlayUISound(USoundBase* Sound, float VolumeScale);
 
+	EPlayerToDo GetPlayerToDo();
 
+	void ToDoUpdate(EPlayerToDo currentTodo);
 
 protected:
 
