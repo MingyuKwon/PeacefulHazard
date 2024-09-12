@@ -178,6 +178,13 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		else if (situationType == EInteractSituationType::EIST_Note)
 		{
 			playerController->ShowInformationUI(true, NoteText);
+			if (NotereadToDoUpdate != EPlayerToDo::EPTD_None)
+			{
+				if (PeaceFulHazardGameMode)
+				{
+					PeaceFulHazardGameMode->ToDoUpdate(NotereadToDoUpdate);
+				}
+			}
 		}
 		else if (situationType == EInteractSituationType::EIST_RedTrigger ||
 			situationType == EInteractSituationType::EIST_BlueTrigger ||

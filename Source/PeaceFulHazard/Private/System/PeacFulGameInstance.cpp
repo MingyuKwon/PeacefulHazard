@@ -18,6 +18,32 @@ void UPeacFulGameInstance::UpdateToDo(EPlayerToDo targetTodo)
 
     todoIndex = FMath::Clamp(todoIndex, 0, currentToDos.Num() - 1);
 
+    switch (targetTodo)
+    {
+    case EPlayerToDo::EPTD_SearchRightGarden :
+        currentEnemyForce += 5;
+        break;
+
+    case EPlayerToDo::EPTD_SearchCathedral:
+        currentEnemyForce += 5;
+        break;
+
+    case EPlayerToDo::EPTD_SearchLeftGarden:
+        currentEnemyForce += 10;
+        break;
+
+    case EPlayerToDo::EPTD_SearchCathedralSecondFloor:
+        currentEnemyForce += 10;
+        break;
+
+    case EPlayerToDo::EPTD_Survive:
+        currentEnemyForce += 20;
+        break;
+
+      
+    }
+
+
 }
 
 EPlayerToDo UPeacFulGameInstance::GetCurrentToDo(FString& TodoString)

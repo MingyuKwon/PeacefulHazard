@@ -32,9 +32,34 @@ void AHappyPichUpItem::CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count)
 			if (PeaceFulHazardGameMode)
 			{
 				PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+
+				switch (ItemType)
+				{
+				case EItemType::EIT_GraveYardDoorKey:
+					PeaceFulHazardGameMode->ToDoUpdate(EPlayerToDo::EPTD_SearchGravetard);
+					break;
+				case EItemType::EIT_CrossOverFirstDoorKey:
+					PeaceFulHazardGameMode->ToDoUpdate(EPlayerToDo::EPTD_SearchRightGarden);
+					break;
+				case EItemType::EIT_MainCatheralDoorKey:
+					PeaceFulHazardGameMode->ToDoUpdate(EPlayerToDo::EPTD_SearchCathedral);
+					break;
+				case EItemType::EIT_CrossOverSecondDoorKey:
+					PeaceFulHazardGameMode->ToDoUpdate(EPlayerToDo::EPTD_SearchLeftGarden);
+					break;
+				case EItemType::EIT_MainCatheralDoorKey2:
+					PeaceFulHazardGameMode->ToDoUpdate(EPlayerToDo::EPTD_SearchCathedralSecondFloor);
+					break;
+
+
+					
+				}
 			}
 
 			bAlreadyInteract = true;
+
+
+
 			AfterInteraction();
 
 		}
