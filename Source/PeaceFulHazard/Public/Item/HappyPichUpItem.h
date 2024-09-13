@@ -21,6 +21,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
 	int32 ItemCount;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
+	int32 EasyItemCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
+	int32 NormalItemCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
+	int32 HardItemCount;
+
 	virtual void BeginPlay() override;
 
 	virtual void AfterInteraction() override;

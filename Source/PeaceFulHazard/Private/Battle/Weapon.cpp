@@ -36,6 +36,28 @@ void AWeapon::BeginPlay()
 {
     Super::BeginPlay();
     PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
+
+    if (PeaceFulHazardGameMode)
+    {
+        switch (PeaceFulHazardGameMode->GetDifficulty())
+        {
+        case EDifficulty::ED_Easy:
+            NormalBulletDamage = Easy_NormalBulletDamage;
+            BigBulletDamage = Easy_BigBulletDamage;
+            break;
+
+        case EDifficulty::ED_Normal:
+            NormalBulletDamage = Normal_NormalBulletDamage;
+            BigBulletDamage = Normal_BigBulletDamage;
+            break;
+
+        case EDifficulty::ED_Hard:
+            NormalBulletDamage = Hard_NormalBulletDamage;
+            BigBulletDamage = Hard_BigBulletDamage;
+            break;
+        }
+
+    }
 }
 
 void AWeapon::ChangeBulletMode(EItemType itemType)

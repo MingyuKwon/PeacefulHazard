@@ -13,6 +13,22 @@ void AHappyPichUpItem::BeginPlay()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->InteractWithItemUIEvent.AddDynamic(this, &ThisClass::CheckBroadCastItemIsMe);
+
+		switch (PeaceFulHazardGameMode->GetDifficulty())
+		{
+		case EDifficulty::ED_Easy:
+			ItemCount = EasyItemCount;
+			break;
+
+		case EDifficulty::ED_Normal:
+			ItemCount = NormalItemCount;
+			break;
+
+		case EDifficulty::ED_Hard:
+			ItemCount = HardItemCount;
+			break;
+		}
+		
 	}
 }
 

@@ -75,11 +75,26 @@ protected:
 	UMaterialInstance* BigMaterial;
 
 
-	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	float NormalBulletDamage = 10.f;
+	float BigBulletDamage = 20.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float BigBulletDamage = 20.f;
+	float Easy_NormalBulletDamage = 15.f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float Normal_NormalBulletDamage = 10.f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float Hard_NormalBulletDamage = 10.f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float Easy_BigBulletDamage = 30.f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float Normal_BigBulletDamage = 20.f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float Hard_BigBulletDamage = 20.f;
 
 	EItemType currentItemType = EItemType::EIT_Bullet_Noraml;
 
