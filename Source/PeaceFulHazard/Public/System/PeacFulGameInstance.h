@@ -37,6 +37,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	TMap<EWarpTarget, FString> MapName;
 
+	EDifficulty gameDifficulty = EDifficulty::ED_Easy;
+
 	int32 currentEnemyForce = 0;
 
 	void UpdateToDo(EPlayerToDo targetTodo);

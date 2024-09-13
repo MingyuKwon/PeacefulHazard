@@ -176,3 +176,15 @@ enum class EPlayerToDo : uint8
 
     EPTD_Max
 };
+
+UENUM(BlueprintType)
+enum class EDifficulty : uint8
+{
+    ED_None,
+    ED_Easy,
+    ED_Normal,
+    ED_Hard,
+
+    ED_Max,
+
+};

@@ -119,7 +119,7 @@ void APeaceFulHazardGameMode::SaveTempToSlot()
         gameSave->saveEnemyForce = PeacFulGameInstance->currentEnemyForce;
         gameSave->saveTodoIndex = PeacFulGameInstance->todoIndex;
         gameSave->SaveTime = FDateTime::Now();
-
+        gameSave->SavegameDifficulty = PeacFulGameInstance->gameDifficulty;
 
         UGameplayStatics::SaveGameToSlot(gameSave, ReceivedSlotName, 0);
     }
@@ -152,6 +152,7 @@ void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
                 PeacFulGameInstance->TutorialCheckMap = LoadedGame->TutorialCheckMap;
                 PeacFulGameInstance->todoIndex = LoadedGame->saveTodoIndex;
                 PeacFulGameInstance->currentEnemyForce = LoadedGame->saveEnemyForce;
+                PeacFulGameInstance->gameDifficulty = LoadedGame->SavegameDifficulty;
             }
 
             UGameplayStatics::OpenLevel(this, *TravelMap[LoadedGame->saveMapName]);
@@ -377,6 +378,13 @@ EPlayerToDo APeaceFulHazardGameMode::GetPlayerToDo()
     }
 
     return EPlayerToDo::EPTD_None;
+}
+
+EDifficulty APeaceFulHazardGameMode::GetDifficulty()
+{
+    if (PeacFulGameInstance == nullptr) return EDifficulty::ED_None;
+
+    return PeacFulGameInstance->gameDifficulty;
 }
 
 void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo targetTodo)

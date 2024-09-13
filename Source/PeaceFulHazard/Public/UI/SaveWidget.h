@@ -210,6 +210,36 @@ protected:
 	UTextBlock* ToDoText8;
 
 
+	TArray<UTextBlock*> DifficultyTexts;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText1;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText2;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText3;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText4;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText5;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText6;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText7;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText8;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MapDifficulty;
+
+	
 
 	TArray<UTextBlock*> TimeTexts;
 

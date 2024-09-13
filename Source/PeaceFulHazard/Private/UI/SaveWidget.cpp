@@ -283,6 +283,30 @@ void USaveWidget::ShowCurrentLocation()
 {
 	if (PeaceFulHazardGameMode == nullptr) return;
 
+	switch (PeaceFulHazardGameMode->GetDifficulty())
+	{
+	case EDifficulty::ED_Easy:
+		MapDifficulty->SetText(FText::FromString("Easy"));
+		MapDifficulty->SetColorAndOpacity(FLinearColor::Green);
+		break;
+
+	case EDifficulty::ED_Normal:
+		MapDifficulty->SetText(FText::FromString("Normal"));
+		MapDifficulty->SetColorAndOpacity(FLinearColor::Black);
+
+		break;
+
+	case EDifficulty::ED_Hard:
+		MapDifficulty->SetText(FText::FromString("Hard"));
+		MapDifficulty->SetColorAndOpacity(FLinearColor::Red);
+
+		break;
+
+	default:
+		MapDifficulty->SetText(FText::FromString(""));
+
+	}
+
 	MainHubBorder->SetBrushColor(FLinearColor::White);
 
 	GraveyardBorder->SetBrushColor(FLinearColor::White);
@@ -376,6 +400,31 @@ void USaveWidget::UpdateAllUI()
 
 					SaveSpotTexts[i]->SetText(FText::FromString(PeacFulGameInstance->MapName[LoadedGame->saveMapName]));
 
+					switch (LoadedGame->SavegameDifficulty)
+					{
+					case EDifficulty::ED_Easy :
+						DifficultyTexts[i]->SetText(FText::FromString("Easy"));
+						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Green);
+						break;
+
+					case EDifficulty::ED_Normal:
+						DifficultyTexts[i]->SetText(FText::FromString("Normal"));
+						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Black);
+
+						break;
+
+					case EDifficulty::ED_Hard:
+						DifficultyTexts[i]->SetText(FText::FromString("Hard"));
+						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Red);
+
+						break;
+
+					default:
+						DifficultyTexts[i]->SetText(FText::FromString(""));
+
+					}
+
+
 					SaveSlotBackgrounds[i]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 				}
 				
@@ -401,6 +450,7 @@ void USaveWidget::UpdateAllUI()
 				ToDoTexts[i]->SetText(FText::FromString(FString("")));
 				SaveSlotBackgrounds[i]->SetVisibility(ESlateVisibility::Hidden);
 				TimeTexts[i]->SetText(FText::FromString(FString("")));
+				DifficultyTexts[i]->SetText(FText::FromString(""));
 
 				SaveSpotTexts[i]->SetText(FText::FromString(FString("")));
 
@@ -520,4 +570,14 @@ void USaveWidget::InitArrays()
 	SaveSpotTexts.Add(SaveSpotText6);
 	SaveSpotTexts.Add(SaveSpotText7);
 	SaveSpotTexts.Add(SaveSpotText8);
+
+	DifficultyTexts.Add(DifficultyText1);
+	DifficultyTexts.Add(DifficultyText2);
+	DifficultyTexts.Add(DifficultyText3);
+	DifficultyTexts.Add(DifficultyText4);
+	DifficultyTexts.Add(DifficultyText5);
+	DifficultyTexts.Add(DifficultyText6);
+	DifficultyTexts.Add(DifficultyText7);
+	DifficultyTexts.Add(DifficultyText8);
+
 }

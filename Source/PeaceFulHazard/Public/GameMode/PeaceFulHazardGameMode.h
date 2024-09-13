@@ -131,6 +131,7 @@ public:
 	void PlayUISound(USoundBase* Sound, float VolumeScale);
 
 	EPlayerToDo GetPlayerToDo();
+	EDifficulty GetDifficulty();
 
 	void ToDoUpdate(EPlayerToDo targetTodo);
 
