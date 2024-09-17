@@ -133,7 +133,7 @@ void AHappyPlayerController::UpdateValue()
 
     if (ControlledCharacter->GetIsAiming())
     {
-        aimFocusLerpValue = FMath::Lerp(aimFocusLerpValue, 0, 0.05f);
+        aimFocusLerpValue = FMath::Lerp(aimFocusLerpValue, 0, aimFocusLerpValue < 0.5f ? 0.015f : 0.05f);
 
         if (ControlledCharacter->GetPlayerSpeed() < 0.1f)
         {
@@ -417,6 +417,15 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
        
         if (bSuccess)
         {
+            if (currentBulletType == EItemType::EIT_Bullet_Noraml)
+            {
+                aimFocusLerpValue = FMath::Clamp(aimFocusLerpValue, 0.6, 1.f);
+            }
+            else
+            {
+                aimFocusLerpValue = FMath::Clamp(aimFocusLerpValue, 1.0, 1.f);
+            }
+
             SetBulletCount(true);
         }
 

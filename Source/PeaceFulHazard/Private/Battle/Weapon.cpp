@@ -149,7 +149,7 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector, float dam
     if (bHit)
     {
         FVector SphereCenter = HitResult.ImpactPoint;
-        float SphereRadius = aimFocusLerpValue * 20.f;
+        float SphereRadius = aimFocusLerpValue * 45.f;
 
         FVector RandomDirection = FMath::VRand(); // 랜덤 방향
         FVector RandomPointInSphere = SphereCenter + RandomDirection * FMath::FRandRange(0.f, SphereRadius);

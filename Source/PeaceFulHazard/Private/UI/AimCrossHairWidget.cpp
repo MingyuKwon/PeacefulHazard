@@ -8,10 +8,10 @@
 void UAimCrossHairWidget::setAimWide(float value)
 {
 	FVector2D PositionSetAim[4] = {
-		FVector2D(0.f, value * 20),   // Down
-		FVector2D(value * 20, 0.f),    // Right
-		FVector2D(-value * 20, 0.f),   // Left
-		FVector2D(0.f, - value * 20)     // Up
+		FVector2D(0.f, value * 25),   // Down
+		FVector2D(value * 25, 0.f),    // Right
+		FVector2D(-value * 25, 0.f),   // Left
+		FVector2D(0.f, - value * 25)     // Up
 	};
 
 	UCanvasPanelSlot* CrossHairSlot = nullptr;
