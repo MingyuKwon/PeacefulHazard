@@ -290,6 +290,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool GetIsShift() const { return bNowShifting; };
 
+	UFUNCTION(BlueprintCallable)
+	float GetPlayerSpeed() const;
 
 	UFUNCTION(BlueprintCallable)
 	float GetMoveXInput() const;

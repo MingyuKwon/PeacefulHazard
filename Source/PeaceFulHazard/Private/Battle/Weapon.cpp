@@ -130,7 +130,7 @@ void AWeapon::ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector Sho
     }
 }
 
-void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector, float damagepercent)
+void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector, float damagepercent, float aimFocusLerpValue)
 {
     if (WeaponMesh == nullptr) return;
 
@@ -146,6 +146,24 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector, float dam
 
     bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, Params);
 
+    if (bHit)
+    {
+        FVector SphereCenter = HitResult.ImpactPoint;
+        float SphereRadius = aimFocusLerpValue * 20.f;
+
+        FVector RandomDirection = FMath::VRand(); // 랜덤 방향
+        FVector RandomPointInSphere = SphereCenter + RandomDirection * FMath::FRandRange(0.f, SphereRadius);
+
+        DrawDebugSphere(GetWorld(), SphereCenter, SphereRadius, 12, FColor::Red, false, 3.f);
+
+        bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, Start + (RandomPointInSphere - Start).GetSafeNormal() * 10000.0f, ECC_Visibility, Params);
+
+        if (bHit)
+        {
+            DrawDebugLine(GetWorld(), HitResult.ImpactPoint, Start, FColor::Blue, false, 3.f);
+        }
+
+    }
 
     if (PeaceFulHazardGameMode)
     {

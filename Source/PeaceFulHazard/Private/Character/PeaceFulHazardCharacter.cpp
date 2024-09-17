@@ -379,6 +379,12 @@ bool APeaceFulHazardCharacter::GetIsAiming() const
 	
 }
 
+float APeaceFulHazardCharacter::GetPlayerSpeed() const
+{
+	if (GetCharacterMovement() == nullptr) return 0.f;
+	return GetCharacterMovement()->Velocity.Length();
+}
+
 float APeaceFulHazardCharacter::GetMoveXInput() const
 {
 	return moveXInput;
@@ -736,7 +742,7 @@ bool APeaceFulHazardCharacter::Fire(const FInputActionValue& Value)
 		int32 gap = HappyPlayerController->GetPlayerForce() - PeacFulGameInstance->currentEnemyForce;
 		float percent = 1 + gap / 100.f;
 
-		EquipWeapon->Fire(WorldLocation, WorldDirection, percent);
+		EquipWeapon->Fire(WorldLocation, WorldDirection, percent, HappyPlayerController->aimFocusLerpValue);
 	}
 
 	if (bNormalFire)

@@ -122,8 +122,40 @@ void AHappyPlayerController::BeginPlay()
 
     }
 
+    GetWorld()->GetTimerManager().SetTimer(UpdateValueHandle, this, &AHappyPlayerController::UpdateValue, 0.02f, true);
+
+    
 }
 
+void AHappyPlayerController::UpdateValue()
+{
+    if (ControlledCharacter == nullptr) return;
+
+    if (ControlledCharacter->GetIsAiming())
+    {
+        aimFocusLerpValue = FMath::Lerp(aimFocusLerpValue, 0, 0.05f);
+
+        if (ControlledCharacter->GetPlayerSpeed() < 0.1f)
+        {
+        }
+        else
+        {
+            aimFocusLerpValue = FMath::Clamp(aimFocusLerpValue, 0.3, 1.f);
+        }
+
+    }
+    else
+    {
+        aimFocusLerpValue = FMath::Lerp(aimFocusLerpValue, 1, 1.f);
+    }
+
+
+
+    if (PlayerHUD)
+    {
+        PlayerHUD->SetAimWide(aimFocusLerpValue);
+    }
+}
 
 void AHappyPlayerController::InitializeInventory()
 {

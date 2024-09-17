@@ -50,6 +50,14 @@ void APlayerHUD::SetAimDisplay(bool bVisible)
 
 }
 
+void APlayerHUD::SetAimWide(float value)
+{
+    if (HUDAimWidget)
+    {
+        HUDAimWidget->setAimWide(value);
+    }
+}
+
 void APlayerHUD::SetInventoryDisplay(bool bVisible)
 {
     if (!bVisible)
