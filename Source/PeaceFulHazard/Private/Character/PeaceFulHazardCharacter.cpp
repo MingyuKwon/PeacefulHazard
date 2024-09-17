@@ -662,6 +662,9 @@ bool APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
 
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
+	if (PeaceFulHazardGameMode == nullptr) return false;
+	PeaceFulHazardGameMode->GetSettingValue(MouseSensitivity, MouseAimSensitivity);
+
 	if (GetIsAiming())
 	{
 		LookAxisVector = LookAxisVector * MouseAimSensitivity;

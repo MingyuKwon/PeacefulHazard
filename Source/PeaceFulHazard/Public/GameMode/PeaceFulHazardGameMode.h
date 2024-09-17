@@ -135,6 +135,8 @@ public:
 
 	void ToDoUpdate(EPlayerToDo targetTodo);
 
+	void GetSettingValue(float& mouse, float& mouseAim);
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")

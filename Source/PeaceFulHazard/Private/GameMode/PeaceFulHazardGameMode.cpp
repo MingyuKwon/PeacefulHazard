@@ -397,4 +397,14 @@ void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo targetTodo)
     }
 }
 
+void APeaceFulHazardGameMode::GetSettingValue(float& mouse, float& mouseAim)
+{
+    if (PeacFulGameInstance)
+    {
+        mouse = PeacFulGameInstance->MouseSensitivity;
+        mouseAim = PeacFulGameInstance->MouseAimSensitivity;
+
+    }
+}
+
 

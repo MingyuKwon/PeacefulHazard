@@ -60,6 +60,13 @@ public:
 	void PlayAudioComponent(EGameSoundType soundType, UAudioComponent* AudioComponent, USoundBase* Sound, float VolumeScale);
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim Parameter", meta = (AllowPrivateAccess = "true"))
+	float MouseSensitivity = 0.4f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim Parameter", meta = (AllowPrivateAccess = "true"))
+	float MouseAimSensitivity = 0.2f;
+
+
 protected:
 
 	virtual void Init() override;
