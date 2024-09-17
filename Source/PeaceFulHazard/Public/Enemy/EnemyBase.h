@@ -10,6 +10,9 @@
 class UBoxComponent;
 class UAnimMontage;
 class APeaceFulHazardGameMode;
+class USoundBase;
+class UNiagaraComponent;
+
 UCLASS()
 class PEACEFULHAZARD_API AEnemyBase : public ACharacter
 {
@@ -24,6 +27,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* AttackRangeBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UNiagaraComponent* SpawnNiagaraPoint;
+
+	bool ShowChasingNiagara();
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
@@ -44,13 +52,35 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 
+	UFUNCTION(BlueprintCallable)
+	void PlayAttackSound(int32 index);
 
-protected:
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
 	float PatrolMoveSpeed = 120;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move Para")
 	float ChasingMoveSpeed = 200;
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* DeathSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* HitSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* HeadHitSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* AttackSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
+	float MaxHealth = 130;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
+	EPlayerToDo spawnProgress = EPlayerToDo::EPTD_GetOutTutorialRoom;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Para")
 	float EnemyDamageAmount = 10;
@@ -116,8 +146,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Anim Para")
 	UAnimMontage* AttackMontage;
 
+	UPROPERTY(EditAnywhere, Category = "Anim Para")
+	UAnimMontage* AttackMontage2;
 
 	void PlayHitMontage(FVector ShotDirection);
+
+
+	float StunPercent = 0.f;
+
+	void SetMaterialParaLerp(bool bDissolve, float value);
+
 
 public:	
 	// Called every frame

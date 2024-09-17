@@ -31,11 +31,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	float maxHealth = 100.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	float damageAccumulate = 0.f;
+	float headDamageAccumulate = 0.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
-	float stundamageAccumulateUnit = 50.f;
+	float stundamageAccumulateUnit = 60.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	float stunHeadDamageAccumulateUnit = 25.f;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	bool bStunHeadShot = false;
@@ -57,9 +61,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	int32 routeIndex = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
-	bool bIsVisuallySensingTarget = false;
-
 	void EnemyTakeDamge(float Damage, bool bHead);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
@@ -70,6 +71,7 @@ public:
 
 	void TriggerRoute(TArray<AEnemyRoutePivot*> Pivots);
 
+	UFUNCTION(BlueprintCallable)
 	void TriggerResetPivotIndex(bool BFollowingLastPosition);
 
 protected:

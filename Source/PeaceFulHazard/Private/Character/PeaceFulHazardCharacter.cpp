@@ -18,6 +18,8 @@
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "System/PeacFulGameInstance.h"
+#include "Materials/MaterialInstance.h"
+#include "NiagaraComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -66,6 +68,10 @@ APeaceFulHazardCharacter::APeaceFulHazardCharacter()
 	actiontBox = CreateDefaultSubobject<UBoxComponent>(TEXT("actiontBox"));
 	actiontBox->SetupAttachment(RootComponent);
 
+	SpawnNiagaraPoint = CreateDefaultSubobject<UNiagaraComponent>(TEXT("SpawnNiagaraPoint"));
+	SpawnNiagaraPoint->SetupAttachment(RootComponent);
+
+	
 	
 
 }
@@ -93,6 +99,36 @@ void APeaceFulHazardCharacter::Tick(float deltaTime)
 	SetShouldRotate();
 	SetShouldPlayerFollowCamera();
 
+}
+
+void APeaceFulHazardCharacter::FootStepSoundPlay(bool bLeft, bool bRun)
+{
+	if (PeaceFulHazardGameMode)
+	{
+		if (bLeft)
+		{
+			if (bRun)
+			{
+				PeaceFulHazardGameMode->PlaySoundInGameplay(FootStepRun_L_Sound, GetActorLocation(), 1.0f);
+			}
+			else
+			{
+				PeaceFulHazardGameMode->PlaySoundInGameplay(FootStep_L_Sound, GetActorLocation(), 1.0f);
+			}
+		}
+		else
+		{
+			if (bRun)
+			{
+				PeaceFulHazardGameMode->PlaySoundInGameplay(FootStepRun_R_Sound, GetActorLocation(), 1.0f);
+
+			}
+			else
+			{
+				PeaceFulHazardGameMode->PlaySoundInGameplay(FootStep_R_Sound, GetActorLocation(), 1.0f);
+			}
+		}
+	}
 }
 
 void APeaceFulHazardCharacter::PlayHitReactMontage(AActor* DamageCauser)
@@ -236,6 +272,54 @@ void APeaceFulHazardCharacter::AimingPitchLerp(float deltaTime)
 }
 
 
+void APeaceFulHazardCharacter::UpdateValue()
+{
+	if (HappyPlayerController == nullptr) return;
+
+	float healthpercent = HappyPlayerController->GetHealthPercent();
+	if (healthpercent > 0)
+	{
+		SetMaterialParaLerp(true, 1 - (healthpercent * 0.7f + 0.3f) );
+	}
+	else
+	{
+		SetMaterialParaLerp(true, 1.0 - healthpercent);
+
+	}
+
+	if (bNowDamaging)
+	{
+		SetMaterialParaLerp(false, 0.2f);
+	}
+	else
+	{
+		SetMaterialParaLerp(false, 0.f);
+
+	}
+
+
+
+}
+
+void APeaceFulHazardCharacter::SetMaterialParaLerp(bool bDissolve, float value)
+{
+	if (bDissolve)
+	{
+		bool bReduce = value < dissolvePercent;
+
+		dissolvePercent = FMath::Lerp(dissolvePercent, value, bReduce ? 0.1f : 0.2f);
+		GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
+
+	}
+	else
+	{
+		bool bReduce = value < damagePercent;
+
+		damagePercent = FMath::Lerp(damagePercent, value, bReduce ? 0.5f : 0.8f);
+		GetMesh()->SetScalarParameterValueOnMaterials("DamagePercent", damagePercent);
+
+	}
+}
 
 void APeaceFulHazardCharacter::BeginPlay()
 {
@@ -253,6 +337,24 @@ void APeaceFulHazardCharacter::BeginPlay()
 
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
 	PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
+
+
+	GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &ThisClass::UpdateValue, 0.1f, true);
+
+	if (SpawnNiagaraPoint)
+	{
+		SpawnNiagaraPoint->Deactivate();
+	}
+
+}
+
+void APeaceFulHazardCharacter::MapStartInitialize()
+{
+	if (HappyPlayerController == nullptr) return;
+
+	float healthpercent = HappyPlayerController->GetHealthPercent();
+	dissolvePercent = 1 - (healthpercent * 0.7f + 0.3f);
+	GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
 
 }
 
@@ -409,6 +511,8 @@ float APeaceFulHazardCharacter::TakeDamage(float DamageAmount, FDamageEvent cons
 
 	if (HappyPlayerController)
 	{
+		PeaceFulHazardGameMode->PlaySoundInGameplay(HitSound, GetActorLocation(), 1.5f);
+
 		HappyPlayerController->TakeDamge(ActualDamage);
 	}
 	UE_LOG(LogTemp, Display, TEXT("Damage applied to: %s %f"), *GetName(), ActualDamage);
@@ -494,6 +598,21 @@ void APeaceFulHazardCharacter::SetShouldPlayerFollowCamera()
     }
 }
 
+
+bool APeaceFulHazardCharacter::ShowChasingNiagara()
+{
+	if(SpawnNiagaraPoint == nullptr) return false;
+
+	if (SpawnNiagaraPoint->IsActive())
+	{
+		return false; 
+	}
+	else
+	{
+		SpawnNiagaraPoint->Activate();
+		return true;
+	}
+}
 
 bool APeaceFulHazardCharacter::Move(const FInputActionValue& Value)
 {
@@ -717,6 +836,18 @@ bool APeaceFulHazardCharacter::EquipTrigger(EItemType BulletType)
 
 		}
 
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->PlaySoundInGameplay(EquipSound, GetActorLocation(), 1.f);
+		}
+
+	}
+	else
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->PlaySoundInGameplay(UnEquipSound, GetActorLocation(), 1.f);
+		}
 	}
 
 	return true;
@@ -763,6 +894,8 @@ void APeaceFulHazardCharacter::Death()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->PlayerDeathEvent.Broadcast();
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 
@@ -822,4 +955,6 @@ void APeaceFulHazardCharacter::ChangeBulletEndTrigger()
 
 	}
 }
+
+
 

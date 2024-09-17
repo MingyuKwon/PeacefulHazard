@@ -35,7 +35,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWantSaveEvent);
 
 
 class UPeacFulGameInstance;
-
+class USoundBase;
+class UAudioComponent;
 
 UCLASS(minimalapi)
 class APeaceFulHazardGameMode : public AGameModeBase
@@ -125,9 +126,32 @@ public:
 	void SaveEnemyStats(FString name, float enemyHealth, FVector enemyLocation, FRotator enemyRotation);
 
 	void OpenMap(FString MapName);
+
+	void PlaySoundInGameplay(USoundBase* Sound, FVector Location, float VolumeScale);
+	void PlayUISound(USoundBase* Sound, float VolumeScale);
+
+	EPlayerToDo GetPlayerToDo();
+	EDifficulty GetDifficulty();
+
+	void ToDoUpdate(EPlayerToDo targetTodo);
+
 protected:
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<EWarpTarget, FString> TravelMap;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	TMap<EWarpTarget, USoundBase*> BackgroundMusics;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Audio")
+	UAudioComponent* BGMAudioComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Audio")
+	UAudioComponent* UIAudioComponent;
+
+
+	void PlayBGM();
 
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;

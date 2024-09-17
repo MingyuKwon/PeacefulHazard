@@ -9,6 +9,8 @@
 #include "UI/NoticePanelWidget.h"
 #include "UI/SaveWidget.h"
 #include "UI/InformationPanelWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameMode/PeaceFulHazardGameMode.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -17,11 +19,20 @@ void APlayerHUD::DrawHUD()
 
 void APlayerHUD::SetAimDisplay(bool bVisible)
 {
+    if (HUDAimWidget->GetVisibility() == ESlateVisibility::SelfHitTestInvisible && bVisible) return;
+    if (HUDAimWidget->GetVisibility() == ESlateVisibility::Hidden && !bVisible) return;
+
+
     if (!bVisible)
     {
         if (HUDAimWidget)
         {
             HUDAimWidget->SetVisibility(ESlateVisibility::Hidden);
+
+            if (PeaceFulHazardGameMode)
+            {
+                PeaceFulHazardGameMode->PlayUISound(AimUICloseSound, 1.f);
+            }
         }
         return;
     }
@@ -29,6 +40,12 @@ void APlayerHUD::SetAimDisplay(bool bVisible)
     if (HUDAimWidget)
     {
         HUDAimWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->PlayUISound(AimUIShowSound, 1.f);
+        }
+        
     }
 
 }
@@ -51,6 +68,11 @@ void APlayerHUD::SetInventoryDisplay(bool bVisible)
     {
         InventoryWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
         InventoryWidget->showTabUI();
+
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->PlayUISound(InventoryUIShowSound, 1.f);
+        }
     }
 }
 
@@ -69,6 +91,11 @@ void APlayerHUD::SetItemBoxDisplay(bool bVisible)
     {
         ItemBoxWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
         ItemBoxWidget->showItemBoxUI();
+
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->PlayUISound(BoxUIShowSound, 1.f);
+        }
     }
 
 }
@@ -87,6 +114,11 @@ void APlayerHUD::SetNoticeDisplay(bool bVisible)
     if (NoticePanelWidget)
     {
         NoticePanelWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->PlayUISound(NoticeUIShowSound, 1.f);
+        }
     }
 
 }
@@ -105,6 +137,11 @@ void APlayerHUD::SetInformationDisplay(bool bVisible)
     if (InformationPanelWidget)
     {
         InformationPanelWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->PlayUISound(NoticeUIShowSound, 1.f);
+        }
     }
 }
 
@@ -125,6 +162,10 @@ void APlayerHUD::SetMainMenuDisplay(bool bVisible, EMenuType menuType, bool bSav
 
         SaveWidget->SetMainMenuDisplay(menuType, bSavePanelSave);
       
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->PlayUISound(MenuUIShowSound, 1.f);
+        }
     }
 }
 
@@ -156,6 +197,11 @@ void APlayerHUD::SetGetItemDisplay(bool bVisible, EItemType itemType, int32 coun
         InventoryWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
         InventoryWidget->showItemGetUI(itemType, count);
 
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->PlayUISound(GetItemUIShowSound,  1.f);
+        }
+
     }
 }
 
@@ -174,7 +220,10 @@ void APlayerHUD::showSituationUI(bool bVisible, EInteractSituationType situation
     {
         InventoryWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
         InventoryWidget->showSituationUI(situationType);
-
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->PlayUISound(SituationUIShowSound, 1.f);
+        }
     }
 }
 
@@ -262,9 +311,24 @@ void APlayerHUD::UpdateInformationDisplay(FString& noticeText)
 
 void APlayerHUD::BackNoticeUIInputTrigger()
 {
-    if (NoticePanelWidget)
+    if (NoticePanelWidget->GetVisibility() != ESlateVisibility::Hidden)
     {
-        NoticePanelWidget->BackUIInputTrigger();
+        if (NoticePanelWidget)
+        {
+            NoticePanelWidget->BackUIInputTrigger();
+        }
+    }
+    else if (InformationPanelWidget->GetVisibility() != ESlateVisibility::Hidden)
+    {
+        if (InformationPanelWidget)
+        {
+            InformationPanelWidget->BackUIInputTrigger();
+        }
+    }
+    
+    if (PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
     }
 }
 
@@ -273,7 +337,14 @@ void APlayerHUD::BackMenuUIInputTrigger()
     if (SaveWidget)
     {
         SaveWidget->BackUIInputTrigger();
+
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
+        }
     }
+
+    
 }
 
 void APlayerHUD::BackUIInputTrigger()
@@ -294,7 +365,10 @@ void APlayerHUD::BackUIInputTrigger()
         InformationPanelWidget->BackUIInputTrigger();
     }
 
-
+    if (PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
+    }
 }
 
 void APlayerHUD::OkUIInputTrigger()
@@ -339,12 +413,15 @@ void APlayerHUD::BeginPlay()
 {
     Super::BeginPlay();
 
+    PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
+
     if (AimCrossHairWidgetClass != nullptr)
     {
         HUDAimWidget = CreateWidget<UAimCrossHairWidget>(GetWorld(), AimCrossHairWidgetClass);
         if (HUDAimWidget != nullptr)
         {
             HUDAimWidget->AddToViewport();
+            HUDAimWidget->SetVisibility(ESlateVisibility::Hidden);
         }
     }
 

@@ -68,6 +68,11 @@ void USaveWidget::OnSaveButtonClicked()
 	if (HoveringSaveButton == nullptr) return;
 	if (PeaceFulHazardGameMode == nullptr) return;
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
+
 	if (bSaveMode)
 	{
 		PeaceFulHazardGameMode->SaveDataToSlot(HoveringSaveButton->GetName());
@@ -91,6 +96,11 @@ void USaveWidget::OnSaveButtonHovered()
 		}
 	}
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
+
 	ChangeNowHoveringButton(FindButton, true);
 
 }
@@ -106,6 +116,11 @@ void USaveWidget::OnDeleteButtonClicked()
 	if (HoveringDeleteButton == nullptr) return;
 
 	int32 index = GetButtonIndex(HoveringDeleteButton, false);
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 
 	if (bSaveMode)
 	{
@@ -128,6 +143,11 @@ void USaveWidget::OnDeleteButtonHovered()
 		}
 	}
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 0.3f);
+	}
+
 	ChangeNowHoveringButton(FindButton, false);
 
 
@@ -147,6 +167,11 @@ void USaveWidget::OnNewButtonClicked()
 	if (bSaveMode) return;
 
 	if (PeaceFulHazardGameMode == nullptr) return;
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 
 	PeaceFulHazardGameMode->LoadDataFromSlot(FString(""), true);
 
@@ -216,16 +241,31 @@ void USaveWidget::NativeConstruct()
 void USaveWidget::OnMapButtonClicked()
 {
 	SetMainMenuDisplay(EMenuType::EMT_Map);
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 }
 
 void USaveWidget::OnSaveLoadButtonClicked()
 {
 	SetMainMenuDisplay(EMenuType::EMT_Save);
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 }
 
 void USaveWidget::OnOptionButtonClicked()
 {
 	SetMainMenuDisplay(EMenuType::EMT_Option);
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 }
 
 void USaveWidget::OnExitButtonClicked()
@@ -233,11 +273,39 @@ void USaveWidget::OnExitButtonClicked()
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	UKismetSystemLibrary::QuitGame(this, PlayerController, EQuitPreference::Quit, true);
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 }
 
 void USaveWidget::ShowCurrentLocation()
 {
 	if (PeaceFulHazardGameMode == nullptr) return;
+
+	switch (PeaceFulHazardGameMode->GetDifficulty())
+	{
+	case EDifficulty::ED_Easy:
+		MapDifficulty->SetText(FText::FromString("Easy"));
+		MapDifficulty->SetColorAndOpacity(FLinearColor::Green);
+		break;
+
+	case EDifficulty::ED_Normal:
+		MapDifficulty->SetText(FText::FromString("Normal"));
+		MapDifficulty->SetColorAndOpacity(FLinearColor::Black);
+
+		break;
+
+	case EDifficulty::ED_Hard:
+		MapDifficulty->SetText(FText::FromString("Hard"));
+		MapDifficulty->SetColorAndOpacity(FLinearColor::Red);
+
+		break;
+
+	default:
+		MapDifficulty->SetText(FText::FromString(""));
+
+	}
 
 	MainHubBorder->SetBrushColor(FLinearColor::White);
 
@@ -332,6 +400,31 @@ void USaveWidget::UpdateAllUI()
 
 					SaveSpotTexts[i]->SetText(FText::FromString(PeacFulGameInstance->MapName[LoadedGame->saveMapName]));
 
+					switch (LoadedGame->SavegameDifficulty)
+					{
+					case EDifficulty::ED_Easy :
+						DifficultyTexts[i]->SetText(FText::FromString("Easy"));
+						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Green);
+						break;
+
+					case EDifficulty::ED_Normal:
+						DifficultyTexts[i]->SetText(FText::FromString("Normal"));
+						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Black);
+
+						break;
+
+					case EDifficulty::ED_Hard:
+						DifficultyTexts[i]->SetText(FText::FromString("Hard"));
+						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Red);
+
+						break;
+
+					default:
+						DifficultyTexts[i]->SetText(FText::FromString(""));
+
+					}
+
+
 					SaveSlotBackgrounds[i]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 				}
 				
@@ -357,6 +450,7 @@ void USaveWidget::UpdateAllUI()
 				ToDoTexts[i]->SetText(FText::FromString(FString("")));
 				SaveSlotBackgrounds[i]->SetVisibility(ESlateVisibility::Hidden);
 				TimeTexts[i]->SetText(FText::FromString(FString("")));
+				DifficultyTexts[i]->SetText(FText::FromString(""));
 
 				SaveSpotTexts[i]->SetText(FText::FromString(FString("")));
 
@@ -476,4 +570,14 @@ void USaveWidget::InitArrays()
 	SaveSpotTexts.Add(SaveSpotText6);
 	SaveSpotTexts.Add(SaveSpotText7);
 	SaveSpotTexts.Add(SaveSpotText8);
+
+	DifficultyTexts.Add(DifficultyText1);
+	DifficultyTexts.Add(DifficultyText2);
+	DifficultyTexts.Add(DifficultyText3);
+	DifficultyTexts.Add(DifficultyText4);
+	DifficultyTexts.Add(DifficultyText5);
+	DifficultyTexts.Add(DifficultyText6);
+	DifficultyTexts.Add(DifficultyText7);
+	DifficultyTexts.Add(DifficultyText8);
+
 }

@@ -287,6 +287,7 @@ public:
 	int32 GetPlayerForce();
 
 
+
 	UFUNCTION(BlueprintCallable)
 	void GetItem(EItemType itemType, int32 count);
 
@@ -299,12 +300,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TriggerMenu_Save(bool bSave);
 
-
 	UFUNCTION()
 	void TakeDamge(float damage);
 
 	UFUNCTION(BlueprintCallable)
 	EItemType GetcurrentBulletType() { return currentBulletType; }
 
-	
+	UFUNCTION(BlueprintCallable)
+	float GetHealthPercent() { return currentHealth  / 50.f; }
+
 };

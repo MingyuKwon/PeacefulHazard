@@ -50,6 +50,9 @@ class PEACEFULHAZARD_API UPeacFulSaveGame : public USaveGame
 	
 public:
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
+    EDifficulty SavegameDifficulty = EDifficulty::ED_Normal;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     int32 saveEnemyForce = 0;
 
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
@@ -94,11 +97,9 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     bool SavePlayerdEquipped;
 
-    // ���⼭ �ڱ��� �̹� ��ȣ�ۿ� �߰ų� �׾����� �ƴ��� �ڱ� �̸����� Ȯ����
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     TMap<EWarpTarget, FSaveArrayContainer> MapInteractSaveMap;
 
-    // ���� ������ �ڱⰡ ���׾��ٰ� �ǴܵǸ� ���⿡ �����͸� ������
     UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
     TMap<EWarpTarget, FSaveArrayContainer> EnemySaveMap;
 

@@ -22,6 +22,8 @@ class UBoxComponent;
 class AHappyInteractableItem;
 class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
+class USoundBase;
+class UNiagaraComponent;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -47,6 +49,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* actiontBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UNiagaraComponent* SpawnNiagaraPoint;
+
+	bool ShowChasingNiagara();
 
 
 	/** Called for movement input */
@@ -90,12 +97,41 @@ public:
 	virtual void Tick(float deltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
+	void FootStepSoundPlay(bool bLeft, bool bRun);
+
+
+	UFUNCTION(BlueprintCallable)
 	void ReloadEndTrigger();
 
 	UFUNCTION(BlueprintCallable)
 	void ChangeBulletEndTrigger();
 
+
+	UFUNCTION(BlueprintCallable)
+	void MapStartInitialize();
+
+
 protected:
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* HitSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* EquipSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* UnEquipSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* FootStepRun_L_Sound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* FootStepRun_R_Sound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* FootStep_L_Sound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* FootStep_R_Sound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
 	float AimMoveSpeed = 100.f;
@@ -175,6 +211,14 @@ protected:
 
 	FTimerHandle LookLock;
 
+	FTimerHandle updateTimerHandle;
+	UFUNCTION()
+	void UpdateValue();
+
+	float dissolvePercent = 0.f;
+	float damagePercent = 0.f;
+
+	void SetMaterialParaLerp(bool bDissolve, float value);
 
 protected:
 

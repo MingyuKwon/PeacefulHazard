@@ -11,7 +11,8 @@ class UBoxComponent;
 class UNiagaraSystem;
 class UAnimMontage;
 class APistolShell;
-
+class USoundBase;
+class APeaceFulHazardGameMode;
 
 UCLASS()
 class PEACEFULHAZARD_API AWeapon : public AActor
@@ -24,6 +25,14 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* NormalFireSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* BigFireSound;
+
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
@@ -66,11 +75,26 @@ protected:
 	UMaterialInstance* BigMaterial;
 
 
-	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	float NormalBulletDamage = 10.f;
+	float BigBulletDamage = 20.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float BigBulletDamage = 20.f;
+	float Easy_NormalBulletDamage = 15.f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float Normal_NormalBulletDamage = 10.f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float Hard_NormalBulletDamage = 10.f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float Easy_BigBulletDamage = 30.f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float Normal_BigBulletDamage = 20.f;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	float Hard_BigBulletDamage = 20.f;
 
 	EItemType currentItemType = EItemType::EIT_Bullet_Noraml;
 

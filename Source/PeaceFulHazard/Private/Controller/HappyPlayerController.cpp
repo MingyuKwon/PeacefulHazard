@@ -127,7 +127,10 @@ void AHappyPlayerController::BeginPlay()
 
 void AHappyPlayerController::InitializeInventory()
 {
-    CharacterInventoty.ItemLockArray.Init(false, 8);
+    CharacterInventoty.ItemLockArray.Init(false, 5);
+    CharacterInventoty.ItemLockArray.Add(true);
+    CharacterInventoty.ItemLockArray.Add(true);
+    CharacterInventoty.ItemLockArray.Add(true);
     CharacterInventoty.ItemLockArray.Add(true);
     CharacterInventoty.ItemLockArray.Add(true);
     CharacterInventoty.ItemLockArray.Add(true);
@@ -402,9 +405,6 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
     {
         if (PlayerHUD)
         {
-            FString EnumAsString = UEnum::GetValueAsString(currentUIState);
-            UE_LOG(LogTemp, Warning, TEXT("RIghtClickStart Current UI State: %s"), *EnumAsString);
-
             if (currentUIState == EUIState::EUIS_Notice)
             {
                 PlayerHUD->BackNoticeUIInputTrigger();
@@ -489,6 +489,11 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
 void AHappyPlayerController::ChangeBullet(const FInputActionValue& Value)
 {
     bool bSuccess = false;
+
+    if (currentBulletType == EItemType::EIT_Bullet_Noraml && !CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Bullet_Big)) return;
+    if (currentBulletType == EItemType::EIT_Bullet_Big && !CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Bullet_Noraml)) return;
+
+    
 
     if (ControlledCharacter)
     {
@@ -727,7 +732,6 @@ void AHappyPlayerController::ChangeUiState(EUIState uiState, bool bLock)
 
 void AHappyPlayerController::CloseAllUI()
 {
-    UE_LOG(LogTemp, Display, TEXT("EUIState CloseAllUI"));
     ChangeUiState(EUIState::EUIS_None, false);
 
     if (currentUIState == EUIState::EUIS_None)
@@ -774,6 +778,13 @@ void AHappyPlayerController::MapStartCallBack()
         {
             ControlledCharacter->EquipTrigger(currentBulletType);
         }
+
+        if (ControlledCharacter)
+        {
+            ControlledCharacter->MapStartInitialize();
+        }
+
+        
     }
 
     UpdateAllUI();
@@ -981,7 +992,7 @@ void AHappyPlayerController::ShowNoticeUI(bool bVisible, FString& noticeText)
 
 void AHappyPlayerController::ShowInformationUI(bool bVisible, FString& noticeText)
 {
-    ChangeUiState(EUIState::EUIS_Menu, bVisible);
+    ChangeUiState(EUIState::EUIS_Notice, bVisible);
 
     if (bVisible)
     {

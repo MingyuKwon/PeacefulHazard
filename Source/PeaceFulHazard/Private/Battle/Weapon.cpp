@@ -13,6 +13,8 @@
 #include "Enemy/EnemyBase.h"
 #include "Engine/DamageEvents.h"
 #include "Perception/AISense_Damage.h"
+#include "Perception/AISenseConfig_Hearing.h"
+#include "GameMode/PeaceFulHazardGameMode.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -33,7 +35,29 @@ AWeapon::AWeapon()
 void AWeapon::BeginPlay()
 {
     Super::BeginPlay();
+    PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
 
+    if (PeaceFulHazardGameMode)
+    {
+        switch (PeaceFulHazardGameMode->GetDifficulty())
+        {
+        case EDifficulty::ED_Easy:
+            NormalBulletDamage = Easy_NormalBulletDamage;
+            BigBulletDamage = Easy_BigBulletDamage;
+            break;
+
+        case EDifficulty::ED_Normal:
+            NormalBulletDamage = Normal_NormalBulletDamage;
+            BigBulletDamage = Normal_BigBulletDamage;
+            break;
+
+        case EDifficulty::ED_Hard:
+            NormalBulletDamage = Hard_NormalBulletDamage;
+            BigBulletDamage = Hard_BigBulletDamage;
+            break;
+        }
+
+    }
 }
 
 void AWeapon::ChangeBulletMode(EItemType itemType)
@@ -121,6 +145,30 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector, float dam
     Params.AddIgnoredActor(this);
 
     bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, Params);
+
+
+    if (PeaceFulHazardGameMode)
+    {
+        switch (currentItemType)
+        {
+        case EItemType::EIT_Bullet_Noraml :
+            PeaceFulHazardGameMode->PlaySoundInGameplay(NormalFireSound, GetActorLocation(), 1.f);
+            break;
+
+        case EItemType::EIT_Bullet_Big :
+            PeaceFulHazardGameMode->PlaySoundInGameplay(BigFireSound, GetActorLocation(), 1.5f);
+            break;
+        }
+    }
+
+    UAISense_Hearing::ReportNoiseEvent(
+        GetWorld(),
+        GetActorLocation(),  // �Ҹ� �߻� ��ġ (���� ��ġ)
+        1.0f,  // �Ҹ��� ũ�� (Loudness), ��Ȳ�� �°� ���� ����
+        GetOwner(),  // �Ҹ��� �߻���Ų ���� (���� �߻��� ��ü)
+        0.0f,  // �Ҹ� ���� �ð� (0�̸� ��� �Ҹ� �̺�Ʈ �߻� �� ����)
+        TEXT("WeaponNoise")  // �Ҹ��� Ÿ�� (���ϴ� ��� ����� �� �ִ� �±�)
+    );
 
     if (bHit)
     {

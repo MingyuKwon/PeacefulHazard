@@ -58,13 +58,20 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 	{
 		damageAccumulate = 0;
 		bStunDamage = true;
-		GetWorld()->GetTimerManager().SetTimer(DamgeStunTimerHandle, this, &ThisClass::DamageStunRelease, 2.f, false);
+		GetWorld()->GetTimerManager().SetTimer(DamgeStunTimerHandle, this, &ThisClass::DamageStunRelease, 1.2f, false);
 	}
 
 	if (bHead)
 	{
-		bStunHeadShot = true;
-		GetWorld()->GetTimerManager().SetTimer(HeadStunTimerHandle, this, &ThisClass::HeadStunRelease, 0.7f, false);
+		headDamageAccumulate += Damage;
+
+		if (stunHeadDamageAccumulateUnit <= headDamageAccumulate)
+		{
+			headDamageAccumulate = 0;
+			bStunHeadShot = true;
+			GetWorld()->GetTimerManager().SetTimer(HeadStunTimerHandle, this, &ThisClass::HeadStunRelease, 0.4f, false);
+		}
+
 	}
 
 	if (currentHealth <= 0)
@@ -182,6 +189,11 @@ void AEnemyAIController::UpdateBlackBoard()
 			}
 		}
 
+		Target->ShowChasingNiagara();
+		if (controlEnemy)
+		{
+			controlEnemy->ShowChasingNiagara();
+		}
 	}
 	else
 	{
@@ -189,9 +201,11 @@ void AEnemyAIController::UpdateBlackBoard()
 		{
 			TriggerResetPivotIndex(bFollowingLastPositon);
 		}
+
+		DrawDebugSphere(GetWorld(), TargetLocation, 50.f, 30, FColor::Blue, false, 0.1f);
+
 	}
 
-	DrawDebugSphere(GetWorld(), TargetLocation, 100.f, 30, FColor::Blue, false, 0.1f);
 
 	if (BlackboardComp)
 	{
@@ -262,6 +276,7 @@ void AEnemyAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActor
 	}
 }
 
+// only visual perception will set target object, other perception will bring to impact point
 void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 	if (!Actor->IsA(APeaceFulHazardCharacter::StaticClass())) return;
@@ -271,6 +286,7 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 	APeaceFulHazardCharacter* InputTarget = Cast<APeaceFulHazardCharacter>(Actor);
 	if (InputTarget->bDeath) return;
 
+	// �ð� ���� ó��
 	if (Stimulus.Type.Name == "Default__AISense_Sight")
 	{
 		if (Stimulus.WasSuccessfullySensed())
@@ -279,39 +295,53 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 
 			bFollowingLastPositon = false;
 			Target = InputTarget;
-			bIsVisuallySensingTarget = true;
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Sight Sense Out: %s"), *Actor->GetName());
-			bIsVisuallySensingTarget = false;
 
-			if (!bFollowingLastPositon) 
+			if (!bFollowingLastPositon)
 			{
 				bFollowingLastPositon = true;
 				Target = nullptr;
 			}
 		}
 	}
+	// ������ ���� ó��
 	else if (Stimulus.Type.Name == "Default__AISense_Damage")
 	{
+		if (Target != nullptr) return; // if enemy is targetting, does not nees anymore
+
 		if (Stimulus.WasSuccessfullySensed())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Damage Sense In: %s"), *Actor->GetName());
 
-			bFollowingLastPositon = false;
-			Target = InputTarget;
+			bFollowingLastPositon = true;
+			TargetLocation = InputTarget->GetActorLocation();
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Damage Sense Out: %s"), *Actor->GetName());
 
-			if (!bIsVisuallySensingTarget)
-			{
-				bFollowingLastPositon = true;
-				Target = nullptr;
-			}
 		}
-		
+	}
+	// �Ҹ� ���� ó��
+	else if (Stimulus.Type.Name == "Default__AISense_Hearing")
+	{
+		if (Target != nullptr) return;  // if enemy is targetting, does not nees anymore
+
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hearing Sense In: %s"), *Actor->GetName());
+
+			bFollowingLastPositon = true;
+			TargetLocation = InputTarget->GetActorLocation();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hearing Sense Out: %s"), *Actor->GetName());
+
+
+		}
 	}
 }

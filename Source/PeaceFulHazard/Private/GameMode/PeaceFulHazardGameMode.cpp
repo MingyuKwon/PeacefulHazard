@@ -8,10 +8,19 @@
 #include "System/PeacFulGameInstance.h"
 #include "System/MapNameStore.h"
 #include "System/PeacFulSaveGame.h"
+#include "Sound/SoundBase.h"
+#include "Components/AudioComponent.h"
 
 APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 {
+    BGMAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("BackgroundMusicComponent"));
+    BGMAudioComponent->bAutoActivate = false;  
+    BGMAudioComponent->bIsUISound = true;
 
+    UIAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("UIAudioComponent"));
+    UIAudioComponent->bAutoActivate = false;
+    UIAudioComponent->bIsUISound = true;
+    
 }
 
 void APeaceFulHazardGameMode::OpenMap(FString MapName)
@@ -24,10 +33,9 @@ void APeaceFulHazardGameMode::OpenMap(FString MapName)
 
         if (PeacFulGameInstance)
         {
-            FString temp;
-            if (PeacFulGameInstance->GetCurrentToDo(temp) == EPlayerToDo::EPTD_GetOutTutorialRoom)
+            if (GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
             {
-                PeacFulGameInstance->UpdateToDo();
+                ToDoUpdate(EPlayerToDo::EPTD_LookAroundMainHub);
             }
         }
         UGameplayStatics::OpenLevel(this, FName(*ReceivedMapName));
@@ -55,10 +63,9 @@ void APeaceFulHazardGameMode::SetEnemyRefCount(bool bPlus)
 
         if (PeacFulGameInstance)
         {
-            FString temp;
-            if (PeacFulGameInstance->GetCurrentToDo(temp) == EPlayerToDo::EPTD_GetOutTutorialRoom)
+            if (GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
             {
-                PeacFulGameInstance->UpdateToDo();
+                ToDoUpdate(EPlayerToDo::EPTD_LookAroundMainHub);
             }
         }
         UGameplayStatics::OpenLevel(this, FName(*ReceivedMapName));
@@ -112,7 +119,7 @@ void APeaceFulHazardGameMode::SaveTempToSlot()
         gameSave->saveEnemyForce = PeacFulGameInstance->currentEnemyForce;
         gameSave->saveTodoIndex = PeacFulGameInstance->todoIndex;
         gameSave->SaveTime = FDateTime::Now();
-
+        gameSave->SavegameDifficulty = PeacFulGameInstance->gameDifficulty;
 
         UGameplayStatics::SaveGameToSlot(gameSave, ReceivedSlotName, 0);
     }
@@ -145,6 +152,7 @@ void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
                 PeacFulGameInstance->TutorialCheckMap = LoadedGame->TutorialCheckMap;
                 PeacFulGameInstance->todoIndex = LoadedGame->saveTodoIndex;
                 PeacFulGameInstance->currentEnemyForce = LoadedGame->saveEnemyForce;
+                PeacFulGameInstance->gameDifficulty = LoadedGame->SavegameDifficulty;
             }
 
             UGameplayStatics::OpenLevel(this, *TravelMap[LoadedGame->saveMapName]);
@@ -281,6 +289,7 @@ void APeaceFulHazardGameMode::SetAleradyInteract(FString name)
     }
 }
 
+
 AActor* APeaceFulHazardGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
     TArray<AActor*> PlayerStarts;
@@ -326,8 +335,66 @@ void APeaceFulHazardGameMode::BeginPlay()
     GetWorld()->GetTimerManager().SetTimer(startDelayHandle, [this]()
         {
             MapStartEvent.Broadcast();
+            PlayBGM();
         }, 0.1f, false);
 
+}
+
+void APeaceFulHazardGameMode::PlayBGM()
+{
+    if (currentMapType == EWarpTarget::EWT_None) return;
+    if (PeacFulGameInstance == nullptr) return;
+
+
+    if (BackgroundMusics.Contains(currentMapType))
+    {
+        PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_BGM ,BGMAudioComponent, BackgroundMusics[currentMapType], 1.f);
+    }
+    
+}
+
+void APeaceFulHazardGameMode::PlaySoundInGameplay(USoundBase* Sound, FVector Location, float VolumeScale)
+{
+    if (PeacFulGameInstance)
+    {
+        PeacFulGameInstance->PlaySoundOnceInGamePlay(Sound, Location, VolumeScale);
+    }
+}
+
+void APeaceFulHazardGameMode::PlayUISound(USoundBase* Sound, float VolumeScale)
+{
+    if (PeacFulGameInstance)
+    {
+        PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_UI, UIAudioComponent, Sound, VolumeScale);
+    }
+}
+
+EPlayerToDo APeaceFulHazardGameMode::GetPlayerToDo()
+{
+    if (PeacFulGameInstance)
+    {
+        FString temp;
+        return PeacFulGameInstance->GetCurrentToDo(temp);
+    }
+
+    return EPlayerToDo::EPTD_None;
+}
+
+EDifficulty APeaceFulHazardGameMode::GetDifficulty()
+{
+    if (PeacFulGameInstance == nullptr) return EDifficulty::ED_None;
+
+    return PeacFulGameInstance->gameDifficulty;
+}
+
+void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo targetTodo)
+{
+    if (PeacFulGameInstance)
+    {
+        if (GetPlayerToDo() >= targetTodo) return;
+
+        PeacFulGameInstance->UpdateToDo(targetTodo);
+    }
 }
 
 

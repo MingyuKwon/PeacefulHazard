@@ -3,12 +3,46 @@
 
 #include "System/PeacFulGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/SoundBase.h"
+#include "Components/AudioComponent.h"
 
-void UPeacFulGameInstance::UpdateToDo()
+void UPeacFulGameInstance::UpdateToDo(EPlayerToDo targetTodo)
 {
-    todoIndex++;
+    int32 todoIndexInArray = currentToDos.Find(targetTodo);
+    if (todoIndexInArray != INDEX_NONE)
+    {
+        todoIndex = todoIndexInArray;
+    }
+
+    todoIndex = todoIndexInArray;
 
     todoIndex = FMath::Clamp(todoIndex, 0, currentToDos.Num() - 1);
+
+    switch (targetTodo)
+    {
+    case EPlayerToDo::EPTD_SearchRightGarden :
+        currentEnemyForce += 5;
+        break;
+
+    case EPlayerToDo::EPTD_SearchCathedral:
+        currentEnemyForce += 5;
+        break;
+
+    case EPlayerToDo::EPTD_SearchLeftGarden:
+        currentEnemyForce += 10;
+        break;
+
+    case EPlayerToDo::EPTD_SearchCathedralSecondFloor:
+        currentEnemyForce += 10;
+        break;
+
+    case EPlayerToDo::EPTD_Survive:
+        currentEnemyForce += 20;
+        break;
+
+      
+    }
+
 
 }
 
@@ -59,6 +93,45 @@ void UPeacFulGameInstance::resetTempSave()
     SelectedSaveSlot = TEXT("");
 }
 
+void UPeacFulGameInstance::PlaySoundOnceInGamePlay(USoundBase* Sound, FVector Location, float VolumeScale)
+{
+    float Volume = SFXVolume * VolumeScale;
+
+    if (Sound)
+    {
+        UGameplayStatics::PlaySoundAtLocation(this, Sound, Location, Volume);
+    }
+}
+
+void UPeacFulGameInstance::PlayAudioComponent(EGameSoundType soundType, UAudioComponent* AudioComponent, USoundBase* Sound, float VolumeScale)
+{
+    float Volume = 1.f;
+
+    switch (soundType)
+    {
+    case EGameSoundType::EGST_BGM:
+        Volume = BGMVolume;
+
+    case EGameSoundType::EGST_UI:
+        Volume = UIVolume;
+
+    default:
+        break;
+    }
+
+    Volume *= VolumeScale;
+
+    if (Sound)
+    {
+        AudioComponent->SetSound(Sound);
+        AudioComponent->SetVolumeMultiplier(Volume);
+        AudioComponent->Play();
+    }
+    
+}
+
+
+
 void UPeacFulGameInstance::Init()
 {
     Super::Init();
@@ -69,15 +142,36 @@ void UPeacFulGameInstance::Init()
 
     currentToDos.Add(EPlayerToDo::EPTD_GetOutTutorialRoom);
     currentToDos.Add(EPlayerToDo::EPTD_LookAroundMainHub);
+    currentToDos.Add(EPlayerToDo::EPTD_FindKeyToGravetard);
+    currentToDos.Add(EPlayerToDo::EPTD_SearchGravetard);
+    currentToDos.Add(EPlayerToDo::EPTD_SearchRightGarden);
+    currentToDos.Add(EPlayerToDo::EPTD_SearchCathedral);
+    currentToDos.Add(EPlayerToDo::EPTD_FindKeytoLeftGarden);
+    currentToDos.Add(EPlayerToDo::EPTD_SearchLeftGarden);
+    currentToDos.Add(EPlayerToDo::EPTD_SearchCathedralSecondFloor);
+    currentToDos.Add(EPlayerToDo::EPTD_GetTreasure);
+    currentToDos.Add(EPlayerToDo::EPTD_Survive);
 
-    ToDoMap.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString("find a way to get out of this building"));
-    ToDoMap.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString("Look around for anything that might provide information about the treasure."));
+
+    ToDoMap.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString("Find a way to get out of this building"));
+    ToDoMap.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString("Look around for anything that might provide information about the \"treasure\"."));
+    ToDoMap.Add(EPlayerToDo::EPTD_FindKeyToGravetard, FString("Explore a way to access the locked \"graveyard\""));
+    ToDoMap.Add(EPlayerToDo::EPTD_SearchGravetard, FString("Investigate the \"graveyard\" to see if we can find any useful clues."));
+    ToDoMap.Add(EPlayerToDo::EPTD_SearchRightGarden, FString("Investigate the \"right garden\" to see if we can find any useful clues."));
+    ToDoMap.Add(EPlayerToDo::EPTD_SearchCathedral, FString("Head to the \"cathedral\" to get the treasure."));
+    ToDoMap.Add(EPlayerToDo::EPTD_FindKeytoLeftGarden, FString("The clue to access the second floor of the \"cathedral\" is in the \"left garden\". Get the key to the door that leads to the \"left garden\"."));
+    ToDoMap.Add(EPlayerToDo::EPTD_SearchLeftGarden, FString("Investigate the \"left garden\" to see if we can find any useful clues."));
+    ToDoMap.Add(EPlayerToDo::EPTD_SearchCathedralSecondFloor, FString("Investigate the \"cathedral\" second floor"));
+    ToDoMap.Add(EPlayerToDo::EPTD_GetTreasure, FString("Get the Treasure!"));
+    ToDoMap.Add(EPlayerToDo::EPTD_Survive, FString("Survive within the time limit"));
+
+
 
     MapName.Add(EWarpTarget::EWT_Tutorial, FString("Tutorial Room"));
     MapName.Add(EWarpTarget::EWT_MainHub, FString("Main Hub"));
 
 
-    TutorialMap.Add(ETutorialType::ETT_MoveTutorial, FString("Move : ASDW \n\nRun : Left Shift"));
+    TutorialMap.Add(ETutorialType::ETT_MoveTutorial, FString("Move : ASDW \n\nRun : Left Shift \n\nInteract : Left Mouse Button \n\nBack : Right Mouse Button"));
     TutorialMap.Add(ETutorialType::ETT_InteractWithItem, FString("As you approach an item, a white indicator appears. Get closer, and it turns blue. \n\nPress the left mouse button to pick up or interact."));
     TutorialMap.Add(ETutorialType::ETT_Fire, FString("Aim : RightClick \nFire : LeftClick \nReload : R \nChange Bullet : Mouse wheel"));
     TutorialMap.Add(ETutorialType::ETT_InteractWithSituation, FString("As you approach an interactable object, a white indicator appears. Get closer, and it turns blue. \n\nPress the left mouse button to interact."));

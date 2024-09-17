@@ -38,6 +38,11 @@ void UItemBoxWidget::BackUIInputTrigger()
 		return;
 	}
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(BackSound, 0.3f);
+	}
+
 	SetAllUIUpdate();
 
 }
@@ -272,11 +277,21 @@ void UItemBoxWidget::OnUseButtoClicked()
 		PeaceFulHazardGameMode->ItemBoxInteractEvent.Broadcast(true, index, itemType, itemCount);
 	}
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
+
 }
 
 void UItemBoxWidget::OnCombineButtoClicked()
 {
 	combineLock = true;
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 
 	SetAllUIUpdate();
 }
@@ -293,11 +308,22 @@ void UItemBoxWidget::OnDiscardButtoClicked()
 	{
 		PeaceFulHazardGameMode->OuterChangeInventoryEvent.Broadcast(GetButtonIndex(NowHoveringButton), itemType, -1, false);
 	}
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 }
 
 void UItemBoxWidget::OnMoveButtoClicked()
 {
 	MoveLock = true;
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
+
 	SetAllUIUpdate();
 
 }
@@ -483,6 +509,11 @@ void UItemBoxWidget::OnItemButtonClicked_1()
 
 	if (PeaceFulHazardGameMode)
 	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
+
+	if (PeaceFulHazardGameMode)
+	{
 		int32 index = GetButtonIndex_1(LiteralHoveringButton_1);
 		PeaceFulHazardGameMode->ItemBoxInteractEvent.Broadcast(false, index, recentItemBox->itemBoxItems[index], recentItemBox->itemBoxItemCounts[index]);
 
@@ -503,6 +534,11 @@ void UItemBoxWidget::OnItemButtonHovered_1()
 			FindButton = Button;
 			break;
 		}
+	}
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 0.5f);
 	}
 
 	LiteralHoveringButton_1 = FindButton;
@@ -539,6 +575,10 @@ void UItemBoxWidget::OnItemButtonClicked()
 		NowInteractButton = NowHoveringButton;
 	}
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+	}
 
 	SetAllUIUpdate();
 }
@@ -554,6 +594,11 @@ void UItemBoxWidget::OnItemButtonHovered()
 			FindButton = Button;
 			break;
 		}
+	}
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 0.5f);
 	}
 
 	ChangeNowHoveringButton(FindButton);

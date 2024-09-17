@@ -25,6 +25,7 @@
 #include "Materials/MaterialInstance.h"
 #include "System/EnemyRoutePivot.h"
 #include "Character/PeaceFulHazardCharacter.h"
+#include "NiagaraComponent.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -49,6 +50,10 @@ AEnemyBase::AEnemyBase()
     AttackRangeBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
     GetCharacterMovement()->bUseRVOAvoidance = true;
+
+    SpawnNiagaraPoint = CreateDefaultSubobject<UNiagaraComponent>(TEXT("SpawnNiagaraPoint"));
+    SpawnNiagaraPoint->SetupAttachment(RootComponent);
+
 }
 
 void AEnemyBase::Tick(float DeltaTime)
@@ -74,9 +79,21 @@ void AEnemyBase::PossessedBy(AController* NewController)
 
 void AEnemyBase::Attack()
 {
-    if (AttackMontage)
+    int32 RandomChoice = FMath::RandRange(0, 1);
+
+    if (RandomChoice == 0)
     {
-        GetMesh()->GetAnimInstance()->Montage_Play(AttackMontage);
+        if (AttackMontage)
+        {
+            GetMesh()->GetAnimInstance()->Montage_Play(AttackMontage);
+        }
+    }
+    else
+    {
+        if (AttackMontage2)
+        {
+            GetMesh()->GetAnimInstance()->Montage_Play(AttackMontage2);
+        }
     }
 }
 
@@ -103,6 +120,14 @@ void AEnemyBase::AttackEnd()
     }
 }
 
+void AEnemyBase::PlayAttackSound(int32 index)
+{
+    if (PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->PlaySoundInGameplay(AttackSound, GetActorLocation(), 1.f);
+    }
+}
+
 void AEnemyBase::MatchYawWithController(float DeltaTime)
 {
     float CurrentYaw = GetActorRotation().Yaw;
@@ -115,6 +140,21 @@ void AEnemyBase::MatchYawWithController(float DeltaTime)
 
     FRotator NewRotation(0, NewYaw, 0);
     SetActorRotation(NewRotation);
+}
+
+bool AEnemyBase::ShowChasingNiagara()
+{
+    if (SpawnNiagaraPoint == nullptr) return false;
+
+    if (SpawnNiagaraPoint->IsActive())
+    {
+        return false;
+    }
+    else
+    {
+        SpawnNiagaraPoint->Activate();
+        return true;
+    }
 }
 
 void AEnemyBase::StopHeadStunMontage()
@@ -152,12 +192,19 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 
         if (bHead)
         {
-            ActualDamage *= 2.0f; // Çìµå¼¦ÀÇ °æ¿ì µ¥¹ÌÁö 2¹è
-            UE_LOG(LogTemp, Display, TEXT("Head Shot"));
+            ActualDamage *= 2.0f; // ï¿½ï¿½å¼¦ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½
+
+            if (PeaceFulHazardGameMode)
+            {
+                PeaceFulHazardGameMode->PlaySoundInGameplay(HeadHitSound, GetActorLocation(), 1.3f);
+            }
         }
         else
         {
-            UE_LOG(LogTemp, Display, TEXT("Body Shot"));
+            if (PeaceFulHazardGameMode)
+            {
+                PeaceFulHazardGameMode->PlaySoundInGameplay(HitSound, GetActorLocation(), 1.f);
+            }
         }
     }
     else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
@@ -178,6 +225,8 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
             if (HeadStunMontage)
             {
                 StopAnimMontage(AttackMontage);
+                StopAnimMontage(AttackMontage2);
+
                 AttackEnd();
                 PlayAnimMontage(HeadStunMontage);
             }
@@ -188,6 +237,7 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
             if (DamageStunMontage)
             {
                 StopAnimMontage(AttackMontage);
+                StopAnimMontage(AttackMontage2);
                 AttackEnd();
                 PlayAnimMontage(DamageStunMontage);
             }
@@ -196,15 +246,15 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 
         if (EnemyAIController->bDeath)
         {
-            GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));  // Ãæµ¹ ¼³Á¤À» Ragdoll·Î º¯°æ
-            GetCharacterMovement()->DisableMovement();  // Ä³¸¯ÅÍÀÇ ¸ðµç ¿òÁ÷ÀÓ ºñÈ°¼ºÈ­
-            GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // Ä¸½¶ ÄÝ¸®Àü ºñÈ°¼ºÈ­
+            GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));  // ï¿½æµ¹ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ragdollï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            GetCharacterMovement()->DisableMovement();  // Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
+            GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // Ä¸ï¿½ï¿½ ï¿½Ý¸ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
 
             if (PeaceFulHazardGameMode)
             {
                 PeaceFulHazardGameMode->SetAleradyInteract(GetName());
                 PeaceFulHazardGameMode->SetEnemyRefCount(false);
-
+                PeaceFulHazardGameMode->PlaySoundInGameplay(DeathSound, GetActorLocation(), 1.f);
             }
 
             SetLifeSpan(1.5f);
@@ -215,7 +265,7 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 
     PlayHitMontage(ShotDirection);
 
-    // ¿©±â¿¡ bDeath true ÀÌ¸é Á×´Â ¾Ö´Ï¸ÞÀÌ¼Ç ÁøÇà ÇÏµµ·Ï ÇÏÀÚ
+    // ï¿½ï¿½ï¿½â¿¡ bDeath true ï¿½Ì¸ï¿½ ï¿½×´ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     return ActualDamage;
 }
@@ -268,9 +318,31 @@ void AEnemyBase::PlayHitMontage(FVector ShotDirection)
         if (HitFwdMontage)
         {
             PlayAnimMontage(HitFwdMontage);
+
         }
     }
 
+    
+}
+
+void AEnemyBase::SetMaterialParaLerp(bool bDissolve, float value)
+{
+    if (bDissolve)
+    {
+        bool bReduce = value < dissolvePercent;
+
+        dissolvePercent = FMath::Lerp(dissolvePercent, value, bReduce ? 0.1f : 0.2f);
+        GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
+
+    }
+    else
+    {
+        bool bReduce = value < StunPercent;
+
+        StunPercent = FMath::Lerp(StunPercent, value, bReduce ? 0.5f : 0.8f);
+        GetMesh()->SetScalarParameterValueOnMaterials("Stun", StunPercent);
+
+    }
 }
 
 // Called when the game starts or when spawned
@@ -282,6 +354,14 @@ void AEnemyBase::BeginPlay()
 
     if (PeaceFulHazardGameMode)
     {
+        // If it is not time to enemy spawn
+        if (PeaceFulHazardGameMode->GetPlayerToDo() < spawnProgress)
+        {
+            Destroy();
+            return;
+        }
+
+
         if (PeaceFulHazardGameMode->CheckAleradyInteract(GetName()))
         {
             Destroy();
@@ -302,7 +382,10 @@ void AEnemyBase::BeginPlay()
 
     HeadBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("FX_Head"));
 
-
+    if (SpawnNiagaraPoint)
+    {
+        SpawnNiagaraPoint->Deactivate();
+    }
 }
 
 
@@ -331,6 +414,10 @@ void AEnemyBase::MapStartCallBack()
             SetActorRotation(enemyRotation);
         }
     }
+    else
+    {
+        EnemyAIController->currentHealth = MaxHealth;
+    }
 
 }
 
@@ -358,6 +445,15 @@ void AEnemyBase::UpdateValue()
             GetCharacterMovement()->MaxWalkSpeed = PatrolMoveSpeed;
         }
 
+        if (EnemyAIController->bStunDamage || EnemyAIController->bStunHeadShot && !EnemyAIController->bDeath)
+        {
+            SetMaterialParaLerp(false, 0.25f);
+        }
+        else
+        {
+            SetMaterialParaLerp(false, 0.f);
+
+        }
 
         if (EnemyAIController->bDeath)
         {

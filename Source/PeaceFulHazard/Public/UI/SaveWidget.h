@@ -14,6 +14,8 @@ class UCanvasPanel;
 class UBorder;
 class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
+class USoundBase;
+
 /**
  * 
  */
@@ -35,6 +37,16 @@ public:
 	void SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave = false);
 
 protected:
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonHoverSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonClickSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* BackSound;
+
 
 	int32 GetButtonIndex(UButton* button, bool bSaveButtons);
 
@@ -198,6 +210,36 @@ protected:
 	UTextBlock* ToDoText8;
 
 
+	TArray<UTextBlock*> DifficultyTexts;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText1;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText2;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText3;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText4;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText5;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText6;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText7;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DifficultyText8;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MapDifficulty;
+
+	
 
 	TArray<UTextBlock*> TimeTexts;
 

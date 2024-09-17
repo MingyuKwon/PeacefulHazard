@@ -31,6 +31,16 @@ enum class EItemType : uint8
 };
 
 UENUM(BlueprintType)
+enum class EGameSoundType : uint8
+{
+    EST_None,
+
+    EGST_SFX,
+    EGST_BGM,
+    EGST_UI,
+};
+
+UENUM(BlueprintType)
 enum class ETutorialType : uint8
 {
     ETT_None,
@@ -154,6 +164,27 @@ enum class EPlayerToDo : uint8
     EPTD_None,
     EPTD_GetOutTutorialRoom,
     EPTD_LookAroundMainHub,
+    EPTD_FindKeyToGravetard,
+    EPTD_SearchGravetard,
+    EPTD_SearchRightGarden,
+    EPTD_SearchCathedral,
+    EPTD_FindKeytoLeftGarden,
+    EPTD_SearchLeftGarden,
+    EPTD_SearchCathedralSecondFloor,
+    EPTD_GetTreasure,
+    EPTD_Survive,
 
     EPTD_Max
+};
+
+UENUM(BlueprintType)
+enum class EDifficulty : uint8
+{
+    ED_None,
+    ED_Easy,
+    ED_Normal,
+    ED_Hard,
+
+    ED_Max,
+
 };
