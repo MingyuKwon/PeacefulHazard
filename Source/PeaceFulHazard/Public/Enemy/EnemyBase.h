@@ -81,7 +81,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
 	EPlayerToDo spawnProgress = EPlayerToDo::EPTD_GetOutTutorialRoom;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Para")
 	float EnemyDamageAmount = 10;
 
@@ -158,6 +157,9 @@ protected:
 
 
 public:	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
+	bool bBoss = false;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

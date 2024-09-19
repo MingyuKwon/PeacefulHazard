@@ -47,6 +47,23 @@ AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializ
 
 }
 
+void AEnemyAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (controlEnemy && controlEnemy->bBoss && !bNowAttacking && !bDeath && !bStunDamage && !bStunHeadShot)
+	{
+		FVector DirectionToTarget = (TargetLocation - controlEnemy->GetActorLocation()).GetSafeNormal();
+		FRotator TargetRotation = DirectionToTarget.Rotation();
+
+		float DeltaTime = GetWorld()->GetDeltaSeconds();
+		FRotator NewRotation = FMath::RInterpTo(controlEnemy->GetActorRotation(), TargetRotation, DeltaTime, 2.0f);
+
+		controlEnemy->SetActorRotation(NewRotation);
+
+	}
+}
+
 void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 {
 	currentHealth -= Damage;
@@ -144,7 +161,6 @@ void AEnemyAIController::Attack()
 {
 	bNowAttacking = true;
 
-	UE_LOG(LogTemp, Display, TEXT("Attack"));
 	if (controlEnemy)
 	{
 		controlEnemy->Attack();
@@ -153,6 +169,7 @@ void AEnemyAIController::Attack()
 
 bool AEnemyAIController::CheckMovetoDestination()
 {
+
 	if (GetPawn() == nullptr ) return false;
 	FVector PawnPosition = GetPawn()->GetActorLocation();
 
@@ -161,7 +178,7 @@ bool AEnemyAIController::CheckMovetoDestination()
 	if (GEngine)
 	{
 		FString text = FString::Printf(TEXT("distance : %f"), distance);
-		GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Blue, text);
+		GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Red, text);
 	}
 
 	if (controlEnemy)
@@ -205,7 +222,6 @@ void AEnemyAIController::UpdateBlackBoard()
 		DrawDebugSphere(GetWorld(), TargetLocation, 50.f, 30, FColor::Blue, false, 0.1f);
 
 	}
-
 
 	if (BlackboardComp)
 	{
