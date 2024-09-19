@@ -160,6 +160,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
 	bool bBoss = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	float stundamageAccumulateUnit = 60.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	float stunHeadDamageAccumulateUnit = 25.f;
+
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

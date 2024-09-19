@@ -36,12 +36,6 @@ public:
 	float damageAccumulate = 0.f;
 	float headDamageAccumulate = 0.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
-	float stundamageAccumulateUnit = 60.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
-	float stunHeadDamageAccumulateUnit = 25.f;
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	bool bStunHeadShot = false;

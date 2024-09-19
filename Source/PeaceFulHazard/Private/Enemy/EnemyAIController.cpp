@@ -66,12 +66,14 @@ void AEnemyAIController::Tick(float DeltaTime)
 
 void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 {
+	if (controlEnemy == nullptr) return;
+
 	currentHealth -= Damage;
 	currentHealth = FMath::Clamp(currentHealth, 0, currentHealth);
 
 	damageAccumulate += Damage;
 
-	if (stundamageAccumulateUnit <= damageAccumulate)
+	if (controlEnemy->stundamageAccumulateUnit <= damageAccumulate)
 	{
 		damageAccumulate = 0;
 		bStunDamage = true;
@@ -82,7 +84,7 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 	{
 		headDamageAccumulate += Damage;
 
-		if (stunHeadDamageAccumulateUnit <= headDamageAccumulate)
+		if (controlEnemy->stunHeadDamageAccumulateUnit <= headDamageAccumulate)
 		{
 			headDamageAccumulate = 0;
 			bStunHeadShot = true;
@@ -169,7 +171,6 @@ void AEnemyAIController::Attack()
 
 bool AEnemyAIController::CheckMovetoDestination()
 {
-
 	if (GetPawn() == nullptr ) return false;
 	FVector PawnPosition = GetPawn()->GetActorLocation();
 
@@ -183,7 +184,21 @@ bool AEnemyAIController::CheckMovetoDestination()
 
 	if (controlEnemy)
 	{
-		return distance <= ((Target == nullptr) ? controlEnemy->PatrolMoveToRange : controlEnemy->AttackRange);
+		if (controlEnemy->bBoss)
+		{
+			FVector DirectionToTarget = (TargetLocation - controlEnemy->GetActorLocation()).GetSafeNormal();
+
+			float DotProduct = FVector::DotProduct(controlEnemy->GetActorForwardVector(), DirectionToTarget);
+			float AngleDegrees = FMath::RadiansToDegrees(FMath::Acos(DotProduct));
+
+			float AllowedAngle = 20.0f; // 허용되는 각도
+			return AngleDegrees <= AllowedAngle;
+
+		}
+		else
+		{
+			return distance <= ((Target == nullptr) ? controlEnemy->PatrolMoveToRange : controlEnemy->AttackRange);
+		}
 
 	}
 
