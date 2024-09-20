@@ -72,6 +72,7 @@ public:
 
 protected:
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+
 	UFUNCTION()
 	void PlayerDeathCallback();
 

@@ -12,6 +12,7 @@ class UAnimMontage;
 class APeaceFulHazardGameMode;
 class USoundBase;
 class UNiagaraComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class PEACEFULHAZARD_API AEnemyBase : public ACharacter
@@ -63,6 +64,15 @@ public:
 	float ChasingMoveSpeed = 200;
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UNiagaraSystem* BeforeBombEffect;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UNiagaraSystem* AfterBombEffect;
+
+	FVector BombLocationSave = FVector::ZeroVector;
+
+
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* DeathSound;
 
