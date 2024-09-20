@@ -44,7 +44,7 @@ public:
 	void StopDamageStunMontage();
 
 	UFUNCTION(BlueprintCallable)
-	void Attack();
+	void Attack(bool bBossRange = false);
 
 	UFUNCTION(BlueprintCallable)
 	void AttackImpact(int32 index);

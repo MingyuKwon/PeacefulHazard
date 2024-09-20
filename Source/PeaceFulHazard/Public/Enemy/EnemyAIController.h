@@ -75,7 +75,7 @@ protected:
 	UFUNCTION()
 	void PlayerDeathCallback();
 
-	void Attack();
+	void Attack(bool bBossRange = false);
 
 	UFUNCTION()
 	bool CheckMovetoDestination();

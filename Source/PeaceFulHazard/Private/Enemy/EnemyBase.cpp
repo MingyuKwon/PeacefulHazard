@@ -77,8 +77,18 @@ void AEnemyBase::PossessedBy(AController* NewController)
 	}
 }
 
-void AEnemyBase::Attack()
+void AEnemyBase::Attack(bool bBossRange)
 {
+    if (bBossRange)
+    {
+        if (AttackMontage2)
+        {
+            GetMesh()->GetAnimInstance()->Montage_Play(AttackMontage2);
+        }
+
+        return;
+    }
+
     int32 RandomChoice = FMath::RandRange(0, 1);
 
     if (RandomChoice == 0)

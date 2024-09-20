@@ -159,13 +159,13 @@ void AEnemyAIController::PlayerDeathCallback()
 
 }
 
-void AEnemyAIController::Attack()
+void AEnemyAIController::Attack(bool bBossRange)
 {
 	bNowAttacking = true;
 
 	if (controlEnemy)
 	{
-		controlEnemy->Attack();
+		controlEnemy->Attack(bBossRange);
 	}
 }
 
@@ -217,7 +217,17 @@ void AEnemyAIController::UpdateBlackBoard()
 			{
 				if (nonAttackLock) return;
 
-				Attack();
+				if (controlEnemy->bBoss)
+				{
+					float distance = FVector::Dist2D(GetPawn()->GetActorLocation(), TargetLocation);
+					Attack(controlEnemy->AttackRange < distance);
+
+				}
+				else
+				{
+					Attack();
+				}
+
 			}
 		}
 
