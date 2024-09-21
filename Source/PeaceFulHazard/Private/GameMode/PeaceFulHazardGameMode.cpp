@@ -135,22 +135,6 @@ void APeaceFulHazardGameMode::LoadSettingValue()
 
 }
 
-void APeaceFulHazardGameMode::SetDefaultMouseSensivility(float value)
-{
-    if (PeacFulGameInstance)
-    {
-        PeacFulGameInstance->MouseSensitivity = value;
-    }
-}
-
-void APeaceFulHazardGameMode::SetAimMouseSensivility(float value)
-{
-    if (PeacFulGameInstance)
-    {
-        PeacFulGameInstance->MouseAimSensitivity = value;
-
-    }
-}
 
 void APeaceFulHazardGameMode::SaveDataToSlot(FString slotName)
 {

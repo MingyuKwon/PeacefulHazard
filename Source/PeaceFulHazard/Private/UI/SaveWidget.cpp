@@ -194,6 +194,13 @@ void USaveWidget::NativeConstruct()
 
 	InitArrays();
 
+
+	if (SettingResetButton)
+	{
+		SettingResetButton->OnClicked.AddDynamic(this, &ThisClass::OnResetSettingValue);
+
+	}
+
 	for (UButton* Button : SaveButtons)
 	{
 		if (Button)
@@ -264,9 +271,9 @@ void USaveWidget::OnDefaultMouseSensibilityValueChanged(float Value)
 			CanvasSlotFill->SetOffsets(NewOffsets);
 		}
 
-		if (PeaceFulHazardGameMode)
+		if (PeacFulGameInstance)
 		{
-			PeaceFulHazardGameMode->SetDefaultMouseSensivility(Value);
+			PeacFulGameInstance->MouseSensitivity = Value;
 		}
 	}
 
@@ -287,11 +294,21 @@ void USaveWidget::OnAimMouseSensibilityValueChanged(float Value)
 
 		}
 
-		if (PeaceFulHazardGameMode)
+		if (PeacFulGameInstance)
 		{
-			PeaceFulHazardGameMode->SetAimMouseSensivility(Value);
+			PeacFulGameInstance->MouseAimSensitivity = Value;
 		}
 	}
+}
+
+void USaveWidget::OnResetSettingValue()
+{
+	if (PeacFulGameInstance)
+	{
+		PeacFulGameInstance->ResetSetting();
+	}
+
+	UpdateAllUI();
 }
 
 void USaveWidget::OnMapButtonClicked()

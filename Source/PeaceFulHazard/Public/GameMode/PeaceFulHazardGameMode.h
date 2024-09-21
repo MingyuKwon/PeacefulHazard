@@ -108,9 +108,6 @@ public:
 	void SaveSettingValue();
 	void LoadSettingValue();
 
-	void SetDefaultMouseSensivility(float value);
-	void SetAimMouseSensivility(float value);
-
 	void GetSettingValue(float& mouse, float& mouseAim);
 
 	void SaveDataToSlot(FString slotName);

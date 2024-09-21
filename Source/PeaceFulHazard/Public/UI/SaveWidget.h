@@ -116,6 +116,11 @@ protected:
 
 
 	/////////////////////// option panel ////////////////////////////////////////////
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* SettingResetButton;
+
+
 	UPROPERTY(meta = (BindWidget))
 	USlider* DefaultMouseSensibility;
 
@@ -137,6 +142,10 @@ protected:
 
 	UFUNCTION()
 	void OnAimMouseSensibilityValueChanged(float Value);
+
+	UFUNCTION()
+	void OnResetSettingValue();
+
 
 	/////////////////////// option panel ////////////////////////////////////////////
 
