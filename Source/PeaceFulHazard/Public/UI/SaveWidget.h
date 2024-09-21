@@ -15,7 +15,7 @@ class UBorder;
 class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
 class USoundBase;
-
+class USlider;
 /**
  * 
  */
@@ -113,6 +113,32 @@ protected:
 	UButton* TitleButton;
 
 	//////////////////////// menu select ///////////////////////////////////////////////
+
+
+	/////////////////////// option panel ////////////////////////////////////////////
+	UPROPERTY(meta = (BindWidget))
+	USlider* DefaultMouseSensibility;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* DefaultMouseSensibilityFill;
+
+	float maxDefaultMouseSensibilityFill = 1000;
+
+	UPROPERTY(meta = (BindWidget))
+	USlider* AimMouseSensibility;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* AimMouseSensibilityFill;
+
+	float maxAimMouseSensibilityFill = 1000;
+
+	UFUNCTION()
+	void OnDefaultMouseSensibilityValueChanged(float Value);
+
+	UFUNCTION()
+	void OnAimMouseSensibilityValueChanged(float Value);
+
+	/////////////////////// option panel ////////////////////////////////////////////
 
 	UPROPERTY(meta = (BindWidget))
 	UBorder* SaveShowPanel;

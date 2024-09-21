@@ -13,6 +13,8 @@
 #include "System/PeacFulSaveGame.h"
 #include "System/PeacFulGameInstance.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Components/Slider.h"
+
 
 void USaveWidget::BackUIInputTrigger()
 {
@@ -235,7 +237,52 @@ void USaveWidget::NativeConstruct()
 		TitleButton->OnClicked.AddDynamic(this, &ThisClass::OnExitButtonClicked);
 	}
 
+
+	if (DefaultMouseSensibility)
+	{
+		DefaultMouseSensibility->OnValueChanged.AddDynamic(this, &ThisClass::OnDefaultMouseSensibilityValueChanged);
+	}
+
+	if (AimMouseSensibility)
+	{
+		AimMouseSensibility->OnValueChanged.AddDynamic(this, &ThisClass::OnAimMouseSensibilityValueChanged);
+	}
+
 	UpdateAllUI();
+}
+
+void USaveWidget::OnDefaultMouseSensibilityValueChanged(float Value)
+{
+	if (DefaultMouseSensibility && DefaultMouseSensibilityFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(DefaultMouseSensibilityFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxDefaultMouseSensibilityFill * (1 - Value);
+			CanvasSlotFill->SetOffsets(NewOffsets);
+
+		}
+	}
+
+}
+
+void USaveWidget::OnAimMouseSensibilityValueChanged(float Value)
+{
+	if (AimMouseSensibility && AimMouseSensibilityFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(AimMouseSensibilityFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxAimMouseSensibilityFill * (1 - Value);
+
+			CanvasSlotFill->SetOffsets(NewOffsets);
+
+		}
+	}
 }
 
 void USaveWidget::OnMapButtonClicked()
@@ -278,6 +325,8 @@ void USaveWidget::OnExitButtonClicked()
 		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
 	}
 }
+
+
 
 void USaveWidget::ShowCurrentLocation()
 {

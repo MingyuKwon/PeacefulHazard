@@ -57,7 +57,7 @@ void AEnemyAIController::Tick(float DeltaTime)
 		FRotator TargetRotation = DirectionToTarget.Rotation();
 
 		float DeltaTime = GetWorld()->GetDeltaSeconds();
-		FRotator NewRotation = FMath::RInterpTo(controlEnemy->GetActorRotation(), TargetRotation, DeltaTime, 2.0f);
+		FRotator NewRotation = FMath::RInterpTo(controlEnemy->GetActorRotation(), TargetRotation, DeltaTime, 2.5f);
 
 		controlEnemy->SetActorRotation(NewRotation);
 

@@ -90,9 +90,9 @@ void AEnemyBase::Attack(bool bBossRange)
         return;
     }
 
-    int32 RandomChoice = FMath::RandRange(0, 1);
+    int32 RandomChoice = FMath::RandRange(0, 9);
 
-    if (RandomChoice == 0)
+    if (RandomChoice <= 6)
     {
         if (AttackMontage)
         {
@@ -149,7 +149,7 @@ void AEnemyBase::AttackImpact(int32 index)
                 );
 
                 float InnerRadius = 50.f;
-                float OuterRadius = 150.f;
+                float OuterRadius = 170.f;
 
                 DrawDebugSphere(
                     GetWorld(),
