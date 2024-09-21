@@ -412,7 +412,7 @@ void USaveWidget::OnBrightChanged(float Value)
 
 		if (PeacFulGameInstance)
 		{
-			PeacFulGameInstance->Brightness = Value * 2 + 13.f;
+			PeacFulGameInstance->Brightness = Value * 4 + 11.f;
 		}
 
 		if (PeaceFulHazardGameMode)
@@ -609,7 +609,7 @@ void USaveWidget::UpdateAllUI()
 			
 			if (Brightness)
 			{
-				Brightness->SetValue((PeacFulGameInstance->Brightness - 13.f) / 2.f);
+				Brightness->SetValue((PeacFulGameInstance->Brightness - 11.f) / 4.f);
 			}
 		}
 	}

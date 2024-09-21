@@ -407,8 +407,7 @@ void APeaceFulHazardGameMode::SetGameBrightness()
 
     if (CachedPostProcessVolume)
     {
-        CachedPostProcessVolume->Settings.AutoExposureMinBrightness = PeacFulGameInstance->Brightness;
-        CachedPostProcessVolume->Settings.AutoExposureMaxBrightness = PeacFulGameInstance->Brightness;
+        CachedPostProcessVolume->Settings.AutoExposureBias = PeacFulGameInstance->Brightness;
     }
 }
 
