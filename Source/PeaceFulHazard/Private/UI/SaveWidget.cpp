@@ -280,6 +280,12 @@ void USaveWidget::NativeConstruct()
 		ResolutionDropDown->OnSelectionChanged.AddDynamic(this, &ThisClass::OnResolutionDropDownChanged);
 	}
 
+	if (LanguageDropDown)
+	{
+		LanguageDropDown->OnSelectionChanged.AddDynamic(this, &ThisClass::OnLanguageDropDownChanged);
+	}
+	
+
 	UpdateAllUI();
 }
 
@@ -288,6 +294,14 @@ void USaveWidget::OnResolutionDropDownChanged(FString SelectedItem, ESelectInfo:
 	if (PeacFulGameInstance)
 	{
 		PeacFulGameInstance->SetResolution(SelectedItem);
+	}
+}
+
+void USaveWidget::OnLanguageDropDownChanged(FString SelectedItem, ESelectInfo::Type SelectionType)
+{
+	if (PeacFulGameInstance)
+	{
+		PeacFulGameInstance->SetLangauage(SelectedItem);
 	}
 }
 
@@ -628,6 +642,11 @@ void USaveWidget::UpdateAllUI()
 			if (ResolutionDropDown)
 			{
 				ResolutionDropDown->SetSelectedOption(PeacFulGameInstance->Resolution);
+			}
+
+			if (LanguageDropDown)
+			{
+				LanguageDropDown->SetSelectedOption(PeacFulGameInstance->Language);
 			}
 		}
 	}

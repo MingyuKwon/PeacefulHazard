@@ -174,9 +174,16 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UComboBoxString* ResolutionDropDown;
 
+	UPROPERTY(meta = (BindWidget))
+	UComboBoxString* LanguageDropDown;
+
+	
+
 	UFUNCTION()
 	void OnResolutionDropDownChanged(FString SelectedItem, ESelectInfo::Type SelectionType);
 
+	UFUNCTION()
+	void OnLanguageDropDownChanged(FString SelectedItem, ESelectInfo::Type SelectionType);
 
 
 	UFUNCTION()

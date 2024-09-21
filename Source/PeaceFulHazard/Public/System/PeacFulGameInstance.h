@@ -88,8 +88,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
 	FString Resolution;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
+	FString Language;
+
+
 	void SetResolution(FString SelectedItem);
 
+	void SetLangauage(FString SelectedItem);
 
 	//////////////////////////////////////// SETTING /////////////////////////////////////////////////////////////////////
 

@@ -111,6 +111,7 @@ void APeaceFulHazardGameMode::SaveSettingValue()
 
         settingSave->Brightness = PeacFulGameInstance->Brightness;
         settingSave->Resolution = PeacFulGameInstance->Resolution;
+        settingSave->Language = PeacFulGameInstance->Language;
 
 
         UGameplayStatics::SaveGameToSlot(settingSave, FString("Setting"), 0);

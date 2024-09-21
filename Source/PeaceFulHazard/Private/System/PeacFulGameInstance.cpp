@@ -170,6 +170,7 @@ void UPeacFulGameInstance::LoadSettingValue()
             Brightness = LoadedSave->Brightness;
 
             Resolution = LoadedSave->Resolution;
+            Language = LoadedSave->Language;
         }
     }
     else
@@ -208,6 +209,20 @@ void UPeacFulGameInstance::SetResolution(FString SelectedItem)
         UserSettings->ApplySettings(false);
     }
 
+}
+
+void UPeacFulGameInstance::SetLangauage(FString SelectedItem)
+{
+    Language = SelectedItem;
+
+    if (Language == "English")
+    {
+
+    }
+    else if (Language == FString(TEXT("ÇÑ±¹¾î")))
+    {
+
+    }
 }
 
 void UPeacFulGameInstance::Init()
