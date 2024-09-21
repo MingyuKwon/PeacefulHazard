@@ -64,8 +64,7 @@ public:
 	float MouseSensitivity = 0.4f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim Parameter", meta = (AllowPrivateAccess = "true"))
-	float MouseAimSensitivity = 0.2f;
-
+	float MouseAimSensitivity = 0.4f;
 
 protected:
 

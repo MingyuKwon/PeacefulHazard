@@ -105,7 +105,14 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FWantSaveEvent WantSaveEvent;
 
-	
+	void SaveSettingValue();
+	void LoadSettingValue();
+
+	void SetDefaultMouseSensivility(float value);
+	void SetAimMouseSensivility(float value);
+
+	void GetSettingValue(float& mouse, float& mouseAim);
+
 	void SaveDataToSlot(FString slotName);
 	void LoadDataFromSlot(FString slotName, bool bNewGame);
 	void DeleteDataFromSlot(FString slotName);
@@ -135,7 +142,6 @@ public:
 
 	void ToDoUpdate(EPlayerToDo targetTodo);
 
-	void GetSettingValue(float& mouse, float& mouseAim);
 
 protected:
 

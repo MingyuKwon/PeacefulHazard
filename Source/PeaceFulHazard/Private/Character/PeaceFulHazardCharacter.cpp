@@ -667,7 +667,7 @@ bool APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
 
 	if (GetIsAiming())
 	{
-		LookAxisVector = LookAxisVector * MouseAimSensitivity;
+		LookAxisVector = LookAxisVector * MouseAimSensitivity / 2;
 	}
 	else
 	{

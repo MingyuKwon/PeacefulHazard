@@ -262,7 +262,11 @@ void USaveWidget::OnDefaultMouseSensibilityValueChanged(float Value)
 			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
 			NewOffsets.Right = maxDefaultMouseSensibilityFill * (1 - Value);
 			CanvasSlotFill->SetOffsets(NewOffsets);
+		}
 
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->SetDefaultMouseSensivility(Value);
 		}
 	}
 
@@ -281,6 +285,11 @@ void USaveWidget::OnAimMouseSensibilityValueChanged(float Value)
 
 			CanvasSlotFill->SetOffsets(NewOffsets);
 
+		}
+
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->SetAimMouseSensivility(Value);
 		}
 	}
 }
@@ -427,6 +436,25 @@ void USaveWidget::ShowCurrentLocation()
 
 void USaveWidget::UpdateAllUI()
 {
+	if (PeaceFulHazardGameMode)
+	{
+		float defaultMouse;
+		float aimMouse;
+		PeaceFulHazardGameMode->GetSettingValue(defaultMouse, aimMouse);
+
+		if (DefaultMouseSensibility)
+		{
+			DefaultMouseSensibility->SetValue(defaultMouse);
+		}
+
+		if (AimMouseSensibility)
+		{
+			AimMouseSensibility->SetValue(aimMouse);
+		}
+	}
+	
+
+
 	for (int32 i = 0; i < SaveButtons.Num(); i++)
 	{
 		if (SaveButtons[i])

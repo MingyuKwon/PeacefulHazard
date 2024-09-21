@@ -92,6 +92,33 @@ void APeaceFulHazardGameMode::SetEnemySaveRefCount(bool bPlus)
 
 
 
+void APeaceFulHazardGameMode::SaveSettingValue()
+{
+
+}
+
+void APeaceFulHazardGameMode::LoadSettingValue()
+{
+
+}
+
+void APeaceFulHazardGameMode::SetDefaultMouseSensivility(float value)
+{
+    if (PeacFulGameInstance)
+    {
+        PeacFulGameInstance->MouseSensitivity = value;
+    }
+}
+
+void APeaceFulHazardGameMode::SetAimMouseSensivility(float value)
+{
+    if (PeacFulGameInstance)
+    {
+        PeacFulGameInstance->MouseAimSensitivity = value;
+
+    }
+}
+
 void APeaceFulHazardGameMode::SaveDataToSlot(FString slotName)
 {
     enemySaveRefCount = enemyRefCount + 1;
