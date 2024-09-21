@@ -92,7 +92,7 @@ void AEnemyBase::Attack(bool bBossRange)
 
     int32 RandomChoice = FMath::RandRange(0, 9);
 
-    if (RandomChoice <= 6)
+    if (bBoss && RandomChoice <= 6 || !bBoss && RandomChoice <= 4)
     {
         if (AttackMontage)
         {

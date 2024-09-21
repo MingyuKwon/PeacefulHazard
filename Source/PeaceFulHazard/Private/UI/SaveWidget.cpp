@@ -269,6 +269,11 @@ void USaveWidget::NativeConstruct()
 		UIVolumue->OnValueChanged.AddDynamic(this, &ThisClass::OnUIChanged);
 	}
 
+	if (Brightness)
+	{
+		Brightness->OnValueChanged.AddDynamic(this, &ThisClass::OnBrightChanged);
+	}
+
 
 	UpdateAllUI();
 }
@@ -386,6 +391,33 @@ void USaveWidget::OnUIChanged(float Value)
 		if (PeacFulGameInstance)
 		{
 			PeacFulGameInstance->UIVolume = Value;
+		}
+	}
+}
+
+void USaveWidget::OnBrightChanged(float Value)
+{
+	if (Brightness && BrightnessFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(BrightnessFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxBrightnessFill * (1 - Value);
+
+			CanvasSlotFill->SetOffsets(NewOffsets);
+
+		}
+
+		if (PeacFulGameInstance)
+		{
+			PeacFulGameInstance->Brightness = Value * 2 + 13.f;
+		}
+
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->SetGameBrightness();
 		}
 	}
 }
@@ -575,6 +607,10 @@ void USaveWidget::UpdateAllUI()
 				UIVolumue->SetValue(PeacFulGameInstance->UIVolume);
 			}
 			
+			if (Brightness)
+			{
+				Brightness->SetValue((PeacFulGameInstance->Brightness - 13.f) / 2.f);
+			}
 		}
 	}
 	

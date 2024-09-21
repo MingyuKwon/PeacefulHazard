@@ -37,6 +37,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWantSaveEvent);
 class UPeacFulGameInstance;
 class USoundBase;
 class UAudioComponent;
+class APostProcessVolume;
 
 UCLASS(minimalapi)
 class APeaceFulHazardGameMode : public AGameModeBase
@@ -136,6 +137,9 @@ public:
 	void SetBGMVolume(float value);
 
 
+	void SetGameBrightness();
+
+
 	EPlayerToDo GetPlayerToDo();
 	EDifficulty GetDifficulty();
 
@@ -176,6 +180,8 @@ protected:
 	FString ReceivedSlotName = FString("");
 
 	UPeacFulGameInstance* PeacFulGameInstance;
+
+	APostProcessVolume* CachedPostProcessVolume;
 
 };
 

@@ -160,6 +160,14 @@ protected:
 	float maxVolumeFill = 500.0f;
 
 	
+	UPROPERTY(meta = (BindWidget))
+	USlider* Brightness;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* BrightnessFill;
+
+	float maxBrightnessFill = 440.0f;
+
 
 	UFUNCTION()
 	void OnDefaultMouseSensibilityValueChanged(float Value);
@@ -177,6 +185,8 @@ protected:
 	UFUNCTION()
 	void OnUIChanged(float Value);
 
+	UFUNCTION()
+	void OnBrightChanged(float Value);
 
 	UFUNCTION()
 	void OnResetSettingValue();

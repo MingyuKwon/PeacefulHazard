@@ -146,6 +146,7 @@ void UPeacFulGameInstance::ResetSetting()
     BGMVolume = 0.5f;
     UIVolume = 0.5f;
 
+    Brightness = 14.f;
 }
 
 void UPeacFulGameInstance::LoadSettingValue()
@@ -162,6 +163,8 @@ void UPeacFulGameInstance::LoadSettingValue()
             BGMVolume = LoadedSave->BGMVolume;
             SFXVolume = LoadedSave->SFXVolume;
             UIVolume = LoadedSave->UIVolume;
+
+            Brightness = LoadedSave->Brightness;
 
         }
     }

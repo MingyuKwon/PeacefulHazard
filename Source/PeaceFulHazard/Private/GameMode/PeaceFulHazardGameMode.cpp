@@ -109,6 +109,8 @@ void APeaceFulHazardGameMode::SaveSettingValue()
         settingSave->SFXVolume = PeacFulGameInstance->SFXVolume;
         settingSave->UIVolume = PeacFulGameInstance->UIVolume;
 
+        settingSave->Brightness = PeacFulGameInstance->Brightness;
+
         UGameplayStatics::SaveGameToSlot(settingSave, FString("Setting"), 0);
     }
 
@@ -383,6 +385,7 @@ void APeaceFulHazardGameMode::BeginPlay()
         currentMapType = mapStore->mapType;
     }
 
+    SetGameBrightness();
 
     FTimerHandle startDelayHandle;
     GetWorld()->GetTimerManager().SetTimer(startDelayHandle, [this]()
@@ -392,6 +395,23 @@ void APeaceFulHazardGameMode::BeginPlay()
         }, 0.1f, false);
 
 }
+
+void APeaceFulHazardGameMode::SetGameBrightness()
+{
+    if (PeacFulGameInstance == nullptr) return;
+
+    if (!CachedPostProcessVolume)
+    {
+        CachedPostProcessVolume = Cast<APostProcessVolume>(UGameplayStatics::GetActorOfClass(GetWorld(), APostProcessVolume::StaticClass()));
+    }
+
+    if (CachedPostProcessVolume)
+    {
+        CachedPostProcessVolume->Settings.AutoExposureMinBrightness = PeacFulGameInstance->Brightness;
+        CachedPostProcessVolume->Settings.AutoExposureMaxBrightness = PeacFulGameInstance->Brightness;
+    }
+}
+
 
 void APeaceFulHazardGameMode::PlayBGM()
 {

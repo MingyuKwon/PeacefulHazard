@@ -30,5 +30,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
 	float UIVolume = 0.5f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
+	float Brightness = 14.f;
 
 };

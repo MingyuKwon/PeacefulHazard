@@ -82,6 +82,10 @@ public:
 
 	void LoadSettingValue();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
+	float Brightness = 14.f;
+
+
 	//////////////////////////////////////// SETTING /////////////////////////////////////////////////////////////////////
 
 protected:
