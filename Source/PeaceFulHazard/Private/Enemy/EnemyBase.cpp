@@ -112,7 +112,7 @@ void AEnemyBase::AttackImpact(int32 index)
 {
     UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
-    if (AnimInstance && AnimInstance->Montage_IsPlaying(AttackMontage2))
+    if (bBoss && AnimInstance && AnimInstance->Montage_IsPlaying(AttackMontage2))
     {
         if (BeforeBombEffect && EnemyAIController && AfterBombEffect)
         {
