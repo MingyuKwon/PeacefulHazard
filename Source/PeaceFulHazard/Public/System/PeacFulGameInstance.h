@@ -12,7 +12,7 @@
 class UPeacFulSaveGame;
 class USoundBase;
 class UAudioComponent;
-
+class USettingSave;
 /**
  * 
  */
@@ -60,20 +60,15 @@ public:
 	void PlayAudioComponent(EGameSoundType soundType, UAudioComponent* AudioComponent, USoundBase* Sound, float VolumeScale);
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim Parameter", meta = (AllowPrivateAccess = "true"))
+	//////////////////////////////////////// SETTING /////////////////////////////////////////////////////////////////////
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
 	float MouseSensitivity = 0.4f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim Parameter", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
 	float MouseAimSensitivity = 0.4f;
 
-protected:
 
-	virtual void Init() override;
-
-	bool bBeforeWasMap = false;
-
-
-	// Sound
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
 	float SFXVolume = 0.8f;
 
@@ -82,6 +77,20 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
 	float UIVolume = 1.f;
+
+	void ResetSetting();
+
+	void LoadSettingValue();
+
+	//////////////////////////////////////// SETTING /////////////////////////////////////////////////////////////////////
+
+protected:
+
+	virtual void Init() override;
+
+	bool bBeforeWasMap = false;
+
+
 
 };
 

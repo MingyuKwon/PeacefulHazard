@@ -10,6 +10,7 @@
 #include "System/PeacFulSaveGame.h"
 #include "Sound/SoundBase.h"
 #include "Components/AudioComponent.h"
+#include "System/SettingSave.h"
 
 APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 {
@@ -94,11 +95,43 @@ void APeaceFulHazardGameMode::SetEnemySaveRefCount(bool bPlus)
 
 void APeaceFulHazardGameMode::SaveSettingValue()
 {
+    if (PeacFulGameInstance == nullptr) return;
+
+    USettingSave* settingSave = Cast<USettingSave>(UGameplayStatics::CreateSaveGameObject(USettingSave::StaticClass()));
+
+
+    if (settingSave)
+    {
+        settingSave->MouseAimSensitivity = PeacFulGameInstance->MouseAimSensitivity;
+        settingSave->MouseSensitivity = PeacFulGameInstance->MouseSensitivity;
+
+        UGameplayStatics::SaveGameToSlot(settingSave, FString("Setting"), 0);
+    }
 
 }
 
 void APeaceFulHazardGameMode::LoadSettingValue()
 {
+    if (UGameplayStatics::DoesSaveGameExist(FString("Setting"), 0))
+    {
+        USettingSave* LoadedSave = Cast<USettingSave>(UGameplayStatics::LoadGameFromSlot(FString("Setting"), 0));
+
+        if (LoadedSave)
+        {
+            if (PeacFulGameInstance)
+            {
+                PeacFulGameInstance->MouseAimSensitivity = LoadedSave->MouseAimSensitivity;
+                PeacFulGameInstance->MouseSensitivity = LoadedSave->MouseSensitivity;
+            }
+        }
+    }
+    else
+    {
+        if (PeacFulGameInstance)
+        {
+            PeacFulGameInstance->ResetSetting();
+        }
+    }
 
 }
 

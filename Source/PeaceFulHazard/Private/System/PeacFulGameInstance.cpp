@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 #include "Components/AudioComponent.h"
+#include "System/SettingSave.h"
 
 void UPeacFulGameInstance::UpdateToDo(EPlayerToDo targetTodo)
 {
@@ -132,6 +133,36 @@ void UPeacFulGameInstance::PlayAudioComponent(EGameSoundType soundType, UAudioCo
 
 
 
+void UPeacFulGameInstance::ResetSetting()
+{
+    MouseSensitivity = 0.4f;
+    MouseAimSensitivity = 0.4f;
+
+    SFXVolume = 0.8f;
+    BGMVolume = 1.f;
+    UIVolume = 1.f;
+
+}
+
+void UPeacFulGameInstance::LoadSettingValue()
+{
+    if (UGameplayStatics::DoesSaveGameExist(FString("Setting"), 0))
+    {
+        USettingSave* LoadedSave = Cast<USettingSave>(UGameplayStatics::LoadGameFromSlot(FString("Setting"), 0));
+
+        if (LoadedSave)
+        {
+            MouseAimSensitivity = LoadedSave->MouseAimSensitivity;
+            MouseSensitivity = LoadedSave->MouseSensitivity;
+
+        }
+    }
+    else
+    {
+        ResetSetting();
+    }
+}
+
 void UPeacFulGameInstance::Init()
 {
     Super::Init();
@@ -186,5 +217,5 @@ void UPeacFulGameInstance::Init()
 
 
     
-
+    LoadSettingValue();
 }

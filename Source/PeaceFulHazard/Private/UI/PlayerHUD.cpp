@@ -161,6 +161,12 @@ void APlayerHUD::SetMainMenuDisplay(bool bVisible, EMenuType menuType, bool bSav
         {
             SaveWidget->SetVisibility(ESlateVisibility::Hidden);
         }
+
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->SaveSettingValue();
+        }
+
         return;
     }
 
