@@ -6,6 +6,7 @@
 #include "Sound/SoundBase.h"
 #include "Components/AudioComponent.h"
 #include "System/SettingSave.h"
+#include "GameFramework/GameUserSettings.h"
 
 void UPeacFulGameInstance::UpdateToDo(EPlayerToDo targetTodo)
 {
@@ -147,6 +148,8 @@ void UPeacFulGameInstance::ResetSetting()
     UIVolume = 0.5f;
 
     Brightness = 14.f;
+
+    Resolution = FString("1920 x 1080");
 }
 
 void UPeacFulGameInstance::LoadSettingValue()
@@ -166,12 +169,45 @@ void UPeacFulGameInstance::LoadSettingValue()
 
             Brightness = LoadedSave->Brightness;
 
+            Resolution = LoadedSave->Resolution;
         }
     }
     else
     {
         ResetSetting();
     }
+}
+
+void UPeacFulGameInstance::SetResolution(FString SelectedItem)
+{
+    UGameUserSettings* UserSettings = GEngine->GetGameUserSettings();
+
+    Resolution = SelectedItem;
+
+    if (UserSettings)
+    {
+        if (Resolution == "1920 x 1080")
+        {
+            UserSettings->SetScreenResolution(FIntPoint(1920, 1080));
+        }
+        else if (Resolution == "2560 x 1440")
+        {
+            UserSettings->SetScreenResolution(FIntPoint(2560, 1440));
+        }
+        else if (Resolution == "1600 x 900")
+        {
+            UserSettings->SetScreenResolution(FIntPoint(1600, 900));
+        }
+        else if (Resolution == "1280 x 720")
+        {
+            UserSettings->SetScreenResolution(FIntPoint(1280, 720));
+        }
+
+        UserSettings->SetFullscreenMode(EWindowMode::Windowed);
+
+        UserSettings->ApplySettings(false);
+    }
+
 }
 
 void UPeacFulGameInstance::Init()
@@ -229,4 +265,7 @@ void UPeacFulGameInstance::Init()
 
     
     LoadSettingValue();
+
+    SetResolution(Resolution);
+
 }

@@ -140,6 +140,7 @@ public:
 	void SetGameBrightness();
 
 
+
 	EPlayerToDo GetPlayerToDo();
 	EDifficulty GetDifficulty();
 

@@ -21,16 +21,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
 	float MouseAimSensitivity = 0.4f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setting Parameter")
 	float SFXVolume = 0.5f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setting Parameter")
 	float BGMVolume = 0.5f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setting Parameter")
 	float UIVolume = 0.5f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
 	float Brightness = 14.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
+	FString Resolution;
 
 };

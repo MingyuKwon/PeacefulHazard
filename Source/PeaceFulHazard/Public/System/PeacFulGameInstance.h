@@ -85,6 +85,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
 	float Brightness = 14.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
+	FString Resolution;
+
+	void SetResolution(FString SelectedItem);
+
 
 	//////////////////////////////////////// SETTING /////////////////////////////////////////////////////////////////////
 

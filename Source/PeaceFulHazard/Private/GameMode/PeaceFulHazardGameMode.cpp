@@ -110,6 +110,8 @@ void APeaceFulHazardGameMode::SaveSettingValue()
         settingSave->UIVolume = PeacFulGameInstance->UIVolume;
 
         settingSave->Brightness = PeacFulGameInstance->Brightness;
+        settingSave->Resolution = PeacFulGameInstance->Resolution;
+
 
         UGameplayStatics::SaveGameToSlot(settingSave, FString("Setting"), 0);
     }

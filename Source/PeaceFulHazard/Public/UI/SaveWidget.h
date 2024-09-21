@@ -16,6 +16,7 @@ class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
 class USoundBase;
 class USlider;
+class UComboBoxString;
 /**
  * 
  */
@@ -167,6 +168,15 @@ protected:
 	UBorder* BrightnessFill;
 
 	float maxBrightnessFill = 440.0f;
+
+
+
+	UPROPERTY(meta = (BindWidget))
+	UComboBoxString* ResolutionDropDown;
+
+	UFUNCTION()
+	void OnResolutionDropDownChanged(FString SelectedItem, ESelectInfo::Type SelectionType);
+
 
 
 	UFUNCTION()

@@ -14,7 +14,8 @@
 #include "System/PeacFulGameInstance.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/Slider.h"
-
+#include "Components/ComboBoxString.h"
+#include "SlateCore.h"
 
 void USaveWidget::BackUIInputTrigger()
 {
@@ -274,8 +275,20 @@ void USaveWidget::NativeConstruct()
 		Brightness->OnValueChanged.AddDynamic(this, &ThisClass::OnBrightChanged);
 	}
 
+	if (ResolutionDropDown)
+	{
+		ResolutionDropDown->OnSelectionChanged.AddDynamic(this, &ThisClass::OnResolutionDropDownChanged);
+	}
 
 	UpdateAllUI();
+}
+
+void USaveWidget::OnResolutionDropDownChanged(FString SelectedItem, ESelectInfo::Type SelectionType)
+{
+	if (PeacFulGameInstance)
+	{
+		PeacFulGameInstance->SetResolution(SelectedItem);
+	}
 }
 
 void USaveWidget::OnDefaultMouseSensibilityValueChanged(float Value)
@@ -610,6 +623,11 @@ void USaveWidget::UpdateAllUI()
 			if (Brightness)
 			{
 				Brightness->SetValue((PeacFulGameInstance->Brightness - 11.f) / 4.f);
+			}
+
+			if (ResolutionDropDown)
+			{
+				ResolutionDropDown->SetSelectedOption(PeacFulGameInstance->Resolution);
 			}
 		}
 	}
