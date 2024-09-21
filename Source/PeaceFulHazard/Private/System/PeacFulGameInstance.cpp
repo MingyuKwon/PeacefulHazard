@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "System/PeacFulGameInstance.h"
@@ -219,7 +219,7 @@ void UPeacFulGameInstance::SetLangauage(FString SelectedItem)
     {
 
     }
-    else if (Language == FString(TEXT("ÇÑ±¹¾î")))
+    else if (Language == FString(TEXT("í•œêµ­ì–´")))
     {
 
     }
