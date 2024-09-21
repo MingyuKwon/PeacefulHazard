@@ -31,6 +31,7 @@ public:
 	virtual void DrawHUD() override;
 
 	void SetAimDisplay(bool bVisible);
+	void SetAimWide(float value);
 
 	void SetInventoryDisplay(bool bVisible);
 

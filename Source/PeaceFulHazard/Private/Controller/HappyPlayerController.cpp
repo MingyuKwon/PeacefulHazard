@@ -122,8 +122,40 @@ void AHappyPlayerController::BeginPlay()
 
     }
 
+    GetWorld()->GetTimerManager().SetTimer(UpdateValueHandle, this, &AHappyPlayerController::UpdateValue, 0.02f, true);
+
+    
 }
 
+void AHappyPlayerController::UpdateValue()
+{
+    if (ControlledCharacter == nullptr) return;
+
+    if (ControlledCharacter->GetIsAiming())
+    {
+        aimFocusLerpValue = FMath::Lerp(aimFocusLerpValue, 0, aimFocusLerpValue < 0.5f ? 0.015f : 0.05f);
+
+        if (ControlledCharacter->GetPlayerSpeed() < 0.1f)
+        {
+        }
+        else
+        {
+            aimFocusLerpValue = FMath::Clamp(aimFocusLerpValue, 0.3, 1.f);
+        }
+
+    }
+    else
+    {
+        aimFocusLerpValue = FMath::Lerp(aimFocusLerpValue, 1, 1.f);
+    }
+
+
+
+    if (PlayerHUD)
+    {
+        PlayerHUD->SetAimWide(aimFocusLerpValue);
+    }
+}
 
 void AHappyPlayerController::InitializeInventory()
 {
@@ -385,6 +417,15 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
        
         if (bSuccess)
         {
+            if (currentBulletType == EItemType::EIT_Bullet_Noraml)
+            {
+                aimFocusLerpValue = FMath::Clamp(aimFocusLerpValue, 0.6, 1.f);
+            }
+            else
+            {
+                aimFocusLerpValue = FMath::Clamp(aimFocusLerpValue, 1.0, 1.f);
+            }
+
             SetBulletCount(true);
         }
 

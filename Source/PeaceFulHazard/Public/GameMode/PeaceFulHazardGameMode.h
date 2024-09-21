@@ -37,6 +37,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWantSaveEvent);
 class UPeacFulGameInstance;
 class USoundBase;
 class UAudioComponent;
+class APostProcessVolume;
 
 UCLASS(minimalapi)
 class APeaceFulHazardGameMode : public AGameModeBase
@@ -105,7 +106,11 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FWantSaveEvent WantSaveEvent;
 
-	
+	void SaveSettingValue();
+	void LoadSettingValue();
+
+	void GetSettingValue(float& mouse, float& mouseAim);
+
 	void SaveDataToSlot(FString slotName);
 	void LoadDataFromSlot(FString slotName, bool bNewGame);
 	void DeleteDataFromSlot(FString slotName);
@@ -129,11 +134,18 @@ public:
 
 	void PlaySoundInGameplay(USoundBase* Sound, FVector Location, float VolumeScale);
 	void PlayUISound(USoundBase* Sound, float VolumeScale);
+	void SetBGMVolume(float value);
+
+
+	void SetGameBrightness();
+
+
 
 	EPlayerToDo GetPlayerToDo();
 	EDifficulty GetDifficulty();
 
 	void ToDoUpdate(EPlayerToDo targetTodo);
+
 
 protected:
 
@@ -169,6 +181,8 @@ protected:
 	FString ReceivedSlotName = FString("");
 
 	UPeacFulGameInstance* PeacFulGameInstance;
+
+	APostProcessVolume* CachedPostProcessVolume;
 
 };
 

@@ -101,7 +101,7 @@ protected:
 	void ShootAtEnemy(AActor* TargetActor, FVector HitLocation, FVector ShotDirection, FName BoneName, float damagepercent);
 
 public:
-	void Fire(FVector CameraPosition, FVector CameraNormalVector, float damagepercent);
+	void Fire(FVector CameraPosition, FVector CameraNormalVector, float damagepercent, float aimFocusLerpValue);
 
 	void ReloadTrigger();
 

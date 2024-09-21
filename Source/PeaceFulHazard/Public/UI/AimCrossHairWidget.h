@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "AimCrossHairWidget.generated.h"
 
+class UImage;
+
 /**
  * 
  */
@@ -14,4 +16,20 @@ class PEACEFULHAZARD_API UAimCrossHairWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+	void setAimWide(float value);
+
+protected:
+	UPROPERTY(meta = (BindWidget))
+	UImage* PistolCrossHairDown;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* PistolCrossHairLeft;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* PistolCrossHairRight;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* PistolCrossHairUp;
+
 };

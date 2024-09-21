@@ -269,14 +269,19 @@ protected:
 	void ShowNoticeUI(bool bVisible, FString& noticeText);
 
 
-
 	UFUNCTION(BlueprintCallable)
 	void WarpTravel(EWarpTarget warptarget);
 
-	
 
+
+	FTimerHandle UpdateValueHandle;
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateValue();
 	
 public:
+	float aimFocusLerpValue = 1.f;
+
 	UFUNCTION(BlueprintCallable)
 	void ShowInformationUI(bool bVisible, FString& noticeText);
 

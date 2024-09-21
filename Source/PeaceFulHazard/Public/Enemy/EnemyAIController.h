@@ -25,6 +25,8 @@ class PEACEFULHAZARD_API AEnemyAIController : public AAIController
 public:
 	AEnemyAIController(const FObjectInitializer& ObjectInitializer);
 
+	virtual void Tick(float DeltaTime) override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
 	float currentHealth = 100.f;
 
@@ -33,12 +35,6 @@ public:
 
 	float damageAccumulate = 0.f;
 	float headDamageAccumulate = 0.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
-	float stundamageAccumulateUnit = 60.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
-	float stunHeadDamageAccumulateUnit = 25.f;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
@@ -76,10 +72,11 @@ public:
 
 protected:
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
+
 	UFUNCTION()
 	void PlayerDeathCallback();
 
-	void Attack();
+	void Attack(bool bBossRange = false);
 
 	UFUNCTION()
 	bool CheckMovetoDestination();

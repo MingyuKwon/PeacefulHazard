@@ -26,6 +26,7 @@
 #include "System/EnemyRoutePivot.h"
 #include "Character/PeaceFulHazardCharacter.h"
 #include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -77,11 +78,21 @@ void AEnemyBase::PossessedBy(AController* NewController)
 	}
 }
 
-void AEnemyBase::Attack()
+void AEnemyBase::Attack(bool bBossRange)
 {
-    int32 RandomChoice = FMath::RandRange(0, 1);
+    if (bBossRange)
+    {
+        if (AttackMontage2)
+        {
+            GetMesh()->GetAnimInstance()->Montage_Play(AttackMontage2);
+        }
 
-    if (RandomChoice == 0)
+        return;
+    }
+
+    int32 RandomChoice = FMath::RandRange(0, 9);
+
+    if (bBoss && RandomChoice <= 6 || !bBoss && RandomChoice <= 4)
     {
         if (AttackMontage)
         {
@@ -99,17 +110,105 @@ void AEnemyBase::Attack()
 
 void AEnemyBase::AttackImpact(int32 index)
 {
-    TArray<AActor*> OverlappingActors;
-    AttackRangeBox->GetOverlappingActors(OverlappingActors);
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
-    for (AActor* Actor : OverlappingActors)
+    if (bBoss && AnimInstance && AnimInstance->Montage_IsPlaying(AttackMontage2))
     {
-        APeaceFulHazardCharacter* TargetCharacter = Cast<APeaceFulHazardCharacter>(Actor);
-        if (TargetCharacter)
+        if (BeforeBombEffect && EnemyAIController && AfterBombEffect)
         {
-            UGameplayStatics::ApplyDamage(TargetCharacter, EnemyDamageAmount, GetController(), this, UDamageType::StaticClass());
+            BombLocationSave = EnemyAIController->TargetLocation;
+            FHitResult HitResult;
+
+            // 라인 트레이스 실행 (아래로 Raycast)
+            bool bHit = GetWorld()->LineTraceSingleByChannel(
+                HitResult,            
+                BombLocationSave,       
+                BombLocationSave + FVector::DownVector * 10000.f,          
+                ECC_Visibility      
+            );
+
+            if (bHit)
+            {
+                BombLocationSave = HitResult.ImpactPoint;
+            }
+
+
+            UNiagaraComponent* bombBeforeNiagara = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+                GetWorld(),
+                BeforeBombEffect,
+                BombLocationSave
+            );
+
+            FTimerHandle bombTimerHandle;
+            GetWorld()->GetTimerManager().SetTimer(bombTimerHandle, [this]() {
+
+                UNiagaraComponent* bombAfterNiagara = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+                    GetWorld(),
+                    AfterBombEffect,
+                    BombLocationSave + FVector::UpVector * 50.f
+                );
+
+                float InnerRadius = 50.f;
+                float OuterRadius = 170.f;
+
+                DrawDebugSphere(
+                    GetWorld(),
+                    BombLocationSave + FVector::UpVector * 50.f,  // 스피어 중심
+                    InnerRadius,                                 // 반경
+                    32,                                          // 세그먼트 수 (세밀하게 그리기)
+                    FColor::Red,                                 // 색상 (내부는 빨간색)
+                    false,                                       // 지속 여부 (false면 일정 시간 후 사라짐)
+                    5.0f                                         // 지속 시간 (5초 동안 그리기)
+                );
+
+                DrawDebugSphere(
+                    GetWorld(),
+                    BombLocationSave + FVector::UpVector * 50.f,  // 스피어 중심
+                    OuterRadius,                                 // 반경
+                    32,                                          // 세그먼트 수
+                    FColor::Yellow,                              // 색상 (외부는 노란색)
+                    false,                                       // 지속 여부
+                    5.0f                                         // 지속 시간
+                );
+
+                UGameplayStatics::ApplyRadialDamageWithFalloff(
+                    GetWorld(),
+                    EnemyDamageAmount,          // 최대 데미지
+                    10.f,                       // 최소 데미지
+                    BombLocationSave + FVector::UpVector * 50.f, // 폭탄 위치
+                    InnerRadius,                      // 내부 반경: 최대 데미지를 가할 반경
+                    OuterRadius,                      // 외부 반경: 최소 데미지를 가할 반경
+                    1.0f,                       // 데미지 감소 시작 거리와 끝 거리 사이의 선형 데미지 감소 계수
+                    nullptr,                    // 데미지 타입 클래스 (기본값)
+                    TArray<AActor*>(),          // 피해 제외 대상 (없음)
+                    this,                       // 피해를 입히는 액터 (자기 자신)
+                    GetInstigatorController(),  // 공격자의 컨트롤러
+                    ECC_Visibility              // 데미지 적용 채널 (Visibility)
+                );
+                }, 1.f, false);
         }
     }
+    else
+    {
+        TArray<AActor*> OverlappingActors;
+        AttackRangeBox->GetOverlappingActors(OverlappingActors);
+
+        for (AActor* Actor : OverlappingActors)
+        {
+            APeaceFulHazardCharacter* TargetCharacter = Cast<APeaceFulHazardCharacter>(Actor);
+            if (TargetCharacter)
+            {
+                UGameplayStatics::ApplyDamage(TargetCharacter, EnemyDamageAmount, GetController(), this, UDamageType::StaticClass());
+            }
+        }
+
+    }
+
+
+
+
+
+
 }
 
 void AEnemyBase::AttackEnd()
@@ -180,6 +279,7 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
     float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
     if (ActualDamage <= 0.0f) return 0;
+    if (Cast<AEnemyBase>(DamageCauser) != nullptr) return 0 ;
 
     FVector ShotDirection;
     bool bHead = false;

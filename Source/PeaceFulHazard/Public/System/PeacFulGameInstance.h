@@ -12,7 +12,7 @@
 class UPeacFulSaveGame;
 class USoundBase;
 class UAudioComponent;
-
+class USettingSave;
 /**
  * 
  */
@@ -60,6 +60,44 @@ public:
 	void PlayAudioComponent(EGameSoundType soundType, UAudioComponent* AudioComponent, USoundBase* Sound, float VolumeScale);
 
 
+	//////////////////////////////////////// SETTING /////////////////////////////////////////////////////////////////////
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
+	float MouseSensitivity = 0.4f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
+	float MouseAimSensitivity = 0.4f;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	float SFXVolume = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	float BGMVolume = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	float UIVolume = 0.5f;
+
+	void ResetSetting();
+
+	void LoadSettingValue();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
+	float Brightness = 14.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
+	FString Resolution;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
+	FString Language;
+
+
+	void SetResolution(FString SelectedItem);
+
+	void SetLangauage(FString SelectedItem);
+
+	//////////////////////////////////////// SETTING /////////////////////////////////////////////////////////////////////
+
 protected:
 
 	virtual void Init() override;
@@ -67,15 +105,6 @@ protected:
 	bool bBeforeWasMap = false;
 
 
-	// Sound
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
-	float SFXVolume = 0.8f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
-	float BGMVolume = 1.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
-	float UIVolume = 1.f;
 
 };
 

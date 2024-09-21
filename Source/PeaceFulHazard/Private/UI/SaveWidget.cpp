@@ -13,6 +13,9 @@
 #include "System/PeacFulSaveGame.h"
 #include "System/PeacFulGameInstance.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Components/Slider.h"
+#include "Components/ComboBoxString.h"
+#include "SlateCore.h"
 
 void USaveWidget::BackUIInputTrigger()
 {
@@ -235,6 +238,224 @@ void USaveWidget::NativeConstruct()
 		TitleButton->OnClicked.AddDynamic(this, &ThisClass::OnExitButtonClicked);
 	}
 
+
+
+	if (SettingResetButton)
+	{
+		SettingResetButton->OnClicked.AddDynamic(this, &ThisClass::OnResetSettingValue);
+	}
+
+	if (DefaultMouseSensibility)
+	{
+		DefaultMouseSensibility->OnValueChanged.AddDynamic(this, &ThisClass::OnDefaultMouseSensibilityValueChanged);
+	}
+
+	if (AimMouseSensibility)
+	{
+		AimMouseSensibility->OnValueChanged.AddDynamic(this, &ThisClass::OnAimMouseSensibilityValueChanged);
+	}
+
+	if (BGMVolumue)
+	{
+		BGMVolumue->OnValueChanged.AddDynamic(this, &ThisClass::OnBGMChanged);
+	}
+
+	if (SFXVolumue)
+	{
+		SFXVolumue->OnValueChanged.AddDynamic(this, &ThisClass::OnSFXChanged);
+	}
+
+	if (UIVolumue)
+	{
+		UIVolumue->OnValueChanged.AddDynamic(this, &ThisClass::OnUIChanged);
+	}
+
+	if (Brightness)
+	{
+		Brightness->OnValueChanged.AddDynamic(this, &ThisClass::OnBrightChanged);
+	}
+
+	if (ResolutionDropDown)
+	{
+		ResolutionDropDown->OnSelectionChanged.AddDynamic(this, &ThisClass::OnResolutionDropDownChanged);
+	}
+
+	if (LanguageDropDown)
+	{
+		LanguageDropDown->OnSelectionChanged.AddDynamic(this, &ThisClass::OnLanguageDropDownChanged);
+	}
+	
+
+	UpdateAllUI();
+}
+
+void USaveWidget::OnResolutionDropDownChanged(FString SelectedItem, ESelectInfo::Type SelectionType)
+{
+	if (PeacFulGameInstance)
+	{
+		PeacFulGameInstance->SetResolution(SelectedItem);
+	}
+}
+
+void USaveWidget::OnLanguageDropDownChanged(FString SelectedItem, ESelectInfo::Type SelectionType)
+{
+	if (PeacFulGameInstance)
+	{
+		PeacFulGameInstance->SetLangauage(SelectedItem);
+	}
+}
+
+void USaveWidget::OnDefaultMouseSensibilityValueChanged(float Value)
+{
+	if (DefaultMouseSensibility && DefaultMouseSensibilityFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(DefaultMouseSensibilityFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxDefaultMouseSensibilityFill * (1 - Value);
+			CanvasSlotFill->SetOffsets(NewOffsets);
+		}
+
+		if (PeacFulGameInstance)
+		{
+			PeacFulGameInstance->MouseSensitivity = Value;
+		}
+	}
+
+}
+
+void USaveWidget::OnAimMouseSensibilityValueChanged(float Value)
+{
+	if (AimMouseSensibility && AimMouseSensibilityFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(AimMouseSensibilityFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxAimMouseSensibilityFill * (1 - Value);
+
+			CanvasSlotFill->SetOffsets(NewOffsets);
+
+		}
+
+		if (PeacFulGameInstance)
+		{
+			PeacFulGameInstance->MouseAimSensitivity = Value;
+		}
+	}
+}
+
+void USaveWidget::OnBGMChanged(float Value)
+{
+	if (BGMVolumue && BGMVolumueFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(BGMVolumueFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxVolumeFill * (1 - Value);
+
+			CanvasSlotFill->SetOffsets(NewOffsets);
+
+		}
+
+		if (PeacFulGameInstance)
+		{
+			PeacFulGameInstance->BGMVolume = Value;
+		}
+
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->SetBGMVolume(Value);
+		}
+		
+
+	}
+
+}
+
+void USaveWidget::OnSFXChanged(float Value)
+{
+	if (SFXVolumue && SFXVolumueFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(SFXVolumueFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxVolumeFill * (1 - Value);
+
+			CanvasSlotFill->SetOffsets(NewOffsets);
+
+		}
+
+		if (PeacFulGameInstance)
+		{
+			PeacFulGameInstance->SFXVolume = Value;
+		}
+	}
+}
+
+void USaveWidget::OnUIChanged(float Value)
+{
+	if (UIVolumue && UIVolumueFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(UIVolumueFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxVolumeFill * (1 - Value);
+
+			CanvasSlotFill->SetOffsets(NewOffsets);
+
+		}
+
+		if (PeacFulGameInstance)
+		{
+			PeacFulGameInstance->UIVolume = Value;
+		}
+	}
+}
+
+void USaveWidget::OnBrightChanged(float Value)
+{
+	if (Brightness && BrightnessFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(BrightnessFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxBrightnessFill * (1 - Value);
+
+			CanvasSlotFill->SetOffsets(NewOffsets);
+
+		}
+
+		if (PeacFulGameInstance)
+		{
+			PeacFulGameInstance->Brightness = Value * 4 + 11.f;
+		}
+
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->SetGameBrightness();
+		}
+	}
+}
+
+void USaveWidget::OnResetSettingValue()
+{
+	if (PeacFulGameInstance)
+	{
+		PeacFulGameInstance->ResetSetting();
+	}
+
 	UpdateAllUI();
 }
 
@@ -278,6 +499,8 @@ void USaveWidget::OnExitButtonClicked()
 		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
 	}
 }
+
+
 
 void USaveWidget::ShowCurrentLocation()
 {
@@ -378,6 +601,58 @@ void USaveWidget::ShowCurrentLocation()
 
 void USaveWidget::UpdateAllUI()
 {
+	if (PeaceFulHazardGameMode)
+	{
+		float defaultMouse;
+		float aimMouse;
+		PeaceFulHazardGameMode->GetSettingValue(defaultMouse, aimMouse);
+
+		if (DefaultMouseSensibility)
+		{
+			DefaultMouseSensibility->SetValue(defaultMouse);
+		}
+
+		if (AimMouseSensibility)
+		{
+			AimMouseSensibility->SetValue(aimMouse);
+		}
+
+		if (PeacFulGameInstance)
+		{
+			if (BGMVolumue)
+			{
+				BGMVolumue->SetValue(PeacFulGameInstance->BGMVolume);
+			}
+
+			if (SFXVolumue)
+			{
+				SFXVolumue->SetValue(PeacFulGameInstance->SFXVolume);
+			}
+
+			if (UIVolumue)
+			{
+				UIVolumue->SetValue(PeacFulGameInstance->UIVolume);
+			}
+			
+			if (Brightness)
+			{
+				Brightness->SetValue((PeacFulGameInstance->Brightness - 11.f) / 4.f);
+			}
+
+			if (ResolutionDropDown)
+			{
+				ResolutionDropDown->SetSelectedOption(PeacFulGameInstance->Resolution);
+			}
+
+			if (LanguageDropDown)
+			{
+				LanguageDropDown->SetSelectedOption(PeacFulGameInstance->Language);
+			}
+		}
+	}
+	
+
+
 	for (int32 i = 0; i < SaveButtons.Num(); i++)
 	{
 		if (SaveButtons[i])
@@ -487,6 +762,7 @@ void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
 
 	MenuSelectCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	SaveShowPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	OptionCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 	switch (menuType)
 	{
@@ -494,6 +770,7 @@ void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
 
 		SaveCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		MapCanvas->SetVisibility(ESlateVisibility::Hidden);
+		OptionCanvas->SetVisibility(ESlateVisibility::Hidden);
 
 		if (bSaveMode)
 		{
@@ -506,7 +783,16 @@ void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
 	case EMenuType::EMT_Map:
 		MapCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		SaveCanvas->SetVisibility(ESlateVisibility::Hidden);
+		OptionCanvas->SetVisibility(ESlateVisibility::Hidden);
 
+		break;
+
+	case EMenuType::EMT_Option:
+		MapCanvas->SetVisibility(ESlateVisibility::Hidden);
+		SaveCanvas->SetVisibility(ESlateVisibility::Hidden);
+		OptionCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+		break;
 	}
 
 	UpdateAllUI();

@@ -50,6 +50,14 @@ void APlayerHUD::SetAimDisplay(bool bVisible)
 
 }
 
+void APlayerHUD::SetAimWide(float value)
+{
+    if (HUDAimWidget)
+    {
+        HUDAimWidget->setAimWide(value);
+    }
+}
+
 void APlayerHUD::SetInventoryDisplay(bool bVisible)
 {
     if (!bVisible)
@@ -153,6 +161,12 @@ void APlayerHUD::SetMainMenuDisplay(bool bVisible, EMenuType menuType, bool bSav
         {
             SaveWidget->SetVisibility(ESlateVisibility::Hidden);
         }
+
+        if (PeaceFulHazardGameMode)
+        {
+            PeaceFulHazardGameMode->SaveSettingValue();
+        }
+
         return;
     }
 

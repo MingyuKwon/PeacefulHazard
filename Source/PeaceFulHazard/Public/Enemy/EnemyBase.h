@@ -12,6 +12,7 @@ class UAnimMontage;
 class APeaceFulHazardGameMode;
 class USoundBase;
 class UNiagaraComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class PEACEFULHAZARD_API AEnemyBase : public ACharacter
@@ -44,7 +45,7 @@ public:
 	void StopDamageStunMontage();
 
 	UFUNCTION(BlueprintCallable)
-	void Attack();
+	void Attack(bool bBossRange = false);
 
 	UFUNCTION(BlueprintCallable)
 	void AttackImpact(int32 index);
@@ -63,6 +64,15 @@ public:
 	float ChasingMoveSpeed = 200;
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UNiagaraSystem* BeforeBombEffect;
+
+	UPROPERTY(EditAnywhere, Category = "Fire Para")
+	UNiagaraSystem* AfterBombEffect;
+
+	FVector BombLocationSave = FVector::ZeroVector;
+
+
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* DeathSound;
 
@@ -80,7 +90,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
 	EPlayerToDo spawnProgress = EPlayerToDo::EPTD_GetOutTutorialRoom;
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Para")
 	float EnemyDamageAmount = 10;
@@ -158,6 +167,16 @@ protected:
 
 
 public:	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
+	bool bBoss = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	float stundamageAccumulateUnit = 60.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	float stunHeadDamageAccumulateUnit = 25.f;
+
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

@@ -10,6 +10,7 @@
 #include "System/PeacFulSaveGame.h"
 #include "Sound/SoundBase.h"
 #include "Components/AudioComponent.h"
+#include "System/SettingSave.h"
 
 APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 {
@@ -90,6 +91,63 @@ void APeaceFulHazardGameMode::SetEnemySaveRefCount(bool bPlus)
 }
 
 
+
+
+void APeaceFulHazardGameMode::SaveSettingValue()
+{
+    if (PeacFulGameInstance == nullptr) return;
+
+    USettingSave* settingSave = Cast<USettingSave>(UGameplayStatics::CreateSaveGameObject(USettingSave::StaticClass()));
+
+
+    if (settingSave)
+    {
+        settingSave->MouseAimSensitivity = PeacFulGameInstance->MouseAimSensitivity;
+        settingSave->MouseSensitivity = PeacFulGameInstance->MouseSensitivity;
+
+        settingSave->BGMVolume = PeacFulGameInstance->BGMVolume;
+        settingSave->SFXVolume = PeacFulGameInstance->SFXVolume;
+        settingSave->UIVolume = PeacFulGameInstance->UIVolume;
+
+        settingSave->Brightness = PeacFulGameInstance->Brightness;
+        settingSave->Resolution = PeacFulGameInstance->Resolution;
+        settingSave->Language = PeacFulGameInstance->Language;
+
+
+        UGameplayStatics::SaveGameToSlot(settingSave, FString("Setting"), 0);
+    }
+
+}
+
+void APeaceFulHazardGameMode::LoadSettingValue()
+{
+    if (UGameplayStatics::DoesSaveGameExist(FString("Setting"), 0))
+    {
+        USettingSave* LoadedSave = Cast<USettingSave>(UGameplayStatics::LoadGameFromSlot(FString("Setting"), 0));
+
+        if (LoadedSave)
+        {
+            if (PeacFulGameInstance)
+            {
+                PeacFulGameInstance->MouseAimSensitivity = LoadedSave->MouseAimSensitivity;
+                PeacFulGameInstance->MouseSensitivity = LoadedSave->MouseSensitivity;
+
+                PeacFulGameInstance->BGMVolume = LoadedSave->BGMVolume;
+                PeacFulGameInstance->SFXVolume = LoadedSave->SFXVolume;
+                PeacFulGameInstance->UIVolume = LoadedSave->UIVolume;
+
+            }
+        }
+    }
+    else
+    {
+        if (PeacFulGameInstance)
+        {
+            PeacFulGameInstance->ResetSetting();
+        }
+    }
+
+}
 
 
 void APeaceFulHazardGameMode::SaveDataToSlot(FString slotName)
@@ -330,6 +388,7 @@ void APeaceFulHazardGameMode::BeginPlay()
         currentMapType = mapStore->mapType;
     }
 
+    SetGameBrightness();
 
     FTimerHandle startDelayHandle;
     GetWorld()->GetTimerManager().SetTimer(startDelayHandle, [this]()
@@ -339,6 +398,22 @@ void APeaceFulHazardGameMode::BeginPlay()
         }, 0.1f, false);
 
 }
+
+void APeaceFulHazardGameMode::SetGameBrightness()
+{
+    if (PeacFulGameInstance == nullptr) return;
+
+    if (!CachedPostProcessVolume)
+    {
+        CachedPostProcessVolume = Cast<APostProcessVolume>(UGameplayStatics::GetActorOfClass(GetWorld(), APostProcessVolume::StaticClass()));
+    }
+
+    if (CachedPostProcessVolume)
+    {
+        CachedPostProcessVolume->Settings.AutoExposureBias = PeacFulGameInstance->Brightness;
+    }
+}
+
 
 void APeaceFulHazardGameMode::PlayBGM()
 {
@@ -369,6 +444,17 @@ void APeaceFulHazardGameMode::PlayUISound(USoundBase* Sound, float VolumeScale)
     }
 }
 
+void APeaceFulHazardGameMode::SetBGMVolume(float value)
+{
+    if (BGMAudioComponent && PeacFulGameInstance)
+    {
+        float Volume = PeacFulGameInstance->BGMVolume * 2.f;
+
+        BGMAudioComponent->SetVolumeMultiplier(Volume);
+    }
+
+}
+
 EPlayerToDo APeaceFulHazardGameMode::GetPlayerToDo()
 {
     if (PeacFulGameInstance)
@@ -394,6 +480,17 @@ void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo targetTodo)
         if (GetPlayerToDo() >= targetTodo) return;
 
         PeacFulGameInstance->UpdateToDo(targetTodo);
+    }
+}
+
+void APeaceFulHazardGameMode::GetSettingValue(float& mouse, float& mouseAim)
+{
+    if (PeacFulGameInstance)
+    {
+        mouse = PeacFulGameInstance->MouseSensitivity;
+        mouseAim = PeacFulGameInstance->MouseAimSensitivity;
+
+
     }
 }
 

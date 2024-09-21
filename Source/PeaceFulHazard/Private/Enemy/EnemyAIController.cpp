@@ -47,14 +47,33 @@ AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializ
 
 }
 
+void AEnemyAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (controlEnemy && controlEnemy->bBoss && !bNowAttacking && !bDeath && !bStunDamage && !bStunHeadShot)
+	{
+		FVector DirectionToTarget = (TargetLocation - controlEnemy->GetActorLocation()).GetSafeNormal();
+		FRotator TargetRotation = DirectionToTarget.Rotation();
+
+		float DeltaTime = GetWorld()->GetDeltaSeconds();
+		FRotator NewRotation = FMath::RInterpTo(controlEnemy->GetActorRotation(), TargetRotation, DeltaTime, 2.5f);
+
+		controlEnemy->SetActorRotation(NewRotation);
+
+	}
+}
+
 void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 {
+	if (controlEnemy == nullptr) return;
+
 	currentHealth -= Damage;
 	currentHealth = FMath::Clamp(currentHealth, 0, currentHealth);
 
 	damageAccumulate += Damage;
 
-	if (stundamageAccumulateUnit <= damageAccumulate)
+	if (controlEnemy->stundamageAccumulateUnit <= damageAccumulate)
 	{
 		damageAccumulate = 0;
 		bStunDamage = true;
@@ -65,7 +84,7 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 	{
 		headDamageAccumulate += Damage;
 
-		if (stunHeadDamageAccumulateUnit <= headDamageAccumulate)
+		if (controlEnemy->stunHeadDamageAccumulateUnit <= headDamageAccumulate)
 		{
 			headDamageAccumulate = 0;
 			bStunHeadShot = true;
@@ -140,14 +159,13 @@ void AEnemyAIController::PlayerDeathCallback()
 
 }
 
-void AEnemyAIController::Attack()
+void AEnemyAIController::Attack(bool bBossRange)
 {
 	bNowAttacking = true;
 
-	UE_LOG(LogTemp, Display, TEXT("Attack"));
 	if (controlEnemy)
 	{
-		controlEnemy->Attack();
+		controlEnemy->Attack(bBossRange);
 	}
 }
 
@@ -161,12 +179,26 @@ bool AEnemyAIController::CheckMovetoDestination()
 	if (GEngine)
 	{
 		FString text = FString::Printf(TEXT("distance : %f"), distance);
-		GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Blue, text);
+		GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Red, text);
 	}
 
 	if (controlEnemy)
 	{
-		return distance <= ((Target == nullptr) ? controlEnemy->PatrolMoveToRange : controlEnemy->AttackRange);
+		if (controlEnemy->bBoss)
+		{
+			FVector DirectionToTarget = (TargetLocation - controlEnemy->GetActorLocation()).GetSafeNormal();
+
+			float DotProduct = FVector::DotProduct(controlEnemy->GetActorForwardVector(), DirectionToTarget);
+			float AngleDegrees = FMath::RadiansToDegrees(FMath::Acos(DotProduct));
+
+			float AllowedAngle = 20.0f; // 허용되는 각도
+			return AngleDegrees <= AllowedAngle;
+
+		}
+		else
+		{
+			return distance <= ((Target == nullptr) ? controlEnemy->PatrolMoveToRange : controlEnemy->AttackRange);
+		}
 
 	}
 
@@ -185,7 +217,17 @@ void AEnemyAIController::UpdateBlackBoard()
 			{
 				if (nonAttackLock) return;
 
-				Attack();
+				if (controlEnemy->bBoss)
+				{
+					float distance = FVector::Dist2D(GetPawn()->GetActorLocation(), TargetLocation);
+					Attack(controlEnemy->AttackRange < distance);
+
+				}
+				else
+				{
+					Attack();
+				}
+
 			}
 		}
 
@@ -205,7 +247,6 @@ void AEnemyAIController::UpdateBlackBoard()
 		DrawDebugSphere(GetWorld(), TargetLocation, 50.f, 30, FColor::Blue, false, 0.1f);
 
 	}
-
 
 	if (BlackboardComp)
 	{

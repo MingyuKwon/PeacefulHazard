@@ -143,11 +143,8 @@ protected:
 	float ShiftMoveSpeed = 300.f;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim Parameter", meta = (AllowPrivateAccess = "true"))
-	float MouseSensitivity = 0.8f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim Parameter", meta = (AllowPrivateAccess = "true"))
-	float MouseAimSensitivity = 0.4f;
+	float MouseSensitivity = 0.4f;
+	float MouseAimSensitivity = 0.2f;
 
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
@@ -290,6 +287,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool GetIsShift() const { return bNowShifting; };
 
+	UFUNCTION(BlueprintCallable)
+	float GetPlayerSpeed() const;
 
 	UFUNCTION(BlueprintCallable)
 	float GetMoveXInput() const;

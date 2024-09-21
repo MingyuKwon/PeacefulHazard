@@ -1,10 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "System/PeacFulGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 #include "Components/AudioComponent.h"
+#include "System/SettingSave.h"
+#include "GameFramework/GameUserSettings.h"
 
 void UPeacFulGameInstance::UpdateToDo(EPlayerToDo targetTodo)
 {
@@ -95,7 +97,7 @@ void UPeacFulGameInstance::resetTempSave()
 
 void UPeacFulGameInstance::PlaySoundOnceInGamePlay(USoundBase* Sound, FVector Location, float VolumeScale)
 {
-    float Volume = SFXVolume * VolumeScale;
+    float Volume = 2 * SFXVolume * VolumeScale;
 
     if (Sound)
     {
@@ -110,10 +112,12 @@ void UPeacFulGameInstance::PlayAudioComponent(EGameSoundType soundType, UAudioCo
     switch (soundType)
     {
     case EGameSoundType::EGST_BGM:
-        Volume = BGMVolume;
+        Volume = BGMVolume * 2;
+        break;
 
     case EGameSoundType::EGST_UI:
-        Volume = UIVolume;
+        Volume = UIVolume * 2;
+        break;
 
     default:
         break;
@@ -131,6 +135,95 @@ void UPeacFulGameInstance::PlayAudioComponent(EGameSoundType soundType, UAudioCo
 }
 
 
+
+void UPeacFulGameInstance::ResetSetting()
+{
+    UE_LOG(LogTemp, Display, TEXT("ResetSetting"));
+
+    MouseSensitivity = 0.4f;
+    MouseAimSensitivity = 0.4f;
+
+    SFXVolume = 0.5f;
+    BGMVolume = 0.5f;
+    UIVolume = 0.5f;
+
+    Brightness = 14.f;
+
+    Resolution = FString("1920 x 1080");
+}
+
+void UPeacFulGameInstance::LoadSettingValue()
+{
+    if (UGameplayStatics::DoesSaveGameExist(FString("Setting"), 0))
+    {
+        USettingSave* LoadedSave = Cast<USettingSave>(UGameplayStatics::LoadGameFromSlot(FString("Setting"), 0));
+
+        if (LoadedSave)
+        {
+            MouseAimSensitivity = LoadedSave->MouseAimSensitivity;
+            MouseSensitivity = LoadedSave->MouseSensitivity;
+
+            BGMVolume = LoadedSave->BGMVolume;
+            SFXVolume = LoadedSave->SFXVolume;
+            UIVolume = LoadedSave->UIVolume;
+
+            Brightness = LoadedSave->Brightness;
+
+            Resolution = LoadedSave->Resolution;
+            Language = LoadedSave->Language;
+        }
+    }
+    else
+    {
+        ResetSetting();
+    }
+}
+
+void UPeacFulGameInstance::SetResolution(FString SelectedItem)
+{
+    UGameUserSettings* UserSettings = GEngine->GetGameUserSettings();
+
+    Resolution = SelectedItem;
+
+    if (UserSettings)
+    {
+        if (Resolution == "1920 x 1080")
+        {
+            UserSettings->SetScreenResolution(FIntPoint(1920, 1080));
+        }
+        else if (Resolution == "2560 x 1440")
+        {
+            UserSettings->SetScreenResolution(FIntPoint(2560, 1440));
+        }
+        else if (Resolution == "1600 x 900")
+        {
+            UserSettings->SetScreenResolution(FIntPoint(1600, 900));
+        }
+        else if (Resolution == "1280 x 720")
+        {
+            UserSettings->SetScreenResolution(FIntPoint(1280, 720));
+        }
+
+        UserSettings->SetFullscreenMode(EWindowMode::Windowed);
+
+        UserSettings->ApplySettings(false);
+    }
+
+}
+
+void UPeacFulGameInstance::SetLangauage(FString SelectedItem)
+{
+    Language = SelectedItem;
+
+    if (Language == "English")
+    {
+
+    }
+    else if (Language == FString(TEXT("한국어")))
+    {
+
+    }
+}
 
 void UPeacFulGameInstance::Init()
 {
@@ -186,5 +279,8 @@ void UPeacFulGameInstance::Init()
 
 
     
+    LoadSettingValue();
+
+    SetResolution(Resolution);
 
 }
