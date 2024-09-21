@@ -194,13 +194,6 @@ void USaveWidget::NativeConstruct()
 
 	InitArrays();
 
-
-	if (SettingResetButton)
-	{
-		SettingResetButton->OnClicked.AddDynamic(this, &ThisClass::OnResetSettingValue);
-
-	}
-
 	for (UButton* Button : SaveButtons)
 	{
 		if (Button)
@@ -245,6 +238,12 @@ void USaveWidget::NativeConstruct()
 	}
 
 
+
+	if (SettingResetButton)
+	{
+		SettingResetButton->OnClicked.AddDynamic(this, &ThisClass::OnResetSettingValue);
+	}
+
 	if (DefaultMouseSensibility)
 	{
 		DefaultMouseSensibility->OnValueChanged.AddDynamic(this, &ThisClass::OnDefaultMouseSensibilityValueChanged);
@@ -254,6 +253,22 @@ void USaveWidget::NativeConstruct()
 	{
 		AimMouseSensibility->OnValueChanged.AddDynamic(this, &ThisClass::OnAimMouseSensibilityValueChanged);
 	}
+
+	if (BGMVolumue)
+	{
+		BGMVolumue->OnValueChanged.AddDynamic(this, &ThisClass::OnBGMChanged);
+	}
+
+	if (SFXVolumue)
+	{
+		SFXVolumue->OnValueChanged.AddDynamic(this, &ThisClass::OnSFXChanged);
+	}
+
+	if (UIVolumue)
+	{
+		UIVolumue->OnValueChanged.AddDynamic(this, &ThisClass::OnUIChanged);
+	}
+
 
 	UpdateAllUI();
 }
@@ -297,6 +312,80 @@ void USaveWidget::OnAimMouseSensibilityValueChanged(float Value)
 		if (PeacFulGameInstance)
 		{
 			PeacFulGameInstance->MouseAimSensitivity = Value;
+		}
+	}
+}
+
+void USaveWidget::OnBGMChanged(float Value)
+{
+	if (BGMVolumue && BGMVolumueFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(BGMVolumueFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxVolumeFill * (1 - Value);
+
+			CanvasSlotFill->SetOffsets(NewOffsets);
+
+		}
+
+		if (PeacFulGameInstance)
+		{
+			PeacFulGameInstance->BGMVolume = Value;
+		}
+
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->SetBGMVolume(Value);
+		}
+		
+
+	}
+
+}
+
+void USaveWidget::OnSFXChanged(float Value)
+{
+	if (SFXVolumue && SFXVolumueFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(SFXVolumueFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxVolumeFill * (1 - Value);
+
+			CanvasSlotFill->SetOffsets(NewOffsets);
+
+		}
+
+		if (PeacFulGameInstance)
+		{
+			PeacFulGameInstance->SFXVolume = Value;
+		}
+	}
+}
+
+void USaveWidget::OnUIChanged(float Value)
+{
+	if (UIVolumue && UIVolumueFill)
+	{
+		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(UIVolumueFill->Slot);
+
+		if (CanvasSlotFill)
+		{
+			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
+			NewOffsets.Right = maxVolumeFill * (1 - Value);
+
+			CanvasSlotFill->SetOffsets(NewOffsets);
+
+		}
+
+		if (PeacFulGameInstance)
+		{
+			PeacFulGameInstance->UIVolume = Value;
 		}
 	}
 }
@@ -467,6 +556,25 @@ void USaveWidget::UpdateAllUI()
 		if (AimMouseSensibility)
 		{
 			AimMouseSensibility->SetValue(aimMouse);
+		}
+
+		if (PeacFulGameInstance)
+		{
+			if (BGMVolumue)
+			{
+				BGMVolumue->SetValue(PeacFulGameInstance->BGMVolume);
+			}
+
+			if (SFXVolumue)
+			{
+				SFXVolumue->SetValue(PeacFulGameInstance->SFXVolume);
+			}
+
+			if (UIVolumue)
+			{
+				UIVolumue->SetValue(PeacFulGameInstance->UIVolume);
+			}
+			
 		}
 	}
 	

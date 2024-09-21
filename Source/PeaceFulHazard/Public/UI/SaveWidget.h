@@ -137,11 +137,46 @@ protected:
 
 	float maxAimMouseSensibilityFill = 1000;
 
+
+
+	UPROPERTY(meta = (BindWidget))
+	USlider* BGMVolumue;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* BGMVolumueFill;
+
+	UPROPERTY(meta = (BindWidget))
+	USlider* SFXVolumue;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* SFXVolumueFill;
+
+	UPROPERTY(meta = (BindWidget))
+	USlider* UIVolumue;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* UIVolumueFill;
+
+	float maxVolumeFill = 500.0f;
+
+	
+
 	UFUNCTION()
 	void OnDefaultMouseSensibilityValueChanged(float Value);
 
 	UFUNCTION()
 	void OnAimMouseSensibilityValueChanged(float Value);
+
+
+	UFUNCTION()
+	void OnBGMChanged(float Value);
+
+	UFUNCTION()
+	void OnSFXChanged(float Value);
+
+	UFUNCTION()
+	void OnUIChanged(float Value);
+
 
 	UFUNCTION()
 	void OnResetSettingValue();

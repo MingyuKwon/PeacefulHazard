@@ -70,13 +70,13 @@ public:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
-	float SFXVolume = 0.8f;
+	float SFXVolume = 0.5f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
-	float BGMVolume = 1.f;
+	float BGMVolume = 0.5f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
-	float UIVolume = 1.f;
+	float UIVolume = 0.5f;
 
 	void ResetSetting();
 

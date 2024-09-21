@@ -96,7 +96,7 @@ void UPeacFulGameInstance::resetTempSave()
 
 void UPeacFulGameInstance::PlaySoundOnceInGamePlay(USoundBase* Sound, FVector Location, float VolumeScale)
 {
-    float Volume = SFXVolume * VolumeScale;
+    float Volume = 2 * SFXVolume * VolumeScale;
 
     if (Sound)
     {
@@ -111,10 +111,12 @@ void UPeacFulGameInstance::PlayAudioComponent(EGameSoundType soundType, UAudioCo
     switch (soundType)
     {
     case EGameSoundType::EGST_BGM:
-        Volume = BGMVolume;
+        Volume = BGMVolume * 2;
+        break;
 
     case EGameSoundType::EGST_UI:
-        Volume = UIVolume;
+        Volume = UIVolume * 2;
+        break;
 
     default:
         break;
@@ -135,12 +137,14 @@ void UPeacFulGameInstance::PlayAudioComponent(EGameSoundType soundType, UAudioCo
 
 void UPeacFulGameInstance::ResetSetting()
 {
+    UE_LOG(LogTemp, Display, TEXT("ResetSetting"));
+
     MouseSensitivity = 0.4f;
     MouseAimSensitivity = 0.4f;
 
-    SFXVolume = 0.8f;
-    BGMVolume = 1.f;
-    UIVolume = 1.f;
+    SFXVolume = 0.5f;
+    BGMVolume = 0.5f;
+    UIVolume = 0.5f;
 
 }
 
@@ -154,6 +158,10 @@ void UPeacFulGameInstance::LoadSettingValue()
         {
             MouseAimSensitivity = LoadedSave->MouseAimSensitivity;
             MouseSensitivity = LoadedSave->MouseSensitivity;
+
+            BGMVolume = LoadedSave->BGMVolume;
+            SFXVolume = LoadedSave->SFXVolume;
+            UIVolume = LoadedSave->UIVolume;
 
         }
     }

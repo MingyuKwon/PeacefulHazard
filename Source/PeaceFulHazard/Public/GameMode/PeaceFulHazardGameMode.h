@@ -133,6 +133,8 @@ public:
 
 	void PlaySoundInGameplay(USoundBase* Sound, FVector Location, float VolumeScale);
 	void PlayUISound(USoundBase* Sound, float VolumeScale);
+	void SetBGMVolume(float value);
+
 
 	EPlayerToDo GetPlayerToDo();
 	EDifficulty GetDifficulty();

@@ -19,6 +19,16 @@ public:
 	float MouseSensitivity = 0.4f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
-	float MouseAimSensitivity = 0.2f;
+	float MouseAimSensitivity = 0.4f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	float SFXVolume = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	float BGMVolume = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound Parameter")
+	float UIVolume = 0.5f;
+
 
 };

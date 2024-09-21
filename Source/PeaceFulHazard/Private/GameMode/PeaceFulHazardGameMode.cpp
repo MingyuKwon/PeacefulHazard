@@ -105,6 +105,10 @@ void APeaceFulHazardGameMode::SaveSettingValue()
         settingSave->MouseAimSensitivity = PeacFulGameInstance->MouseAimSensitivity;
         settingSave->MouseSensitivity = PeacFulGameInstance->MouseSensitivity;
 
+        settingSave->BGMVolume = PeacFulGameInstance->BGMVolume;
+        settingSave->SFXVolume = PeacFulGameInstance->SFXVolume;
+        settingSave->UIVolume = PeacFulGameInstance->UIVolume;
+
         UGameplayStatics::SaveGameToSlot(settingSave, FString("Setting"), 0);
     }
 
@@ -122,6 +126,11 @@ void APeaceFulHazardGameMode::LoadSettingValue()
             {
                 PeacFulGameInstance->MouseAimSensitivity = LoadedSave->MouseAimSensitivity;
                 PeacFulGameInstance->MouseSensitivity = LoadedSave->MouseSensitivity;
+
+                PeacFulGameInstance->BGMVolume = LoadedSave->BGMVolume;
+                PeacFulGameInstance->SFXVolume = LoadedSave->SFXVolume;
+                PeacFulGameInstance->UIVolume = LoadedSave->UIVolume;
+
             }
         }
     }
@@ -413,6 +422,17 @@ void APeaceFulHazardGameMode::PlayUISound(USoundBase* Sound, float VolumeScale)
     }
 }
 
+void APeaceFulHazardGameMode::SetBGMVolume(float value)
+{
+    if (BGMAudioComponent && PeacFulGameInstance)
+    {
+        float Volume = PeacFulGameInstance->BGMVolume * 2.f;
+
+        BGMAudioComponent->SetVolumeMultiplier(Volume);
+    }
+
+}
+
 EPlayerToDo APeaceFulHazardGameMode::GetPlayerToDo()
 {
     if (PeacFulGameInstance)
@@ -447,6 +467,7 @@ void APeaceFulHazardGameMode::GetSettingValue(float& mouse, float& mouseAim)
     {
         mouse = PeacFulGameInstance->MouseSensitivity;
         mouseAim = PeacFulGameInstance->MouseAimSensitivity;
+
 
     }
 }
