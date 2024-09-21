@@ -762,6 +762,7 @@ void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
 
 	MenuSelectCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	SaveShowPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	OptionCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 	switch (menuType)
 	{
@@ -769,6 +770,7 @@ void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
 
 		SaveCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		MapCanvas->SetVisibility(ESlateVisibility::Hidden);
+		OptionCanvas->SetVisibility(ESlateVisibility::Hidden);
 
 		if (bSaveMode)
 		{
@@ -781,7 +783,16 @@ void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
 	case EMenuType::EMT_Map:
 		MapCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		SaveCanvas->SetVisibility(ESlateVisibility::Hidden);
+		OptionCanvas->SetVisibility(ESlateVisibility::Hidden);
 
+		break;
+
+	case EMenuType::EMT_Option:
+		MapCanvas->SetVisibility(ESlateVisibility::Hidden);
+		SaveCanvas->SetVisibility(ESlateVisibility::Hidden);
+		OptionCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+		break;
 	}
 
 	UpdateAllUI();

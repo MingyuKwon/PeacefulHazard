@@ -81,6 +81,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* MapCanvas;
 
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* OptionCanvas;
+
 	
 	UButton* HoveringSaveButton;
 	UButton* HoveringDeleteButton;
