@@ -45,6 +45,15 @@ public:
 
 protected:
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetLangaugeText(ELanguage language);
+
+	UFUNCTION()
+	void CheckLanguage();
+
+	void SetItemDynamicChangeLanguage(UTextBlock* textBlock, FItemInformationUnit itemInformtation, bool bName);
+
+
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* ButtonHoverSound;
 

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/ItemBoxWidget.h"
@@ -208,6 +208,55 @@ void UItemBoxWidget::showItemBoxUI()
 {
 	InventoryCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
+
+void UItemBoxWidget::CheckLanguage()
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	SetLangaugeText(PeaceFulHazardGameMode->GetCurrentLanguage());
+
+}
+
+void UItemBoxWidget::SetItemDynamicChangeLanguage(UTextBlock* textBlock, FItemInformationUnit itemInformtation, bool bName)
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	FText Englishtext = FText();
+	FText Koreantext = FText();
+
+	switch (PeaceFulHazardGameMode->GetCurrentLanguage())
+	{
+	case ELanguage::ED_English:
+
+		if (bName)
+		{
+			Englishtext = FText::FromString(itemInformtation.itemNameText);
+		}
+		else
+		{
+			Englishtext = FText::FromString(itemInformtation.itemExplainText);
+		}
+
+		textBlock->SetText(Englishtext);
+		break;
+
+	case ELanguage::ED_Korean:
+
+		if (bName)
+		{
+			Koreantext = FText::FromString(itemInformtation.itemNameKoreanText);
+		}
+		else
+		{
+			Koreantext = FText::FromString(itemInformtation.itemExplainKoreanText);
+		}
+
+		textBlock->SetText(Koreantext);
+		break;
+
+	}
+}
+
 
 void UItemBoxWidget::NativeConstruct()
 {
@@ -518,7 +567,7 @@ void UItemBoxWidget::OnItemButtonClicked_1()
 		PeaceFulHazardGameMode->ItemBoxInteractEvent.Broadcast(false, index, recentItemBox->itemBoxItems[index], recentItemBox->itemBoxItemCounts[index]);
 
 	}
-	
+
 
 	SetAllUIUpdate();
 }
@@ -612,28 +661,34 @@ void UItemBoxWidget::OnItemButtonUnhovered()
 
 void UItemBoxWidget::SetAllUIUpdate()
 {
+	CheckLanguage();
+
 	SetInventoryCanvas();
 	SetInventoryCanvas_1();
 
 	SetItemExplainText();
 	SetItemExplainText_1();
 
+	if (PeaceFulHazardGameMode)
+	{
+		if (IsInventoryFull())
+		{
+			BoxInventoryState->SetText(PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FText::FromString(FString("Your inventory is full. Please create an empty slot in your inventory to retrieve an item from the box. ")) : FText::FromString(FString(TEXT("인벤토리가 가득 찼습니다. 인벤토리에 빈 공간을 만들어야 박스로 부터 아이템을 꺼낼 수 있습니다"))));
+			BoxInventoryState->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
+		}
+		else if (IsBoxFull())
+		{
+			BoxInventoryState->SetText(PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FText::FromString(FString("Your Box is full. Please create an empty slot in your Box to retrieve an item from the inventory. ")) : FText::FromString(FString(TEXT("박스가 가득 찼습니다. 박스에 빈 공간을 만들어야 박스에 아이템을 넣을 수 있습니다"))));
+			BoxInventoryState->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
+		}
+		else
+		{
+			BoxInventoryState->SetText(PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FText::FromString(FString("Press Item to Move to Inventory. ")) : FText::FromString(FString(TEXT("아이템을 눌러서 인벤토리로 옮기세요"))));
+			BoxInventoryState->SetColorAndOpacity(FSlateColor(FLinearColor::Black));
+		}
+	}
 
-	if (IsInventoryFull())
-	{
-		BoxInventoryState->SetText(FText::FromString(FString("Your inventory is full. Please create an empty slot in your inventory to retrieve an item from the box. ")));
-		BoxInventoryState->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
-	}
-	else if (IsBoxFull())
-	{
-		BoxInventoryState->SetText(FText::FromString(FString("Your Box is full. Please create an empty slot in your Box to retrieve an item from the inventory. ")));
-		BoxInventoryState->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
-	}
-	else
-	{
-		BoxInventoryState->SetText(FText::FromString(FString("Press Item to Move to Inventory")));
-		BoxInventoryState->SetColorAndOpacity(FSlateColor(FLinearColor::Black));
-	}
+
 
 	if (combineLock || MoveLock)
 	{
@@ -867,13 +922,8 @@ void UItemBoxWidget::SetItemExplainText_1()
 
 		if (ItemInformation)
 		{
-			FString string = ItemInformation->ItemInformationMap[recentItemBox->itemBoxItems[index]].itemExplainText;
-			TempText = FText::FromString(string);
-			ItemExplainText->SetText(TempText);
-
-			string = ItemInformation->ItemInformationMap[recentItemBox->itemBoxItems[index]].itemNameText;
-			TempText = FText::FromString(string);
-			ItemNameText->SetText(TempText);
+			SetItemDynamicChangeLanguage(ItemExplainText, ItemInformation->ItemInformationMap[recentItemBox->itemBoxItems[index]], false);
+			SetItemDynamicChangeLanguage(ItemNameText, ItemInformation->ItemInformationMap[recentItemBox->itemBoxItems[index]], true);
 
 		}
 
@@ -903,14 +953,8 @@ void UItemBoxWidget::SetItemExplainText()
 
 		if (ItemInformation)
 		{
-			FString string = ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].itemExplainText;
-			TempText = FText::FromString(string);
-			ItemExplainText->SetText(TempText);
-
-			string = ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].itemNameText;
-			TempText = FText::FromString(string);
-			ItemNameText->SetText(TempText);
-
+			SetItemDynamicChangeLanguage(ItemExplainText, ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]], false);
+			SetItemDynamicChangeLanguage(ItemNameText, ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]], true);
 		}
 
 
