@@ -9,6 +9,8 @@
 #include "System/PeacFulSaveGame.h"
 #include "PeacFulGameInstance.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInstanceLanguageChangeEvent);
+
 class UPeacFulSaveGame;
 class USoundBase;
 class UAudioComponent;
@@ -22,6 +24,10 @@ class PEACEFULHAZARD_API UPeacFulGameInstance : public UGameInstance
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FInstanceLanguageChangeEvent LanguageChangeEvent;
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	TMap<ETutorialType, bool> TutorialCheckMap;
 

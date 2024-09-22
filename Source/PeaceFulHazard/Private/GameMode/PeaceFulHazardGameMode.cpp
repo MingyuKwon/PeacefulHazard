@@ -24,6 +24,7 @@ APeaceFulHazardGameMode::APeaceFulHazardGameMode()
     
 }
 
+
 void APeaceFulHazardGameMode::OpenMap(FString MapName)
 {
     ReceivedMapName = MapName;
@@ -376,11 +377,20 @@ AActor* APeaceFulHazardGameMode::ChoosePlayerStart_Implementation(AController* P
 
 }
 
+void APeaceFulHazardGameMode::ChangeLanguageCallBack()
+{
+    LanguageChangeEvent.Broadcast();
+}
+
 void APeaceFulHazardGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
     PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
+    if (PeacFulGameInstance)
+    {
+        PeacFulGameInstance->LanguageChangeEvent.AddDynamic(this, &ThisClass::ChangeLanguageCallBack);
+    }
 
     AMapNameStore* mapStore = Cast<AMapNameStore>(UGameplayStatics::GetActorOfClass(this, AMapNameStore::StaticClass()));
     if (mapStore)

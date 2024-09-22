@@ -223,6 +223,8 @@ void UPeacFulGameInstance::SetLangauage(FString SelectedItem)
     {
 
     }
+
+    LanguageChangeEvent.Broadcast();
 }
 
 void UPeacFulGameInstance::Init()

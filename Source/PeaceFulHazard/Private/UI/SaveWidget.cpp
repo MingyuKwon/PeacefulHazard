@@ -199,6 +199,7 @@ void USaveWidget::NativeConstruct()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->SaveFinishedEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
+		PeaceFulHazardGameMode->LanguageChangeEvent.AddDynamic(this, &ThisClass::CheckLanguage);
 	}
 
 	InitArrays();

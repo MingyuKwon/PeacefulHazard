@@ -31,6 +31,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMenuUIChangeEvent, bool, bVisible);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSaveFinishedEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWantSaveEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FModeLanguageChangeEvent);
 
 
 
@@ -46,6 +47,13 @@ class APeaceFulHazardGameMode : public AGameModeBase
 
 public:
 	APeaceFulHazardGameMode();
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FModeLanguageChangeEvent LanguageChangeEvent;
+
+	UFUNCTION()
+	void ChangeLanguageCallBack();
+
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FNowAimingEvent NowAimingEvent;
