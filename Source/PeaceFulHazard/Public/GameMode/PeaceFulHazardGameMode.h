@@ -109,6 +109,7 @@ public:
 	void SaveSettingValue();
 	void LoadSettingValue();
 
+	ELanguage GetCurrentLanguage();
 	void GetSettingValue(float& mouse, float& mouseAim);
 
 	void SaveDataToSlot(FString slotName);

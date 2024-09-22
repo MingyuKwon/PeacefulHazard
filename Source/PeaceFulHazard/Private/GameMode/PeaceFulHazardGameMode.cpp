@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Character/PeaceFulHazardCharacter.h"
@@ -481,6 +481,24 @@ void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo targetTodo)
 
         PeacFulGameInstance->UpdateToDo(targetTodo);
     }
+}
+
+ELanguage APeaceFulHazardGameMode::GetCurrentLanguage()
+{
+    if (PeacFulGameInstance)
+    {
+        if (PeacFulGameInstance->Language == "English")
+        {
+            return ELanguage::ED_English;
+        }
+        else if (PeacFulGameInstance->Language == FString(TEXT("한국어")))
+        {
+            return ELanguage::ED_Korean;
+
+        }
+    }
+
+    return ELanguage::EL_None;
 }
 
 void APeaceFulHazardGameMode::GetSettingValue(float& mouse, float& mouseAim)

@@ -180,6 +180,14 @@ void USaveWidget::OnNewButtonClicked()
 
 }
 
+void USaveWidget::CheckLanguage()
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+	
+	SetLangaugeText(PeaceFulHazardGameMode->GetCurrentLanguage());
+}
+
+
 void USaveWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -285,6 +293,7 @@ void USaveWidget::NativeConstruct()
 		LanguageDropDown->OnSelectionChanged.AddDynamic(this, &ThisClass::OnLanguageDropDownChanged);
 	}
 	
+	CheckLanguage();
 
 	UpdateAllUI();
 }
@@ -601,6 +610,8 @@ void USaveWidget::ShowCurrentLocation()
 
 void USaveWidget::UpdateAllUI()
 {
+	CheckLanguage();
+
 	if (PeaceFulHazardGameMode)
 	{
 		float defaultMouse;
@@ -798,6 +809,7 @@ void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
 	UpdateAllUI();
 
 }
+
 
 
 void USaveWidget::InitArrays()

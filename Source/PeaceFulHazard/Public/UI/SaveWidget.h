@@ -39,6 +39,12 @@ public:
 
 protected:
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetLangaugeText(ELanguage language);
+
+	UFUNCTION()
+	void CheckLanguage();
+
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* ButtonHoverSound;
 
