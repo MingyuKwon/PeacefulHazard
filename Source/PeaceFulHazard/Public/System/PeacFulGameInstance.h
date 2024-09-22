@@ -31,8 +31,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<ETutorialType, bool> TutorialCheckMap;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
-	TMap<ETutorialType, FString> TutorialMap;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TArray<EPlayerToDo> currentToDos;
@@ -41,7 +39,7 @@ public:
 
 	TMap<EPlayerToDo, FString> GetToDoMapByLanguage();
 	TMap<EWarpTarget, FString> GetMapNameByLanguage();
-
+	TMap<ETutorialType, FString> GetTutorialByLanguage();
 
 	EDifficulty gameDifficulty = EDifficulty::ED_Normal;
 
@@ -118,6 +116,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<EWarpTarget, FString> MapNameKorean;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
+	TMap<ETutorialType, FString> TutorialMapEnglish;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
+	TMap<ETutorialType, FString> TutorialMapKorean;
 
 
 	virtual void Init() override;

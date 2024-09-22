@@ -32,6 +32,9 @@ public:
 
 protected :
 
+	void SetDynamicChangeLanguage(UTextBlock* textBlock, const FText& Englishtext, const FText& Koreantext);
+
+
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 
 	virtual void NativeConstruct() override;
