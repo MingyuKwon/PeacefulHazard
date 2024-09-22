@@ -29,8 +29,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	UTexture2D* DoorInteractkeyImage = nullptr;
 
+	FString GetKeyName();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
-	FString DoorInteractkeyName = FString("");
+	FString DoorInteractkeyNameEnglish = FString("");
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	FString DoorInteractkeyNameKorean = FString("");
+
 
 	UCanInteractWidget* CanInteractWidget;
 

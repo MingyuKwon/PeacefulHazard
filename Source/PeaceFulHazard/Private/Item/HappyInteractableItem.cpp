@@ -43,7 +43,7 @@ void AHappyInteractableItem::BeginPlay()
 
         if (CanInteractWidget)
         {
-            CanInteractWidget->SetInteractEnable(bCanInteractable, false, DoorInteractkeyImage, DoorInteractkeyName);
+            CanInteractWidget->SetInteractEnable(bCanInteractable, false, DoorInteractkeyImage, GetKeyName());
             CanInteractWidget->SetActionEnable(bCanInteractable, false);
         }
     }
@@ -58,6 +58,26 @@ void AHappyInteractableItem::BeginPlay()
 
 }
 
+FString AHappyInteractableItem::GetKeyName()
+{
+    if (PeaceFulHazardGameMode == nullptr) return FString("");
+
+
+    switch (PeaceFulHazardGameMode->GetCurrentLanguage())
+    {
+    case ELanguage::ED_English:
+        return DoorInteractkeyNameEnglish;
+        break;
+
+    case ELanguage::ED_Korean:
+        return DoorInteractkeyNameKorean;
+        break;
+
+    }
+
+    return FString("");
+}
+
 void AHappyInteractableItem::AImVisibleUI(bool flag)
 {
     bCanInteractable = !flag;
@@ -66,7 +86,7 @@ void AHappyInteractableItem::AImVisibleUI(bool flag)
     {
         if (CanInteractWidget)
         {
-            CanInteractWidget->SetInteractEnable(bCanInteractable, false, DoorInteractkeyImage, DoorInteractkeyName);
+            CanInteractWidget->SetInteractEnable(bCanInteractable, false, DoorInteractkeyImage, GetKeyName());
             CanInteractWidget->SetActionEnable(bCanInteractable, false);
         }
     }
@@ -74,7 +94,7 @@ void AHappyInteractableItem::AImVisibleUI(bool flag)
     {
         if (CanInteractWidget)
         {
-            CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable, DoorInteractkeyImage, DoorInteractkeyName);
+            CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable, DoorInteractkeyImage, GetKeyName());
             CanInteractWidget->SetActionEnable(bCanInteractable, bActionable);
         }
     }
@@ -147,7 +167,7 @@ void AHappyInteractableItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
                 bIntearctable = true;
                 if (CanInteractWidget)
                 {
-                    CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable, DoorInteractkeyImage, DoorInteractkeyName);
+                    CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable, DoorInteractkeyImage, GetKeyName());
                 }
             }
 
@@ -175,7 +195,7 @@ void AHappyInteractableItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, A
 
                 if (CanInteractWidget)
                 {
-                    CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable, DoorInteractkeyImage, DoorInteractkeyName);
+                    CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable, DoorInteractkeyImage, GetKeyName());
                 }
             }
 

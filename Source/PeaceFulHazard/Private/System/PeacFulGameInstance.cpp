@@ -304,8 +304,8 @@ void UPeacFulGameInstance::Init()
 
     ToDoMapKorean.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString(TEXT("건물에서 나갈 방법을 찾자")));
     ToDoMapKorean.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString(TEXT("보물에 대한 정보를 제공할 수 있는 무언가를 찾아 중앙광장을 둘러보자.")));
-    ToDoMapKorean.Add(EPlayerToDo::EPTD_FindKeyToGravetard, FString(TEXT("잠긴 \"묘지\"로 접근할 방법을 찾아보자.")));
-    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchGravetard, FString(TEXT("\"묘지\"를 조사하여 유용한 단서를 찾을 수 있는지 확인하자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_FindKeyToGravetard, FString(TEXT("잠긴 \"무덤\"으로 접근할 방법을 찾아보자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchGravetard, FString(TEXT("\"무덤\"을 조사하여 유용한 단서를 찾을 수 있는지 확인하자.")));
     ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchRightGarden, FString(TEXT("\"오른쪽 정원\"을 조사하여 유용한 단서를 찾을 수 있는지 확인하자.")));
     ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchCathedral, FString(TEXT("\"성당\"으로 가서 보물을 찾자.")));
     ToDoMapKorean.Add(EPlayerToDo::EPTD_FindKeytoLeftGarden, FString(TEXT("\"성당\" 2층으로 가기 위한 단서는 \"왼쪽 정원\"에 있다. \"왼쪽 정원\"으로 가는 문 열쇠를 얻자.")));
@@ -332,7 +332,7 @@ void UPeacFulGameInstance::Init()
     MapNameKorean.Add(EWarpTarget::EWT_RightGarden, FString(TEXT("공원 오른쪽")));
 
 
-    TutorialMapEnglish.Add(ETutorialType::ETT_MoveTutorial, FString("Move : ASDW \n\nRun : Left Shift \n\nInteract : Left Mouse Button \n\nBack : Right Mouse Button"));
+    TutorialMapEnglish.Add(ETutorialType::ETT_MoveTutorial, FString("Move : ASDW \nRun : Left Shift \n\nInteract : Left Mouse Button \nBack : Right Mouse Button"));
     TutorialMapEnglish.Add(ETutorialType::ETT_InteractWithItem, FString("As you approach an item, a white indicator appears. Get closer, and it turns blue. \n\nPress the left mouse button to pick up or interact."));
     TutorialMapEnglish.Add(ETutorialType::ETT_Fire, FString("Aim : RightClick \nFire : LeftClick \nReload : R \nChange Bullet : Mouse wheel"));
     TutorialMapEnglish.Add(ETutorialType::ETT_InteractWithSituation, FString("As you approach an interactable object, a white indicator appears. Get closer, and it turns blue. \n\nPress the left mouse button to interact."));
@@ -347,7 +347,7 @@ void UPeacFulGameInstance::Init()
 
 
 
-    TutorialMapKorean.Add(ETutorialType::ETT_MoveTutorial, FString(TEXT("이동 : ASDW \n\n달리기 : 왼쪽 Shift \n\n상호작용 : 왼쪽 마우스 버튼 \n\n뒤로 가기 : 오른쪽 마우스 버튼")));
+    TutorialMapKorean.Add(ETutorialType::ETT_MoveTutorial, FString(TEXT("이동 : ASDW \n달리기 : 왼쪽 Shift \n\n상호작용 : 왼쪽 마우스 버튼 \n뒤로 가기 : 오른쪽 마우스 버튼")));
     TutorialMapKorean.Add(ETutorialType::ETT_InteractWithItem, FString(TEXT("아이템에 가까이 다가가면 흰색 표시가 나타납니다. 더 가까이 가면 파란색으로 변합니다. \n\n왼쪽 마우스 버튼을 눌러 아이템을 줍거나 상호작용하세요.")));
     TutorialMapKorean.Add(ETutorialType::ETT_Fire, FString(TEXT("조준 : 오른쪽 마우스 클릭 \n발사 : 왼쪽 마우스 클릭 \n재장전 : R \n탄환 변경 : 마우스 휠")));
     TutorialMapKorean.Add(ETutorialType::ETT_InteractWithSituation, FString(TEXT("상호작용 가능한 객체에 가까이 다가가면 흰색 표시가 나타납니다. 더 가까이 가면 파란색으로 변합니다. \n\n왼쪽 마우스 버튼을 눌러 상호작용하세요.")));
