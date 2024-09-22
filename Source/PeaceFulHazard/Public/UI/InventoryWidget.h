@@ -47,6 +47,17 @@ public:
 
 protected:
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetLangaugeText(ELanguage language);
+
+	UFUNCTION()
+	void CheckLanguage();
+
+	void SetItemDynamicChangeLanguage(UTextBlock* textBlock, FItemInformationUnit itemInformtation, bool bName);
+	void SetSituationDynamicChangeLanguage(UTextBlock* textBlock, FSituationInformationUnit situation, bool bName);
+
+
+
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* TakeItemSound;
 
@@ -111,10 +122,6 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemGetCountText;
 
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* ItemGetAskText;
-
-
 
 	UPROPERTY(meta = (BindWidget))
 	UBorder* TakeBackground;
@@ -122,11 +129,8 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UBorder* BackBackground;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget),BlueprintReadWrite)
 	UTextBlock* TakeText;
-
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* BackText;
 
 	UPROPERTY(meta = (BindWidget))
 	UBorder* TakeImage;

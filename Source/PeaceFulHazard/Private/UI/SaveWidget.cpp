@@ -311,8 +311,6 @@ void USaveWidget::NativeConstruct()
 		LanguageDropDown->OnSelectionChanged.AddDynamic(this, &ThisClass::OnLanguageDropDownChanged);
 	}
 	
-	CheckLanguage();
-
 	UpdateAllUI();
 }
 
