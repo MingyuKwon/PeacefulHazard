@@ -177,7 +177,8 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		}
 		else if (situationType == EInteractSituationType::EIST_Note)
 		{
-			playerController->ShowInformationUI(true, NoteText);
+			playerController->ShowInformationUI(true, PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? NoteText : NoteTextKorean);
+
 			if (NotereadToDoUpdate != EPlayerToDo::EPTD_None)
 			{
 				if (PeaceFulHazardGameMode)
