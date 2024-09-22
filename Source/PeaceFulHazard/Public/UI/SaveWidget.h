@@ -45,6 +45,8 @@ protected:
 	UFUNCTION()
 	void CheckLanguage();
 
+	void SetDynamicChangeLanguage(UTextBlock* textBlock, const FText& Englishtext, const FText& Koreantext);
+
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* ButtonHoverSound;
 

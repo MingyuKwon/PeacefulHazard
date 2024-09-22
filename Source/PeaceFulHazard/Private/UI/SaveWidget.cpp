@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/SaveWidget.h"
@@ -187,6 +187,23 @@ void USaveWidget::CheckLanguage()
 	SetLangaugeText(PeaceFulHazardGameMode->GetCurrentLanguage());
 }
 
+void USaveWidget::SetDynamicChangeLanguage(UTextBlock* textBlock, const FText& Englishtext, const FText& Koreantext)
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	switch (PeaceFulHazardGameMode->GetCurrentLanguage())
+	{
+	case ELanguage::ED_English :
+		textBlock->SetText(Englishtext);
+		break;
+
+	case ELanguage::ED_Korean:
+		textBlock->SetText(Koreantext);
+		break;
+
+	}
+}
+
 
 void USaveWidget::NativeConstruct()
 {
@@ -199,7 +216,7 @@ void USaveWidget::NativeConstruct()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->SaveFinishedEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
-		PeaceFulHazardGameMode->LanguageChangeEvent.AddDynamic(this, &ThisClass::CheckLanguage);
+		PeaceFulHazardGameMode->LanguageChangeEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
 	}
 
 	InitArrays();
@@ -519,18 +536,18 @@ void USaveWidget::ShowCurrentLocation()
 	switch (PeaceFulHazardGameMode->GetDifficulty())
 	{
 	case EDifficulty::ED_Easy:
-		MapDifficulty->SetText(FText::FromString("Easy"));
+		SetDynamicChangeLanguage(MapDifficulty, FText::FromString("Easy"), FText::FromString(TEXT("쉬움")));
 		MapDifficulty->SetColorAndOpacity(FLinearColor::Green);
 		break;
 
 	case EDifficulty::ED_Normal:
-		MapDifficulty->SetText(FText::FromString("Normal"));
+		SetDynamicChangeLanguage(MapDifficulty, FText::FromString("Normal"), FText::FromString(TEXT("보통")));
 		MapDifficulty->SetColorAndOpacity(FLinearColor::Black);
 
 		break;
 
 	case EDifficulty::ED_Hard:
-		MapDifficulty->SetText(FText::FromString("Hard"));
+		SetDynamicChangeLanguage(MapDifficulty, FText::FromString("Hard"), FText::FromString(TEXT("어려움")));
 		MapDifficulty->SetColorAndOpacity(FLinearColor::Red);
 
 		break;
