@@ -52,7 +52,7 @@ EPlayerToDo UPeacFulGameInstance::GetCurrentToDo(FString& TodoString)
 {
     todoIndex = FMath::Clamp(todoIndex, 0, currentToDos.Num() - 1);
 
-    TodoString = ToDoMap[currentToDos[todoIndex]];
+    TodoString = GetToDoMapByLanguage()[currentToDos[todoIndex]];
 
     return currentToDos[todoIndex];
 }
@@ -227,6 +227,34 @@ void UPeacFulGameInstance::SetLangauage(FString SelectedItem)
     LanguageChangeEvent.Broadcast();
 }
 
+TMap<EPlayerToDo, FString> UPeacFulGameInstance::GetToDoMapByLanguage()
+{
+    if (Language == "English")
+    {
+        return ToDoMapEnglish;
+    }
+    else if (Language == FString(TEXT("한국어")))
+    {
+        return ToDoMapKorean;
+    }
+
+    return ToDoMapEnglish;
+}
+
+TMap<EWarpTarget, FString> UPeacFulGameInstance::GetMapNameByLanguage()
+{
+    if (Language == "English")
+    {
+        return MapNameEnglish;
+    }
+    else if (Language == FString(TEXT("한국어")))
+    {
+        return MapNameKorean;
+    }
+
+    return MapNameEnglish;
+}
+
 void UPeacFulGameInstance::Init()
 {
     Super::Init();
@@ -248,22 +276,46 @@ void UPeacFulGameInstance::Init()
     currentToDos.Add(EPlayerToDo::EPTD_Survive);
 
 
-    ToDoMap.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString("Find a way to get out of this building"));
-    ToDoMap.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString("Look around for anything that might provide information about the \"treasure\"."));
-    ToDoMap.Add(EPlayerToDo::EPTD_FindKeyToGravetard, FString("Explore a way to access the locked \"graveyard\""));
-    ToDoMap.Add(EPlayerToDo::EPTD_SearchGravetard, FString("Investigate the \"graveyard\" to see if we can find any useful clues."));
-    ToDoMap.Add(EPlayerToDo::EPTD_SearchRightGarden, FString("Investigate the \"right garden\" to see if we can find any useful clues."));
-    ToDoMap.Add(EPlayerToDo::EPTD_SearchCathedral, FString("Head to the \"cathedral\" to get the treasure."));
-    ToDoMap.Add(EPlayerToDo::EPTD_FindKeytoLeftGarden, FString("The clue to access the second floor of the \"cathedral\" is in the \"left garden\". Get the key to the door that leads to the \"left garden\"."));
-    ToDoMap.Add(EPlayerToDo::EPTD_SearchLeftGarden, FString("Investigate the \"left garden\" to see if we can find any useful clues."));
-    ToDoMap.Add(EPlayerToDo::EPTD_SearchCathedralSecondFloor, FString("Investigate the \"cathedral\" second floor"));
-    ToDoMap.Add(EPlayerToDo::EPTD_GetTreasure, FString("Get the Treasure!"));
-    ToDoMap.Add(EPlayerToDo::EPTD_Survive, FString("Survive within the time limit"));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString("Find a way to get out of this building"));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString("Look around for anything that might provide information about the \"treasure\"."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_FindKeyToGravetard, FString("Explore a way to access the locked \"graveyard\""));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchGravetard, FString("Investigate the \"graveyard\" to see if we can find any useful clues."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchRightGarden, FString("Investigate the \"right garden\" to see if we can find any useful clues."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchCathedral, FString("Head to the \"cathedral\" to get the treasure."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_FindKeytoLeftGarden, FString("The clue to access the second floor of the \"cathedral\" is in the \"left garden\". Get the key to the door that leads to the \"left garden\"."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchLeftGarden, FString("Investigate the \"left garden\" to see if we can find any useful clues."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchCathedralSecondFloor, FString("Investigate the \"cathedral\" second floor"));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_GetTreasure, FString("Get the Treasure!"));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_Survive, FString("Survive within the time limit"));
+
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString(TEXT("건물에서 나갈 방법을 찾자")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString(TEXT("보물에 대한 정보를 제공할 수 있는 무언가를 찾아 중앙광장을 둘러보자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_FindKeyToGravetard, FString(TEXT("잠긴 \"묘지\"로 접근할 방법을 찾아보자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchGravetard, FString(TEXT("\"묘지\"를 조사하여 유용한 단서를 찾을 수 있는지 확인하자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchRightGarden, FString(TEXT("\"오른쪽 정원\"을 조사하여 유용한 단서를 찾을 수 있는지 확인하자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchCathedral, FString(TEXT("\"성당\"으로 가서 보물을 찾자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_FindKeytoLeftGarden, FString(TEXT("\"성당\" 2층으로 가기 위한 단서는 \"왼쪽 정원\"에 있다. \"왼쪽 정원\"으로 가는 문 열쇠를 얻자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchLeftGarden, FString(TEXT("\"왼쪽 정원\"을 조사하여 유용한 단서를 찾을 수 있는지 확인하자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchCathedralSecondFloor, FString(TEXT("\"성당\" 2층을 조사하자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_GetTreasure, FString(TEXT("보물을 획득하자!")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_Survive, FString(TEXT("제한 시간 동안 생존해라!.")));
 
 
+    MapNameEnglish.Add(EWarpTarget::EWT_Tutorial, FString("Tutorial Room"));
+    MapNameEnglish.Add(EWarpTarget::EWT_MainHub, FString("Main Hub"));
+    MapNameEnglish.Add(EWarpTarget::EWT_MainCathedral, FString("Cathedral"));
+    MapNameEnglish.Add(EWarpTarget::EWT_CrossOver, FString("CrossOver"));
+    MapNameEnglish.Add(EWarpTarget::EWT_GraveYard, FString("Graveyard"));
+    MapNameEnglish.Add(EWarpTarget::EWT_LeftGarden, FString("Left Garden"));
+    MapNameEnglish.Add(EWarpTarget::EWT_RightGarden, FString("Right Garden"));
 
-    MapName.Add(EWarpTarget::EWT_Tutorial, FString("Tutorial Room"));
-    MapName.Add(EWarpTarget::EWT_MainHub, FString("Main Hub"));
+    MapNameKorean.Add(EWarpTarget::EWT_Tutorial, FString(TEXT("튜토리얼 방")));
+    MapNameKorean.Add(EWarpTarget::EWT_MainHub, FString(TEXT("중앙 광장")));
+    MapNameKorean.Add(EWarpTarget::EWT_MainCathedral, FString(TEXT("성당")));
+    MapNameKorean.Add(EWarpTarget::EWT_CrossOver, FString(TEXT("교차로")));
+    MapNameKorean.Add(EWarpTarget::EWT_GraveYard, FString(TEXT("무덤")));
+    MapNameKorean.Add(EWarpTarget::EWT_LeftGarden, FString(TEXT("공원 왼쪽")));
+    MapNameKorean.Add(EWarpTarget::EWT_RightGarden, FString(TEXT("공원 오른쪽")));
 
 
     TutorialMap.Add(ETutorialType::ETT_MoveTutorial, FString("Move : ASDW \n\nRun : Left Shift \n\nInteract : Left Mouse Button \n\nBack : Right Mouse Button"));

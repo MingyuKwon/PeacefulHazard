@@ -697,12 +697,12 @@ void USaveWidget::UpdateAllUI()
 				
 				if (PeacFulGameInstance)
 				{
-					FString temp = PeacFulGameInstance->ToDoMap[PeacFulGameInstance->currentToDos[LoadedGame->saveTodoIndex]];
+					FString temp = PeacFulGameInstance->GetToDoMapByLanguage()[PeacFulGameInstance->currentToDos[LoadedGame->saveTodoIndex]];
 					ToDoTexts[i]->SetText(FText::FromString(temp));
 
 					TimeTexts[i]->SetText(FText::FromString(LoadedGame->SaveTime.ToString(TEXT("%m/%d  |  %H:%M"))));
 
-					SaveSpotTexts[i]->SetText(FText::FromString(PeacFulGameInstance->MapName[LoadedGame->saveMapName]));
+					SaveSpotTexts[i]->SetText(FText::FromString(PeacFulGameInstance->GetMapNameByLanguage()[LoadedGame->saveMapName]));
 
 					switch (LoadedGame->SavegameDifficulty)
 					{

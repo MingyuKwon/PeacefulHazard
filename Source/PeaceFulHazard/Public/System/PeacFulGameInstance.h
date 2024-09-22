@@ -28,20 +28,20 @@ public:
 	FInstanceLanguageChangeEvent LanguageChangeEvent;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<ETutorialType, bool> TutorialCheckMap;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<ETutorialType, FString> TutorialMap;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TArray<EPlayerToDo> currentToDos;
 	int32 todoIndex = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
-	TMap<EPlayerToDo, FString> ToDoMap;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
-	TMap<EWarpTarget, FString> MapName;
+
+	TMap<EPlayerToDo, FString> GetToDoMapByLanguage();
+	TMap<EWarpTarget, FString> GetMapNameByLanguage();
+
 
 	EDifficulty gameDifficulty = EDifficulty::ED_Normal;
 
@@ -105,6 +105,20 @@ public:
 	//////////////////////////////////////// SETTING /////////////////////////////////////////////////////////////////////
 
 protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TMap<EPlayerToDo, FString> ToDoMapEnglish;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
+	TMap<EPlayerToDo, FString> ToDoMapKorean;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
+	TMap<EWarpTarget, FString> MapNameEnglish;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
+	TMap<EWarpTarget, FString> MapNameKorean;
+
 
 	virtual void Init() override;
 
