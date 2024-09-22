@@ -707,18 +707,18 @@ void USaveWidget::UpdateAllUI()
 					switch (LoadedGame->SavegameDifficulty)
 					{
 					case EDifficulty::ED_Easy :
-						DifficultyTexts[i]->SetText(FText::FromString("Easy"));
+						SetDynamicChangeLanguage(DifficultyTexts[i], FText::FromString("Easy"), FText::FromString(TEXT("쉬움")));
 						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Green);
 						break;
 
 					case EDifficulty::ED_Normal:
-						DifficultyTexts[i]->SetText(FText::FromString("Normal"));
+						SetDynamicChangeLanguage(DifficultyTexts[i], FText::FromString("Normal"), FText::FromString(TEXT("보통")));
 						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Black);
 
 						break;
 
 					case EDifficulty::ED_Hard:
-						DifficultyTexts[i]->SetText(FText::FromString("Hard"));
+						SetDynamicChangeLanguage(DifficultyTexts[i], FText::FromString("Hard"), FText::FromString(TEXT("어려움")));
 						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Red);
 
 						break;
@@ -773,13 +773,15 @@ void USaveWidget::UpdateAllUI()
 	{
 		NewSaveButton->SetIsEnabled(false);
 		SaveModeBackGround->SetBrushColor(FLinearColor::Blue);
-		SaveModeText->SetText(FText::FromString(FString("Save")));
+		SetDynamicChangeLanguage(SaveModeText, FText::FromString("Save"), FText::FromString(TEXT("저장")));
+
 	}
 	else
 	{
 		NewSaveButton->SetIsEnabled(true);
 		SaveModeBackGround->SetBrushColor(FLinearColor::Red);
-		SaveModeText->SetText(FText::FromString(FString("Load")));
+		SetDynamicChangeLanguage(SaveModeText, FText::FromString("Load"), FText::FromString(TEXT("불러오기")));
+
 	}
 
 	ShowCurrentLocation();
