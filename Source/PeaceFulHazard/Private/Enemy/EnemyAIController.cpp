@@ -73,7 +73,7 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 
 	damageAccumulate += Damage;
 
-	if (controlEnemy->stundamageAccumulateUnit <= damageAccumulate)
+	if (controlEnemy->GetDamageUnitbyDifficulty() <= damageAccumulate)
 	{
 		damageAccumulate = 0;
 		bStunDamage = true;
@@ -84,7 +84,7 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 	{
 		headDamageAccumulate += Damage;
 
-		if (controlEnemy->stunHeadDamageAccumulateUnit <= headDamageAccumulate)
+		if (controlEnemy->GetHeadUnitbyDifficulty() <= headDamageAccumulate)
 		{
 			headDamageAccumulate = 0;
 			bStunHeadShot = true;
