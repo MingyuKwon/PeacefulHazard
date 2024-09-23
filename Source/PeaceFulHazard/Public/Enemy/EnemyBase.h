@@ -14,6 +14,23 @@ class USoundBase;
 class UNiagaraComponent;
 class UNiagaraSystem;
 
+USTRUCT(BlueprintType)
+struct FDifficultyFloat
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Easy = 10.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Normal = 20.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Hard = 30.f;
+
+};
+
 UCLASS()
 class PEACEFULHAZARD_API AEnemyBase : public ACharacter
 {
@@ -85,14 +102,23 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* AttackSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
-	float MaxHealth = 130;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
 	EPlayerToDo spawnProgress = EPlayerToDo::EPTD_GetOutTutorialRoom;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Para")
-	float EnemyDamageAmount = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	FDifficultyFloat stundamageAccumulateUnit;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	FDifficultyFloat stunHeadDamageAccumulateUnit;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	FDifficultyFloat MaxHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
+	FDifficultyFloat EnemyDamageAmount;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI Para")
 	ERouteNum routeNum = ERouteNum::ERN_None;
@@ -170,11 +196,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Para")
 	bool bBoss = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
-	float stundamageAccumulateUnit = 60.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Pawn Para")
-	float stunHeadDamageAccumulateUnit = 25.f;
+	float GetDamageUnitbyDifficulty();
+	float GetHeadUnitbyDifficulty();
+	float GetMaxHealthbyDifficulty();
+	float GetEnemyDamageAmountbyDifficulty();
 
 
 	// Called every frame

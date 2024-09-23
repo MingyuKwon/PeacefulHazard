@@ -55,6 +55,118 @@ AEnemyBase::AEnemyBase()
     SpawnNiagaraPoint = CreateDefaultSubobject<UNiagaraComponent>(TEXT("SpawnNiagaraPoint"));
     SpawnNiagaraPoint->SetupAttachment(RootComponent);
 
+
+    stundamageAccumulateUnit.Easy = 40.f;
+    stundamageAccumulateUnit.Normal = 70.f;
+    stundamageAccumulateUnit.Hard = 100.f;
+
+
+    stunHeadDamageAccumulateUnit.Easy = 20.f;
+    stunHeadDamageAccumulateUnit.Normal = 35.f;
+    stunHeadDamageAccumulateUnit.Hard = 50.f;
+
+
+    MaxHealth.Easy = 100;
+    MaxHealth.Normal = 150;
+    MaxHealth.Hard = 250;
+
+    EnemyDamageAmount.Easy = 10;
+    EnemyDamageAmount.Normal = 15;
+    EnemyDamageAmount.Hard = 20;
+}
+
+float AEnemyBase::GetDamageUnitbyDifficulty()
+{
+    if (PeaceFulHazardGameMode == nullptr) return 0.f;
+
+    switch (PeaceFulHazardGameMode->GetDifficulty())
+    {
+    case EDifficulty::ED_Easy:
+        return stundamageAccumulateUnit.Easy;
+        break;
+
+    case EDifficulty::ED_Normal:
+        return stundamageAccumulateUnit.Normal;
+        break;
+
+    case EDifficulty::ED_Hard:
+        return stundamageAccumulateUnit.Hard;
+        break;
+    }
+
+    return 0.f;
+}
+
+float AEnemyBase::GetHeadUnitbyDifficulty()
+{
+    if (PeaceFulHazardGameMode == nullptr) return 0.f;
+
+    switch (PeaceFulHazardGameMode->GetDifficulty())
+    {
+    case EDifficulty::ED_Easy:
+        return stunHeadDamageAccumulateUnit.Easy;
+        break;
+
+    case EDifficulty::ED_Normal:
+        return stunHeadDamageAccumulateUnit.Normal;
+
+        break;
+
+    case EDifficulty::ED_Hard:
+        return stunHeadDamageAccumulateUnit.Hard;
+
+        break;
+    }
+
+    return 0.f;
+}
+
+float AEnemyBase::GetMaxHealthbyDifficulty()
+{
+    if (PeaceFulHazardGameMode == nullptr) return 0.f;
+
+    switch (PeaceFulHazardGameMode->GetDifficulty())
+    {
+    case EDifficulty::ED_Easy:
+        return MaxHealth.Easy;
+        break;
+
+    case EDifficulty::ED_Normal:
+        return MaxHealth.Normal;
+
+        break;
+
+    case EDifficulty::ED_Hard:
+        return MaxHealth.Hard;
+
+        break;
+    }
+
+    return 0.f;
+}
+
+float AEnemyBase::GetEnemyDamageAmountbyDifficulty()
+{
+    if (PeaceFulHazardGameMode == nullptr) return 0.f;
+
+    switch (PeaceFulHazardGameMode->GetDifficulty())
+    {
+    case EDifficulty::ED_Easy:
+        return EnemyDamageAmount.Easy;
+        break;
+
+    case EDifficulty::ED_Normal:
+        return EnemyDamageAmount.Normal;
+
+        break;
+
+    case EDifficulty::ED_Hard:
+        return EnemyDamageAmount.Hard;
+
+        break;
+    }
+
+    return 0.f;
 }
 
 void AEnemyBase::Tick(float DeltaTime)
@@ -173,7 +285,7 @@ void AEnemyBase::AttackImpact(int32 index)
 
                 UGameplayStatics::ApplyRadialDamageWithFalloff(
                     GetWorld(),
-                    EnemyDamageAmount,          // 최대 데미지
+                    GetEnemyDamageAmountbyDifficulty(),          // 최대 데미지
                     10.f,                       // 최소 데미지
                     BombLocationSave + FVector::UpVector * 50.f, // 폭탄 위치
                     InnerRadius,                      // 내부 반경: 최대 데미지를 가할 반경
@@ -198,7 +310,7 @@ void AEnemyBase::AttackImpact(int32 index)
             APeaceFulHazardCharacter* TargetCharacter = Cast<APeaceFulHazardCharacter>(Actor);
             if (TargetCharacter)
             {
-                UGameplayStatics::ApplyDamage(TargetCharacter, EnemyDamageAmount, GetController(), this, UDamageType::StaticClass());
+                UGameplayStatics::ApplyDamage(TargetCharacter, GetEnemyDamageAmountbyDifficulty(), GetController(), this, UDamageType::StaticClass());
             }
         }
 
@@ -516,7 +628,7 @@ void AEnemyBase::MapStartCallBack()
     }
     else
     {
-        EnemyAIController->currentHealth = MaxHealth;
+        EnemyAIController->currentHealth = GetMaxHealthbyDifficulty();
     }
 
 }

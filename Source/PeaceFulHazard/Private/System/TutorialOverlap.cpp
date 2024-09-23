@@ -43,6 +43,7 @@ void ATutorialOverlap::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 			if (PeaceFulHazardGameMode)
 			{
 				PeaceFulHazardGameMode->TutorialEvent.Broadcast(tutorialType);
+				UE_LOG(LogTemp, Display, TEXT("OnOverlapBegin Tutorial"));
 			}
         }
     }

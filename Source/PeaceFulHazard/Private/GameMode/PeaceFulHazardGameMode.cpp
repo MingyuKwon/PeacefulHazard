@@ -420,7 +420,41 @@ void APeaceFulHazardGameMode::SetGameBrightness()
 
     if (CachedPostProcessVolume)
     {
-        CachedPostProcessVolume->Settings.AutoExposureBias = PeacFulGameInstance->Brightness;
+        float BrightnessTemp = PeacFulGameInstance->Brightness;
+
+        switch (currentMapType)
+        {
+        case EWarpTarget::EWT_Tutorial:
+            BrightnessTemp *= 1.1f;
+
+            break;
+        case EWarpTarget::EWT_MainHub:
+            BrightnessTemp *= 0.8f;
+            break;
+        case EWarpTarget::EWT_CrossOver:
+            BrightnessTemp *= 1.1f;
+
+            break;
+        case EWarpTarget::EWT_GraveYard:
+            BrightnessTemp *= 0.8f;
+
+            break;
+        case EWarpTarget::EWT_LeftGarden:
+            BrightnessTemp *= 0.8f;
+
+            break;
+        case EWarpTarget::EWT_MainCathedral:
+            BrightnessTemp *= 1.1f;
+
+            break;
+        case EWarpTarget::EWT_RightGarden:
+            BrightnessTemp *= 0.8f;
+
+            break;
+
+        }
+
+        CachedPostProcessVolume->Settings.AutoExposureBias = BrightnessTemp;
     }
 }
 
