@@ -133,7 +133,7 @@ void AHappyPlayerController::UpdateValue()
 
     if (ControlledCharacter->GetIsAiming())
     {
-        aimFocusLerpValue = FMath::Lerp(aimFocusLerpValue, 0, aimFocusLerpValue < 0.5f ? 0.015f : 0.05f);
+        aimFocusLerpValue = FMath::Lerp(aimFocusLerpValue, 0, aimFocusLerpValue < 0.5f ? 0.03f : 0.05f);
 
         if (ControlledCharacter->GetPlayerSpeed() < 0.1f)
         {
@@ -1105,11 +1105,11 @@ void AHappyPlayerController::WarpTravel(EWarpTarget warptarget)
 void AHappyPlayerController::TutorialShow(ETutorialType tutorialType)
 {
     if (PeacFulGameInstance == nullptr) return;
-    if (!PeacFulGameInstance->TutorialMap.Contains(tutorialType)) return;
+    if (!PeacFulGameInstance->GetTutorialByLanguage().Contains(tutorialType)) return;
 
     if (!PeacFulGameInstance->checkIsTutorialAlready(tutorialType))
     {
-        ShowNoticeUI(true, PeacFulGameInstance->TutorialMap[tutorialType]);
+        ShowNoticeUI(true, PeacFulGameInstance->GetTutorialByLanguage()[tutorialType]);
     }
 
 }

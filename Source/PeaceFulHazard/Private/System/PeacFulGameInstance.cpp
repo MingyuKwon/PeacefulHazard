@@ -52,7 +52,7 @@ EPlayerToDo UPeacFulGameInstance::GetCurrentToDo(FString& TodoString)
 {
     todoIndex = FMath::Clamp(todoIndex, 0, currentToDos.Num() - 1);
 
-    TodoString = ToDoMap[currentToDos[todoIndex]];
+    TodoString = GetToDoMapByLanguage()[currentToDos[todoIndex]];
 
     return currentToDos[todoIndex];
 }
@@ -223,6 +223,50 @@ void UPeacFulGameInstance::SetLangauage(FString SelectedItem)
     {
 
     }
+
+    LanguageChangeEvent.Broadcast();
+}
+
+TMap<EPlayerToDo, FString> UPeacFulGameInstance::GetToDoMapByLanguage()
+{
+    if (Language == "English")
+    {
+        return ToDoMapEnglish;
+    }
+    else if (Language == FString(TEXT("한국어")))
+    {
+        return ToDoMapKorean;
+    }
+
+    return ToDoMapEnglish;
+}
+
+TMap<EWarpTarget, FString> UPeacFulGameInstance::GetMapNameByLanguage()
+{
+    if (Language == "English")
+    {
+        return MapNameEnglish;
+    }
+    else if (Language == FString(TEXT("한국어")))
+    {
+        return MapNameKorean;
+    }
+
+    return MapNameEnglish;
+}
+
+TMap<ETutorialType, FString> UPeacFulGameInstance::GetTutorialByLanguage()
+{
+    if (Language == "English")
+    {
+        return TutorialMapEnglish;
+    }
+    else if (Language == FString(TEXT("한국어")))
+    {
+        return TutorialMapKorean;
+    }
+
+    return TutorialMapEnglish;
 }
 
 void UPeacFulGameInstance::Init()
@@ -246,36 +290,75 @@ void UPeacFulGameInstance::Init()
     currentToDos.Add(EPlayerToDo::EPTD_Survive);
 
 
-    ToDoMap.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString("Find a way to get out of this building"));
-    ToDoMap.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString("Look around for anything that might provide information about the \"treasure\"."));
-    ToDoMap.Add(EPlayerToDo::EPTD_FindKeyToGravetard, FString("Explore a way to access the locked \"graveyard\""));
-    ToDoMap.Add(EPlayerToDo::EPTD_SearchGravetard, FString("Investigate the \"graveyard\" to see if we can find any useful clues."));
-    ToDoMap.Add(EPlayerToDo::EPTD_SearchRightGarden, FString("Investigate the \"right garden\" to see if we can find any useful clues."));
-    ToDoMap.Add(EPlayerToDo::EPTD_SearchCathedral, FString("Head to the \"cathedral\" to get the treasure."));
-    ToDoMap.Add(EPlayerToDo::EPTD_FindKeytoLeftGarden, FString("The clue to access the second floor of the \"cathedral\" is in the \"left garden\". Get the key to the door that leads to the \"left garden\"."));
-    ToDoMap.Add(EPlayerToDo::EPTD_SearchLeftGarden, FString("Investigate the \"left garden\" to see if we can find any useful clues."));
-    ToDoMap.Add(EPlayerToDo::EPTD_SearchCathedralSecondFloor, FString("Investigate the \"cathedral\" second floor"));
-    ToDoMap.Add(EPlayerToDo::EPTD_GetTreasure, FString("Get the Treasure!"));
-    ToDoMap.Add(EPlayerToDo::EPTD_Survive, FString("Survive within the time limit"));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString("Find a way to get out of this building"));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString("Look around for anything that might provide information about the \"treasure\"."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_FindKeyToGravetard, FString("Explore a way to access the locked \"graveyard\""));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchGravetard, FString("Investigate the \"graveyard\" to see if we can find any useful clues."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchRightGarden, FString("Investigate the \"right garden\" to see if we can find any useful clues."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchCathedral, FString("Head to the \"cathedral\" to get the treasure."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_FindKeytoLeftGarden, FString("The clue to access the second floor of the \"cathedral\" is in the \"left garden\". Get the key to the door that leads to the \"left garden\"."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchLeftGarden, FString("Investigate the \"left garden\" to see if we can find any useful clues."));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchCathedralSecondFloor, FString("Investigate the \"cathedral\" second floor"));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_GetTreasure, FString("Get the Treasure!"));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_Survive, FString("Survive within the time limit"));
+
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString(TEXT("건물에서 나갈 방법을 찾자")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString(TEXT("보물에 대한 정보를 제공할 수 있는 무언가를 찾아 중앙광장을 둘러보자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_FindKeyToGravetard, FString(TEXT("잠긴 \"무덤\"으로 접근할 방법을 찾아보자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchGravetard, FString(TEXT("\"무덤\"을 조사하여 유용한 단서를 찾을 수 있는지 확인하자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchRightGarden, FString(TEXT("\"오른쪽 정원\"을 조사하여 유용한 단서를 찾을 수 있는지 확인하자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchCathedral, FString(TEXT("\"성당\"으로 가서 보물을 찾자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_FindKeytoLeftGarden, FString(TEXT("\"성당\" 2층으로 가기 위한 단서는 \"왼쪽 정원\"에 있다. \"왼쪽 정원\"으로 가는 문 열쇠를 얻자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchLeftGarden, FString(TEXT("\"왼쪽 정원\"을 조사하여 유용한 단서를 찾을 수 있는지 확인하자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchCathedralSecondFloor, FString(TEXT("\"성당\" 2층을 조사하자.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_GetTreasure, FString(TEXT("보물을 획득하자!")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_Survive, FString(TEXT("제한 시간 동안 생존해라!.")));
+
+
+    MapNameEnglish.Add(EWarpTarget::EWT_Tutorial, FString("Tutorial Room"));
+    MapNameEnglish.Add(EWarpTarget::EWT_MainHub, FString("Main Hub"));
+    MapNameEnglish.Add(EWarpTarget::EWT_MainCathedral, FString("Cathedral"));
+    MapNameEnglish.Add(EWarpTarget::EWT_CrossOver, FString("CrossOver"));
+    MapNameEnglish.Add(EWarpTarget::EWT_GraveYard, FString("Graveyard"));
+    MapNameEnglish.Add(EWarpTarget::EWT_LeftGarden, FString("Left Garden"));
+    MapNameEnglish.Add(EWarpTarget::EWT_RightGarden, FString("Right Garden"));
+
+    MapNameKorean.Add(EWarpTarget::EWT_Tutorial, FString(TEXT("튜토리얼 방")));
+    MapNameKorean.Add(EWarpTarget::EWT_MainHub, FString(TEXT("중앙 광장")));
+    MapNameKorean.Add(EWarpTarget::EWT_MainCathedral, FString(TEXT("성당")));
+    MapNameKorean.Add(EWarpTarget::EWT_CrossOver, FString(TEXT("교차로")));
+    MapNameKorean.Add(EWarpTarget::EWT_GraveYard, FString(TEXT("무덤")));
+    MapNameKorean.Add(EWarpTarget::EWT_LeftGarden, FString(TEXT("공원 왼쪽")));
+    MapNameKorean.Add(EWarpTarget::EWT_RightGarden, FString(TEXT("공원 오른쪽")));
+
+
+    TutorialMapEnglish.Add(ETutorialType::ETT_MoveTutorial, FString("Move : ASDW \nRun : Left Shift \n\nInteract : Left Mouse Button \nBack : Right Mouse Button"));
+    TutorialMapEnglish.Add(ETutorialType::ETT_InteractWithItem, FString("As you approach an item, a white indicator appears. Get closer, and it turns blue. \n\nPress the left mouse button to pick up or interact."));
+    TutorialMapEnglish.Add(ETutorialType::ETT_Fire, FString("Aim : RightClick \nFire : LeftClick \nReload : R \nChange Bullet : Mouse wheel"));
+    TutorialMapEnglish.Add(ETutorialType::ETT_InteractWithSituation, FString("As you approach an interactable object, a white indicator appears. Get closer, and it turns blue. \n\nPress the left mouse button to interact."));
+    TutorialMapEnglish.Add(ETutorialType::ETT_InteractWithOneWayDoor, FString("Some doors only open from the other side. \n\nIf it won't open, find another way around."));
+    TutorialMapEnglish.Add(ETutorialType::ETT_InteractItemBox, FString("If there's an item box, you can store items from your inventory in it. \n\nYou can also retrieve items from the box."));
+
+    TutorialMapEnglish.Add(ETutorialType::ETT_UIGetItem, FString("When you get item, you can take it by pressing left mouse button.\n(You only can take item if there is empty space) \n\nIf you don't want to take it, press right mouse button."));
+    TutorialMapEnglish.Add(ETutorialType::ETT_UISituation, FString("You can iteract by using special item. \n\ninteractable items will be showen brighter and clickable."));
+    TutorialMapEnglish.Add(ETutorialType::ETT_UIItemBox, FString("You can store items from your inventory in the box or take items from the box into your inventory. \n\nMake sure there's an empty space in either the inventory or the box where you want to place the item."));
+    TutorialMapEnglish.Add(ETutorialType::ETT_UIMenu_Save, FString("Press the desired slot button to save or load data. \nIf you want to delete a saved file, click the X button above. \n\nTo start a new game, press New Game at the top."));
+    TutorialMapEnglish.Add(ETutorialType::ETT_UIShowInventory, FString("In the inventory, you can use, combine, discard items. \n\nSome items may have different options for use or whether they can be discarded."));
 
 
 
-    MapName.Add(EWarpTarget::EWT_Tutorial, FString("Tutorial Room"));
-    MapName.Add(EWarpTarget::EWT_MainHub, FString("Main Hub"));
+    TutorialMapKorean.Add(ETutorialType::ETT_MoveTutorial, FString(TEXT("이동 : ASDW \n달리기 : 왼쪽 Shift \n\n상호작용 : 왼쪽 마우스 버튼 \n뒤로 가기 : 오른쪽 마우스 버튼")));
+    TutorialMapKorean.Add(ETutorialType::ETT_InteractWithItem, FString(TEXT("아이템에 가까이 다가가면 흰색 표시가 나타납니다. 더 가까이 가면 파란색으로 변합니다. \n\n왼쪽 마우스 버튼을 눌러 아이템을 줍거나 상호작용하세요.")));
+    TutorialMapKorean.Add(ETutorialType::ETT_Fire, FString(TEXT("조준 : 오른쪽 마우스 클릭 \n발사 : 왼쪽 마우스 클릭 \n재장전 : R \n탄환 변경 : 마우스 휠")));
+    TutorialMapKorean.Add(ETutorialType::ETT_InteractWithSituation, FString(TEXT("상호작용 가능한 객체에 가까이 다가가면 흰색 표시가 나타납니다. 더 가까이 가면 파란색으로 변합니다. \n\n왼쪽 마우스 버튼을 눌러 상호작용하세요.")));
+    TutorialMapKorean.Add(ETutorialType::ETT_InteractWithOneWayDoor, FString(TEXT("일부 문은 반대편에서만 열립니다. \n\n열리지 않으면 다른 길을 찾아보세요.")));
+    TutorialMapKorean.Add(ETutorialType::ETT_InteractItemBox, FString(TEXT("아이템 박스가 있으면 인벤토리에서 아이템을 보관할 수 있습니다. \n\n박스에서 아이템을 꺼내올 수도 있습니다.")));
 
-
-    TutorialMap.Add(ETutorialType::ETT_MoveTutorial, FString("Move : ASDW \n\nRun : Left Shift \n\nInteract : Left Mouse Button \n\nBack : Right Mouse Button"));
-    TutorialMap.Add(ETutorialType::ETT_InteractWithItem, FString("As you approach an item, a white indicator appears. Get closer, and it turns blue. \n\nPress the left mouse button to pick up or interact."));
-    TutorialMap.Add(ETutorialType::ETT_Fire, FString("Aim : RightClick \nFire : LeftClick \nReload : R \nChange Bullet : Mouse wheel"));
-    TutorialMap.Add(ETutorialType::ETT_InteractWithSituation, FString("As you approach an interactable object, a white indicator appears. Get closer, and it turns blue. \n\nPress the left mouse button to interact."));
-    TutorialMap.Add(ETutorialType::ETT_InteractWithOneWayDoor, FString("Some doors only open from the other side. \n\nIf it won't open, find another way around."));
-    TutorialMap.Add(ETutorialType::ETT_InteractItemBox, FString("If there's an item box, you can store items from your inventory in it. \n\nYou can also retrieve items from the box."));
-
-    TutorialMap.Add(ETutorialType::ETT_UIGetItem, FString("When you get item, you can take it by pressing left mouse button.\n(You only can take item if there is empty space) \n\nIf you don't want to take it, press right mouse button."));
-    TutorialMap.Add(ETutorialType::ETT_UISituation, FString("You can iteract by using special item. \n\ninteractable items will be showen brighter and clickable."));
-    TutorialMap.Add(ETutorialType::ETT_UIItemBox, FString("You can store items from your inventory in the box or take items from the box into your inventory. \n\nMake sure there's an empty space in either the inventory or the box where you want to place the item."));
-    TutorialMap.Add(ETutorialType::ETT_UIMenu_Save, FString("Press the desired slot button to save or load data. \nIf you want to delete a saved file, click the X button above. \n\nTo start a new game, press New Game at the top."));
-    TutorialMap.Add(ETutorialType::ETT_UIShowInventory, FString("In the inventory, you can use, combine, discard items. \n\nSome items may have different options for use or whether they can be discarded."));
+    TutorialMapKorean.Add(ETutorialType::ETT_UIGetItem, FString(TEXT("아이템을 얻으면 왼쪽 마우스 버튼을 눌러 가져올 수 있습니다.\n(빈 공간이 있어야만 아이템을 가져올 수 있습니다) \n\n아이템을 원하지 않으면 오른쪽 마우스 버튼을 누르세요.")));
+    TutorialMapKorean.Add(ETutorialType::ETT_UISituation, FString(TEXT("특수 아이템을 사용하여 상호작용할 수 있습니다. \n\n상호작용 가능한 아이템은 더 밝게 표시되고 클릭할 수 있습니다.")));
+    TutorialMapKorean.Add(ETutorialType::ETT_UIItemBox, FString(TEXT("인벤토리에서 아이템을 박스에 보관하거나 박스에서 아이템을 꺼내올 수 있습니다. \n\n아이템을 보관할 곳에 빈 공간이 있는지 확인하세요.")));
+    TutorialMapKorean.Add(ETutorialType::ETT_UIMenu_Save, FString(TEXT("저장하거나 데이터를 불러오려면 원하는 슬롯 버튼을 누르세요. \n저장된 파일을 삭제하려면 위쪽의 X 버튼을 클릭하세요. \n\n새 게임을 시작하려면 상단의 새 게임 버튼을 누르세요.")));
+    TutorialMapKorean.Add(ETutorialType::ETT_UIShowInventory, FString(TEXT("인벤토리에서 아이템을 사용, 결합, 버릴 수 있습니다. \n\n일부 아이템은 사용 방법이나 버릴 수 있는지 여부에 따라 다른 옵션이 있을 수 있습니다.")));
 
 
     

@@ -188,3 +188,14 @@ enum class EDifficulty : uint8
     ED_Max,
 
 };
+
+UENUM(BlueprintType)
+enum class ELanguage : uint8
+{
+    EL_None,
+    ED_English,
+    ED_Korean,
+
+    EL_Max,
+
+};

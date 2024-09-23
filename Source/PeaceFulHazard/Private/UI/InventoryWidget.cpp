@@ -181,14 +181,8 @@ void UInventoryWidget::showItemGetUI(EItemType itemType, int32 count)
 		beforeitemType = itemType;
 		beforeitemcount = count;
 
-		FString string = ItemInformation->ItemInformationMap[itemType].itemExplainText;
-		FText TempText = FText::FromString(string);
-		ItemGetItemExplainText->SetText(TempText);
-
-		string = ItemInformation->ItemInformationMap[itemType].itemNameText;
-		TempText = FText::FromString(string);
-		ItemGetItemNameText->SetText(TempText);
-
+		SetItemDynamicChangeLanguage(ItemGetItemExplainText, ItemInformation->ItemInformationMap[itemType], false);
+		SetItemDynamicChangeLanguage(ItemGetItemNameText, ItemInformation->ItemInformationMap[itemType], true);
 
 		UTexture2D* Texture = ItemInformation->ItemInformationMap[itemType].itemImage;
 		if (Texture)
@@ -205,7 +199,7 @@ void UInventoryWidget::showItemGetUI(EItemType itemType, int32 count)
 		{
 			ItemGetCountBorder->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
-			TempText = FText::AsNumber(count);
+			FText TempText = FText::AsNumber(count);
 			ItemGetCountText->SetText(TempText);
 
 			if (count == ItemInformation->ItemInformationMap[itemType].itemMaxCount)
@@ -247,13 +241,8 @@ void UInventoryWidget::showSituationUI(EInteractSituationType situationType)
 	{
 		beforeSituationType = situationType;
 
-		FString string = ItemInformation->SituationMap[situationType].situationExplainText;
-		FText TempText = FText::FromString(string);
-		SituationExplainText->SetText(TempText);
-
-		string = ItemInformation->SituationMap[situationType].situationNameText;
-		TempText = FText::FromString(string);
-		SituationNameText->SetText(TempText);
+		SetSituationDynamicChangeLanguage(SituationExplainText, ItemInformation->SituationMap[situationType], false);
+		SetSituationDynamicChangeLanguage(SituationNameText, ItemInformation->SituationMap[situationType], true);
 
 
 		UTexture2D* Texture = ItemInformation->SituationMap[situationType].situationImage;
@@ -279,6 +268,94 @@ void UInventoryWidget::showSituationUI(EInteractSituationType situationType)
 			}
 
 		}
+	}
+}
+
+void UInventoryWidget::CheckLanguage()
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	SetLangaugeText(PeaceFulHazardGameMode->GetCurrentLanguage());
+
+}
+
+void UInventoryWidget::SetItemDynamicChangeLanguage(UTextBlock* textBlock, FItemInformationUnit itemInformtation, bool bName)
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	FText Englishtext = FText();
+	FText Koreantext = FText();
+
+	switch (PeaceFulHazardGameMode->GetCurrentLanguage())
+	{
+	case ELanguage::ED_English:
+
+		if (bName)
+		{
+			Englishtext = FText::FromString(itemInformtation.itemNameText);
+		}
+		else
+		{
+			Englishtext = FText::FromString(itemInformtation.itemExplainText);
+		}
+		
+		textBlock->SetText(Englishtext);
+		break;
+
+	case ELanguage::ED_Korean:
+
+		if (bName)
+		{
+			Koreantext = FText::FromString(itemInformtation.itemNameKoreanText);
+		}
+		else
+		{
+			Koreantext = FText::FromString(itemInformtation.itemExplainKoreanText);
+		}
+
+		textBlock->SetText(Koreantext);
+		break;
+
+	}
+}
+
+void UInventoryWidget::SetSituationDynamicChangeLanguage(UTextBlock* textBlock, FSituationInformationUnit situation, bool bName)
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	FText Englishtext = FText();
+	FText Koreantext = FText();
+
+	switch (PeaceFulHazardGameMode->GetCurrentLanguage())
+	{
+	case ELanguage::ED_English:
+
+		if (bName)
+		{
+			Englishtext = FText::FromString(situation.situationNameText);
+		}
+		else
+		{
+			Englishtext = FText::FromString(situation.situationExplainText);
+		}
+
+		textBlock->SetText(Englishtext);
+		break;
+
+	case ELanguage::ED_Korean:
+
+		if (bName)
+		{
+			Koreantext = FText::FromString(situation.situationNameKoreanText);
+		}
+		else
+		{
+			Koreantext = FText::FromString(situation.situationExplainKoreanText);
+		}
+
+		textBlock->SetText(Koreantext);
+		break;
+
 	}
 }
 
@@ -610,6 +687,8 @@ void UInventoryWidget::OnItemButtonUnhovered()
 
 void UInventoryWidget::SetAllUIUpdate()
 {
+	CheckLanguage();
+
 	SetInventoryCanvas();
 	SetItemExplainText();
 
@@ -819,14 +898,8 @@ void UInventoryWidget::SetItemExplainText()
 
 		if (ItemInformation)
 		{
-			FString string = ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].itemExplainText;
-			TempText = FText::FromString(string);
-			ItemExplainText->SetText(TempText);
-
-			string = ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]].itemNameText;
-			TempText = FText::FromString(string);
-			ItemNameText->SetText(TempText);
-
+			SetItemDynamicChangeLanguage(ItemExplainText, ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]], false);
+			SetItemDynamicChangeLanguage(ItemNameText, ItemInformation->ItemInformationMap[recentinventory->inventoryItems[index]], true);
 		}
 
 

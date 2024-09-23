@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/SaveWidget.h"
@@ -180,6 +180,31 @@ void USaveWidget::OnNewButtonClicked()
 
 }
 
+void USaveWidget::CheckLanguage()
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+	
+	SetLangaugeText(PeaceFulHazardGameMode->GetCurrentLanguage());
+}
+
+void USaveWidget::SetDynamicChangeLanguage(UTextBlock* textBlock, const FText& Englishtext, const FText& Koreantext)
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	switch (PeaceFulHazardGameMode->GetCurrentLanguage())
+	{
+	case ELanguage::ED_English :
+		textBlock->SetText(Englishtext);
+		break;
+
+	case ELanguage::ED_Korean:
+		textBlock->SetText(Koreantext);
+		break;
+
+	}
+}
+
+
 void USaveWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -191,6 +216,7 @@ void USaveWidget::NativeConstruct()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->SaveFinishedEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
+		PeaceFulHazardGameMode->LanguageChangeEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
 	}
 
 	InitArrays();
@@ -285,7 +311,6 @@ void USaveWidget::NativeConstruct()
 		LanguageDropDown->OnSelectionChanged.AddDynamic(this, &ThisClass::OnLanguageDropDownChanged);
 	}
 	
-
 	UpdateAllUI();
 }
 
@@ -509,18 +534,18 @@ void USaveWidget::ShowCurrentLocation()
 	switch (PeaceFulHazardGameMode->GetDifficulty())
 	{
 	case EDifficulty::ED_Easy:
-		MapDifficulty->SetText(FText::FromString("Easy"));
+		SetDynamicChangeLanguage(MapDifficulty, FText::FromString("Easy"), FText::FromString(TEXT("쉬움")));
 		MapDifficulty->SetColorAndOpacity(FLinearColor::Green);
 		break;
 
 	case EDifficulty::ED_Normal:
-		MapDifficulty->SetText(FText::FromString("Normal"));
+		SetDynamicChangeLanguage(MapDifficulty, FText::FromString("Normal"), FText::FromString(TEXT("보통")));
 		MapDifficulty->SetColorAndOpacity(FLinearColor::Black);
 
 		break;
 
 	case EDifficulty::ED_Hard:
-		MapDifficulty->SetText(FText::FromString("Hard"));
+		SetDynamicChangeLanguage(MapDifficulty, FText::FromString("Hard"), FText::FromString(TEXT("어려움")));
 		MapDifficulty->SetColorAndOpacity(FLinearColor::Red);
 
 		break;
@@ -601,6 +626,8 @@ void USaveWidget::ShowCurrentLocation()
 
 void USaveWidget::UpdateAllUI()
 {
+	CheckLanguage();
+
 	if (PeaceFulHazardGameMode)
 	{
 		float defaultMouse;
@@ -668,28 +695,28 @@ void USaveWidget::UpdateAllUI()
 				
 				if (PeacFulGameInstance)
 				{
-					FString temp = PeacFulGameInstance->ToDoMap[PeacFulGameInstance->currentToDos[LoadedGame->saveTodoIndex]];
+					FString temp = PeacFulGameInstance->GetToDoMapByLanguage()[PeacFulGameInstance->currentToDos[LoadedGame->saveTodoIndex]];
 					ToDoTexts[i]->SetText(FText::FromString(temp));
 
 					TimeTexts[i]->SetText(FText::FromString(LoadedGame->SaveTime.ToString(TEXT("%m/%d  |  %H:%M"))));
 
-					SaveSpotTexts[i]->SetText(FText::FromString(PeacFulGameInstance->MapName[LoadedGame->saveMapName]));
+					SaveSpotTexts[i]->SetText(FText::FromString(PeacFulGameInstance->GetMapNameByLanguage()[LoadedGame->saveMapName]));
 
 					switch (LoadedGame->SavegameDifficulty)
 					{
 					case EDifficulty::ED_Easy :
-						DifficultyTexts[i]->SetText(FText::FromString("Easy"));
+						SetDynamicChangeLanguage(DifficultyTexts[i], FText::FromString("Easy"), FText::FromString(TEXT("쉬움")));
 						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Green);
 						break;
 
 					case EDifficulty::ED_Normal:
-						DifficultyTexts[i]->SetText(FText::FromString("Normal"));
+						SetDynamicChangeLanguage(DifficultyTexts[i], FText::FromString("Normal"), FText::FromString(TEXT("보통")));
 						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Black);
 
 						break;
 
 					case EDifficulty::ED_Hard:
-						DifficultyTexts[i]->SetText(FText::FromString("Hard"));
+						SetDynamicChangeLanguage(DifficultyTexts[i], FText::FromString("Hard"), FText::FromString(TEXT("어려움")));
 						DifficultyTexts[i]->SetColorAndOpacity(FLinearColor::Red);
 
 						break;
@@ -744,13 +771,15 @@ void USaveWidget::UpdateAllUI()
 	{
 		NewSaveButton->SetIsEnabled(false);
 		SaveModeBackGround->SetBrushColor(FLinearColor::Blue);
-		SaveModeText->SetText(FText::FromString(FString("Save")));
+		SetDynamicChangeLanguage(SaveModeText, FText::FromString("Save"), FText::FromString(TEXT("저장")));
+
 	}
 	else
 	{
 		NewSaveButton->SetIsEnabled(true);
 		SaveModeBackGround->SetBrushColor(FLinearColor::Red);
-		SaveModeText->SetText(FText::FromString(FString("Load")));
+		SetDynamicChangeLanguage(SaveModeText, FText::FromString("Load"), FText::FromString(TEXT("불러오기")));
+
 	}
 
 	ShowCurrentLocation();
@@ -798,6 +827,7 @@ void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
 	UpdateAllUI();
 
 }
+
 
 
 void USaveWidget::InitArrays()

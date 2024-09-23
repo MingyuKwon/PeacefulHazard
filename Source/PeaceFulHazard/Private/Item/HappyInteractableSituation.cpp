@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Item/HappyInteractableSituation.h"
@@ -35,7 +35,7 @@ void AHappyInteractableSituation::ListenTirggerOn(EInteractSituationType _situat
 	{
 		if (PeaceFulHazardGameMode)
 		{
-			FString string = FString("Some Door placed in this map opened!");
+			FString string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("Some Door placed in this map opened!") : FString(TEXT("이 구역 어딘가 있는 어떤 문이 열린 것 같다! "));
 			PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
 			PeaceFulHazardGameMode->SetAleradyInteract(GetName());
 
@@ -51,11 +51,11 @@ void AHappyInteractableSituation::ListenTirggerOn(EInteractSituationType _situat
 	{
 		if (PeaceFulHazardGameMode)
 		{
-			FString string = FString("To Take the key, you should trigger the blue points in this floor");
+			FString string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("To Take the key, you should trigger the blue points in this floor") : FString(TEXT("키를 가져가기 위해선, 이 층에 있는 푸른 트리거를 작동 시켜야 한다"));
 
 			if (PeaceFulHazardGameMode->currentMapType == EWarpTarget::EWT_MainCathedral)
 			{
-				string = FString("Now you can get the key!");
+				string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("Now you can get the key!") : FString(TEXT("이제 키를 가져 갈 수 있다!"));
 			}
 
 			PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
@@ -177,7 +177,8 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		}
 		else if (situationType == EInteractSituationType::EIST_Note)
 		{
-			playerController->ShowInformationUI(true, NoteText);
+			playerController->ShowInformationUI(true, PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? NoteText : NoteTextKorean);
+
 			if (NotereadToDoUpdate != EPlayerToDo::EPTD_None)
 			{
 				if (PeaceFulHazardGameMode)
@@ -205,7 +206,7 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		{
 			if (PeaceFulHazardGameMode)
 			{
-				FString string = FString("Door is Locked. You should trigger someting to open this door");
+				FString string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("Door is Locked. \nYou should trigger someting to open this door") : FString(TEXT("문이 닫혀 있다. \n반대쪽 에서 열어야 할 것 같다 "));
 				PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
 			}
 		}
@@ -213,11 +214,11 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		{
 			if (PeaceFulHazardGameMode)
 			{
-				FString string = FString("Door is Locked. You should trigger someting to open this door");
+				FString string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("Door is Locked. \nYou should trigger someting to open this door") : FString(TEXT("문이 닫혀 있다. \n뭔가 작동 시켜야 문이 열릴 것 같다 "));
 
 				if (PeaceFulHazardGameMode->currentMapType == EWarpTarget::EWT_MainCathedral)
 				{
-					string = FString("To Take the key, you should trigger the blue points in this floor");
+					string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("To Take the key, you should trigger the blue points in this floor") : FString(TEXT("키를 가져가기 위해선, 이 층에 있는 푸른 트리거를 작동 시켜야 한다"));
 				}
 
 				PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
@@ -234,7 +235,7 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 				{
 					if (PeaceFulHazardGameMode)
 					{
-						FString string = FString("Doors Should be Opened in the Opposite Direction");
+						FString string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("Door is Locked. \nYou should trigger someting to open this door") : FString(TEXT("문이 닫혀 있다. \n반대쪽 에서 열어야 할 것 같다 "));
 						PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
 					}
 				}

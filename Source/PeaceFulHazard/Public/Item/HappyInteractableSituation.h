@@ -41,6 +41,10 @@ protected:
 	FString NoteText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
+	FString NoteTextKorean;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
 	EPlayerToDo NotereadToDoUpdate = EPlayerToDo::EPTD_None;
 
 	virtual void BeginPlay() override;

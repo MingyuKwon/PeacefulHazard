@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Character/PeaceFulHazardCharacter.h"
@@ -23,6 +23,7 @@ APeaceFulHazardGameMode::APeaceFulHazardGameMode()
     UIAudioComponent->bIsUISound = true;
     
 }
+
 
 void APeaceFulHazardGameMode::OpenMap(FString MapName)
 {
@@ -376,11 +377,20 @@ AActor* APeaceFulHazardGameMode::ChoosePlayerStart_Implementation(AController* P
 
 }
 
+void APeaceFulHazardGameMode::ChangeLanguageCallBack()
+{
+    LanguageChangeEvent.Broadcast();
+}
+
 void APeaceFulHazardGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
     PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
+    if (PeacFulGameInstance)
+    {
+        PeacFulGameInstance->LanguageChangeEvent.AddDynamic(this, &ThisClass::ChangeLanguageCallBack);
+    }
 
     AMapNameStore* mapStore = Cast<AMapNameStore>(UGameplayStatics::GetActorOfClass(this, AMapNameStore::StaticClass()));
     if (mapStore)
@@ -481,6 +491,24 @@ void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo targetTodo)
 
         PeacFulGameInstance->UpdateToDo(targetTodo);
     }
+}
+
+ELanguage APeaceFulHazardGameMode::GetCurrentLanguage()
+{
+    if (PeacFulGameInstance)
+    {
+        if (PeacFulGameInstance->Language == "English")
+        {
+            return ELanguage::ED_English;
+        }
+        else if (PeacFulGameInstance->Language == FString(TEXT("한국어")))
+        {
+            return ELanguage::ED_Korean;
+
+        }
+    }
+
+    return ELanguage::EL_None;
 }
 
 void APeaceFulHazardGameMode::GetSettingValue(float& mouse, float& mouseAim)
