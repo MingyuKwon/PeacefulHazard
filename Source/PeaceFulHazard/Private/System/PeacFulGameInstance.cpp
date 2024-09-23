@@ -82,7 +82,9 @@ void UPeacFulGameInstance::RefreshGame()
     TutorialCheckMap.Add(ETutorialType::ETT_UIItemBox, false);
     TutorialCheckMap.Add(ETutorialType::ETT_UIMenu_Save, false);
     TutorialCheckMap.Add(ETutorialType::ETT_UIShowInventory, false);
+    TutorialCheckMap.Add(ETutorialType::ETT_WarpExplain, false);
 
+    
     tempSaveGame = Cast<UPeacFulSaveGame>(UGameplayStatics::CreateSaveGameObject(UPeacFulSaveGame::StaticClass()));
 
 }
@@ -332,7 +334,7 @@ void UPeacFulGameInstance::Init()
     MapNameKorean.Add(EWarpTarget::EWT_RightGarden, FString(TEXT("공원 오른쪽")));
 
 
-    TutorialMapEnglish.Add(ETutorialType::ETT_MoveTutorial, FString("Move : ASDW \nRun : Left Shift \n\nInteract : Left Mouse Button \nBack : Right Mouse Button"));
+    TutorialMapEnglish.Add(ETutorialType::ETT_MoveTutorial, FString("Move : ASDW \nRun : Left Shift \n\nInteract : Left Mouse Button \nBack : Right Mouse Button\n\nE : Weapon Equip"));
     TutorialMapEnglish.Add(ETutorialType::ETT_InteractWithItem, FString("As you approach an item, a white indicator appears. Get closer, and it turns blue. \n\nPress the left mouse button to pick up or interact."));
     TutorialMapEnglish.Add(ETutorialType::ETT_Fire, FString("Aim : RightClick \nFire : LeftClick \nReload : R \nChange Bullet : Mouse wheel"));
     TutorialMapEnglish.Add(ETutorialType::ETT_InteractWithSituation, FString("As you approach an interactable object, a white indicator appears. Get closer, and it turns blue. \n\nPress the left mouse button to interact."));
@@ -345,9 +347,10 @@ void UPeacFulGameInstance::Init()
     TutorialMapEnglish.Add(ETutorialType::ETT_UIMenu_Save, FString("Press the desired slot button to save or load data. \nIf you want to delete a saved file, click the X button above. \n\nTo start a new game, press New Game at the top."));
     TutorialMapEnglish.Add(ETutorialType::ETT_UIShowInventory, FString("In the inventory, you can use, combine, discard items. \n\nSome items may have different options for use or whether they can be discarded."));
 
+    TutorialMapEnglish.Add(ETutorialType::ETT_WarpExplain, FString("The doors with a green glowing outline are warp doors. \n\nBy interacting with them, you can enter or exit different buildings or areas, so make sure to use them actively."));
 
-
-    TutorialMapKorean.Add(ETutorialType::ETT_MoveTutorial, FString(TEXT("이동 : ASDW \n달리기 : 왼쪽 Shift \n\n상호작용 : 왼쪽 마우스 버튼 \n뒤로 가기 : 오른쪽 마우스 버튼")));
+    
+    TutorialMapKorean.Add(ETutorialType::ETT_MoveTutorial, FString(TEXT("이동 : ASDW \n달리기 : 왼쪽 Shift \n\n상호작용 : 왼쪽 마우스 버튼 \n뒤로 가기 : 오른쪽 마우스 버튼\n\nE : 무기 장착")));
     TutorialMapKorean.Add(ETutorialType::ETT_InteractWithItem, FString(TEXT("아이템에 가까이 다가가면 흰색 표시가 나타납니다. 더 가까이 가면 파란색으로 변합니다. \n\n왼쪽 마우스 버튼을 눌러 아이템을 줍거나 상호작용하세요.")));
     TutorialMapKorean.Add(ETutorialType::ETT_Fire, FString(TEXT("조준 : 오른쪽 마우스 클릭 \n발사 : 왼쪽 마우스 클릭 \n재장전 : R \n탄환 변경 : 마우스 휠")));
     TutorialMapKorean.Add(ETutorialType::ETT_InteractWithSituation, FString(TEXT("상호작용 가능한 객체에 가까이 다가가면 흰색 표시가 나타납니다. 더 가까이 가면 파란색으로 변합니다. \n\n왼쪽 마우스 버튼을 눌러 상호작용하세요.")));
@@ -359,6 +362,9 @@ void UPeacFulGameInstance::Init()
     TutorialMapKorean.Add(ETutorialType::ETT_UIItemBox, FString(TEXT("인벤토리에서 아이템을 박스에 보관하거나 박스에서 아이템을 꺼내올 수 있습니다. \n\n아이템을 보관할 곳에 빈 공간이 있는지 확인하세요.")));
     TutorialMapKorean.Add(ETutorialType::ETT_UIMenu_Save, FString(TEXT("저장하거나 데이터를 불러오려면 원하는 슬롯 버튼을 누르세요. \n저장된 파일을 삭제하려면 위쪽의 X 버튼을 클릭하세요. \n\n새 게임을 시작하려면 상단의 새 게임 버튼을 누르세요.")));
     TutorialMapKorean.Add(ETutorialType::ETT_UIShowInventory, FString(TEXT("인벤토리에서 아이템을 사용, 결합, 버릴 수 있습니다. \n\n일부 아이템은 사용 방법이나 버릴 수 있는지 여부에 따라 다른 옵션이 있을 수 있습니다.")));
+
+    TutorialMapKorean.Add(ETutorialType::ETT_WarpExplain, FString(TEXT("테두리가 녹색 빛이 나는 문들을 워프 문 입니다. \n\n워프 문과 상호작용 하면 다른 건물이나 지역으로 들어가거나 나올 수 있으므로 적극 활용 해 봅시다")));
+
 
 
     

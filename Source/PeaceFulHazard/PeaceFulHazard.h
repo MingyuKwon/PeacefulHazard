@@ -57,6 +57,8 @@ enum class ETutorialType : uint8
     ETT_UIMenu_Save,
     ETT_UIShowInventory,
 
+    ETT_WarpExplain,
+
     ETT_Max
 };
 
