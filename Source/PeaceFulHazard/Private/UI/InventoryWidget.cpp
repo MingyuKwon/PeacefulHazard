@@ -102,6 +102,7 @@ bool UInventoryWidget::IsInventoryFull()
 bool UInventoryWidget::CanGetItem(EItemType itemType, int32 count)
 {
 	if (!IsInventoryFull()) return true;
+	if (itemType == EItemType::EIT_Bag) return true;
 
 	// only if inventory is Full
 

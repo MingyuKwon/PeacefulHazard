@@ -256,6 +256,10 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void InventorySizeUpgrade(int32 count);
 
+	bool CanGetItem(EItemType itemType, int32 count);
+	bool IsInventoryFull();
+
+
 
 	UFUNCTION(BlueprintCallable)
 	void ChangeItemBoxInContrller(int32 index, EItemType itemType, int32 count);

@@ -943,6 +943,55 @@ void AHappyPlayerController::InventorySizeUpgrade(int32 count)
     UpdateAllUI();
 }
 
+bool AHappyPlayerController::CanGetItem(EItemType itemType, int32 count)
+{
+    if (!IsInventoryFull()) return true;
+    if (itemType == EItemType::EIT_Bag) return true;
+
+    // only if inventory is Full
+
+    int32 MaxCountUnit = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
+    int32 FreeSpace = 0;
+
+    for (int i = 0; i < 15; i++)
+    {
+        if (CharacterInventoty.inventoryItems[i] != itemType) continue;
+
+        FreeSpace += MaxCountUnit - CharacterInventoty.inventoryItemCounts[i];
+    }
+
+    return FreeSpace >= count;
+}
+
+bool AHappyPlayerController::IsInventoryFull()
+{
+
+    int32 Lockindex = 0;
+    for (bool Lock : CharacterInventoty.ItemLockArray)
+    {
+        if (Lock)
+        {
+            break;
+        }
+
+        Lockindex++;
+    }
+
+    int32 Emptyindex = 0;
+    for (EItemType InventoryitemType : CharacterInventoty.inventoryItems)
+    {
+        if (InventoryitemType == EItemType::EIT_None)
+        {
+            break;
+        }
+
+        Emptyindex++;
+    }
+
+    return Emptyindex >= Lockindex;
+
+}
+
 void AHappyPlayerController::ChangeItemBoxInContrller(int32 index, EItemType itemType, int32 count)
 {
     if (count >= 0)
@@ -1199,31 +1248,62 @@ bool AHappyPlayerController::ChangeItemInventoryArray(EItemType itemType, int32 
         return true;
     }
 
-    int32 Emptyindex = 0;
-    for (EItemType InventoryitemType : CharacterInventoty.inventoryItems)
+    
+    if (!CanGetItem(itemType, count)) return false;
+
+    if (!IsInventoryFull())
     {
-        if (InventoryitemType == EItemType::EIT_None)
+        int32 Emptyindex = 0;
+        for (EItemType InventoryitemType : CharacterInventoty.inventoryItems)
         {
-            break;
+            if (InventoryitemType == EItemType::EIT_None)
+            {
+                break;
+            }
+
+            Emptyindex++;
         }
 
-        Emptyindex++;
-    }
+        CharacterInventoty.inventoryItems[Emptyindex] = itemType;
+        CharacterInventoty.inventoryItemCounts[Emptyindex] = count;
 
-    if (Lockindex <= Emptyindex)
+        if (CharacterInventoty.inventoryItemCounts[Emptyindex] > ItemInformation->ItemInformationMap[itemType].itemMaxCount)
+        {
+            if (!ChangeItemInventoryArray(itemType, CharacterInventoty.inventoryItemCounts[Emptyindex] - ItemInformation->ItemInformationMap[itemType].itemMaxCount)) return false;
+
+            CharacterInventoty.inventoryItemCounts[Emptyindex] = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
+        }
+    }
+    else
     {
-        return false;
+        // inventory is full but free space is enough to get the item
+
+        int32 MaxCountUnit = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
+
+        int index = 0;
+        for (index = 0; index < 15; index++)
+        {
+            if (CharacterInventoty.inventoryItems[index] == itemType && CharacterInventoty.inventoryItemCounts[index] < MaxCountUnit)
+            {
+                break;
+            }
+
+        }
+
+        int32 FreeSpace = MaxCountUnit - CharacterInventoty.inventoryItemCounts[index];
+        FreeSpace = FMath::Clamp(FreeSpace, 0, count);
+
+        CharacterInventoty.inventoryItemCounts[index] += FreeSpace;
+        count -= FreeSpace;
+
+        if (count > 0)
+        {
+            if (!ChangeItemInventoryArray(itemType, count)) return false;
+        }
+
     }
 
-    CharacterInventoty.inventoryItems[Emptyindex] = itemType;
-    CharacterInventoty.inventoryItemCounts[Emptyindex] = count;
-
-    if (CharacterInventoty.inventoryItemCounts[Emptyindex] > ItemInformation->ItemInformationMap[itemType].itemMaxCount)
-    {
-        if (!ChangeItemInventoryArray(itemType, CharacterInventoty.inventoryItemCounts[Emptyindex] - ItemInformation->ItemInformationMap[itemType].itemMaxCount)) return false;
-
-        CharacterInventoty.inventoryItemCounts[Emptyindex] = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
-    }
+    
 
     UpdateAllUI();
     return true;
