@@ -903,6 +903,8 @@ bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EI
         }
     }
 
+    UpdateAllUI();
+
     return true;
 }
 
@@ -1148,6 +1150,7 @@ bool AHappyPlayerController::ChangeItemInventoryMap(EItemType itemType, int32 co
         CharacterInventoty.ItemCountMap.Remove(Key);
     }
 
+    UpdateAllUI();
     return true;
 
 }
@@ -1222,7 +1225,7 @@ bool AHappyPlayerController::ChangeItemInventoryArray(EItemType itemType, int32 
         CharacterInventoty.inventoryItemCounts[Emptyindex] = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
     }
 
-
+    UpdateAllUI();
     return true;
 }
 

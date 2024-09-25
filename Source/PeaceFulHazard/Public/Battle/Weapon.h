@@ -79,22 +79,22 @@ protected:
 	float BigBulletDamage = 20.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float Easy_NormalBulletDamage = 15.f;
+	float Easy_NormalBulletDamage = 20.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float Normal_NormalBulletDamage = 10.f;
+	float Normal_NormalBulletDamage = 15.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float Hard_NormalBulletDamage = 10.f;
+	float Hard_NormalBulletDamage = 15.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float Easy_BigBulletDamage = 30.f;
+	float Easy_BigBulletDamage = 40.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float Normal_BigBulletDamage = 20.f;
+	float Normal_BigBulletDamage = 30.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float Hard_BigBulletDamage = 20.f;
+	float Hard_BigBulletDamage = 30.f;
 
 	EItemType currentItemType = EItemType::EIT_Bullet_Noraml;
 

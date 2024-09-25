@@ -47,8 +47,6 @@ void AHappyPichUpItem::CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count)
 		{
 			if (PeaceFulHazardGameMode)
 			{
-				PeaceFulHazardGameMode->SetAleradyInteract(GetName());
-
 				switch (ItemType)
 				{
 				case EItemType::EIT_GraveYardDoorKey:
@@ -68,8 +66,12 @@ void AHappyPichUpItem::CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count)
 					break;
 
 
-					
+
 				}
+
+
+				PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+
 			}
 
 			bAlreadyInteract = true;
