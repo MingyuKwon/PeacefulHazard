@@ -55,8 +55,7 @@ void UInventoryWidget::OkUIInputTrigger()
 	if (GetVisibility() == ESlateVisibility::Hidden) return;
 
 	if (beforeitemType == EItemType::EIT_None) return;
-	if (IsInventoryFull()) return;
-
+	if (TakeImage->GetVisibility() == ESlateVisibility::Hidden) return;
 
 	if (ItemGetCanvas->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
 	{
@@ -98,6 +97,30 @@ bool UInventoryWidget::IsInventoryFull()
 	}
 
 	return true;
+}
+
+bool UInventoryWidget::CanGetItem(EItemType itemType, int32 count)
+{
+	if (!IsInventoryFull()) return true;
+
+	// only if inventory is Full
+
+	int32 MaxCountUnit = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
+	int32 FreeSpace = 0;
+
+	if (recentinventory)
+	{
+		for (int i = 0; i < 15; i++)
+		{
+			if (recentinventory->inventoryItems[i] != itemType) continue;
+
+			FreeSpace += MaxCountUnit - recentinventory->inventoryItemCounts[i];
+		}
+	}
+
+	
+
+	return FreeSpace >= count;
 }
 
 
@@ -214,7 +237,7 @@ void UInventoryWidget::showItemGetUI(EItemType itemType, int32 count)
 		}
 	}
 
-	if (IsInventoryFull())
+	if (!CanGetItem(itemType, count))
 	{
 		TakeBackground->SetVisibility(ESlateVisibility::Hidden);
 		TakeText->SetVisibility(ESlateVisibility::Hidden);
