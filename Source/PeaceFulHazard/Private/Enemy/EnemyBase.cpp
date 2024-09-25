@@ -404,7 +404,7 @@ float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 
         if (bHead)
         {
-            ActualDamage *= 2.0f; // ��弦�� ��� ������ 2��
+            ActualDamage *= 1.5f;
 
             if (PeaceFulHazardGameMode)
             {

@@ -156,6 +156,13 @@ enum class ERouteNum : uint8
     ERN_RouteNum8,
     ERN_RouteNum9,
     ERN_RouteNum10,
+    ERN_RouteNum11,
+    ERN_RouteNum12,
+    ERN_RouteNum13,
+    ERN_RouteNum14,
+    ERN_RouteNum15,
+    ERN_RouteNum16,
+    ERN_RouteNum17,
 
     ERN_Max
 };

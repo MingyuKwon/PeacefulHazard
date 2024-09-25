@@ -25,6 +25,8 @@ public:
 	void OkUIInputTrigger();
 
 	bool IsInventoryFull();
+	bool CanGetItem(EItemType itemType, int32 count);
+
 
 	void CloseInventoryUIValue();
 

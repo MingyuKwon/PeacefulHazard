@@ -417,7 +417,6 @@ void APeaceFulHazardGameMode::SetGameBrightness()
     {
         CachedPostProcessVolume = Cast<APostProcessVolume>(UGameplayStatics::GetActorOfClass(GetWorld(), APostProcessVolume::StaticClass()));
     }
-
     if (CachedPostProcessVolume)
     {
         float BrightnessTemp = PeacFulGameInstance->Brightness;
@@ -426,36 +425,96 @@ void APeaceFulHazardGameMode::SetGameBrightness()
         {
         case EWarpTarget::EWT_Tutorial:
             BrightnessTemp *= 1.1f;
-
             break;
         case EWarpTarget::EWT_MainHub:
             BrightnessTemp *= 0.8f;
             break;
         case EWarpTarget::EWT_CrossOver:
             BrightnessTemp *= 1.1f;
-
             break;
         case EWarpTarget::EWT_GraveYard:
             BrightnessTemp *= 0.8f;
-
             break;
         case EWarpTarget::EWT_LeftGarden:
             BrightnessTemp *= 0.8f;
-
             break;
         case EWarpTarget::EWT_MainCathedral:
             BrightnessTemp *= 1.1f;
-
             break;
         case EWarpTarget::EWT_RightGarden:
             BrightnessTemp *= 0.8f;
-
             break;
-
         }
 
         CachedPostProcessVolume->Settings.AutoExposureBias = BrightnessTemp;
+
+
+        float TemperatureTemp = 6500.0f;  // 기본 색온도 (6500K는 중립적인 색온도)
+        FLinearColor TintTemp = FLinearColor::White;  // 기본 색조
+
+        FString temp;
+
+        float TransitionSpeed = 0.5f;  // 색상 변화 속도 조절 (0.0f ~ 1.0f)
+        FLinearColor StartTint = FLinearColor(0.8f, 0.9f, 1.0f);  // 초기 푸른빛
+        FLinearColor EndTint = FLinearColor(1.0f, 0.75f, 0.5f);   // 석양빛 (노란빛)
+        float StartTemperature = 5000.0f;  // 초기 푸른빛 온도
+        float EndTemperature = 8500.0f;    // 석양빛 온도
+
+
+        switch (PeacFulGameInstance->GetCurrentToDo(temp))
+        {
+        case EPlayerToDo::EPTD_GetOutTutorialRoom:
+        case EPlayerToDo::EPTD_LookAroundMainHub:
+        case EPlayerToDo::EPTD_FindKeyToGravetard:
+        case EPlayerToDo::EPTD_SearchGravetard:
+            TemperatureTemp = 5000.0f;  // 차가운 색 온도 (푸른빛)
+            TintTemp = FLinearColor(0.5f, 0.7f, 1.0f);  // 푸른색조, 더 차갑게 보이도록 변경
+            UE_LOG(LogTemp, Display, TEXT("Bright 1"));
+            break;
+
+        case EPlayerToDo::EPTD_SearchRightGarden:
+            TemperatureTemp = 6000.0f;  // 약간 따뜻해진 색 온도
+            TintTemp = FLinearColor(0.8f, 0.6f, 0.7f);  // 보라색 느낌의 중간 단계
+            UE_LOG(LogTemp, Display, TEXT("Bright 2"));
+
+            break;
+
+        case EPlayerToDo::EPTD_SearchCathedral:
+        case EPlayerToDo::EPTD_FindKeytoLeftGarden:
+            TemperatureTemp = 7000.0f;  // 따뜻한 색 온도
+            TintTemp = FLinearColor(1.0f, 0.6f, 0.6f);  // 붉은빛과 약간의 따뜻한 색조
+            UE_LOG(LogTemp, Display, TEXT("Bright 3"));
+
+            break;
+
+        case EPlayerToDo::EPTD_SearchLeftGarden:
+            TemperatureTemp = 7500.0f;  // 더 따뜻한 색 온도
+            TintTemp = FLinearColor(1.0f, 0.4f, 0.4f);  // 붉은 계열로 변화
+            UE_LOG(LogTemp, Display, TEXT("Bright 4"));
+
+            break;
+
+        case EPlayerToDo::EPTD_SearchCathedralSecondFloor:
+            TemperatureTemp = 8000.0f;  // 매우 따뜻한 색 온도
+            TintTemp = FLinearColor(1.0f, 0.3f, 0.3f);  // 강렬한 붉은색
+            UE_LOG(LogTemp, Display, TEXT("Bright 5"));
+
+            break;
+
+        case EPlayerToDo::EPTD_GetTreasure:
+        case EPlayerToDo::EPTD_Survive:
+            TemperatureTemp = 8500.0f;  // 극도로 따뜻한 색 온도
+            TintTemp = FLinearColor(1.0f, 0.2f, 0.2f);  // 매우 진한 붉은색
+            UE_LOG(LogTemp, Display, TEXT("Bright 6"));
+
+            break;
+        }
+
+
+        CachedPostProcessVolume->Settings.WhiteTemp = TemperatureTemp;
+        CachedPostProcessVolume->Settings.ColorSaturation = TintTemp; 
     }
+
 }
 
 
@@ -524,6 +583,7 @@ void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo targetTodo)
         if (GetPlayerToDo() >= targetTodo) return;
 
         PeacFulGameInstance->UpdateToDo(targetTodo);
+        SetGameBrightness();
     }
 }
 
