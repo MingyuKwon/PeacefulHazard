@@ -179,12 +179,19 @@ void APeaceFulHazardCharacter::PlayHitReactMontage(AActor* DamageCauser)
 	}
 	else
 	{
-		if (HitBackwardMontage)
+		if (HitForwardMontage)
 		{
-			PlayAnimMontage(HitBackwardMontage);
+			FRotator CurrentRotation = GetActorRotation();
+			FRotator TargetRotation = CurrentRotation + FRotator(0.0f, 180.0f, 0.0f);  // Yaw 값에 180도 추가
+
+			SetActorRotation(TargetRotation);
+
+			UE_LOG(LogTemp, Warning, TEXT("Hit from Front"));
+
+			PlayAnimMontage(HitForwardMontage);
 		}
-		UE_LOG(LogTemp, Display, TEXT("Hit from Back"));
 	}
+	
 
 }
 
@@ -275,6 +282,12 @@ void APeaceFulHazardCharacter::AimingPitchLerp(float deltaTime)
 void APeaceFulHazardCharacter::UpdateValue()
 {
 	if (HappyPlayerController == nullptr) return;
+
+	if (GEngine)
+	{
+		FString text = FString::Printf(TEXT("bNowUnDamagable = %s"), bNowUnDamagable ? *FString("True") : *FString("False"));
+		GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Red, text);
+	}
 
 	float healthpercent = HappyPlayerController->GetHealthPercent();
 	if (healthpercent > 0)
@@ -503,12 +516,12 @@ float APeaceFulHazardCharacter::TakeDamage(float DamageAmount, FDamageEvent cons
 	GetWorld()->GetTimerManager().SetTimer(DamagedTimerHandle, [this]()
 		{
 			bNowDamaging = false;
-		}, 0.5f, false);
+		}, 0.7f, false);
 
 	GetWorld()->GetTimerManager().SetTimer(UnDamagableTimerHandle, [this]()
 		{
 			bNowUnDamagable = false;
-		}, 1.0f, false);
+		}, 1.3f, false);
 	
 	
 	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
@@ -521,7 +534,6 @@ float APeaceFulHazardCharacter::TakeDamage(float DamageAmount, FDamageEvent cons
 
 		HappyPlayerController->TakeDamge(ActualDamage);
 	}
-	UE_LOG(LogTemp, Display, TEXT("Damage applied to: %s %f"), *GetName(), ActualDamage);
 
 	return ActualDamage;
 }
@@ -593,7 +605,7 @@ void APeaceFulHazardCharacter::SetShouldPlayerFollowCamera()
 
     if (bEquiped)
     {
-        if (!bNowShifting && GetCharacterMovement()->Velocity.Length() > 0)
+        if (!bNowShifting && GetCharacterMovement()->Velocity.Length() > 0 && !bNowDamaging)
         {
             FRotator CurrentRotation = GetActorRotation();
             FRotator TargetRotation = Controller->GetControlRotation();
