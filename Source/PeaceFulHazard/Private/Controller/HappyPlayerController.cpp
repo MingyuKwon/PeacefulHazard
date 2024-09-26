@@ -798,14 +798,7 @@ void AHappyPlayerController::MapStartCallBack()
 
     if (isSavedDataRemain)
     {
-        if (GEngine)
-        {
-            FString WarpTargetString = UEnum::GetValueAsString(warptarget);
-            FString CurrentMapTypeString = UEnum::GetValueAsString(PeaceFulHazardGameMode->currentMapType);
-
-            UE_LOG(LogTemp, Warning, TEXT("WarpTarget: %s, CurrentMapType: %s"), *WarpTargetString, *CurrentMapTypeString);
-        }
-
+       
         if (warptarget == PeaceFulHazardGameMode->currentMapType)
         {
             if (ControlledCharacter)

@@ -175,12 +175,7 @@ bool AEnemyAIController::CheckMovetoDestination()
 	FVector PawnPosition = GetPawn()->GetActorLocation();
 
 	float distance = FVector::Dist2D(PawnPosition, TargetLocation);
-	
-	if (GEngine)
-	{
-		FString text = FString::Printf(TEXT("distance : %f"), distance);
-		GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Red, text);
-	}
+
 
 	if (controlEnemy)
 	{
