@@ -8,6 +8,7 @@
 
 class AEnemyBase;
 class APeaceFulHazardGameMode;
+class UBoxComponent;
 
 UCLASS()
 class PEACEFULHAZARD_API ADynamicEnemySpawner : public AActor
@@ -19,6 +20,12 @@ public:
 	ADynamicEnemySpawner();
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* StaticMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* HeadBox;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -28,12 +35,21 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Spawn Para")
 	float SpawnTime = 3.f;
 
+	float acculumateValue = 0.f;
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 
 
+	void SetMaterialParaLerp( float value);
+
 	UFUNCTION()
 	void SpawnEnemy();
+
+	UFUNCTION()
+	void TimerEnd();
+
+	bool bDestory = false;
+
 
 public:	
 	// Called every frame
