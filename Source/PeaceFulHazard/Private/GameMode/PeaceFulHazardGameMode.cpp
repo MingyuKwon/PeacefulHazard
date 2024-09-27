@@ -407,6 +407,17 @@ void APeaceFulHazardGameMode::BeginPlay()
             PlayBGM();
         }, 0.1f, false);
 
+
+
+    FTimerHandle TestHandle;
+    GetWorld()->GetTimerManager().SetTimer(TestHandle, [this]()
+        {
+            //DynamicSpawnStartEvent.Broadcast();
+
+        }, 3.f, false);
+
+    
+
 }
 
 void APeaceFulHazardGameMode::SetGameBrightness()

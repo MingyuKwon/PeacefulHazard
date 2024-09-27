@@ -283,12 +283,6 @@ void APeaceFulHazardCharacter::UpdateValue()
 {
 	if (HappyPlayerController == nullptr) return;
 
-	if (GEngine)
-	{
-		FString text = FString::Printf(TEXT("bNowUnDamagable = %s"), bNowUnDamagable ? *FString("True") : *FString("False"));
-		GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Red, text);
-	}
-
 	float healthpercent = HappyPlayerController->GetHealthPercent();
 	if (healthpercent > 0)
 	{

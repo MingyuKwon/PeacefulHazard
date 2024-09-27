@@ -33,6 +33,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWantSaveEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FModeLanguageChangeEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDynamicSpawnStartEvent);
 
 
 class UPeacFulGameInstance;
@@ -114,6 +115,10 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FWantSaveEvent WantSaveEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FDynamicSpawnStartEvent DynamicSpawnStartEvent;
+
+	
 	void SaveSettingValue();
 	void LoadSettingValue();
 

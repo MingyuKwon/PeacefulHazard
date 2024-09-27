@@ -71,6 +71,13 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 	currentHealth -= Damage;
 	currentHealth = FMath::Clamp(currentHealth, 0, currentHealth);
 
+	if (GEngine)
+	{
+		FString text = FString::Printf(TEXT("Damage : %f , current Health : %f") , Damage, currentHealth);
+		GEngine->AddOnScreenDebugMessage(8, 1.f, FColor::Green, text);
+		UE_LOG(LogTemp, Display, TEXT("Damage : %f , current Health : %f"), Damage, currentHealth);
+	}
+
 	damageAccumulate += Damage;
 
 	if (controlEnemy->GetDamageUnitbyDifficulty() <= damageAccumulate)
@@ -176,9 +183,14 @@ bool AEnemyAIController::CheckMovetoDestination()
 
 	float distance = FVector::Dist2D(PawnPosition, TargetLocation);
 
+	if (controlEnemy == nullptr)
+	{
+		controlEnemy = Cast<AEnemyBase>(GetPawn());
+	}
 
 	if (controlEnemy)
 	{
+
 		if (controlEnemy->bBoss)
 		{
 			FVector DirectionToTarget = (TargetLocation - controlEnemy->GetActorLocation()).GetSafeNormal();
@@ -192,6 +204,14 @@ bool AEnemyAIController::CheckMovetoDestination()
 		}
 		else
 		{
+
+
+			if (GEngine)
+			{
+				FString text = FString::Printf(TEXT("distance : %f , PatrolMoveToRange : %f , AttackRange : %f"), distance, controlEnemy->PatrolMoveToRange, controlEnemy->AttackRange);
+				GEngine->AddOnScreenDebugMessage(9, 1.f, FColor::Yellow, text);
+			}
+
 			return distance <= ((Target == nullptr) ? controlEnemy->PatrolMoveToRange : controlEnemy->AttackRange);
 		}
 
@@ -208,9 +228,23 @@ void AEnemyAIController::UpdateBlackBoard()
 
 		if (CheckMovetoDestination())
 		{
+
+
 			if (!bNowAttacking && !bDeath && !bStunDamage && !bStunHeadShot)
 			{
+				if (GEngine)
+				{
+					FString text = FString::Printf(TEXT("Should Attack"));
+					GEngine->AddOnScreenDebugMessage(10, 1.f, FColor::Red, text);
+				}
+
 				if (nonAttackLock) return;
+
+				if (GEngine)
+				{
+					FString text = FString::Printf(TEXT("Attack"));
+					GEngine->AddOnScreenDebugMessage(11, 1.f, FColor::Blue, text);
+				}
 
 				if (controlEnemy->bBoss)
 				{
@@ -220,6 +254,8 @@ void AEnemyAIController::UpdateBlackBoard()
 				}
 				else
 				{
+
+
 					Attack();
 				}
 
