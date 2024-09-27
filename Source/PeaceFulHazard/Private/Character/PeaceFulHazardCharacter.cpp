@@ -156,7 +156,7 @@ void APeaceFulHazardCharacter::PlayHitReactMontage(AActor* DamageCauser)
 
 
 	}
-	else if (Angle > 45.0f && Angle <= 135.0f)
+	else if (Angle > 45.0f && Angle <= 120.0f)
 	{
 		// Right hit
 		if (HitRightMontage)
@@ -167,7 +167,7 @@ void APeaceFulHazardCharacter::PlayHitReactMontage(AActor* DamageCauser)
 
 
 	}
-	else if (Angle < -45.0f && Angle >= -135.0f)
+	else if (Angle < -45.0f && Angle >= -120.0f)
 	{
 		// Left hit
 		if (HitLeftMontage)

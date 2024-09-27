@@ -41,7 +41,7 @@ public:
 	TMap<EWarpTarget, FString> GetMapNameByLanguage();
 	TMap<ETutorialType, FString> GetTutorialByLanguage();
 
-	EDifficulty gameDifficulty = EDifficulty::ED_Easy;
+	EDifficulty gameDifficulty = EDifficulty::ED_Hard;
 
 	int32 currentEnemyForce = 0;
 
