@@ -412,7 +412,7 @@ void APeaceFulHazardGameMode::BeginPlay()
     FTimerHandle TestHandle;
     GetWorld()->GetTimerManager().SetTimer(TestHandle, [this]()
         {
-            //DynamicSpawnStartEvent.Broadcast();
+            DynamicSpawnStartEvent.Broadcast();
 
         }, 3.f, false);
 
