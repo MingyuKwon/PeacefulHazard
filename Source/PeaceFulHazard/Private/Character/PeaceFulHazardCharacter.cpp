@@ -283,6 +283,14 @@ void APeaceFulHazardCharacter::UpdateValue()
 {
 	if (HappyPlayerController == nullptr) return;
 
+	if (bDissolveControllerControl)
+	{
+		ControllerForceDissolveValue -= 0.1f / 6.f;
+		SetDissolveForce(ControllerForceDissolveValue);
+
+		return;
+	}
+
 	float healthpercent = HappyPlayerController->GetHealthPercent();
 	if (healthpercent > 0)
 	{
@@ -315,7 +323,7 @@ void APeaceFulHazardCharacter::SetMaterialParaLerp(bool bDissolve, float value)
 		bool bReduce = value < dissolvePercent;
 
 		dissolvePercent = FMath::Lerp(dissolvePercent, value, bReduce ? 0.1f : 0.2f);
-		GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
+		SetDissolveForce(dissolvePercent);
 
 	}
 	else
@@ -361,8 +369,12 @@ void APeaceFulHazardCharacter::MapStartInitialize()
 
 	float healthpercent = HappyPlayerController->GetHealthPercent();
 	dissolvePercent = 1 - (healthpercent * 0.7f + 0.3f);
-	GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
+	SetDissolveForce(dissolvePercent);
+}
 
+void APeaceFulHazardCharacter::SetDissolveForce(float value)
+{
+	GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", value);
 }
 
 

@@ -48,10 +48,11 @@ void ACinematicActive::MapStartCallBack()
 {
     if (PeaceFulHazardGameMode)
     {
-        if(!PeaceFulHazardGameMode->CheckAleradyInteract(GetName()))
+        if (!PeaceFulHazardGameMode->CheckAleradyInteract(GetName()))
         {
             PlaySequence();
-            PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+            UE_LOG(LogTemp, Warning, TEXT("Play Sequence"));
+
         }
         else
         {
@@ -64,7 +65,6 @@ void ACinematicActive::MapStartCallBack()
 
 void ACinematicActive::OnSequenceFinished()
 {
-    UE_LOG(LogTemp, Warning, TEXT("Sequence End"));
     if (PeaceFulHazardGameMode) PeaceFulHazardGameMode->CinematicPlayEvent.Broadcast(false);
 
 }
@@ -83,6 +83,9 @@ void ACinematicActive::PlaySequence()
             if (PeaceFulHazardGameMode) PeaceFulHazardGameMode->CinematicPlayEvent.Broadcast(true);
             
             SequencePlayer->Play();
+
+            PeaceFulHazardGameMode->SetAleradyInteract(GetName());
+
         }
     }
 }

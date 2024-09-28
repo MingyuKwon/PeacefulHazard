@@ -37,8 +37,6 @@ protected:
 	UFUNCTION()
 	void OnSequenceFinished();
 
-	
-
 	void PlaySequence();
 
 

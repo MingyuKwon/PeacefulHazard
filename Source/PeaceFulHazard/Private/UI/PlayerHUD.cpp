@@ -153,6 +153,21 @@ void APlayerHUD::SetInformationDisplay(bool bVisible)
     }
 }
 
+void APlayerHUD::SetDefaultDisplay(bool bVisible)
+{
+    if (DefaultPlayerWidget == nullptr) return;
+
+    if (bVisible)
+    {
+        DefaultPlayerWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+    }
+    else
+    {
+        DefaultPlayerWidget->SetVisibility(ESlateVisibility::Hidden);
+    }
+}
+
 void APlayerHUD::SetMainMenuDisplay(bool bVisible, EMenuType menuType, bool bSavePanelSave)
 {
     if (!bVisible)

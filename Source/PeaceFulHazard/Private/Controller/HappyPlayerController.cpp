@@ -120,8 +120,6 @@ void AHappyPlayerController::BeginPlay()
                 SetInputMode(FInputModeGameOnly());
 
                 PlayerHUD->ShowLoadingUI(false);
-                TutorialShow(ETutorialType::ETT_MoveTutorial);
-
             }, 0.5f, false);
 
     }
@@ -1018,6 +1016,38 @@ bool AHappyPlayerController::IsInventoryFull()
 void AHappyPlayerController::CinematicShow(bool bShow)
 {
     bCinematicShow = bShow;
+
+    if (bShow)
+    {
+        if (PlayerHUD)
+        {
+            PlayerHUD->SetDefaultDisplay(false);
+        }
+
+        if (ControlledCharacter && PeaceFulHazardGameMode && PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
+        {
+
+
+            ControlledCharacter->bDissolveControllerControl = true;
+        }
+    }
+    else
+    {
+        if (PlayerHUD)
+        {
+            PlayerHUD->SetDefaultDisplay(true);
+        }
+
+        TutorialShow(ETutorialType::ETT_MoveTutorial);
+        if (ControlledCharacter && PeaceFulHazardGameMode && PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
+        {
+
+
+            ControlledCharacter->bDissolveControllerControl = false;
+        }
+    }
+
+    
 }
 
 void AHappyPlayerController::ChangeItemBoxInContrller(int32 index, EItemType itemType, int32 count)
