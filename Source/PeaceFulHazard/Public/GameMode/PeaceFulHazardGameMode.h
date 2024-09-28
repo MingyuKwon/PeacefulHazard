@@ -36,6 +36,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FModeLanguageChangeEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDynamicSpawnStartEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCinematicPlayEvent, bool, bPlay);
+
 
 class UPeacFulGameInstance;
 class USoundBase;
@@ -119,6 +121,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FDynamicSpawnStartEvent DynamicSpawnStartEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FCinematicPlayEvent CinematicPlayEvent;
 	
 	void SaveSettingValue();
 	void LoadSettingValue();

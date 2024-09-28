@@ -34,6 +34,11 @@ protected:
 	UFUNCTION()
 	void MapStartCallBack();
 
+	UFUNCTION()
+	void OnSequenceFinished();
+
+	
+
 	void PlaySequence();
 
 

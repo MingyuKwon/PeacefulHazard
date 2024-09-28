@@ -93,6 +93,10 @@ void AHappyPlayerController::BeginPlay()
 
         PeaceFulHazardGameMode->WantSaveEvent.AddDynamic(this, &ThisClass::WantToSaveCallBack);
 
+        PeaceFulHazardGameMode->CinematicPlayEvent.AddDynamic(this, &ThisClass::CinematicShow);
+
+
+        
 
         InitializeInventory();
     }
@@ -183,6 +187,8 @@ void AHappyPlayerController::InitializeInventory()
 
 void AHappyPlayerController::Tab(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     if (PlayerHUD)
     {
         if (currentUIState == EUIState::EUIS_Notice || currentUIState == EUIState::EUIS_Menu) return;
@@ -211,6 +217,8 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
 
 void AHappyPlayerController::Menu(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     if (PlayerHUD)
     {
         if (currentUIState == EUIState::EUIS_Notice) return;
@@ -368,6 +376,8 @@ void AHappyPlayerController::PauseGame(bool flag)
 
 void AHappyPlayerController::Move(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (ControlledCharacter)
@@ -378,6 +388,8 @@ void AHappyPlayerController::Move(const FInputActionValue& Value)
 
 void AHappyPlayerController::Look(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (ControlledCharacter)
@@ -408,6 +420,9 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
 
         return;
     }
+
+    if (bCinematicShow) return;
+
 
     if (ControlledCharacter->GetIsAiming())
     {
@@ -440,6 +455,7 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
 
 void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
 {
+
     bool bSuccess = false;
 
     if (IsPaused())
@@ -464,6 +480,8 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
     }
     else
     {
+        if (bCinematicShow) return;
+
         if (ControlledCharacter)
         {
             bSuccess = ControlledCharacter->AimStart(Value);
@@ -475,6 +493,8 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
 
 void AHappyPlayerController::RightClickEnd(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (ControlledCharacter)
@@ -485,6 +505,8 @@ void AHappyPlayerController::RightClickEnd(const FInputActionValue& Value)
 
 void AHappyPlayerController::ShiftStart(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (ControlledCharacter)
@@ -495,6 +517,8 @@ void AHappyPlayerController::ShiftStart(const FInputActionValue& Value)
 
 void AHappyPlayerController::ShiftEnd(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (ControlledCharacter)
@@ -505,6 +529,8 @@ void AHappyPlayerController::ShiftEnd(const FInputActionValue& Value)
 
 void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (ControlledCharacter)
@@ -515,6 +541,8 @@ void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
 
 void AHappyPlayerController::Reload(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
     int32 reloadBulletCount = GetReloadBulletCount();
 
@@ -529,6 +557,8 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
 
 void AHappyPlayerController::ChangeBullet(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (currentBulletType == EItemType::EIT_Bullet_Noraml && !CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Bullet_Big)) return;
@@ -983,6 +1013,11 @@ bool AHappyPlayerController::IsInventoryFull()
 
     return Emptyindex >= Lockindex;
 
+}
+
+void AHappyPlayerController::CinematicShow(bool bShow)
+{
+    bCinematicShow = bShow;
 }
 
 void AHappyPlayerController::ChangeItemBoxInContrller(int32 index, EItemType itemType, int32 count)
