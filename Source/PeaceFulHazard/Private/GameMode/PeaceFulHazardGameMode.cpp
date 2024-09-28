@@ -343,7 +343,6 @@ void APeaceFulHazardGameMode::SetAleradyInteract(FString name)
 
     if (!tempInteractMap.Contains(name))
     {
-        UE_LOG(LogTemp, Warning, TEXT("SetAleradyInteract %s"), *name);
         gameSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames.Add(name);
     }
 }
@@ -412,7 +411,10 @@ void APeaceFulHazardGameMode::BeginPlay()
     FTimerHandle TestHandle;
     GetWorld()->GetTimerManager().SetTimer(TestHandle, [this]()
         {
-            DynamicSpawnStartEvent.Broadcast();
+            if (DynamicSpawnMode)
+            {
+                DynamicSpawnStartEvent.Broadcast();
+            }
 
         }, 3.f, false);
 

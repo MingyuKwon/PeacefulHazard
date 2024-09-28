@@ -7,6 +7,7 @@
 #include "PeaceFulHazard/PeaceFulHazard.h"
 #include "Item/HappyInteractableItem.h"
 #include "Controller/HappyPlayerController.h"
+
 #include "PeaceFulHazardGameMode.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNowAimingEvent, bool, flag);
@@ -162,6 +163,10 @@ public:
 
 
 protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
+	bool DynamicSpawnMode = false;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<EWarpTarget, FString> TravelMap;

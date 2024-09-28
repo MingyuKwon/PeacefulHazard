@@ -62,7 +62,7 @@ void ADynamicEnemySpawner::TimerEnd()
 	FTimerHandle TimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]() {
 		Destroy();
-		}, 1.f, false);
+		}, 0.5f, false);
 
 	
 }
