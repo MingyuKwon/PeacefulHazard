@@ -11,7 +11,7 @@ class UInputMappingContext;
 class UInputAction;
 
 class AMainMenuGameMode;
-
+class AMainMenuHUD;
 /**
  * 
  */
@@ -36,6 +36,7 @@ protected:
 	UInputAction* MoveAction;
 
 	AMainMenuGameMode* MainMenuGameMode;
+	AMainMenuHUD* MainMenuHUD;
 
 	virtual void BeginPlay() override;
 

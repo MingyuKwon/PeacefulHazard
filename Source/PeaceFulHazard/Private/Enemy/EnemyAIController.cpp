@@ -71,13 +71,6 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 	currentHealth -= Damage;
 	currentHealth = FMath::Clamp(currentHealth, 0, currentHealth);
 
-	if (GEngine)
-	{
-		FString text = FString::Printf(TEXT("Damage : %f , current Health : %f") , Damage, currentHealth);
-		GEngine->AddOnScreenDebugMessage(8, 1.f, FColor::Green, text);
-		UE_LOG(LogTemp, Display, TEXT("Damage : %f , current Health : %f"), Damage, currentHealth);
-	}
-
 	damageAccumulate += Damage;
 
 	if (controlEnemy->GetDamageUnitbyDifficulty() <= damageAccumulate)

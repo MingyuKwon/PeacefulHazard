@@ -10,11 +10,38 @@
 #include "MainMenu/MainMenuGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
+void AMainMenuHUD::BackUIInputTrigger()
+{
+    if (MainMenu_NewGameWidget)
+    {
+        MainMenu_NewGameWidget->BackUIInputTrigger();
+    }
+
+    if (MainMenu_SettingWidget)
+    {
+        MainMenu_SettingWidget->BackUIInputTrigger();
+    }
+
+    if (MainMenu_LoadWidget)
+    {
+        MainMenu_LoadWidget->BackUIInputTrigger();
+    }
+
+    if (MainMenu_DefaultWidget)
+    {
+        MainMenu_DefaultWidget->BackUIInputTrigger();
+    }
+}
+
 void AMainMenuHUD::BeginPlay()
 {
     Super::BeginPlay();
 
     MainMenuGameMode = Cast<AMainMenuGameMode>(UGameplayStatics::GetGameMode(this));
+    if (MainMenuGameMode)
+    {
+        MainMenuGameMode->MenuModeChangeEvent.AddDynamic(this, &ThisClass::ChangeMenuMode);
+    }
 
     if (MainMenu_NewGameWidgetClass != nullptr)
     {
@@ -59,3 +86,62 @@ void AMainMenuHUD::BeginPlay()
 
 
 }
+
+void AMainMenuHUD::ChangeMenuMode(EMainMenuType menuType, bool bChangeStart)
+{
+    if (bChangeStart)
+    {
+        ChangeShowMenuUI(EMainMenuType::EMT_None);
+    }
+    else
+    {
+        ChangeShowMenuUI(menuType);
+    }
+}
+
+void AMainMenuHUD::ChangeShowMenuUI(EMainMenuType menuType)
+{
+    if (menuType == EMainMenuType::EMT_None || menuType == EMainMenuType::EMT_GameStart)
+    {
+        MainMenu_NewGameWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_SettingWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_LoadWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_DefaultWidget->SetVisibility(ESlateVisibility::Hidden);
+
+    }
+    else if (menuType == EMainMenuType::EMT_Load)
+    {
+        MainMenu_NewGameWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_SettingWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_LoadWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+        MainMenu_DefaultWidget->SetVisibility(ESlateVisibility::Hidden);
+
+    }
+    else if (menuType == EMainMenuType::EMT_Setting)
+    {
+        MainMenu_NewGameWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_SettingWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+        MainMenu_LoadWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_DefaultWidget->SetVisibility(ESlateVisibility::Hidden);
+
+    }
+    else if (menuType == EMainMenuType::EMT_NewGame)
+    {
+        MainMenu_NewGameWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+        MainMenu_SettingWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_LoadWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_DefaultWidget->SetVisibility(ESlateVisibility::Hidden);
+
+    }
+    else if (menuType == EMainMenuType::EMT_Default)
+    {
+        MainMenu_NewGameWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_SettingWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_LoadWidget->SetVisibility(ESlateVisibility::Hidden);
+        MainMenu_DefaultWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+    }
+
+
+}
+

@@ -21,6 +21,8 @@ class PEACEFULHAZARD_API AMainMenuHUD : public AHUD
 {
 	GENERATED_BODY()
 	
+public:
+	void BackUIInputTrigger();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
@@ -39,6 +41,10 @@ protected:
 
 	AMainMenuGameMode* MainMenuGameMode;
 
+	UFUNCTION()
+	void ChangeMenuMode(EMainMenuType menuType, bool bChangeStart);
+
+	void ChangeShowMenuUI(EMainMenuType menuType);
 
 	UPROPERTY()
 	UMainMenu_NewGameWidget* MainMenu_NewGameWidget;

@@ -5,6 +5,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
+#include "MainMenu/MainMenuHUD.h"
+
 #include "MainMenu/MainMenuGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -20,7 +22,7 @@ void AMainMenuController::SetupInputComponent()
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent)) {
 
         EnhancedInputComponent->BindAction(RIghtClickAction, ETriggerEvent::Triggered, this, &ThisClass::RIghtClick);
-        EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
+        //EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
 
         
 
@@ -38,24 +40,57 @@ void AMainMenuController::BeginPlay()
     bShowMouseCursor = true;
 
     MainMenuGameMode = Cast<AMainMenuGameMode>(UGameplayStatics::GetGameMode(this));
+    MainMenuHUD = Cast<AMainMenuHUD>(GetHUD());
 
-    if (MainMenuGameMode)
-    {
-        MainMenuGameMode->MenuModeChangeEvent.AddDynamic(this, &ThisClass::ChangeCameraPosition);
-    }
 }
 
 void AMainMenuController::ChangeCameraPosition(EMainMenuType menuType, bool bChangeStart)
 {
+    if (menuType == EMainMenuType::EMT_Load)
+    {
+        if (MainMenuGameMode)
+        {
+            MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_Load, true);
+        }
+    }
+    else if (menuType == EMainMenuType::EMT_Setting)
+    {
+        if (MainMenuGameMode)
+        {
+            MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_Setting, true);
+        }
+    }
+    else if (menuType == EMainMenuType::EMT_NewGame)
+    {
+        if (MainMenuGameMode)
+        {
+            MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_NewGame, true);
 
+        }
+    }
+    else if (menuType == EMainMenuType::EMT_Default)
+    {
+        if (MainMenuGameMode)
+        {
+            MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_Default, true);
+
+        }
+    }
+    else if (menuType == EMainMenuType::EMT_GameStart)
+    {
+        if (MainMenuGameMode)
+        {
+            MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_GameStart, true);
+
+        }
+    }
 }
 
 void AMainMenuController::RIghtClick(const FInputActionValue& Value)
 {
-    if (MainMenuGameMode)
+    if (MainMenuHUD)
     {
-        MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_GameStart, true);
-
+        MainMenuHUD->BackUIInputTrigger();
     }
 }
 

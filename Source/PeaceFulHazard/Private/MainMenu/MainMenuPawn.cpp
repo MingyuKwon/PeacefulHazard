@@ -67,13 +67,15 @@ void AMainMenuPawn::LerpCameraTransform()
 	SetActorLocation(NewLocation);
 	FollowCamera->SetWorldRotation(NewRotation);
 
-	float LocationErrorTolerance = 1.0f; 
-	float RotationErrorTolerance = 1.0f; 
+	float LocationErrorTolerance = 30.0f; 
 
-	if (FVector::Dist(NewLocation, TargetLocation) < LocationErrorTolerance &&
-		FMath::Abs(NewRotation.Pitch - TargetRotation.Pitch) < RotationErrorTolerance &&
-		FMath::Abs(NewRotation.Yaw - TargetRotation.Yaw) < RotationErrorTolerance &&
-		FMath::Abs(NewRotation.Roll - TargetRotation.Roll) < RotationErrorTolerance)
+	if (GEngine)
+	{
+		FString text = FString::Printf(TEXT("Distance gap : %f "), FVector::Dist(NewLocation, TargetLocation));
+		GEngine->AddOnScreenDebugMessage(8, 1.f, FColor::Green, text);
+	}
+
+	if (FVector::Dist(NewLocation, TargetLocation) < LocationErrorTolerance )
 	{
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(currentMenuType, false);
 		beforeMenuType = EMainMenuType::EMT_None;
