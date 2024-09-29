@@ -11,6 +11,7 @@ class UMainMenu_NewGameWidget;
 class UMainMenu_SettingWidget;
 class UMainMenu_LoadWidget;
 class UMainMenu_DefaultWidget;
+class UMainMenuLoadingWidget;
 
 class AMainMenuGameMode;
 /**
@@ -37,6 +38,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UMainMenu_DefaultWidget> MainMenu_DefaultWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UMainMenuLoadingWidget> MainMenuLoadingWidgetClass;
+
+	
+
 	virtual void BeginPlay() override;
 
 	AMainMenuGameMode* MainMenuGameMode;
@@ -58,5 +64,7 @@ protected:
 	UPROPERTY()
 	UMainMenu_DefaultWidget* MainMenu_DefaultWidget;
 
+	UPROPERTY()
+	UMainMenuLoadingWidget* MainMenuLoadingWidget;
 
 };

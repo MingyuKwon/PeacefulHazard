@@ -10,6 +10,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMenuModeChangeEvent, EMainMenuType, menuType, bool, bChangeStart);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMainModeLanguageChangeEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMainModeSaveFinishedEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLoadingShowEvent, float, Opacity);
 
 /**
  * 
@@ -26,14 +27,18 @@ class PEACEFULHAZARD_API AMainMenuGameMode : public AGameModeBase
 public:
 	AMainMenuGameMode();
 
+	virtual void Tick(float DeltaTime) override;
+
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FMainModeLanguageChangeEvent LanguageChangeEvent;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FMainModeSaveFinishedEvent SaveFinishedEvent;
 
-	
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FLoadingShowEvent LoadingShowEvent;
 
+	
 	UFUNCTION()
 	void ChangeLanguageCallBack();
 
@@ -52,6 +57,8 @@ public:
 
 	void LoadDataFromSlot(FString slotName, bool bNewGame);
 	void LoadDataFromContinue();
+
+	float LoadingValue = 1.f;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")

@@ -6,6 +6,7 @@
 #include "MainMenu/MainMenu_SettingWidget.h"
 #include "MainMenu/MainMenu_LoadWidget.h"
 #include "MainMenu/MainMenu_DefaultWidget.h"
+#include "MainMenu/MainMenuLoadingWidget.h"
 
 #include "MainMenu/MainMenuGameMode.h"
 #include "Kismet/GameplayStatics.h"
@@ -80,6 +81,16 @@ void AMainMenuHUD::BeginPlay()
         if (MainMenu_DefaultWidget != nullptr)
         {
             MainMenu_DefaultWidget->AddToViewport();
+        }
+
+    }
+
+    if (MainMenuLoadingWidgetClass != nullptr)
+    {
+        MainMenuLoadingWidget = CreateWidget<UMainMenuLoadingWidget>(GetWorld(), MainMenuLoadingWidgetClass);
+        if (MainMenuLoadingWidget != nullptr)
+        {
+            MainMenuLoadingWidget->AddToViewport();
         }
 
     }

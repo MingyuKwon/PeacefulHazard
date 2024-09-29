@@ -19,6 +19,13 @@ AMainMenuGameMode::AMainMenuGameMode()
 
 }
 
+void AMainMenuGameMode::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+
+}
+
 void AMainMenuGameMode::ChangeLanguageCallBack()
 {
     LanguageChangeEvent.Broadcast();
