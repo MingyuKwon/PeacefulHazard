@@ -4,6 +4,20 @@
 
 #include "CoreMinimal.h"
 
+
+UENUM(BlueprintType)
+enum class EMainMenuType : uint8
+{
+    EMT_None,
+    EMT_Default,
+    EMT_Load,
+    EMT_Setting,
+    EMT_NewGame,
+    EMT_GameStart,
+
+    EMT_Max
+};
+
 UENUM(BlueprintType)
 enum class EItemType : uint8
 {
