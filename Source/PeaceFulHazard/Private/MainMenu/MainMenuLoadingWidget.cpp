@@ -37,4 +37,6 @@ void UMainMenuLoadingWidget::NativeConstruct()
     {
         MainMenuGameMode->LoadingShowEvent.AddDynamic(this, &ThisClass::SetLoadingOpacity);
     }
+
+    SetLoadingOpacity(1.f);
 }

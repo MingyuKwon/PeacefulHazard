@@ -23,7 +23,6 @@ void AMainMenuGameMode::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-
 }
 
 void AMainMenuGameMode::ChangeLanguageCallBack()
@@ -232,4 +231,11 @@ void AMainMenuGameMode::BeginPlay()
     {
         PeacFulGameInstance->LanguageChangeEvent.AddDynamic(this, &ThisClass::ChangeLanguageCallBack);
     }
+
+    FTimerHandle timerHandle;
+    GetWorld()->GetTimerManager().SetTimer(timerHandle, [this]() {
+        LoadingShowEvent.Broadcast(false);
+
+        }, 0.7f, false);
+
 }
