@@ -44,6 +44,39 @@ ELanguage AMainMenuGameMode::GetCurrentLanguage()
 
 }
 
+void AMainMenuGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
+{
+    if (bNewGame)
+    {
+        PeacFulGameInstance->RefreshGame();
+
+        UE_LOG(LogTemp, Warning, TEXT("RefreshGame"));
+
+        UGameplayStatics::OpenLevel(this, *TravelMap[EWarpTarget::EWT_Tutorial]);
+
+    }
+    else
+    {
+        if (!slotName.IsEmpty())
+        {
+            UPeacFulSaveGame* LoadedGame = Cast<UPeacFulSaveGame>(UGameplayStatics::LoadGameFromSlot(slotName, 0));
+
+            if (LoadedGame)
+            {
+                PeacFulGameInstance->tempSaveGame = LoadedGame;
+                PeacFulGameInstance->TutorialCheckMap = LoadedGame->TutorialCheckMap;
+                PeacFulGameInstance->todoIndex = LoadedGame->saveTodoIndex;
+                PeacFulGameInstance->currentEnemyForce = LoadedGame->saveEnemyForce;
+                PeacFulGameInstance->gameDifficulty = LoadedGame->SavegameDifficulty;
+            }
+
+            UGameplayStatics::OpenLevel(this, *TravelMap[LoadedGame->saveMapName]);
+
+        }
+    }
+
+}
+
 void AMainMenuGameMode::SaveSettingValue()
 {
     if (PeacFulGameInstance == nullptr) return;
@@ -98,6 +131,14 @@ void AMainMenuGameMode::LoadSettingValue()
         }
     }
 
+}
+
+void AMainMenuGameMode::PlayUISound(USoundBase* Sound, float VolumeScale)
+{
+    if (PeacFulGameInstance)
+    {
+        PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_UI, UIAudioComponent, Sound, VolumeScale);
+    }
 }
 
 

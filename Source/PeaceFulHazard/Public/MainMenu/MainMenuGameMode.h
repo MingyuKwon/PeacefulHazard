@@ -9,6 +9,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMenuModeChangeEvent, EMainMenuType, menuType, bool, bChangeStart);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMainModeLanguageChangeEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMainModeSaveFinishedEvent);
 
 /**
  * 
@@ -28,6 +29,11 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FMainModeLanguageChangeEvent LanguageChangeEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FMainModeSaveFinishedEvent SaveFinishedEvent;
+
+	
+
 	UFUNCTION()
 	void ChangeLanguageCallBack();
 
@@ -38,15 +44,17 @@ public:
 	void SaveSettingValue();
 	void LoadSettingValue();
 
+	void PlayUISound(USoundBase* Sound, float VolumeScale);
+
 	void SetBGMVolume(float value);
 	void SetGameBrightness();
 	void GetSettingValue(float& mouse, float& mouseAim);
 
+	void LoadDataFromSlot(FString slotName, bool bNewGame);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<EWarpTarget, FString> TravelMap;
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	TMap<EWarpTarget, USoundBase*> BackgroundMusics;
