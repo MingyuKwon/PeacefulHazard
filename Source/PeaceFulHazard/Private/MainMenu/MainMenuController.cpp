@@ -35,6 +35,8 @@ void AMainMenuController::BeginPlay()
 {
     Super::BeginPlay();
 
+    bShowMouseCursor = true;
+
     MainMenuGameMode = Cast<AMainMenuGameMode>(UGameplayStatics::GetGameMode(this));
 
     if (MainMenuGameMode)
