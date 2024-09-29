@@ -57,6 +57,8 @@ void UMainMenu_LoadWidget::NativeConstruct()
 			Button->OnUnhovered.AddDynamic(this, &ThisClass::OnSaveButtonUnhovered);
 		}
 	}
+
+	ContinueButton->OnClicked.AddDynamic(this, &ThisClass::OnContinueButtonClicked);
 }
 
 void UMainMenu_LoadWidget::OnSettingButtonClicked()
@@ -97,6 +99,8 @@ void UMainMenu_LoadWidget::SetDynamicChangeLanguage(UTextBlock* textBlock, const
 void UMainMenu_LoadWidget::UpdateAllUI()
 {
 	CheckLanguage();
+
+	ContinueButton->SetIsEnabled(false);
 
 	for (int32 i = 0; i < SaveButtons.Num(); i++)
 	{
@@ -146,6 +150,9 @@ void UMainMenu_LoadWidget::UpdateAllUI()
 
 
 					SaveSlotBackgrounds[i]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+					ContinueButton->SetIsEnabled(true);
+
 				}
 
 			}
@@ -238,6 +245,14 @@ void UMainMenu_LoadWidget::OnSaveButtonHovered()
 void UMainMenu_LoadWidget::OnSaveButtonUnhovered()
 {
 	ChangeNowHoveringButton(nullptr, true);
+}
+
+void UMainMenu_LoadWidget::OnContinueButtonClicked()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->LoadDataFromContinue();
+	}
 }
 
 void UMainMenu_LoadWidget::InitArrays()

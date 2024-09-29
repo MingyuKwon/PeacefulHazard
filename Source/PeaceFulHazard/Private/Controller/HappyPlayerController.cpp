@@ -96,7 +96,8 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->CinematicPlayEvent.AddDynamic(this, &ThisClass::CinematicShow);
 
 
-        
+        PeaceFulHazardGameMode->ShowLoadingEvent.AddDynamic(this, &ThisClass::ShowLoadingUI);
+
 
         InitializeInventory();
     }
@@ -895,7 +896,13 @@ void AHappyPlayerController::SituationInteract(EInteractSituationType situationT
     CloseAllUI();
 }
 
-
+void AHappyPlayerController::ShowLoadingUI(bool bVisible)
+{
+    if (PlayerHUD)
+    {
+        PlayerHUD->ShowLoadingUI(bVisible);
+    }
+}
 
 bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
 {

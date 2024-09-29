@@ -51,6 +51,7 @@ public:
 	void GetSettingValue(float& mouse, float& mouseAim);
 
 	void LoadDataFromSlot(FString slotName, bool bNewGame);
+	void LoadDataFromContinue();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")

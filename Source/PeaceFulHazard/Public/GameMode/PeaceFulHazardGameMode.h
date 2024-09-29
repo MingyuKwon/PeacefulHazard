@@ -36,6 +36,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FModeLanguageChangeEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDynamicSpawnStartEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FShowLoadingEvent, bool, bVisible);
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCinematicPlayEvent, bool, bPlay);
 
 
@@ -58,6 +61,8 @@ public:
 	UFUNCTION()
 	void ChangeLanguageCallBack();
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FShowLoadingEvent ShowLoadingEvent;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FNowAimingEvent NowAimingEvent;
@@ -150,6 +155,8 @@ public:
 	void SaveEnemyStats(FString name, float enemyHealth, FVector enemyLocation, FRotator enemyRotation);
 
 	void OpenMap(FString MapName);
+
+	void MoveToMainMenu();
 
 	void PlaySoundInGameplay(USoundBase* Sound, FVector Location, float VolumeScale);
 	void PlayUISound(USoundBase* Sound, float VolumeScale);

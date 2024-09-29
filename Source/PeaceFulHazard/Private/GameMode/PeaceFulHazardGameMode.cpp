@@ -48,6 +48,12 @@ void APeaceFulHazardGameMode::OpenMap(FString MapName)
     }
 }
 
+void APeaceFulHazardGameMode::MoveToMainMenu()
+{
+    UGameplayStatics::OpenLevel(this, FName("MainMenu"));
+
+}
+
 void APeaceFulHazardGameMode::SetEnemyRefCount(bool bPlus)
 {
     if (bPlus)

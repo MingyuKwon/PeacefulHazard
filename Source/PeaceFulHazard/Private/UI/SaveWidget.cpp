@@ -516,12 +516,12 @@ void USaveWidget::OnOptionButtonClicked()
 
 void USaveWidget::OnExitButtonClicked()
 {
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	UKismetSystemLibrary::QuitGame(this, PlayerController, EQuitPreference::Quit, true);
-
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+		PeaceFulHazardGameMode->ShowLoadingEvent.Broadcast(true);
+		PeaceFulHazardGameMode->MoveToMainMenu();
+		
 	}
 }
 

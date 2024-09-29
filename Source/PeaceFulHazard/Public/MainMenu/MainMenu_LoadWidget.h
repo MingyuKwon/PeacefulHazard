@@ -91,7 +91,10 @@ protected:
 	void OnSaveButtonUnhovered();
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* NewSaveButton;
+	UButton* ContinueButton;
+	UFUNCTION()
+	void OnContinueButtonClicked();
+
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* SaveButton1;

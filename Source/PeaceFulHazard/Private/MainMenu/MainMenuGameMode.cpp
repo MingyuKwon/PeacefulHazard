@@ -77,6 +77,45 @@ void AMainMenuGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
 
 }
 
+void AMainMenuGameMode::LoadDataFromContinue()
+{
+    TArray<FString> slotName;
+    slotName.Add(FString("SaveButton1"));
+    slotName.Add(FString("SaveButton2"));
+    slotName.Add(FString("SaveButton3"));
+    slotName.Add(FString("SaveButton4"));
+    slotName.Add(FString("SaveButton5"));
+    slotName.Add(FString("SaveButton6"));
+    slotName.Add(FString("SaveButton7"));
+    slotName.Add(FString("SaveButton8"));
+
+    FString LatestSlotName = FString();
+    FDateTime LatestSaveTime = FDateTime::MinValue();  
+
+    for (FString name : slotName)
+    {
+        if (UGameplayStatics::DoesSaveGameExist(name, 0))
+        {
+            UPeacFulSaveGame* LoadedGame = Cast<UPeacFulSaveGame>(UGameplayStatics::LoadGameFromSlot(name, 0));
+            if (LoadedGame)
+            {
+                FDateTime LoadedSaveTime = LoadedGame->SaveTime;
+
+                if (LoadedSaveTime > LatestSaveTime)
+                {
+                    LatestSaveTime = LoadedSaveTime;
+                    LatestSlotName = name;
+                }
+            }
+        }
+    }
+
+    if (!LatestSlotName.IsEmpty())
+    {
+        LoadDataFromSlot(LatestSlotName, false);  
+    }
+}
+
 void AMainMenuGameMode::SaveSettingValue()
 {
     if (PeacFulGameInstance == nullptr) return;

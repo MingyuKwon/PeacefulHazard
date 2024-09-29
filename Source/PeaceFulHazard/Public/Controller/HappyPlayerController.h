@@ -192,6 +192,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SituationInteract(EInteractSituationType situationType);
 
+	UFUNCTION(BlueprintCallable)
+	void ShowLoadingUI(bool bVisible);
+
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
