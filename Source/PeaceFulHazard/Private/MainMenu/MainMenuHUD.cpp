@@ -101,6 +101,11 @@ void AMainMenuHUD::ChangeMenuMode(EMainMenuType menuType, bool bChangeStart)
 
 void AMainMenuHUD::ChangeShowMenuUI(EMainMenuType menuType)
 {
+    if (MainMenuGameMode)
+    {
+        MainMenuGameMode->SaveSettingValue();
+    }
+
     if (menuType == EMainMenuType::EMT_None || menuType == EMainMenuType::EMT_GameStart)
     {
         MainMenu_NewGameWidget->SetVisibility(ESlateVisibility::Hidden);
