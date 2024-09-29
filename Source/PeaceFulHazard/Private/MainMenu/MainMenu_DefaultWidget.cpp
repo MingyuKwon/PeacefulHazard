@@ -18,10 +18,24 @@ void UMainMenu_DefaultWidget::NativeConstruct()
 
 	MainMenuGameMode = Cast<AMainMenuGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->LanguageChangeEvent.AddDynamic(this, &ThisClass::CheckLanguage);
+	}
+
 	QuitGameButton->OnClicked.AddDynamic(this, &ThisClass::OnQuitButtonClicked);
 	LoadButton->OnClicked.AddDynamic(this, &ThisClass::OnLoadButtonClicked);
 	SettingButton->OnClicked.AddDynamic(this, &ThisClass::OnSettingButtonClicked);
 	NewGaemButton->OnClicked.AddDynamic(this, &ThisClass::OnNewGameButtonClicked);
+
+	CheckLanguage();
+}
+
+void UMainMenu_DefaultWidget::CheckLanguage()
+{
+	if (MainMenuGameMode == nullptr) return;
+
+	SetLangaugeText(MainMenuGameMode->GetCurrentLanguage());
 
 }
 

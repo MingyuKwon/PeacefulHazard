@@ -26,6 +26,12 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetLangaugeText(ELanguage language);
+
+	UFUNCTION()
+	void CheckLanguage();
+
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* LoadButton;
