@@ -466,9 +466,10 @@ void APlayerHUD::BeginPlay()
                 UpdateBulletDisplay(beforeCurrentBulle, beforeMaxBullet, beforeLeftBullet, beforeBulletType, beforeanotherBullet);
             }
 
+            DefaultPlayerWidget->ShowLoadingUI(true);
+
             if (bBeforeLoadingShow)
             {
-                DefaultPlayerWidget->ShowLoadingUI(true);
                 bBeforeLoadingShow = false;
             }
    

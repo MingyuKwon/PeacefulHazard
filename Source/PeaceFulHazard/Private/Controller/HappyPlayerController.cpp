@@ -119,7 +119,6 @@ void AHappyPlayerController::BeginPlay()
             {
                 bShowMouseCursor = false;
                 SetInputMode(FInputModeGameOnly());
-
                 PlayerHUD->ShowLoadingUI(false);
             }, 0.5f, false);
 

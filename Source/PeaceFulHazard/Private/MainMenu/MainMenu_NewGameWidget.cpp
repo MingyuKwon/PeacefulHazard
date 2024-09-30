@@ -94,8 +94,14 @@ void UMainMenu_NewGameWidget::OnGameStartButtonlicked()
 {
 	if (MainMenuGameMode)
 	{
-		MainMenuGameMode->LoadingShowEvent.Broadcast(1.f);
-		MainMenuGameMode->LoadDataFromSlot(FString(""), true);
+		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_GameStart, true);
+
+		FTimerHandle timerHandle;
+		GetWorld()->GetTimerManager().SetTimer(timerHandle, [this]() {
+			MainMenuGameMode->LoadingShowEvent.Broadcast(1.f);
+			MainMenuGameMode->LoadDataFromSlot(FString(""), true);
+
+			}, 1.f, false);
 	}
 
 }

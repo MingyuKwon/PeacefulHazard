@@ -144,6 +144,8 @@ void UDefaultPlayerWidget::UpdateTodoUI()
 
 void UDefaultPlayerWidget::ShowLoadingUI(bool bVisible)
 {
+    UE_LOG(LogTemp, Warning, TEXT("ShowLoadingUI %s"), bVisible ? *FString("True") : *FString("False"));
+
     if (bVisible)
     {
         LoadingCanvas->SetVisibility(ESlateVisibility::Visible);
