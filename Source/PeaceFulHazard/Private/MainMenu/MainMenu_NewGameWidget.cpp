@@ -26,6 +26,12 @@ void UMainMenu_NewGameWidget::NativeConstruct()
 	MainMenuGameMode = Cast<AMainMenuGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->LanguageChangeEvent.AddDynamic(this, &ThisClass::CheckLanguage);
+
+	}
+
 	LoadButton->OnClicked.AddDynamic(this, &ThisClass::OnLoadButtonClicked);
 	SettingButton->OnClicked.AddDynamic(this, &ThisClass::OnSettingButtonClicked);
 
@@ -39,6 +45,8 @@ void UMainMenu_NewGameWidget::NativeConstruct()
 	NormalButton->OnHovered.AddDynamic(this, &ThisClass::OnNormalButtonHover);
 	HardButton->OnHovered.AddDynamic(this, &ThisClass::OnHardButtonHover);
 
+	CheckLanguage();
+
 	OnNormalButtonClicked();
 	OnNormalButtonHover();
 }
@@ -49,7 +57,18 @@ void UMainMenu_NewGameWidget::CheckLanguage()
 
 	SetLangaugeText(MainMenuGameMode->GetCurrentLanguage());
 
-
+	if (currentSelectDifficulty == EDifficulty::ED_Easy)
+	{
+		OnEasyButtonHover();
+	}
+	else if (currentSelectDifficulty == EDifficulty::ED_Normal)
+	{
+		OnNormalButtonHover();
+	}
+	else if (currentSelectDifficulty == EDifficulty::ED_Hard)
+	{
+		OnHardButtonHover();
+	}
 
 }
 
@@ -75,6 +94,7 @@ void UMainMenu_NewGameWidget::OnGameStartButtonlicked()
 {
 	if (MainMenuGameMode)
 	{
+		MainMenuGameMode->LoadingShowEvent.Broadcast(1.f);
 		MainMenuGameMode->LoadDataFromSlot(FString(""), true);
 	}
 
@@ -88,6 +108,8 @@ void UMainMenu_NewGameWidget::OnEasyButtonClicked()
 
 		SetDynamicChangeLanguage(DifficultyText, FText::FromString(FString("Easy")), FText::FromString(FString(TEXT("쉬움"))));
 		DifficultyText->SetColorAndOpacity(FLinearColor::Green);
+
+		currentSelectDifficulty = EDifficulty::ED_Easy;
 	}
 }
 
@@ -100,6 +122,8 @@ void UMainMenu_NewGameWidget::OnNormalButtonClicked()
 		SetDynamicChangeLanguage(DifficultyText, FText::FromString(FString("Normal")), FText::FromString(FString(TEXT("보통"))));
 		DifficultyText->SetColorAndOpacity(FLinearColor::Black);
 
+		currentSelectDifficulty = EDifficulty::ED_Normal;
+
 	}
 }
 
@@ -111,6 +135,8 @@ void UMainMenu_NewGameWidget::OnHardButtonClicked()
 
 		SetDynamicChangeLanguage(DifficultyText, FText::FromString(FString("Hard")), FText::FromString(FString(TEXT("어려움"))));
 		DifficultyText->SetColorAndOpacity(FLinearColor::Red);
+
+		currentSelectDifficulty = EDifficulty::ED_Hard;
 
 	}
 }

@@ -99,6 +99,7 @@ protected:
 	UFUNCTION()
 	void OnSettingButtonClicked();
 
+	EDifficulty currentSelectDifficulty = EDifficulty::ED_Normal;
 
 
 	AMainMenuGameMode* MainMenuGameMode;
