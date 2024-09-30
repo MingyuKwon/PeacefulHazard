@@ -390,6 +390,13 @@ void AHappyPlayerController::Look(const FInputActionValue& Value)
 
     bool bSuccess = false;
 
+    FVector2D LookAxisVector = Value.Get<FVector2D>();
+    FString text = FString::Printf(TEXT("LookAxisVector : %f, %f"), LookAxisVector.X, LookAxisVector.Y);
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(9, 1.f, FColor::Red, text);
+    }
+
     if (ControlledCharacter)
     {
         bSuccess = ControlledCharacter->Look(Value);

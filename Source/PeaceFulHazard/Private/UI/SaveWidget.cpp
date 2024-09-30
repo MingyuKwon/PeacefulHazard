@@ -332,12 +332,17 @@ void USaveWidget::OnLanguageDropDownChanged(FString SelectedItem, ESelectInfo::T
 
 void USaveWidget::OnDefaultMouseSensibilityValueChanged(float Value)
 {
+	UE_LOG(LogTemp, Warning, TEXT("OnDefaultMouseSensibilityValueChanged Out: %f"), Value);
+
 	if (DefaultMouseSensibility && DefaultMouseSensibilityFill)
 	{
 		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(DefaultMouseSensibilityFill->Slot);
 
+
 		if (CanvasSlotFill)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("OnDefaultMouseSensibilityValueChanged In: %f"), Value);
+
 			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
 			NewOffsets.Right = maxDefaultMouseSensibilityFill * (1 - Value);
 			CanvasSlotFill->SetOffsets(NewOffsets);
@@ -356,6 +361,8 @@ void USaveWidget::OnAimMouseSensibilityValueChanged(float Value)
 	if (AimMouseSensibility && AimMouseSensibilityFill)
 	{
 		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(AimMouseSensibilityFill->Slot);
+
+		UE_LOG(LogTemp, Warning, TEXT("OnAimMouseSensibilityValueChanged Out: %f"), Value);
 
 		if (CanvasSlotFill)
 		{
@@ -521,7 +528,7 @@ void USaveWidget::OnExitButtonClicked()
 		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
 		PeaceFulHazardGameMode->ShowLoadingEvent.Broadcast(true);
 		PeaceFulHazardGameMode->MoveToMainMenu();
-		
+
 	}
 }
 
@@ -637,6 +644,7 @@ void USaveWidget::UpdateAllUI()
 		if (DefaultMouseSensibility)
 		{
 			DefaultMouseSensibility->SetValue(defaultMouse);
+			OnDefaultMouseSensibilityValueChanged(defaultMouse);
 		}
 
 		if (AimMouseSensibility)

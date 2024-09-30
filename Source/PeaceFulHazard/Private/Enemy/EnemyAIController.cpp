@@ -197,14 +197,6 @@ bool AEnemyAIController::CheckMovetoDestination()
 		}
 		else
 		{
-
-
-			if (GEngine)
-			{
-				FString text = FString::Printf(TEXT("distance : %f , PatrolMoveToRange : %f , AttackRange : %f"), distance, controlEnemy->PatrolMoveToRange, controlEnemy->AttackRange);
-				GEngine->AddOnScreenDebugMessage(9, 1.f, FColor::Yellow, text);
-			}
-
 			return distance <= ((Target == nullptr) ? controlEnemy->PatrolMoveToRange : controlEnemy->AttackRange);
 		}
 

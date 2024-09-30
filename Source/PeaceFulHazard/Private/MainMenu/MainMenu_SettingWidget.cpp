@@ -295,6 +295,8 @@ void UMainMenu_SettingWidget::UpdateAllUI()
 		if (DefaultMouseSensibility)
 		{
 			DefaultMouseSensibility->SetValue(defaultMouse);
+			OnDefaultMouseSensibilityValueChanged(defaultMouse);
+
 		}
 
 		if (AimMouseSensibility)

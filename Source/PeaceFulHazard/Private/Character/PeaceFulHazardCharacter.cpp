@@ -683,6 +683,10 @@ bool APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
 	if (PeaceFulHazardGameMode == nullptr) return false;
 	PeaceFulHazardGameMode->GetSettingValue(MouseSensitivity, MouseAimSensitivity);
 
+	MouseSensitivity += 0.02f;
+	MouseAimSensitivity += 0.02f;
+
+
 	if (GetIsAiming())
 	{
 		LookAxisVector = LookAxisVector * MouseAimSensitivity / 2;
@@ -694,6 +698,7 @@ bool APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
 
 	if (Controller != nullptr)
 	{
+
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
