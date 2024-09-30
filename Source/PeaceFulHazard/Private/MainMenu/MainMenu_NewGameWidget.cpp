@@ -1,10 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "MainMenu/MainMenu_NewGameWidget.h"
 #include "MainMenu/MainMenuGameMode.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
+#include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
+#include "System/PeacFulGameInstance.h"
 
 void UMainMenu_NewGameWidget::BackUIInputTrigger()
 {
@@ -21,9 +24,123 @@ void UMainMenu_NewGameWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	MainMenuGameMode = Cast<AMainMenuGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 	LoadButton->OnClicked.AddDynamic(this, &ThisClass::OnLoadButtonClicked);
 	SettingButton->OnClicked.AddDynamic(this, &ThisClass::OnSettingButtonClicked);
+
+	GameStartButton->OnClicked.AddDynamic(this, &ThisClass::OnGameStartButtonlicked);
+
+	EasyButton->OnClicked.AddDynamic(this, &ThisClass::OnEasyButtonClicked);
+	NormalButton->OnClicked.AddDynamic(this, &ThisClass::OnNormalButtonClicked);
+	HardButton->OnClicked.AddDynamic(this, &ThisClass::OnHardButtonClicked);
+
+	EasyButton->OnHovered.AddDynamic(this, &ThisClass::OnEasyButtonHover);
+	NormalButton->OnHovered.AddDynamic(this, &ThisClass::OnNormalButtonHover);
+	HardButton->OnHovered.AddDynamic(this, &ThisClass::OnHardButtonHover);
+
+	OnNormalButtonClicked();
+	OnNormalButtonHover();
+}
+
+void UMainMenu_NewGameWidget::CheckLanguage()
+{
+	if (MainMenuGameMode == nullptr) return;
+
+	SetLangaugeText(MainMenuGameMode->GetCurrentLanguage());
+
+
+
+}
+
+void UMainMenu_NewGameWidget::SetDynamicChangeLanguage(UTextBlock* textBlock, const FText& Englishtext, const FText& Koreantext)
+{
+	if (MainMenuGameMode == nullptr) return;
+
+	switch (MainMenuGameMode->GetCurrentLanguage())
+	{
+	case ELanguage::ED_English:
+		textBlock->SetText(Englishtext);
+		break;
+
+	case ELanguage::ED_Korean:
+		textBlock->SetText(Koreantext);
+		break;
+
+	}
+}
+
+
+void UMainMenu_NewGameWidget::OnGameStartButtonlicked()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->LoadDataFromSlot(FString(""), true);
+	}
+
+}
+
+void UMainMenu_NewGameWidget::OnEasyButtonClicked()
+{
+	if (PeacFulGameInstance)
+	{
+		PeacFulGameInstance->gameDifficulty = EDifficulty::ED_Easy;
+
+		SetDynamicChangeLanguage(DifficultyText, FText::FromString(FString("Easy")), FText::FromString(FString(TEXT("쉬움"))));
+		DifficultyText->SetColorAndOpacity(FLinearColor::Green);
+	}
+}
+
+void UMainMenu_NewGameWidget::OnNormalButtonClicked()
+{
+	if (PeacFulGameInstance)
+	{
+		PeacFulGameInstance->gameDifficulty = EDifficulty::ED_Normal;
+
+		SetDynamicChangeLanguage(DifficultyText, FText::FromString(FString("Normal")), FText::FromString(FString(TEXT("보통"))));
+		DifficultyText->SetColorAndOpacity(FLinearColor::Black);
+
+	}
+}
+
+void UMainMenu_NewGameWidget::OnHardButtonClicked()
+{
+	if (PeacFulGameInstance)
+	{
+		PeacFulGameInstance->gameDifficulty = EDifficulty::ED_Hard;
+
+		SetDynamicChangeLanguage(DifficultyText, FText::FromString(FString("Hard")), FText::FromString(FString(TEXT("어려움"))));
+		DifficultyText->SetColorAndOpacity(FLinearColor::Red);
+
+	}
+}
+
+void UMainMenu_NewGameWidget::OnEasyButtonHover()
+{
+	EasyShot->SetVisibility(ESlateVisibility::Visible);
+	NormalShot->SetVisibility(ESlateVisibility::Hidden);
+	HardShot->SetVisibility(ESlateVisibility::Hidden);
+
+	SetDynamicChangeLanguage(DifficultyExaplainText, FText::FromString(FString("This is the easiest difficulty level.\n\n- Enemies are weaker.\n- The number of items you can obtain increases.\n- You have more inventory space.\n\nRecommended for those playing TPS games for the first time.")), FText::FromString(FString(TEXT("가장 쉬운 난이도 입니다. \n\n- 적들이 더 약해집니다 \n- 얻을 수 있는 아이템의 수가 늘어납니다\n- 인벤토리가 더 여유롭습니다.\n\nTPS류 게임을 처음 해보는 분들께 추천합니다"))));
+}
+
+void UMainMenu_NewGameWidget::OnNormalButtonHover()
+{
+	EasyShot->SetVisibility(ESlateVisibility::Hidden);
+	NormalShot->SetVisibility(ESlateVisibility::Visible);
+	HardShot->SetVisibility(ESlateVisibility::Hidden);
+
+	SetDynamicChangeLanguage(DifficultyExaplainText, FText::FromString(FString("This is the standard difficulty level.\n\nRecommended for those with experience in TPS games \nor who have played games like Resident Evil.")), FText::FromString(FString(TEXT("일반적인 난이도 입니다\n\nTPS류 게임에 경험이 있거나, \n바이오하자드 류 게임을 플레이 해보신 분들께 추천드립니다."))));
+
+}
+
+void UMainMenu_NewGameWidget::OnHardButtonHover()
+{
+	EasyShot->SetVisibility(ESlateVisibility::Hidden);
+	NormalShot->SetVisibility(ESlateVisibility::Hidden);
+	HardShot->SetVisibility(ESlateVisibility::Visible);
+
+	SetDynamicChangeLanguage(DifficultyExaplainText, FText::FromString(FString("This is the hardest difficulty level.\n\n- Enemies become stronger.\n- The number of items you can obtain decreases.\n- Inventory space is more limited.\n\nRecommended for players who are familiar with the game.")), FText::FromString(FString(TEXT("가장 어려운 난이도 입니다. \n\n- 적들이 더 강해집니다 \n- 얻을 수 있는 아이템의 수가 적어집니다\n- 인벤토리가 더 빡빡해집니다\n\n게임 플레이에 익숙해진 분들에게 추천합니다"))));
 
 }
 
