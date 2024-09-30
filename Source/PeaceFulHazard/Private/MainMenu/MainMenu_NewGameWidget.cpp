@@ -59,14 +59,17 @@ void UMainMenu_NewGameWidget::CheckLanguage()
 
 	if (currentSelectDifficulty == EDifficulty::ED_Easy)
 	{
+		OnEasyButtonClicked();
 		OnEasyButtonHover();
 	}
 	else if (currentSelectDifficulty == EDifficulty::ED_Normal)
 	{
+		OnNormalButtonClicked();
 		OnNormalButtonHover();
 	}
 	else if (currentSelectDifficulty == EDifficulty::ED_Hard)
 	{
+		OnHardButtonClicked();
 		OnHardButtonHover();
 	}
 

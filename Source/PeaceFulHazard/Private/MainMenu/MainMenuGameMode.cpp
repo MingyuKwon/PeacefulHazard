@@ -235,7 +235,7 @@ void AMainMenuGameMode::BeginPlay()
     FTimerHandle timerHandle;
     GetWorld()->GetTimerManager().SetTimer(timerHandle, [this]() {
         LoadingShowEvent.Broadcast(false);
-
+        LanguageChangeEvent.Broadcast();
         }, 0.7f, false);
 
 }
