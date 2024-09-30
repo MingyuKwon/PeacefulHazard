@@ -110,6 +110,8 @@ void AMainMenuHUD::ChangeMenuMode(EMainMenuType menuType, bool bChangeStart)
     }
 }
 
+
+
 void AMainMenuHUD::ChangeShowMenuUI(EMainMenuType menuType)
 {
     if (MainMenuGameMode)

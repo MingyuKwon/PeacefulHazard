@@ -35,6 +35,9 @@ void UMainMenu_SettingWidget::NativeConstruct()
 	LoadButton->OnClicked.AddDynamic(this, &ThisClass::OnLoadButtonClicked);
 	NewGaemButton->OnClicked.AddDynamic(this, &ThisClass::OnNewGameButtonClicked);
 
+	LoadButton->OnHovered.AddDynamic(this, &ThisClass::OnLoadButtonHovered);
+	NewGaemButton->OnHovered.AddDynamic(this, &ThisClass::OnNewGameButtonHoverd);
+
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->LanguageChangeEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
@@ -93,6 +96,9 @@ void UMainMenu_SettingWidget::OnLoadButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_Load, true);
+
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+
 	}
 }
 
@@ -101,6 +107,25 @@ void UMainMenu_SettingWidget::OnNewGameButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_NewGame, true);
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+
+	}
+}
+
+void UMainMenu_SettingWidget::OnLoadButtonHovered()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+
+	}
+}
+
+void UMainMenu_SettingWidget::OnNewGameButtonHoverd()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
 
 	}
 }

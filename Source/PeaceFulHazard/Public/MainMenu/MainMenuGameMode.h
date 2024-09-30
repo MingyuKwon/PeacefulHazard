@@ -73,6 +73,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Audio")
 	UAudioComponent* UIAudioComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* MainMenuBGM;
+
+	void PlayBGM();
 
 	virtual void BeginPlay() override;
 

@@ -77,6 +77,9 @@ protected:
 
 	UFUNCTION()
 	void OnNewButtonClicked();
+	UFUNCTION()
+	void OnNewButtonHovered();
+
 
 	virtual void NativeConstruct() override;
 

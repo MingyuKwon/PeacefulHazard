@@ -26,6 +26,16 @@ public:
 	void BackUIInputTrigger();
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonHoverSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonClickSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* BackSound;
+
+
 	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -51,6 +61,10 @@ protected:
 
 	UFUNCTION()
 	void OnGameStartButtonlicked();
+
+	UFUNCTION()
+	void OnGameStartButtonHoverd();
+
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* EasyButton;
@@ -98,6 +112,14 @@ protected:
 
 	UFUNCTION()
 	void OnSettingButtonClicked();
+
+
+	UFUNCTION()
+	void OnLoadButtonHovered();
+
+	UFUNCTION()
+	void OnSettingButtonHoverd();
+
 
 	EDifficulty currentSelectDifficulty = EDifficulty::ED_Normal;
 

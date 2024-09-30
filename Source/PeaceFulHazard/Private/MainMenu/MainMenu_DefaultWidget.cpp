@@ -28,6 +28,11 @@ void UMainMenu_DefaultWidget::NativeConstruct()
 	SettingButton->OnClicked.AddDynamic(this, &ThisClass::OnSettingButtonClicked);
 	NewGaemButton->OnClicked.AddDynamic(this, &ThisClass::OnNewGameButtonClicked);
 
+	QuitGameButton->OnHovered.AddDynamic(this, &ThisClass::OnQuitButtonHovered);
+	LoadButton->OnHovered.AddDynamic(this, &ThisClass::OnLoadButtonHovered);
+	SettingButton->OnHovered.AddDynamic(this, &ThisClass::OnSettingButtonHovered);
+	NewGaemButton->OnHovered.AddDynamic(this, &ThisClass::OnNewGameButtonHovered);
+
 	CheckLanguage();
 }
 
@@ -51,6 +56,8 @@ void UMainMenu_DefaultWidget::OnLoadButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_Load, true);
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+
 	}
 }
 
@@ -59,6 +66,7 @@ void UMainMenu_DefaultWidget::OnSettingButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_Setting, true);
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
 
 	}
 }
@@ -68,6 +76,39 @@ void UMainMenu_DefaultWidget::OnNewGameButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_NewGame, true);
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
 
+	}
+}
+
+void UMainMenu_DefaultWidget::OnQuitButtonHovered()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
+}
+
+void UMainMenu_DefaultWidget::OnLoadButtonHovered()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
+}
+
+void UMainMenu_DefaultWidget::OnSettingButtonHovered()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
+}
+
+void UMainMenu_DefaultWidget::OnNewGameButtonHovered()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
 	}
 }

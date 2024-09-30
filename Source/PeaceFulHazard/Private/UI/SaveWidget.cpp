@@ -180,6 +180,14 @@ void USaveWidget::OnNewButtonClicked()
 
 }
 
+void USaveWidget::OnNewButtonHovered()
+{
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 1.f);
+	}
+}
+
 void USaveWidget::CheckLanguage()
 {
 	if (PeaceFulHazardGameMode == nullptr) return;
@@ -244,6 +252,8 @@ void USaveWidget::NativeConstruct()
 	if (NewSaveButton)
 	{
 		NewSaveButton->OnClicked.AddDynamic(this, &ThisClass::OnNewButtonClicked);
+		NewSaveButton->OnHovered.AddDynamic(this, &ThisClass::OnNewButtonHovered);
+
 	}
 	
 

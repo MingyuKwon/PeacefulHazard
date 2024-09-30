@@ -51,6 +51,13 @@ protected:
 	UFUNCTION()
 	void OnNewGameButtonClicked();
 
+	UFUNCTION()
+	void OnSettingButtonHovered();
+
+	UFUNCTION()
+	void OnNewGameButtonHoverd();
+
+
 
 	AMainMenuGameMode* MainMenuGameMode;
 	UPeacFulGameInstance* PeacFulGameInstance;
@@ -95,6 +102,7 @@ protected:
 	UFUNCTION()
 	void OnContinueButtonClicked();
 
+	void OnContinueButtonHoverd();
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* SaveButton1;

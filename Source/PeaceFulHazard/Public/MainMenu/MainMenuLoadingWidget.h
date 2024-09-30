@@ -32,6 +32,15 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonHoverSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonClickSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* BackSound;
+
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* LoadingText;

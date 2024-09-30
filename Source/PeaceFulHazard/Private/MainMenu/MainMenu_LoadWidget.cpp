@@ -44,6 +44,9 @@ void UMainMenu_LoadWidget::NativeConstruct()
 	SettingButton->OnClicked.AddDynamic(this, &ThisClass::OnSettingButtonClicked);
 	NewGaemButton->OnClicked.AddDynamic(this, &ThisClass::OnNewGameButtonClicked);
 
+	SettingButton->OnHovered.AddDynamic(this, &ThisClass::OnSettingButtonHovered);
+	NewGaemButton->OnHovered.AddDynamic(this, &ThisClass::OnNewGameButtonHoverd);
+
 	InitArrays();
 
 	UpdateAllUI();
@@ -66,6 +69,7 @@ void UMainMenu_LoadWidget::OnSettingButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_Setting, true);
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
 
 	}
 }
@@ -75,6 +79,24 @@ void UMainMenu_LoadWidget::OnNewGameButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_NewGame, true);
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+	}
+}
+
+void UMainMenu_LoadWidget::OnSettingButtonHovered()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+
+	}
+}
+
+void UMainMenu_LoadWidget::OnNewGameButtonHoverd()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
 
 	}
 }
@@ -215,6 +237,7 @@ void UMainMenu_LoadWidget::OnSaveButtonClicked()
 	{
 		MainMenuGameMode->PlayUISound(ButtonClickSound, 1.f);
 		MainMenuGameMode->LoadDataFromSlot(HoveringSaveButton->GetName(), false);
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
 
 	}
 }
@@ -245,6 +268,7 @@ void UMainMenu_LoadWidget::OnSaveButtonHovered()
 void UMainMenu_LoadWidget::OnSaveButtonUnhovered()
 {
 	ChangeNowHoveringButton(nullptr, true);
+
 }
 
 void UMainMenu_LoadWidget::OnContinueButtonClicked()
@@ -252,6 +276,16 @@ void UMainMenu_LoadWidget::OnContinueButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->LoadDataFromContinue();
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+
+	}
+}
+
+void UMainMenu_LoadWidget::OnContinueButtonHoverd()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
 	}
 }
 

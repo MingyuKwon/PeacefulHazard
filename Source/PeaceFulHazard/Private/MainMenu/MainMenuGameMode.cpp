@@ -198,6 +198,16 @@ void AMainMenuGameMode::SetBGMVolume(float value)
 
 }
 
+void AMainMenuGameMode::PlayBGM()
+{
+    if (PeacFulGameInstance == nullptr) return;
+
+    if (MainMenuBGM)
+    {
+        PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_BGM, BGMAudioComponent, MainMenuBGM, 1.f);
+    }
+
+}
 void AMainMenuGameMode::SetGameBrightness()
 {
     if (PeacFulGameInstance == nullptr) return;
@@ -236,6 +246,8 @@ void AMainMenuGameMode::BeginPlay()
     GetWorld()->GetTimerManager().SetTimer(timerHandle, [this]() {
         LoadingShowEvent.Broadcast(false);
         LanguageChangeEvent.Broadcast();
+        PlayBGM();
+
         }, 0.7f, false);
 
 }

@@ -35,7 +35,15 @@ void UMainMenu_NewGameWidget::NativeConstruct()
 	LoadButton->OnClicked.AddDynamic(this, &ThisClass::OnLoadButtonClicked);
 	SettingButton->OnClicked.AddDynamic(this, &ThisClass::OnSettingButtonClicked);
 
+	LoadButton->OnHovered.AddDynamic(this, &ThisClass::OnLoadButtonHovered);
+	SettingButton->OnHovered.AddDynamic(this, &ThisClass::OnSettingButtonHoverd);
+
+
+	
 	GameStartButton->OnClicked.AddDynamic(this, &ThisClass::OnGameStartButtonlicked);
+	GameStartButton->OnHovered.AddDynamic(this, &ThisClass::OnGameStartButtonHoverd);
+
+	
 
 	EasyButton->OnClicked.AddDynamic(this, &ThisClass::OnEasyButtonClicked);
 	NormalButton->OnClicked.AddDynamic(this, &ThisClass::OnNormalButtonClicked);
@@ -109,6 +117,14 @@ void UMainMenu_NewGameWidget::OnGameStartButtonlicked()
 
 }
 
+void UMainMenu_NewGameWidget::OnGameStartButtonHoverd()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
+}
+
 void UMainMenu_NewGameWidget::OnEasyButtonClicked()
 {
 	if (PeacFulGameInstance)
@@ -119,6 +135,12 @@ void UMainMenu_NewGameWidget::OnEasyButtonClicked()
 		DifficultyText->SetColorAndOpacity(FLinearColor::Green);
 
 		currentSelectDifficulty = EDifficulty::ED_Easy;
+
+		if (MainMenuGameMode)
+		{
+			MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+		}
+
 	}
 }
 
@@ -133,6 +155,10 @@ void UMainMenu_NewGameWidget::OnNormalButtonClicked()
 
 		currentSelectDifficulty = EDifficulty::ED_Normal;
 
+		if (MainMenuGameMode)
+		{
+			MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+		}
 	}
 }
 
@@ -147,6 +173,10 @@ void UMainMenu_NewGameWidget::OnHardButtonClicked()
 
 		currentSelectDifficulty = EDifficulty::ED_Hard;
 
+		if (MainMenuGameMode)
+		{
+			MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+		}
 	}
 }
 
@@ -156,6 +186,11 @@ void UMainMenu_NewGameWidget::OnEasyButtonHover()
 	NormalShot->SetVisibility(ESlateVisibility::Hidden);
 	HardShot->SetVisibility(ESlateVisibility::Hidden);
 
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
+
 	SetDynamicChangeLanguage(DifficultyExaplainText, FText::FromString(FString("This is the easiest difficulty level.\n\n- Enemies are weaker.\n- The number of items you can obtain increases.\n- You have more inventory space.\n\nRecommended for those playing TPS games for the first time.")), FText::FromString(FString(TEXT("가장 쉬운 난이도 입니다. \n\n- 적들이 더 약해집니다 \n- 얻을 수 있는 아이템의 수가 늘어납니다\n- 인벤토리가 더 여유롭습니다.\n\nTPS류 게임을 처음 해보는 분들께 추천합니다"))));
 }
 
@@ -164,6 +199,11 @@ void UMainMenu_NewGameWidget::OnNormalButtonHover()
 	EasyShot->SetVisibility(ESlateVisibility::Hidden);
 	NormalShot->SetVisibility(ESlateVisibility::Visible);
 	HardShot->SetVisibility(ESlateVisibility::Hidden);
+
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
 
 	SetDynamicChangeLanguage(DifficultyExaplainText, FText::FromString(FString("This is the standard difficulty level.\n\nRecommended for those with experience in TPS games \nor who have played games like Resident Evil.")), FText::FromString(FString(TEXT("일반적인 난이도 입니다\n\nTPS류 게임에 경험이 있거나, \n바이오하자드 류 게임을 플레이 해보신 분들께 추천드립니다."))));
 
@@ -175,6 +215,11 @@ void UMainMenu_NewGameWidget::OnHardButtonHover()
 	NormalShot->SetVisibility(ESlateVisibility::Hidden);
 	HardShot->SetVisibility(ESlateVisibility::Visible);
 
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
+
 	SetDynamicChangeLanguage(DifficultyExaplainText, FText::FromString(FString("This is the hardest difficulty level.\n\n- Enemies become stronger.\n- The number of items you can obtain decreases.\n- Inventory space is more limited.\n\nRecommended for players who are familiar with the game.")), FText::FromString(FString(TEXT("가장 어려운 난이도 입니다. \n\n- 적들이 더 강해집니다 \n- 얻을 수 있는 아이템의 수가 적어집니다\n- 인벤토리가 더 빡빡해집니다\n\n게임 플레이에 익숙해진 분들에게 추천합니다"))));
 
 }
@@ -184,7 +229,10 @@ void UMainMenu_NewGameWidget::OnLoadButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_Load, true);
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+
 	}
+
 }
 
 void UMainMenu_NewGameWidget::OnSettingButtonClicked()
@@ -192,6 +240,22 @@ void UMainMenu_NewGameWidget::OnSettingButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_Setting, true);
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+	}
+}
 
+void UMainMenu_NewGameWidget::OnLoadButtonHovered()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
+}
+
+void UMainMenu_NewGameWidget::OnSettingButtonHoverd()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
 	}
 }

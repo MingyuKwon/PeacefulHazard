@@ -26,6 +26,16 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonHoverSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* ButtonClickSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* BackSound;
+
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetLangaugeText(ELanguage language);
 
@@ -57,6 +67,19 @@ protected:
 
 	UFUNCTION()
 	void OnNewGameButtonClicked();
+
+	UFUNCTION()
+	void OnQuitButtonHovered();
+
+	UFUNCTION()
+	void OnLoadButtonHovered();
+
+	UFUNCTION()
+	void OnSettingButtonHovered();
+
+	UFUNCTION()
+	void OnNewGameButtonHovered();
+
 
 
 	AMainMenuGameMode* MainMenuGameMode;
