@@ -260,8 +260,6 @@ void AEnemyAIController::UpdateBlackBoard()
 			TriggerResetPivotIndex(bFollowingLastPositon);
 		}
 
-		DrawDebugSphere(GetWorld(), TargetLocation, 50.f, 30, FColor::Blue, false, 0.1f);
-
 	}
 
 	if (BlackboardComp)

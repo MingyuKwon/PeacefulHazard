@@ -452,7 +452,7 @@ void APeaceFulHazardGameMode::SetGameBrightness()
             BrightnessTemp *= 1.1f;
             break;
         case EWarpTarget::EWT_GraveYard:
-            BrightnessTemp *= 0.8f;
+            BrightnessTemp *= 0.7f;
             break;
         case EWarpTarget::EWT_LeftGarden:
             BrightnessTemp *= 0.8f;
