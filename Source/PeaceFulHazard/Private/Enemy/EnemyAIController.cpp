@@ -77,7 +77,7 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 	{
 		damageAccumulate = 0;
 		bStunDamage = true;
-		GetWorld()->GetTimerManager().SetTimer(DamgeStunTimerHandle, this, &ThisClass::DamageStunRelease, 1.5f, false);
+		GetWorld()->GetTimerManager().SetTimer(DamgeStunTimerHandle, this, &ThisClass::DamageStunRelease, 2.0f, false);
 	}
 
 	if (bHead)
@@ -88,7 +88,7 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 		{
 			headDamageAccumulate = 0;
 			bStunHeadShot = true;
-			GetWorld()->GetTimerManager().SetTimer(HeadStunTimerHandle, this, &ThisClass::HeadStunRelease, 0.5f, false);
+			GetWorld()->GetTimerManager().SetTimer(HeadStunTimerHandle, this, &ThisClass::HeadStunRelease, 1.0f, false);
 		}
 
 	}
