@@ -192,6 +192,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SituationInteract(EInteractSituationType situationType);
 
+	UFUNCTION(BlueprintCallable)
+	void ShowLoadingUI(bool bVisible);
+
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
@@ -260,6 +263,10 @@ protected:
 	bool IsInventoryFull();
 
 
+	bool bCinematicShow = false;
+
+	UFUNCTION(BlueprintCallable)
+	void CinematicShow(bool bShow);
 
 	UFUNCTION(BlueprintCallable)
 	void ChangeItemBoxInContrller(int32 index, EItemType itemType, int32 count);

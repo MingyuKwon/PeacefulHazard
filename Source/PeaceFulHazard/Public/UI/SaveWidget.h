@@ -77,6 +77,9 @@ protected:
 
 	UFUNCTION()
 	void OnNewButtonClicked();
+	UFUNCTION()
+	void OnNewButtonHovered();
+
 
 	virtual void NativeConstruct() override;
 
@@ -224,9 +227,6 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UBorder* SaveShowPanel;
-
-
-
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* NewSaveButton;

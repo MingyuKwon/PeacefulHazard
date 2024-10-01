@@ -156,7 +156,7 @@ void APeaceFulHazardCharacter::PlayHitReactMontage(AActor* DamageCauser)
 
 
 	}
-	else if (Angle > 45.0f && Angle <= 135.0f)
+	else if (Angle > 45.0f && Angle <= 120.0f)
 	{
 		// Right hit
 		if (HitRightMontage)
@@ -167,7 +167,7 @@ void APeaceFulHazardCharacter::PlayHitReactMontage(AActor* DamageCauser)
 
 
 	}
-	else if (Angle < -45.0f && Angle >= -135.0f)
+	else if (Angle < -45.0f && Angle >= -120.0f)
 	{
 		// Left hit
 		if (HitLeftMontage)
@@ -283,10 +283,12 @@ void APeaceFulHazardCharacter::UpdateValue()
 {
 	if (HappyPlayerController == nullptr) return;
 
-	if (GEngine)
+	if (bDissolveControllerControl)
 	{
-		FString text = FString::Printf(TEXT("bNowUnDamagable = %s"), bNowUnDamagable ? *FString("True") : *FString("False"));
-		GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Red, text);
+		ControllerForceDissolveValue -= 0.1f / 6.f;
+		SetDissolveForce(ControllerForceDissolveValue);
+
+		return;
 	}
 
 	float healthpercent = HappyPlayerController->GetHealthPercent();
@@ -321,7 +323,7 @@ void APeaceFulHazardCharacter::SetMaterialParaLerp(bool bDissolve, float value)
 		bool bReduce = value < dissolvePercent;
 
 		dissolvePercent = FMath::Lerp(dissolvePercent, value, bReduce ? 0.1f : 0.2f);
-		GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
+		SetDissolveForce(dissolvePercent);
 
 	}
 	else
@@ -367,8 +369,12 @@ void APeaceFulHazardCharacter::MapStartInitialize()
 
 	float healthpercent = HappyPlayerController->GetHealthPercent();
 	dissolvePercent = 1 - (healthpercent * 0.7f + 0.3f);
-	GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", dissolvePercent);
+	SetDissolveForce(dissolvePercent);
+}
 
+void APeaceFulHazardCharacter::SetDissolveForce(float value)
+{
+	GetMesh()->SetScalarParameterValueOnMaterials("Dissolve", value);
 }
 
 
@@ -677,6 +683,10 @@ bool APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
 	if (PeaceFulHazardGameMode == nullptr) return false;
 	PeaceFulHazardGameMode->GetSettingValue(MouseSensitivity, MouseAimSensitivity);
 
+	MouseSensitivity += 0.02f;
+	MouseAimSensitivity += 0.02f;
+
+
 	if (GetIsAiming())
 	{
 		LookAxisVector = LookAxisVector * MouseAimSensitivity / 2;
@@ -688,6 +698,7 @@ bool APeaceFulHazardCharacter::Look(const FInputActionValue& Value)
 
 	if (Controller != nullptr)
 	{
+
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);

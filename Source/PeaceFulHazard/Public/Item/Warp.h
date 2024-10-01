@@ -28,6 +28,9 @@ protected:
 
 	virtual void AfterInteraction() override;
 
+	UFUNCTION()
+	void WarpDisable();
+
 public:
 	virtual void InteractWithPlayer(APeaceFulHazardCharacter* character) override;
 

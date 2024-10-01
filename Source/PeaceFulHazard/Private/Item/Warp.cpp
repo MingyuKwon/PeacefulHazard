@@ -11,11 +11,25 @@ void AWarp::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->MapTravelEvent.Broadcast(WarpTarget);
+		PeaceFulHazardGameMode->DynamicSpawnStartEvent.AddDynamic(this, &ThisClass::WarpDisable);
+		
+	}
 }
 
 void AWarp::AfterInteraction()
 {
 
+}
+
+void AWarp::WarpDisable()
+{
+	if (BoxComponent)
+	{
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }
 
 void AWarp::InteractWithPlayer(APeaceFulHazardCharacter* character)

@@ -48,6 +48,12 @@ void APeaceFulHazardGameMode::OpenMap(FString MapName)
     }
 }
 
+void APeaceFulHazardGameMode::MoveToMainMenu()
+{
+    UGameplayStatics::OpenLevel(this, FName("MainMenu"));
+
+}
+
 void APeaceFulHazardGameMode::SetEnemyRefCount(bool bPlus)
 {
     if (bPlus)
@@ -343,7 +349,6 @@ void APeaceFulHazardGameMode::SetAleradyInteract(FString name)
 
     if (!tempInteractMap.Contains(name))
     {
-        UE_LOG(LogTemp, Warning, TEXT("SetAleradyInteract %s"), *name);
         gameSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames.Add(name);
     }
 }
@@ -406,6 +411,20 @@ void APeaceFulHazardGameMode::BeginPlay()
             MapStartEvent.Broadcast();
             PlayBGM();
         }, 0.1f, false);
+
+
+
+    FTimerHandle TestHandle;
+    GetWorld()->GetTimerManager().SetTimer(TestHandle, [this]()
+        {
+            if (DynamicSpawnMode)
+            {
+                DynamicSpawnStartEvent.Broadcast();
+            }
+
+        }, 3.f, false);
+
+    
 
 }
 

@@ -93,6 +93,11 @@ void AHappyPlayerController::BeginPlay()
 
         PeaceFulHazardGameMode->WantSaveEvent.AddDynamic(this, &ThisClass::WantToSaveCallBack);
 
+        PeaceFulHazardGameMode->CinematicPlayEvent.AddDynamic(this, &ThisClass::CinematicShow);
+
+
+        PeaceFulHazardGameMode->ShowLoadingEvent.AddDynamic(this, &ThisClass::ShowLoadingUI);
+
 
         InitializeInventory();
     }
@@ -114,10 +119,7 @@ void AHappyPlayerController::BeginPlay()
             {
                 bShowMouseCursor = false;
                 SetInputMode(FInputModeGameOnly());
-
                 PlayerHUD->ShowLoadingUI(false);
-                TutorialShow(ETutorialType::ETT_MoveTutorial);
-
             }, 0.5f, false);
 
     }
@@ -183,6 +185,8 @@ void AHappyPlayerController::InitializeInventory()
 
 void AHappyPlayerController::Tab(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     if (PlayerHUD)
     {
         if (currentUIState == EUIState::EUIS_Notice || currentUIState == EUIState::EUIS_Menu) return;
@@ -211,6 +215,8 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
 
 void AHappyPlayerController::Menu(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     if (PlayerHUD)
     {
         if (currentUIState == EUIState::EUIS_Notice) return;
@@ -368,6 +374,8 @@ void AHappyPlayerController::PauseGame(bool flag)
 
 void AHappyPlayerController::Move(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (ControlledCharacter)
@@ -378,7 +386,16 @@ void AHappyPlayerController::Move(const FInputActionValue& Value)
 
 void AHappyPlayerController::Look(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
+
+    FVector2D LookAxisVector = Value.Get<FVector2D>();
+    FString text = FString::Printf(TEXT("LookAxisVector : %f, %f"), LookAxisVector.X, LookAxisVector.Y);
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(9, 1.f, FColor::Red, text);
+    }
 
     if (ControlledCharacter)
     {
@@ -408,6 +425,9 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
 
         return;
     }
+
+    if (bCinematicShow) return;
+
 
     if (ControlledCharacter->GetIsAiming())
     {
@@ -440,6 +460,7 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
 
 void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
 {
+
     bool bSuccess = false;
 
     if (IsPaused())
@@ -464,6 +485,8 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
     }
     else
     {
+        if (bCinematicShow) return;
+
         if (ControlledCharacter)
         {
             bSuccess = ControlledCharacter->AimStart(Value);
@@ -475,6 +498,8 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
 
 void AHappyPlayerController::RightClickEnd(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (ControlledCharacter)
@@ -485,6 +510,8 @@ void AHappyPlayerController::RightClickEnd(const FInputActionValue& Value)
 
 void AHappyPlayerController::ShiftStart(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (ControlledCharacter)
@@ -495,6 +522,8 @@ void AHappyPlayerController::ShiftStart(const FInputActionValue& Value)
 
 void AHappyPlayerController::ShiftEnd(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (ControlledCharacter)
@@ -505,6 +534,8 @@ void AHappyPlayerController::ShiftEnd(const FInputActionValue& Value)
 
 void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (ControlledCharacter)
@@ -515,6 +546,8 @@ void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
 
 void AHappyPlayerController::Reload(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
     int32 reloadBulletCount = GetReloadBulletCount();
 
@@ -529,6 +562,8 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
 
 void AHappyPlayerController::ChangeBullet(const FInputActionValue& Value)
 {
+    if (bCinematicShow) return;
+
     bool bSuccess = false;
 
     if (currentBulletType == EItemType::EIT_Bullet_Noraml && !CharacterInventoty.ItemCountMap.Contains(EItemType::EIT_Bullet_Big)) return;
@@ -867,7 +902,13 @@ void AHappyPlayerController::SituationInteract(EInteractSituationType situationT
     CloseAllUI();
 }
 
-
+void AHappyPlayerController::ShowLoadingUI(bool bVisible)
+{
+    if (PlayerHUD)
+    {
+        PlayerHUD->ShowLoadingUI(bVisible);
+    }
+}
 
 bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
 {
@@ -983,6 +1024,43 @@ bool AHappyPlayerController::IsInventoryFull()
 
     return Emptyindex >= Lockindex;
 
+}
+
+void AHappyPlayerController::CinematicShow(bool bShow)
+{
+    bCinematicShow = bShow;
+
+    if (bShow)
+    {
+        if (PlayerHUD)
+        {
+            PlayerHUD->SetDefaultDisplay(false);
+        }
+
+        if (ControlledCharacter && PeaceFulHazardGameMode && PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
+        {
+
+
+            ControlledCharacter->bDissolveControllerControl = true;
+        }
+    }
+    else
+    {
+        if (PlayerHUD)
+        {
+            PlayerHUD->SetDefaultDisplay(true);
+        }
+
+        TutorialShow(ETutorialType::ETT_MoveTutorial);
+        if (ControlledCharacter && PeaceFulHazardGameMode && PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
+        {
+
+
+            ControlledCharacter->bDissolveControllerControl = false;
+        }
+    }
+
+    
 }
 
 void AHappyPlayerController::ChangeItemBoxInContrller(int32 index, EItemType itemType, int32 count)

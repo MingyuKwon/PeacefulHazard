@@ -7,6 +7,7 @@
 #include "PeaceFulHazard/PeaceFulHazard.h"
 #include "Item/HappyInteractableItem.h"
 #include "Controller/HappyPlayerController.h"
+
 #include "PeaceFulHazardGameMode.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNowAimingEvent, bool, flag);
@@ -33,6 +34,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWantSaveEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FModeLanguageChangeEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDynamicSpawnStartEvent);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FShowLoadingEvent, bool, bVisible);
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCinematicPlayEvent, bool, bPlay);
 
 
 class UPeacFulGameInstance;
@@ -54,6 +61,8 @@ public:
 	UFUNCTION()
 	void ChangeLanguageCallBack();
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FShowLoadingEvent ShowLoadingEvent;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FNowAimingEvent NowAimingEvent;
@@ -114,6 +123,12 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FWantSaveEvent WantSaveEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FDynamicSpawnStartEvent DynamicSpawnStartEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FCinematicPlayEvent CinematicPlayEvent;
+	
 	void SaveSettingValue();
 	void LoadSettingValue();
 
@@ -141,6 +156,8 @@ public:
 
 	void OpenMap(FString MapName);
 
+	void MoveToMainMenu();
+
 	void PlaySoundInGameplay(USoundBase* Sound, FVector Location, float VolumeScale);
 	void PlayUISound(USoundBase* Sound, float VolumeScale);
 	void SetBGMVolume(float value);
@@ -157,6 +174,10 @@ public:
 
 
 protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
+	bool DynamicSpawnMode = false;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<EWarpTarget, FString> TravelMap;

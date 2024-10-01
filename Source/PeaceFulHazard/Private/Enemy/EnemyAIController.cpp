@@ -77,7 +77,7 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 	{
 		damageAccumulate = 0;
 		bStunDamage = true;
-		GetWorld()->GetTimerManager().SetTimer(DamgeStunTimerHandle, this, &ThisClass::DamageStunRelease, 1.2f, false);
+		GetWorld()->GetTimerManager().SetTimer(DamgeStunTimerHandle, this, &ThisClass::DamageStunRelease, 1.5f, false);
 	}
 
 	if (bHead)
@@ -88,7 +88,7 @@ void AEnemyAIController::EnemyTakeDamge(float Damage, bool bHead)
 		{
 			headDamageAccumulate = 0;
 			bStunHeadShot = true;
-			GetWorld()->GetTimerManager().SetTimer(HeadStunTimerHandle, this, &ThisClass::HeadStunRelease, 0.4f, false);
+			GetWorld()->GetTimerManager().SetTimer(HeadStunTimerHandle, this, &ThisClass::HeadStunRelease, 0.5f, false);
 		}
 
 	}
@@ -176,9 +176,14 @@ bool AEnemyAIController::CheckMovetoDestination()
 
 	float distance = FVector::Dist2D(PawnPosition, TargetLocation);
 
+	if (controlEnemy == nullptr)
+	{
+		controlEnemy = Cast<AEnemyBase>(GetPawn());
+	}
 
 	if (controlEnemy)
 	{
+
 		if (controlEnemy->bBoss)
 		{
 			FVector DirectionToTarget = (TargetLocation - controlEnemy->GetActorLocation()).GetSafeNormal();
@@ -208,9 +213,23 @@ void AEnemyAIController::UpdateBlackBoard()
 
 		if (CheckMovetoDestination())
 		{
+
+
 			if (!bNowAttacking && !bDeath && !bStunDamage && !bStunHeadShot)
 			{
+				if (GEngine)
+				{
+					FString text = FString::Printf(TEXT("Should Attack"));
+					GEngine->AddOnScreenDebugMessage(10, 1.f, FColor::Red, text);
+				}
+
 				if (nonAttackLock) return;
+
+				if (GEngine)
+				{
+					FString text = FString::Printf(TEXT("Attack"));
+					GEngine->AddOnScreenDebugMessage(11, 1.f, FColor::Blue, text);
+				}
 
 				if (controlEnemy->bBoss)
 				{
@@ -220,6 +239,8 @@ void AEnemyAIController::UpdateBlackBoard()
 				}
 				else
 				{
+
+
 					Attack();
 				}
 

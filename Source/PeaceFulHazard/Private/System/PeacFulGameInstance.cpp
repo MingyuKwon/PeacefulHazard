@@ -23,15 +23,15 @@ void UPeacFulGameInstance::UpdateToDo(EPlayerToDo targetTodo)
     switch (targetTodo)
     {
     case EPlayerToDo::EPTD_SearchRightGarden :
-        currentEnemyForce += 5;
+        currentEnemyForce += 10;
         break;
 
     case EPlayerToDo::EPTD_SearchCathedral:
-        currentEnemyForce += 5;
+        currentEnemyForce += 10;
         break;
 
     case EPlayerToDo::EPTD_SearchLeftGarden:
-        currentEnemyForce += 10;
+        currentEnemyForce += 15;
         break;
 
     case EPlayerToDo::EPTD_SearchCathedralSecondFloor:
@@ -39,7 +39,7 @@ void UPeacFulGameInstance::UpdateToDo(EPlayerToDo targetTodo)
         break;
 
     case EPlayerToDo::EPTD_Survive:
-        currentEnemyForce += 20;
+        currentEnemyForce += 15;
         break;
 
       

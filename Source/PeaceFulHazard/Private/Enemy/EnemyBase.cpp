@@ -589,6 +589,12 @@ void AEnemyBase::BeginPlay()
         }
     }
 
+    if (EnemyAIController)
+    {
+        EnemyAIController->currentHealth = GetMaxHealthbyDifficulty();
+
+    }
+
     GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyBase::UpdateValue, 0.1f, true);
     FindEnemyRoutes();
 
@@ -598,6 +604,9 @@ void AEnemyBase::BeginPlay()
     {
         SpawnNiagaraPoint->Deactivate();
     }
+
+
+
 }
 
 

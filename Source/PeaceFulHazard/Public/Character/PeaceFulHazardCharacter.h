@@ -110,6 +110,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MapStartInitialize();
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bDissolveControllerControl = false;
+	float ControllerForceDissolveValue = 1.f;
+
+	void SetDissolveForce(float value);
+
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Sound Para")

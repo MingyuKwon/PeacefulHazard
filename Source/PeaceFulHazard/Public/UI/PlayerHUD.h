@@ -42,6 +42,8 @@ public:
 	void SetInformationDisplay(bool bVisible);
 
 
+	void SetDefaultDisplay(bool bVisible);
+
 	void SetMainMenuDisplay(bool bVisible, EMenuType menuType, bool bSavePanelSave = false);
 
 	void ShowLoadingUI(bool bVisible);
