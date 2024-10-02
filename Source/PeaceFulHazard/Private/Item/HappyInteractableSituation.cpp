@@ -44,7 +44,7 @@ void AHappyInteractableSituation::ListenTirggerOn(EInteractSituationType _situat
 		}
 
 		AfterInteraction();
-
+		return;
 	}
 
 	if (situationType == EInteractSituationType::EIST_BlueTriggerDoor && _situationType == EInteractSituationType::EIST_BlueTrigger)
