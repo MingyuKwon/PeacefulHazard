@@ -60,6 +60,10 @@ protected:
 	void OnQuitButtonClicked();
 
 	UFUNCTION()
+	void OnceQuitButtonClickedSuccess();
+
+
+	UFUNCTION()
 	void OnLoadButtonClicked();
 
 	UFUNCTION()

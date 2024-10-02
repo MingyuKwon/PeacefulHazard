@@ -110,6 +110,10 @@ protected:
 	UFUNCTION()
 	void OnContinueButtonHoverd();
 
+	UFUNCTION()
+	void OnceContinueButtonClickedSuccess();
+
+
 	UPROPERTY(meta = (BindWidget))
 	UButton* SaveButton1;
 

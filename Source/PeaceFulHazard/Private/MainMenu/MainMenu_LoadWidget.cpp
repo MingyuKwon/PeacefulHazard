@@ -301,10 +301,28 @@ void UMainMenu_LoadWidget::OnContinueButtonClicked()
 {
 	if (MainMenuGameMode)
 	{
-		MainMenuGameMode->LoadDataFromContinue();
 		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
 
+		FString EnglishMessage = FString::Printf(TEXT("Do you want to continue last game? "));
+
+		FString KoreanMessage = FString::Printf(TEXT("가장 최근 게임을 이어서 하시겠습니까?"));
+
+		MainMenuGameMode->CheckOneMoreMenuEvent.Broadcast(true, FText::FromString(EnglishMessage), FText::FromString(KoreanMessage));
+		MainMenuGameMode->CheckOneMoreSuccessMenuEvent.AddDynamic(this, &ThisClass::OnceContinueButtonClickedSuccess);
+
+
 	}
+}
+
+void UMainMenu_LoadWidget::OnceContinueButtonClickedSuccess()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->LoadDataFromContinue();
+		MainMenuGameMode->CheckOneMoreSuccessMenuEvent.RemoveDynamic(this, &ThisClass::OnceContinueButtonClickedSuccess);
+
+	}
+
 }
 
 void UMainMenu_LoadWidget::OnContinueButtonHoverd()
@@ -314,6 +332,8 @@ void UMainMenu_LoadWidget::OnContinueButtonHoverd()
 		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
 	}
 }
+
+
 
 void UMainMenu_LoadWidget::InitArrays()
 {

@@ -105,6 +105,48 @@ void UMainMenu_NewGameWidget::OnGameStartButtonlicked()
 {
 	if (MainMenuGameMode)
 	{
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+
+		FString EnglishMessage = FString::Printf(TEXT("Do you want to continue last game? "));
+		FString KoreanMessage = FString::Printf(TEXT("가장 최근 게임을 이어서 하시겠습니까?"));
+
+		if (currentSelectDifficulty == EDifficulty::ED_Easy)
+		{
+			EnglishMessage = FString::Printf(TEXT("Play New Game in Easy Difficulty?"));
+			KoreanMessage = FString::Printf(TEXT("쉬움 난이도로 게임을 시작하시겠습니까?"));
+
+		}
+		else if (currentSelectDifficulty == EDifficulty::ED_Normal)
+		{
+			EnglishMessage = FString::Printf(TEXT("Play New Game in Normal Difficulty?"));
+			KoreanMessage = FString::Printf(TEXT("보통 난이도로 게임을 시작하시겠습니까?"));
+
+		}
+		else if(currentSelectDifficulty == EDifficulty::ED_Hard)
+		{
+			EnglishMessage = FString::Printf(TEXT("Play New Game in Hard Difficulty?"));
+			KoreanMessage = FString::Printf(TEXT("어려움 난이도로 게임을 시작하시겠습니까?"));
+
+		}
+		else
+		{
+			EnglishMessage = FString::Printf(TEXT("Error"));
+			KoreanMessage = FString::Printf(TEXT("Error"));
+
+		}
+
+		MainMenuGameMode->CheckOneMoreMenuEvent.Broadcast(true, FText::FromString(EnglishMessage), FText::FromString(KoreanMessage));
+		MainMenuGameMode->CheckOneMoreSuccessMenuEvent.AddDynamic(this, &ThisClass::OnceGameStartButtonlickedSuccess);
+
+
+	}
+
+}
+
+void UMainMenu_NewGameWidget::OnceGameStartButtonlickedSuccess()
+{
+	if (MainMenuGameMode)
+	{
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_GameStart, true);
 
 		FTimerHandle timerHandle;
@@ -113,8 +155,10 @@ void UMainMenu_NewGameWidget::OnGameStartButtonlicked()
 			MainMenuGameMode->LoadDataFromSlot(FString(""), true);
 
 			}, 1.f, false);
-	}
 
+		MainMenuGameMode->CheckOneMoreSuccessMenuEvent.RemoveDynamic(this, &ThisClass::OnceGameStartButtonlickedSuccess);
+
+	}
 }
 
 void UMainMenu_NewGameWidget::OnGameStartButtonHoverd()

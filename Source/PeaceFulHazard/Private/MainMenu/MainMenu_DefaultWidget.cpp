@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "MainMenu/MainMenu_DefaultWidget.h"
@@ -45,6 +45,26 @@ void UMainMenu_DefaultWidget::CheckLanguage()
 }
 
 void UMainMenu_DefaultWidget::OnQuitButtonClicked()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+
+		FString EnglishMessage = FString::Printf(TEXT("Do you want to Quit the game? "));
+
+		FString KoreanMessage = FString::Printf(TEXT("게임을 종료 하시겠습니까?"));
+
+		MainMenuGameMode->CheckOneMoreMenuEvent.Broadcast(true, FText::FromString(EnglishMessage), FText::FromString(KoreanMessage));
+		MainMenuGameMode->CheckOneMoreSuccessMenuEvent.AddDynamic(this, &ThisClass::OnceQuitButtonClickedSuccess);
+
+
+	}
+
+
+
+}
+
+void UMainMenu_DefaultWidget::OnceQuitButtonClickedSuccess()
 {
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	UKismetSystemLibrary::QuitGame(this, PlayerController, EQuitPreference::Quit, true);
