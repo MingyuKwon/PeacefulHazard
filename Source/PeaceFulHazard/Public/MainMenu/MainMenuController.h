@@ -33,6 +33,10 @@ protected:
 	UInputAction* RIghtClickAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* LeftClickAction;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
 
 	AMainMenuGameMode* MainMenuGameMode;
@@ -43,9 +47,13 @@ protected:
 	UFUNCTION()
 	void ChangeCameraPosition(EMainMenuType menuType, bool bChangeStart);
 
+	UFUNCTION()
+	void SetOnceCheckDisplay(bool bVisible, const FText EnglishText = FText(), const FText KoreanText = FText());
 
 
 	void RIghtClick(const FInputActionValue& Value);
+	void LeftClick(const FInputActionValue& Value);
+
 	void Move(const FInputActionValue& Value);
 
 };

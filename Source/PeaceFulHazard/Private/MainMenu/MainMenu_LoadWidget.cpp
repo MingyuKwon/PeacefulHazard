@@ -238,12 +238,34 @@ void UMainMenu_LoadWidget::OnSaveButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->PlayUISound(ButtonClickSound, 1.f);
-		MainMenuGameMode->LoadDataFromSlot(HoveringSaveButton->GetName(), false);
-		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+
+		CheckCallBackHoveringSaveButton = HoveringSaveButton;
+
+		if (CheckCallBackHoveringSaveButton)
+		{
+			FString ButtonName = CheckCallBackHoveringSaveButton->GetName();
+			FString EnglishMessage = FString::Printf(TEXT("Do you want to load from slot \"%s\"?"), *ButtonName);
+
+			FString KoreanMessage =  FString::Printf(TEXT("\"%s\" 슬롯을 불러오겠습니까?"), *ButtonName);
+
+			MainMenuGameMode->CheckOneMoreMenuEvent.Broadcast(true, FText::FromString(EnglishMessage), FText::FromString(KoreanMessage));
+			MainMenuGameMode->CheckOneMoreSuccessMenuEvent.AddDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
+		}
+
 
 	}
 }
 
+void UMainMenu_LoadWidget::OnceSaveButtonClickedSuccess()
+{
+	if (CheckCallBackHoveringSaveButton == nullptr) return;
+	if (MainMenuGameMode == nullptr) return;
+
+	MainMenuGameMode->LoadDataFromSlot(CheckCallBackHoveringSaveButton->GetName(), false);
+
+	MainMenuGameMode->CheckOneMoreSuccessMenuEvent.RemoveDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
+
+}
 
 void UMainMenu_LoadWidget::OnSaveButtonHovered()
 {
@@ -272,6 +294,8 @@ void UMainMenu_LoadWidget::OnSaveButtonUnhovered()
 	ChangeNowHoveringButton(nullptr, true);
 
 }
+
+
 
 void UMainMenu_LoadWidget::OnContinueButtonClicked()
 {

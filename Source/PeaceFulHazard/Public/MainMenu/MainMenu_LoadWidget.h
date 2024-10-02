@@ -85,6 +85,7 @@ protected:
 	TArray<UBorder*> SaveSlotBackgrounds;
 
 	UButton* HoveringSaveButton;
+	UButton* CheckCallBackHoveringSaveButton;
 
 	int32 GetButtonIndex(UButton* button, bool bSaveButtons);
 
@@ -96,6 +97,10 @@ protected:
 	void OnSaveButtonHovered();
 	UFUNCTION()
 	void OnSaveButtonUnhovered();
+
+	UFUNCTION()
+	void OnceSaveButtonClickedSuccess();
+
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* ContinueButton;
