@@ -19,6 +19,7 @@ class UInformationPanelWidget;
 class USoundBase;
 class APeaceFulHazardGameMode;
 class UGameOverWidget;
+class UCheckOnceMoreWidget;
 /**
  *
  */
@@ -50,6 +51,8 @@ public:
 
 	void ShowLoadingUI(bool bVisible);
 
+	void SetOnceCheckDisplay(bool bVisible, const FText EnglishText = FText(), const FText KoreanText = FText());
+
 
 	void SetGetItemDisplay(bool bVisible, EItemType itemType = EItemType::EIT_None, int32 count = 0);
 
@@ -80,7 +83,14 @@ public:
 
 	void OkUIInputTrigger();
 
+	void OneMoreCheckBackUIInputTrigger();
+	void OneMoreCheckOkUIInputTrigger();
+
+
 	bool GetCanCloseTab();
+
+	bool GetOneMoreCheckVisible();
+
 
 protected:
 	virtual void BeginPlay() override;
@@ -140,6 +150,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UGameOverWidget> GameOverWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UCheckOnceMoreWidget> CheckOnceMoreWidgetClass;
+
+	
 	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Parameter")
@@ -163,6 +177,8 @@ protected:
 	USaveWidget* SaveWidget;
 
 	UGameOverWidget* GameOverWidget;
+
+	UCheckOnceMoreWidget* CheckOnceMoreWidget;
 
 	int32 beforeCurrentBulle = -1;
 	int32 beforeMaxBullet = -1;

@@ -115,6 +115,11 @@ protected:
 	void OnExitButtonClicked();
 
 
+	UFUNCTION()
+	void OnceExitButtonSuccess();
+
+
+
 	UPROPERTY(meta = (BindWidget))
 	UButton* MapButton;
 

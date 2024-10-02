@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "UI/GameOverWidget.h"
+#include "UI/CheckOnceMoreWidget.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -228,6 +229,14 @@ void APlayerHUD::ShowLoadingUI(bool bVisible)
     }
 }
 
+void APlayerHUD::SetOnceCheckDisplay(bool bVisible, const FText EnglishText, const FText KoreanText)
+{
+    if (CheckOnceMoreWidget)
+    {
+        CheckOnceMoreWidget->SetOneMoreDisplay(bVisible, EnglishText, KoreanText);
+    }
+}
+
 void APlayerHUD::SetGetItemDisplay(bool bVisible, EItemType itemType, int32 count)
 {
     if (!bVisible)
@@ -417,10 +426,14 @@ void APlayerHUD::BackUIInputTrigger()
         InformationPanelWidget->BackUIInputTrigger();
     }
 
+
+
     if (PeaceFulHazardGameMode)
     {
         PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
     }
+
+
 
 }
 
@@ -450,6 +463,29 @@ void APlayerHUD::OkUIInputTrigger()
     {
         SaveWidget->OkUIInputTrigger();
     }
+
+    
+}
+
+void APlayerHUD::OneMoreCheckBackUIInputTrigger()
+{
+    if (CheckOnceMoreWidget)
+    {
+        CheckOnceMoreWidget->BackUIInputTrigger();
+    }
+
+    if (PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
+    }
+}
+
+void APlayerHUD::OneMoreCheckOkUIInputTrigger()
+{
+    if (CheckOnceMoreWidget)
+    {
+        CheckOnceMoreWidget->OkUIInputTrigger();
+    }
 }
 
 bool APlayerHUD::GetCanCloseTab()
@@ -457,6 +493,16 @@ bool APlayerHUD::GetCanCloseTab()
     if (InventoryWidget)
     {
         return !(InventoryWidget->InteractLock);
+    }
+
+    return false;
+}
+
+bool APlayerHUD::GetOneMoreCheckVisible()
+{
+    if (CheckOnceMoreWidget)
+    {
+        return CheckOnceMoreWidget->GetVisibility() != ESlateVisibility::Hidden;
     }
 
     return false;
@@ -570,6 +616,17 @@ void APlayerHUD::BeginPlay()
         {
             GameOverWidget->AddToViewport();
             GameOverWidget->SetVisibility(ESlateVisibility::Hidden);
+
+        }
+    }
+
+    if (CheckOnceMoreWidgetClass != nullptr)
+    {
+        CheckOnceMoreWidget = CreateWidget<UCheckOnceMoreWidget>(GetWorld(), CheckOnceMoreWidgetClass);
+        if (CheckOnceMoreWidget != nullptr)
+        {
+            CheckOnceMoreWidget->AddToViewport();
+            CheckOnceMoreWidget->SetVisibility(ESlateVisibility::Hidden);
 
         }
     }

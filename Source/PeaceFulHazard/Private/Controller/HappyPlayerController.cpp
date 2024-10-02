@@ -98,6 +98,12 @@ void AHappyPlayerController::BeginPlay()
 
         PeaceFulHazardGameMode->ShowLoadingEvent.AddDynamic(this, &ThisClass::ShowLoadingUI);
 
+
+
+
+        PeaceFulHazardGameMode->CheckOneMoreGameEvent.AddDynamic(this, &ThisClass::SetOnceCheckDisplay);
+
+        
         InitializeInventory();
     }
 
@@ -155,6 +161,14 @@ void AHappyPlayerController::UpdateValue()
     if (PlayerHUD)
     {
         PlayerHUD->SetAimWide(aimFocusLerpValue);
+    }
+}
+
+void AHappyPlayerController::SetOnceCheckDisplay(bool bVisible, const FText EnglishText, const FText KoreanText)
+{
+    if (PlayerHUD)
+    {
+        PlayerHUD->SetOnceCheckDisplay(bVisible,  EnglishText, KoreanText);
     }
 }
 
@@ -437,6 +451,13 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
     {
         if (PlayerHUD)
         {
+            if (PlayerHUD->GetOneMoreCheckVisible())
+            {
+                PlayerHUD->OneMoreCheckOkUIInputTrigger();
+                return;
+            }
+
+
             if (currentUIState == EUIState::EUIS_Notice)
             {
                 PlayerHUD->BackNoticeUIInputTrigger();
@@ -492,6 +513,12 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
     {
         if (PlayerHUD)
         {
+            if (PlayerHUD->GetOneMoreCheckVisible())
+            {
+                PlayerHUD->OneMoreCheckBackUIInputTrigger();
+                return;
+            }
+
             if (currentUIState == EUIState::EUIS_Notice)
             {
                 PlayerHUD->BackNoticeUIInputTrigger();

@@ -42,6 +42,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FShowLoadingEvent, bool, bVisible);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCinematicPlayEvent, bool, bPlay);
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FCheckOneMoreGameEvent, bool, bVisible, const FText, EnglishText, const FText, KoreanText);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCheckOneMoreSuccessGameEvent);
+
+
+
 class UPeacFulGameInstance;
 class USoundBase;
 class UAudioComponent;
@@ -128,6 +133,15 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FCinematicPlayEvent CinematicPlayEvent;
+
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FCheckOneMoreGameEvent CheckOneMoreGameEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FCheckOneMoreSuccessGameEvent CheckOneMoreSuccessGameEvent;
+
+
 	
 	void SaveSettingValue();
 	void LoadSettingValue();

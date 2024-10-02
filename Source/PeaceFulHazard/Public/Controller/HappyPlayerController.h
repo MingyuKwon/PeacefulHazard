@@ -289,6 +289,10 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateValue();
+
+	UFUNCTION()
+	void SetOnceCheckDisplay(bool bVisible, const FText EnglishText = FText(), const FText KoreanText = FText());
+
 	
 public:
 	float aimFocusLerpValue = 1.f;

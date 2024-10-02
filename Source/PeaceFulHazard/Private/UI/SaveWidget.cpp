@@ -536,10 +536,19 @@ void USaveWidget::OnExitButtonClicked()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
-		PeaceFulHazardGameMode->ShowLoadingEvent.Broadcast(true);
-		PeaceFulHazardGameMode->MoveToMainMenu();
 
+		PeaceFulHazardGameMode->CheckOneMoreGameEvent.Broadcast(true, FText::FromString(FString("Do you want to go back to Title Menu? \n(Unsaved Data will be deleted)")), FText::FromString(FString(TEXT("타이틀로 돌아가시겠습니까? \n(저장되지 않은 정보는 없어집니다)"))));
+		PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.AddDynamic(this, &ThisClass::OnceExitButtonSuccess);
 	}
+}
+
+void USaveWidget::OnceExitButtonSuccess()
+{
+	PeaceFulHazardGameMode->ShowLoadingEvent.Broadcast(true);
+	PeaceFulHazardGameMode->MoveToMainMenu();
+
+	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceExitButtonSuccess);
+
 }
 
 
