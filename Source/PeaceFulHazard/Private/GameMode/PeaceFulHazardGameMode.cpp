@@ -425,10 +425,10 @@ void APeaceFulHazardGameMode::BeginPlay()
         }, 3.f, false);
 
     
-    PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeathBrightNess);
+    PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeath);
 }
 
-void APeaceFulHazardGameMode::PlayerDeathBrightNess()
+void APeaceFulHazardGameMode::PlayerDeath()
 {
     if (!CachedPostProcessVolume)
     {
@@ -436,6 +436,9 @@ void APeaceFulHazardGameMode::PlayerDeathBrightNess()
     }
 
     GetWorld()->GetTimerManager().SetTimer(BrightnessTimerHandle, this, &APeaceFulHazardGameMode::DecreaseBrightness, 0.1f, true);
+
+    if (PeacFulGameInstance == nullptr) return;
+    PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_BGM, BGMAudioComponent, GameOverMusic, 1.f);
 
 }
 

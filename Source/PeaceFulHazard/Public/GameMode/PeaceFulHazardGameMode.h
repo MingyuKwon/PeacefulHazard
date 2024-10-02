@@ -187,6 +187,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	TMap<EWarpTarget, USoundBase*> BackgroundMusics;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* GameOverMusic;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Audio")
 	UAudioComponent* BGMAudioComponent;
 
@@ -197,7 +200,7 @@ protected:
 	void PlayBGM();
 
 	UFUNCTION()
-	void PlayerDeathBrightNess();
+	void PlayerDeath();
 
 	UFUNCTION()
 	void DecreaseBrightness();
