@@ -110,7 +110,7 @@ protected:
 	UButton* HoveringSaveButton;
 	UButton* HoveringDeleteButton;
 
-	UButton* CheckCallBackHoveringSaveButton;
+	FString CheckCallBackHoveringSaveButtonName;
 	int32  CheckCallBackHoveringDeleteButtonindex;
 
 

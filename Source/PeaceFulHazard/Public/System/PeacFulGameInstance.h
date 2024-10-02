@@ -90,10 +90,10 @@ public:
 	float Brightness = 14.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
-	FString Resolution;
+	FString Resolution = FString("1920 x 1080");
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting Parameter", meta = (AllowPrivateAccess = "true"))
-	FString Language;
+	FString Language = FString("English");
 
 
 	void SetResolution(FString SelectedItem);

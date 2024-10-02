@@ -85,7 +85,7 @@ protected:
 	TArray<UBorder*> SaveSlotBackgrounds;
 
 	UButton* HoveringSaveButton;
-	UButton* CheckCallBackHoveringSaveButton;
+	FString CheckCallBackHoveringSaveButtonName;
 
 	int32 GetButtonIndex(UButton* button, bool bSaveButtons);
 
