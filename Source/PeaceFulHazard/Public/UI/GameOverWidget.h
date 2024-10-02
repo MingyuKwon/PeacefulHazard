@@ -4,27 +4,79 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "MainMenu_LoadWidget.generated.h"
+#include "PeaceFulHazard/PeaceFulHazard.h"
+
+#include "GameOverWidget.generated.h"
 
 class UButton;
 class UTextBlock;
 class UImage;
 class UCanvasPanel;
 class UBorder;
-class AMainMenuGameMode;
+class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
+class USoundBase;
+class USlider;
+class UComboBoxString;
+
 /**
  * 
  */
 UCLASS()
-class PEACEFULHAZARD_API UMainMenu_LoadWidget : public UUserWidget
+class PEACEFULHAZARD_API UGameOverWidget : public UUserWidget
 {
 	GENERATED_BODY()
-
+	
 public:
 	void BackUIInputTrigger();
 
 protected:
+
+	int32 GetButtonIndex(UButton* button, bool bSaveButtons);
+
+	void ChangeNowHoveringButton(UButton* button, bool bSaveButtons);
+
+	UFUNCTION()
+	void OnSaveButtonClicked();
+	UFUNCTION()
+	void OnSaveButtonHovered();
+	UFUNCTION()
+	void OnSaveButtonUnhovered();
+
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* SaveCanvas;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* ContinueButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* LoadButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* GoTitleButton;
+
+
+
+	UFUNCTION()
+	void OnContinueButtonClicked();
+
+	UFUNCTION()
+	void OnContinueButtonHoverd();
+
+	UFUNCTION()
+	void OnLoadButtonClicked();
+
+	UFUNCTION()
+	void OnLoadButtonHoverd();
+
+	UFUNCTION()
+	void OnGoTitleButtonClicked();
+
+	UFUNCTION()
+	void OnGoTitleButtonHoverd();
+
+
+
 
 	virtual void NativeConstruct() override;
 
@@ -38,28 +90,8 @@ protected:
 	USoundBase* BackSound;
 
 
-	UPROPERTY(meta = (BindWidget))
-	UButton* SettingButton;
 
-	UPROPERTY(meta = (BindWidget))
-	UButton* NewGaemButton;
-
-
-	UFUNCTION()
-	void OnSettingButtonClicked();
-
-	UFUNCTION()
-	void OnNewGameButtonClicked();
-
-	UFUNCTION()
-	void OnSettingButtonHovered();
-
-	UFUNCTION()
-	void OnNewGameButtonHoverd();
-
-
-
-	AMainMenuGameMode* MainMenuGameMode;
+	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 	UPeacFulGameInstance* PeacFulGameInstance;
 
 	UFUNCTION(BlueprintCallable)
@@ -86,24 +118,6 @@ protected:
 
 	UButton* HoveringSaveButton;
 
-	int32 GetButtonIndex(UButton* button, bool bSaveButtons);
-
-	void ChangeNowHoveringButton(UButton* button, bool bSaveButtons);
-
-	UFUNCTION()
-	void OnSaveButtonClicked();
-	UFUNCTION()
-	void OnSaveButtonHovered();
-	UFUNCTION()
-	void OnSaveButtonUnhovered();
-
-	UPROPERTY(meta = (BindWidget))
-	UButton* ContinueButton;
-	UFUNCTION()
-	void OnContinueButtonClicked();
-
-	UFUNCTION()
-	void OnContinueButtonHoverd();
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* SaveButton1;

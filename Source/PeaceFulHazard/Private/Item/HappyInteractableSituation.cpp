@@ -31,7 +31,7 @@ void AHappyInteractableSituation::ListenTirggerOn(EInteractSituationType _situat
 {
 	if ((situationType == EInteractSituationType::EIST_RedTriggerDoor && _situationType == EInteractSituationType::EIST_RedTrigger) || 
 		(situationType == EInteractSituationType::EIST_GreenTriggerDoor && _situationType == EInteractSituationType::EIST_GreenTrigger) ||
-		(situationType == EInteractSituationType::EIST_YellowTriggerDoor && _situationType == EInteractSituationType::EIST_YellowTrigger))
+		(situationType == EInteractSituationType::EIST_YellowTriggerDoor && _situationType == EInteractSituationType::EIST_YellowTrigger)) 
 	{
 		if (PeaceFulHazardGameMode)
 		{
@@ -44,14 +44,13 @@ void AHappyInteractableSituation::ListenTirggerOn(EInteractSituationType _situat
 		}
 
 		AfterInteraction();
-		return;
 	}
 
 	if (situationType == EInteractSituationType::EIST_BlueTriggerDoor && _situationType == EInteractSituationType::EIST_BlueTrigger)
 	{
 		if (PeaceFulHazardGameMode)
 		{
-			FString string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("To Take the key, you should trigger the blue points in this floor") : FString(TEXT("키를 가져가기 위해선, 이 층에 있는 푸른 트리거를 작동 시켜야 한다"));
+			FString string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("Some Door placed in this map opened!") : FString(TEXT("이 구역 어딘가 있는 어떤 문이 열린 것 같다! "));
 
 			if (PeaceFulHazardGameMode->currentMapType == EWarpTarget::EWT_MainCathedral)
 			{

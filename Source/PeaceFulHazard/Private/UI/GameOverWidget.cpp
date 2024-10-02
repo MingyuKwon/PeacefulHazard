@@ -1,51 +1,45 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MainMenu/MainMenu_LoadWidget.h"
-#include "MainMenu/MainMenuGameMode.h"
+#include "UI/GameOverWidget.h"
 #include "Components/Button.h"
 #include "Components/Slider.h"
 #include "Components/ComboBoxString.h"
 #include "Components/CanvasPanel.h"
 #include "Components/Border.h"
 #include "Components/TextBlock.h"
-
+#include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 
 #include "System/PeacFulGameInstance.h"
 #include "System/PeacFulSaveGame.h"
+#include "GameMode/PeaceFulHazardGameMode.h"
 
 #include "Kismet/GameplayStatics.h"
 
-void UMainMenu_LoadWidget::BackUIInputTrigger()
+
+void UGameOverWidget::BackUIInputTrigger()
 {
 	if (GetVisibility() == ESlateVisibility::Hidden) return;
 
-	if (MainMenuGameMode)
-	{
-		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_Default, true);
-	}
+	if (SaveCanvas->GetVisibility() == ESlateVisibility::Hidden) return;
+
+	SaveCanvas->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UMainMenu_LoadWidget::NativeConstruct()
+void UGameOverWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	MainMenuGameMode = Cast<AMainMenuGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	PeacFulGameInstance = Cast<UPeacFulGameInstance>(GetGameInstance());
 
-	if (MainMenuGameMode)
+	if (PeaceFulHazardGameMode)
 	{
-		MainMenuGameMode->SaveFinishedEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
-		MainMenuGameMode->LanguageChangeEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
+		PeaceFulHazardGameMode->SaveFinishedEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
+		PeaceFulHazardGameMode->LanguageChangeEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
 
 	}
-
-	SettingButton->OnClicked.AddDynamic(this, &ThisClass::OnSettingButtonClicked);
-	NewGaemButton->OnClicked.AddDynamic(this, &ThisClass::OnNewGameButtonClicked);
-
-	SettingButton->OnHovered.AddDynamic(this, &ThisClass::OnSettingButtonHovered);
-	NewGaemButton->OnHovered.AddDynamic(this, &ThisClass::OnNewGameButtonHoverd);
 
 	InitArrays();
 
@@ -64,50 +58,23 @@ void UMainMenu_LoadWidget::NativeConstruct()
 	ContinueButton->OnClicked.AddDynamic(this, &ThisClass::OnContinueButtonClicked);
 	ContinueButton->OnHovered.AddDynamic(this, &ThisClass::OnContinueButtonHoverd);
 
+	LoadButton->OnClicked.AddDynamic(this, &ThisClass::OnLoadButtonClicked);
+	LoadButton->OnHovered.AddDynamic(this, &ThisClass::OnLoadButtonHoverd);
+
+	GoTitleButton->OnClicked.AddDynamic(this, &ThisClass::OnGoTitleButtonClicked);
+	GoTitleButton->OnHovered.AddDynamic(this, &ThisClass::OnGoTitleButtonHoverd);
+
+	SaveCanvas->SetVisibility(ESlateVisibility::Hidden);
+
 }
 
-void UMainMenu_LoadWidget::OnSettingButtonClicked()
+
+
+void UGameOverWidget::SetDynamicChangeLanguage(UTextBlock* textBlock, const FText& Englishtext, const FText& Koreantext)
 {
-	if (MainMenuGameMode)
-	{
-		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_Setting, true);
-		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+	if (PeaceFulHazardGameMode == nullptr) return;
 
-	}
-}
-
-void UMainMenu_LoadWidget::OnNewGameButtonClicked()
-{
-	if (MainMenuGameMode)
-	{
-		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_NewGame, true);
-		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
-	}
-}
-
-void UMainMenu_LoadWidget::OnSettingButtonHovered()
-{
-	if (MainMenuGameMode)
-	{
-		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
-
-	}
-}
-
-void UMainMenu_LoadWidget::OnNewGameButtonHoverd()
-{
-	if (MainMenuGameMode)
-	{
-		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
-
-	}
-}
-
-void UMainMenu_LoadWidget::SetDynamicChangeLanguage(UTextBlock* textBlock, const FText& Englishtext, const FText& Koreantext)
-{
-	if (MainMenuGameMode == nullptr) return;
-
-	switch (MainMenuGameMode->GetCurrentLanguage())
+	switch (PeaceFulHazardGameMode->GetCurrentLanguage())
 	{
 	case ELanguage::ED_English:
 		textBlock->SetText(Englishtext);
@@ -120,7 +87,7 @@ void UMainMenu_LoadWidget::SetDynamicChangeLanguage(UTextBlock* textBlock, const
 	}
 }
 
-void UMainMenu_LoadWidget::UpdateAllUI()
+void UGameOverWidget::UpdateAllUI()
 {
 	CheckLanguage();
 
@@ -195,16 +162,16 @@ void UMainMenu_LoadWidget::UpdateAllUI()
 	}
 }
 
-void UMainMenu_LoadWidget::CheckLanguage()
+void UGameOverWidget::CheckLanguage()
 {
-	if (MainMenuGameMode == nullptr) return;
+	if (PeaceFulHazardGameMode == nullptr) return;
 
-	SetLangaugeText(MainMenuGameMode->GetCurrentLanguage());
+	SetLangaugeText(PeaceFulHazardGameMode->GetCurrentLanguage());
 
 }
 
 
-int32 UMainMenu_LoadWidget::GetButtonIndex(UButton* button, bool bSaveButtons)
+int32 UGameOverWidget::GetButtonIndex(UButton* button, bool bSaveButtons)
 {
 	int32 index = 0;
 
@@ -223,29 +190,29 @@ int32 UMainMenu_LoadWidget::GetButtonIndex(UButton* button, bool bSaveButtons)
 	return index < 8 ? index : -1;
 }
 
-void UMainMenu_LoadWidget::ChangeNowHoveringButton(UButton* button, bool bSaveButtons)
+void UGameOverWidget::ChangeNowHoveringButton(UButton* button, bool bSaveButtons)
 {
 	HoveringSaveButton = button;
 
 	UpdateAllUI();
 }
 
-void UMainMenu_LoadWidget::OnSaveButtonClicked()
+void UGameOverWidget::OnSaveButtonClicked()
 {
 	if (HoveringSaveButton == nullptr) return;
-	if (MainMenuGameMode == nullptr) return;
+	if (PeaceFulHazardGameMode == nullptr) return;
 
-	if (MainMenuGameMode)
+	if (PeaceFulHazardGameMode)
 	{
-		MainMenuGameMode->PlayUISound(ButtonClickSound, 1.f);
-		MainMenuGameMode->LoadDataFromSlot(HoveringSaveButton->GetName(), false);
-		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+		PeaceFulHazardGameMode->LoadDataFromSlot(HoveringSaveButton->GetName(), false);
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 0.7f);
 
 	}
 }
 
 
-void UMainMenu_LoadWidget::OnSaveButtonHovered()
+void UGameOverWidget::OnSaveButtonHovered()
 {
 	UButton* FindButton = nullptr;
 
@@ -258,40 +225,75 @@ void UMainMenu_LoadWidget::OnSaveButtonHovered()
 		}
 	}
 
-	if (MainMenuGameMode)
+	if (PeaceFulHazardGameMode)
 	{
-		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 0.5f);
 	}
 
 	ChangeNowHoveringButton(FindButton, true);
 
 }
 
-void UMainMenu_LoadWidget::OnSaveButtonUnhovered()
+void UGameOverWidget::OnSaveButtonUnhovered()
 {
 	ChangeNowHoveringButton(nullptr, true);
 
 }
 
-void UMainMenu_LoadWidget::OnContinueButtonClicked()
+void UGameOverWidget::OnContinueButtonClicked()
 {
-	if (MainMenuGameMode)
+	if (PeaceFulHazardGameMode)
 	{
-		MainMenuGameMode->LoadDataFromContinue();
-		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+		PeaceFulHazardGameMode->ShowLoadingEvent.Broadcast(true);
+		PeaceFulHazardGameMode->LoadDataFromContinue();
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 0.7f);
 
 	}
 }
 
-void UMainMenu_LoadWidget::OnContinueButtonHoverd()
+void UGameOverWidget::OnContinueButtonHoverd()
 {
-	if (MainMenuGameMode)
+	if (PeaceFulHazardGameMode)
 	{
-		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 0.5f);
 	}
 }
 
-void UMainMenu_LoadWidget::InitArrays()
+void UGameOverWidget::OnLoadButtonClicked()
+{
+	SaveCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+}
+
+void UGameOverWidget::OnLoadButtonHoverd()
+{
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
+}
+
+void UGameOverWidget::OnGoTitleButtonClicked()
+{
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+		PeaceFulHazardGameMode->ShowLoadingEvent.Broadcast(true);
+		PeaceFulHazardGameMode->MoveToMainMenu();
+
+	}
+
+}
+
+void UGameOverWidget::OnGoTitleButtonHoverd()
+{
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 0.5f);
+	}
+}
+
+void UGameOverWidget::InitArrays()
 {
 	SaveButtons.Add(SaveButton1);
 	SaveButtons.Add(SaveButton2);
@@ -348,3 +350,4 @@ void UMainMenu_LoadWidget::InitArrays()
 	DifficultyTexts.Add(DifficultyText8);
 
 }
+

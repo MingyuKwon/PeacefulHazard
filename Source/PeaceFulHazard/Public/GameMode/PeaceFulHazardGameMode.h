@@ -165,6 +165,7 @@ public:
 
 	void SetGameBrightness();
 
+	void LoadDataFromContinue();
 
 
 	EPlayerToDo GetPlayerToDo();
@@ -194,6 +195,14 @@ protected:
 
 
 	void PlayBGM();
+
+	UFUNCTION()
+	void PlayerDeathBrightNess();
+
+	UFUNCTION()
+	void DecreaseBrightness();
+
+	FTimerHandle BrightnessTimerHandle;
 
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;

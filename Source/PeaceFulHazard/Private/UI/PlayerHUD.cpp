@@ -11,6 +11,7 @@
 #include "UI/InformationPanelWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameMode/PeaceFulHazardGameMode.h"
+#include "UI/GameOverWidget.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -81,6 +82,23 @@ void APlayerHUD::SetInventoryDisplay(bool bVisible)
         {
             PeaceFulHazardGameMode->PlayUISound(InventoryUIShowSound, 1.f);
         }
+    }
+}
+
+void APlayerHUD::SetGameOverDisplay(bool bVisible)
+{
+    if (!bVisible)
+    {
+        if (GameOverWidget)
+        {
+            InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+        return;
+    }
+
+    if (GameOverWidget)
+    {
+        GameOverWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     }
 }
 
@@ -388,6 +406,11 @@ void APlayerHUD::BackUIInputTrigger()
         ItemBoxWidget->BackUIInputTrigger();
     }
 
+    if (GameOverWidget)
+    {
+        GameOverWidget->BackUIInputTrigger();
+
+    }
 
     if (InformationPanelWidget)
     {
@@ -398,6 +421,7 @@ void APlayerHUD::BackUIInputTrigger()
     {
         PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
     }
+
 }
 
 void APlayerHUD::OkUIInputTrigger()
@@ -539,6 +563,16 @@ void APlayerHUD::BeginPlay()
         }
     }
     
+    if (GameOverWidgetClass != nullptr)
+    {
+        GameOverWidget = CreateWidget<UGameOverWidget>(GetWorld(), GameOverWidgetClass);
+        if (GameOverWidget != nullptr)
+        {
+            GameOverWidget->AddToViewport();
+            GameOverWidget->SetVisibility(ESlateVisibility::Hidden);
+
+        }
+    }
     
 
     SetItemInformationToDisplay();

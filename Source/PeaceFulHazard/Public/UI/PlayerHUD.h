@@ -18,7 +18,7 @@ class USaveWidget;
 class UInformationPanelWidget;
 class USoundBase;
 class APeaceFulHazardGameMode;
-
+class UGameOverWidget;
 /**
  *
  */
@@ -34,6 +34,8 @@ public:
 	void SetAimWide(float value);
 
 	void SetInventoryDisplay(bool bVisible);
+
+	void SetGameOverDisplay(bool bVisible);
 
 	void SetItemBoxDisplay(bool bVisible);
 
@@ -135,6 +137,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<USaveWidget> SaveWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UGameOverWidget> GameOverWidgetClass;
+
 	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Parameter")
@@ -157,7 +162,7 @@ protected:
 
 	USaveWidget* SaveWidget;
 
-
+	UGameOverWidget* GameOverWidget;
 
 	int32 beforeCurrentBulle = -1;
 	int32 beforeMaxBullet = -1;

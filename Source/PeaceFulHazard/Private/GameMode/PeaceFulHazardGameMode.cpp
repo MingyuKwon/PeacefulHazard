@@ -425,8 +425,39 @@ void APeaceFulHazardGameMode::BeginPlay()
         }, 3.f, false);
 
     
+    PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeathBrightNess);
+}
+
+void APeaceFulHazardGameMode::PlayerDeathBrightNess()
+{
+    if (!CachedPostProcessVolume)
+    {
+        CachedPostProcessVolume = Cast<APostProcessVolume>(UGameplayStatics::GetActorOfClass(GetWorld(), APostProcessVolume::StaticClass()));
+    }
+
+    GetWorld()->GetTimerManager().SetTimer(BrightnessTimerHandle, this, &APeaceFulHazardGameMode::DecreaseBrightness, 0.1f, true);
 
 }
+
+void APeaceFulHazardGameMode::DecreaseBrightness()
+{
+    static int32 Counter = 0;  // 반복 횟수를 세기 위한 변수
+
+    if (Counter < 15)
+    {
+        if (CachedPostProcessVolume)
+        {
+            CachedPostProcessVolume->Settings.AutoExposureBias -= 0.3f;
+        }
+        Counter++;
+    }
+    else
+    {
+        GetWorld()->GetTimerManager().ClearTimer(BrightnessTimerHandle);
+        Counter = 0;  // 카운터 초기화
+    }
+}
+
 
 void APeaceFulHazardGameMode::SetGameBrightness()
 {
@@ -536,6 +567,45 @@ void APeaceFulHazardGameMode::SetGameBrightness()
 
 }
 
+void APeaceFulHazardGameMode::LoadDataFromContinue()
+{
+    TArray<FString> slotName;
+    slotName.Add(FString("SaveButton1"));
+    slotName.Add(FString("SaveButton2"));
+    slotName.Add(FString("SaveButton3"));
+    slotName.Add(FString("SaveButton4"));
+    slotName.Add(FString("SaveButton5"));
+    slotName.Add(FString("SaveButton6"));
+    slotName.Add(FString("SaveButton7"));
+    slotName.Add(FString("SaveButton8"));
+
+    FString LatestSlotName = FString();
+    FDateTime LatestSaveTime = FDateTime::MinValue();
+
+    for (FString name : slotName)
+    {
+        if (UGameplayStatics::DoesSaveGameExist(name, 0))
+        {
+            UPeacFulSaveGame* LoadedGame = Cast<UPeacFulSaveGame>(UGameplayStatics::LoadGameFromSlot(name, 0));
+            if (LoadedGame)
+            {
+                FDateTime LoadedSaveTime = LoadedGame->SaveTime;
+
+                if (LoadedSaveTime > LatestSaveTime)
+                {
+                    LatestSaveTime = LoadedSaveTime;
+                    LatestSlotName = name;
+                }
+            }
+        }
+    }
+
+    if (!LatestSlotName.IsEmpty())
+    {
+        LoadDataFromSlot(LatestSlotName, false);
+    }
+}
+
 
 void APeaceFulHazardGameMode::PlayBGM()
 {
@@ -549,6 +619,8 @@ void APeaceFulHazardGameMode::PlayBGM()
     }
     
 }
+
+
 
 void APeaceFulHazardGameMode::PlaySoundInGameplay(USoundBase* Sound, FVector Location, float VolumeScale)
 {

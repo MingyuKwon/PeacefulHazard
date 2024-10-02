@@ -98,7 +98,6 @@ void AHappyPlayerController::BeginPlay()
 
         PeaceFulHazardGameMode->ShowLoadingEvent.AddDynamic(this, &ThisClass::ShowLoadingUI);
 
-
         InitializeInventory();
     }
 
@@ -187,6 +186,12 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
 {
     if (bCinematicShow) return;
 
+    if (ControlledCharacter)
+    {
+        if (ControlledCharacter->bDeath) return;
+
+    }
+
     if (PlayerHUD)
     {
         if (currentUIState == EUIState::EUIS_Notice || currentUIState == EUIState::EUIS_Menu) return;
@@ -216,6 +221,11 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
 void AHappyPlayerController::Menu(const FInputActionValue& Value)
 {
     if (bCinematicShow) return;
+    if (ControlledCharacter)
+    {
+        if (ControlledCharacter->bDeath) return;
+
+    }
 
     if (PlayerHUD)
     {
@@ -333,6 +343,23 @@ void AHappyPlayerController::SetHealth(float changeAmount)
         if (currentHealth <= 0)
         {
             ControlledCharacter->Death();
+
+            bShowMouseCursor = true;
+
+            FInputModeGameAndUI InputMode;
+            InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+            SetInputMode(InputMode);
+
+
+            FTimerHandle timerHandle;
+            GetWorld()->GetTimerManager().SetTimer(timerHandle, [this]() {
+                if (PlayerHUD)
+                {
+                    PlayerHUD->SetGameOverDisplay(true);
+                }
+                SetGamePause(true);
+                }, 2.5f, false);
+
         }
     }
 }
@@ -380,6 +407,8 @@ void AHappyPlayerController::Move(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->Move(Value);
     }
 }
@@ -390,15 +419,10 @@ void AHappyPlayerController::Look(const FInputActionValue& Value)
 
     bool bSuccess = false;
 
-    FVector2D LookAxisVector = Value.Get<FVector2D>();
-    FString text = FString::Printf(TEXT("LookAxisVector : %f, %f"), LookAxisVector.X, LookAxisVector.Y);
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(9, 1.f, FColor::Red, text);
-    }
-
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->Look(Value);
     }
 }
@@ -427,6 +451,7 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
     }
 
     if (bCinematicShow) return;
+    if (ControlledCharacter->bDeath) return;
 
 
     if (ControlledCharacter->GetIsAiming())
@@ -489,6 +514,8 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
 
         if (ControlledCharacter)
         {
+            if (ControlledCharacter->bDeath) return;
+
             bSuccess = ControlledCharacter->AimStart(Value);
         }
     }
@@ -504,6 +531,8 @@ void AHappyPlayerController::RightClickEnd(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->AimEnd(Value);
     }
 }
@@ -516,6 +545,8 @@ void AHappyPlayerController::ShiftStart(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->ShiftStart(Value);
     }
 }
@@ -528,6 +559,8 @@ void AHappyPlayerController::ShiftEnd(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->ShiftEnd(Value);
     }
 }
@@ -540,6 +573,8 @@ void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->EquipTrigger(currentBulletType);
     }
 }
@@ -555,6 +590,8 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
     
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->Reload(Value);
     }
 
@@ -573,6 +610,8 @@ void AHappyPlayerController::ChangeBullet(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->ChangeBullet();
     }
    
