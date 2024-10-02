@@ -196,6 +196,8 @@ void APeaceFulHazardGameMode::SaveTempToSlot()
 
 void APeaceFulHazardGameMode::LoadDataFromSlot(FString slotName, bool bNewGame)
 {
+    if (PeacFulGameInstance == nullptr) return;
+
     if (bNewGame)
     {
         PeacFulGameInstance->RefreshGame();
