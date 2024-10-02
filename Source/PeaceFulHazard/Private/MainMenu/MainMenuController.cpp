@@ -21,8 +21,9 @@ void AMainMenuController::SetupInputComponent()
 
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent)) {
 
-        EnhancedInputComponent->BindAction(RIghtClickAction, ETriggerEvent::Triggered, this, &ThisClass::RIghtClick);
+        EnhancedInputComponent->BindAction(RIghtClickAction, ETriggerEvent::Started, this, &ThisClass::RIghtClick);
         //EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
+        EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Started, this, &ThisClass::LeftClick);
 
         
 
@@ -42,6 +43,11 @@ void AMainMenuController::BeginPlay()
     MainMenuGameMode = Cast<AMainMenuGameMode>(UGameplayStatics::GetGameMode(this));
     MainMenuHUD = Cast<AMainMenuHUD>(GetHUD());
 
+    if (MainMenuGameMode)
+    {
+        MainMenuGameMode->CheckOneMoreMenuEvent.AddDynamic(this, &ThisClass::SetOnceCheckDisplay);
+
+    }
 }
 
 void AMainMenuController::ChangeCameraPosition(EMainMenuType menuType, bool bChangeStart)
@@ -86,12 +92,40 @@ void AMainMenuController::ChangeCameraPosition(EMainMenuType menuType, bool bCha
     }
 }
 
+void AMainMenuController::SetOnceCheckDisplay(bool bVisible, const FText EnglishText, const FText KoreanText)
+{
+    if (MainMenuHUD)
+    {
+        MainMenuHUD->SetOnceCheckDisplay(bVisible, EnglishText, KoreanText);
+    }
+
+}
+
 void AMainMenuController::RIghtClick(const FInputActionValue& Value)
 {
     if (MainMenuHUD)
     {
+        if (MainMenuHUD->GetOneMoreCheckVisible())
+        {
+            MainMenuHUD->OneMoreCheckBackUIInputTrigger();
+            return;
+        }
+
         MainMenuHUD->BackUIInputTrigger();
     }
+}
+
+void AMainMenuController::LeftClick(const FInputActionValue& Value)
+{
+    if (MainMenuHUD)
+    {
+        if (MainMenuHUD->GetOneMoreCheckVisible())
+        {
+            MainMenuHUD->OneMoreCheckOkUIInputTrigger();
+        }
+
+    }
+
 }
 
 void AMainMenuController::Move(const FInputActionValue& Value)

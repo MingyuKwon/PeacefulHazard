@@ -12,6 +12,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMainModeLanguageChangeEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMainModeSaveFinishedEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLoadingShowEvent, float, Opacity);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FCheckOneMoreMenuEvent, bool, bVisible, const FText, EnglishText, const FText, KoreanText);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCheckOneMoreSuccessMenuEvent);
+
 /**
  * 
  */
@@ -37,6 +40,13 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FLoadingShowEvent LoadingShowEvent;
+
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FCheckOneMoreMenuEvent CheckOneMoreMenuEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FCheckOneMoreSuccessMenuEvent CheckOneMoreSuccessMenuEvent;
 
 	
 	UFUNCTION()

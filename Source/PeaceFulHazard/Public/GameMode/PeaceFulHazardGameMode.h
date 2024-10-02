@@ -42,6 +42,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FShowLoadingEvent, bool, bVisible);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCinematicPlayEvent, bool, bPlay);
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FCheckOneMoreGameEvent, bool, bVisible, const FText, EnglishText, const FText, KoreanText);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCheckOneMoreSuccessGameEvent);
+
+
+
 class UPeacFulGameInstance;
 class USoundBase;
 class UAudioComponent;
@@ -128,6 +133,15 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FCinematicPlayEvent CinematicPlayEvent;
+
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FCheckOneMoreGameEvent CheckOneMoreGameEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FCheckOneMoreSuccessGameEvent CheckOneMoreSuccessGameEvent;
+
+
 	
 	void SaveSettingValue();
 	void LoadSettingValue();
@@ -165,6 +179,7 @@ public:
 
 	void SetGameBrightness();
 
+	void LoadDataFromContinue();
 
 
 	EPlayerToDo GetPlayerToDo();
@@ -186,6 +201,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	TMap<EWarpTarget, USoundBase*> BackgroundMusics;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* GameOverMusic;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Audio")
 	UAudioComponent* BGMAudioComponent;
 
@@ -194,6 +212,14 @@ protected:
 
 
 	void PlayBGM();
+
+	UFUNCTION()
+	void PlayerDeath();
+
+	UFUNCTION()
+	void DecreaseBrightness();
+
+	FTimerHandle BrightnessTimerHandle;
 
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;

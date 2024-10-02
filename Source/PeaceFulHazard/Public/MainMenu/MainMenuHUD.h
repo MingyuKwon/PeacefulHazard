@@ -13,6 +13,8 @@ class UMainMenu_LoadWidget;
 class UMainMenu_DefaultWidget;
 class UMainMenuLoadingWidget;
 
+class UCheckOnceMoreWidget;
+
 class AMainMenuGameMode;
 /**
  * 
@@ -24,6 +26,14 @@ class PEACEFULHAZARD_API AMainMenuHUD : public AHUD
 	
 public:
 	void BackUIInputTrigger();
+
+	void OneMoreCheckBackUIInputTrigger();
+	void OneMoreCheckOkUIInputTrigger();
+	bool GetOneMoreCheckVisible();
+
+	UFUNCTION()
+	void SetOnceCheckDisplay(bool bVisible, const FText EnglishText = FText(), const FText KoreanText = FText());
+
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
@@ -41,7 +51,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UMainMenuLoadingWidget> MainMenuLoadingWidgetClass;
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Parameter", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UCheckOnceMoreWidget> CheckOnceMoreWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Para")
+	USoundBase* BackUISound;
 
 	virtual void BeginPlay() override;
 
@@ -66,5 +80,7 @@ protected:
 
 	UPROPERTY()
 	UMainMenuLoadingWidget* MainMenuLoadingWidget;
+
+	UCheckOnceMoreWidget* CheckOnceMoreWidget;
 
 };

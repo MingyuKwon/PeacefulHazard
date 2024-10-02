@@ -99,6 +99,11 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->ShowLoadingEvent.AddDynamic(this, &ThisClass::ShowLoadingUI);
 
 
+
+
+        PeaceFulHazardGameMode->CheckOneMoreGameEvent.AddDynamic(this, &ThisClass::SetOnceCheckDisplay);
+
+        
         InitializeInventory();
     }
 
@@ -159,6 +164,14 @@ void AHappyPlayerController::UpdateValue()
     }
 }
 
+void AHappyPlayerController::SetOnceCheckDisplay(bool bVisible, const FText EnglishText, const FText KoreanText)
+{
+    if (PlayerHUD)
+    {
+        PlayerHUD->SetOnceCheckDisplay(bVisible,  EnglishText, KoreanText);
+    }
+}
+
 void AHappyPlayerController::InitializeInventory()
 {
     CharacterInventoty.ItemLockArray.Init(false, 5);
@@ -186,6 +199,12 @@ void AHappyPlayerController::InitializeInventory()
 void AHappyPlayerController::Tab(const FInputActionValue& Value)
 {
     if (bCinematicShow) return;
+
+    if (ControlledCharacter)
+    {
+        if (ControlledCharacter->bDeath) return;
+
+    }
 
     if (PlayerHUD)
     {
@@ -216,6 +235,11 @@ void AHappyPlayerController::Tab(const FInputActionValue& Value)
 void AHappyPlayerController::Menu(const FInputActionValue& Value)
 {
     if (bCinematicShow) return;
+    if (ControlledCharacter)
+    {
+        if (ControlledCharacter->bDeath) return;
+
+    }
 
     if (PlayerHUD)
     {
@@ -333,6 +357,23 @@ void AHappyPlayerController::SetHealth(float changeAmount)
         if (currentHealth <= 0)
         {
             ControlledCharacter->Death();
+
+            bShowMouseCursor = true;
+
+            FInputModeGameAndUI InputMode;
+            InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+            SetInputMode(InputMode);
+
+
+            FTimerHandle timerHandle;
+            GetWorld()->GetTimerManager().SetTimer(timerHandle, [this]() {
+                if (PlayerHUD)
+                {
+                    PlayerHUD->SetGameOverDisplay(true);
+                }
+                SetGamePause(true);
+                }, 2.5f, false);
+
         }
     }
 }
@@ -380,6 +421,8 @@ void AHappyPlayerController::Move(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->Move(Value);
     }
 }
@@ -390,15 +433,10 @@ void AHappyPlayerController::Look(const FInputActionValue& Value)
 
     bool bSuccess = false;
 
-    FVector2D LookAxisVector = Value.Get<FVector2D>();
-    FString text = FString::Printf(TEXT("LookAxisVector : %f, %f"), LookAxisVector.X, LookAxisVector.Y);
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(9, 1.f, FColor::Red, text);
-    }
-
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->Look(Value);
     }
 }
@@ -413,6 +451,13 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
     {
         if (PlayerHUD)
         {
+            if (PlayerHUD->GetOneMoreCheckVisible())
+            {
+                PlayerHUD->OneMoreCheckOkUIInputTrigger();
+                return;
+            }
+
+
             if (currentUIState == EUIState::EUIS_Notice)
             {
                 PlayerHUD->BackNoticeUIInputTrigger();
@@ -427,6 +472,7 @@ void AHappyPlayerController::Action(const FInputActionValue& Value)
     }
 
     if (bCinematicShow) return;
+    if (ControlledCharacter->bDeath) return;
 
 
     if (ControlledCharacter->GetIsAiming())
@@ -467,6 +513,12 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
     {
         if (PlayerHUD)
         {
+            if (PlayerHUD->GetOneMoreCheckVisible())
+            {
+                PlayerHUD->OneMoreCheckBackUIInputTrigger();
+                return;
+            }
+
             if (currentUIState == EUIState::EUIS_Notice)
             {
                 PlayerHUD->BackNoticeUIInputTrigger();
@@ -489,6 +541,8 @@ void AHappyPlayerController::RIghtClickStart(const FInputActionValue& Value)
 
         if (ControlledCharacter)
         {
+            if (ControlledCharacter->bDeath) return;
+
             bSuccess = ControlledCharacter->AimStart(Value);
         }
     }
@@ -504,6 +558,8 @@ void AHappyPlayerController::RightClickEnd(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->AimEnd(Value);
     }
 }
@@ -516,6 +572,8 @@ void AHappyPlayerController::ShiftStart(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->ShiftStart(Value);
     }
 }
@@ -528,6 +586,8 @@ void AHappyPlayerController::ShiftEnd(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->ShiftEnd(Value);
     }
 }
@@ -540,6 +600,8 @@ void AHappyPlayerController::EquipTrigger(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->EquipTrigger(currentBulletType);
     }
 }
@@ -555,6 +617,8 @@ void AHappyPlayerController::Reload(const FInputActionValue& Value)
     
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->Reload(Value);
     }
 
@@ -573,6 +637,8 @@ void AHappyPlayerController::ChangeBullet(const FInputActionValue& Value)
 
     if (ControlledCharacter)
     {
+        if (ControlledCharacter->bDeath) return;
+
         bSuccess = ControlledCharacter->ChangeBullet();
     }
    
@@ -1322,7 +1388,21 @@ bool AHappyPlayerController::ChangeItemInventoryArray(EItemType itemType, int32 
     
     if (!CanGetItem(itemType, count)) return false;
 
-    if (!IsInventoryFull())
+    int32 MaxCountUnit = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
+
+    int index = 0; // show last item box, which has same item type
+    for (index = 0; index < 15; index++)
+    {
+        if (CharacterInventoty.inventoryItems[index] == itemType && CharacterInventoty.inventoryItemCounts[index] < MaxCountUnit)
+        {
+            break;
+        }
+
+    }
+
+    // if index == 15, should make new slot to obtain item
+
+    if (index >= 15)
     {
         int32 Emptyindex = 0;
         for (EItemType InventoryitemType : CharacterInventoty.inventoryItems)
@@ -1338,29 +1418,19 @@ bool AHappyPlayerController::ChangeItemInventoryArray(EItemType itemType, int32 
         CharacterInventoty.inventoryItems[Emptyindex] = itemType;
         CharacterInventoty.inventoryItemCounts[Emptyindex] = count;
 
-        if (CharacterInventoty.inventoryItemCounts[Emptyindex] > ItemInformation->ItemInformationMap[itemType].itemMaxCount)
+        if (CharacterInventoty.inventoryItemCounts[Emptyindex] > MaxCountUnit)
         {
-            if (!ChangeItemInventoryArray(itemType, CharacterInventoty.inventoryItemCounts[Emptyindex] - ItemInformation->ItemInformationMap[itemType].itemMaxCount)) return false;
+            int32 itemOverflow = CharacterInventoty.inventoryItemCounts[Emptyindex] - MaxCountUnit;
+            CharacterInventoty.inventoryItemCounts[Emptyindex] = MaxCountUnit;
 
-            CharacterInventoty.inventoryItemCounts[Emptyindex] = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
+
+            if (!ChangeItemInventoryArray(itemType, itemOverflow)) return false;
+
         }
+
     }
     else
     {
-        // inventory is full but free space is enough to get the item
-
-        int32 MaxCountUnit = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
-
-        int index = 0;
-        for (index = 0; index < 15; index++)
-        {
-            if (CharacterInventoty.inventoryItems[index] == itemType && CharacterInventoty.inventoryItemCounts[index] < MaxCountUnit)
-            {
-                break;
-            }
-
-        }
-
         int32 FreeSpace = MaxCountUnit - CharacterInventoty.inventoryItemCounts[index];
         FreeSpace = FMath::Clamp(FreeSpace, 0, count);
 
@@ -1373,8 +1443,6 @@ bool AHappyPlayerController::ChangeItemInventoryArray(EItemType itemType, int32 
         }
 
     }
-
-    
 
     UpdateAllUI();
     return true;

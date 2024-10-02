@@ -69,6 +69,10 @@ protected:
 	void OnSaveButtonUnhovered();
 
 	UFUNCTION()
+	void OnceSaveButtonClickedSuccess();
+
+
+	UFUNCTION()
 	void OnDeleteButtonClicked();
 	UFUNCTION()
 	void OnDeleteButtonHovered();
@@ -76,9 +80,16 @@ protected:
 	void OnDeleteButtonUnhovered();
 
 	UFUNCTION()
+	void OnceDeleteButtonClickedSuccess();
+
+
+	UFUNCTION()
 	void OnNewButtonClicked();
 	UFUNCTION()
 	void OnNewButtonHovered();
+
+	UFUNCTION()
+	void OnceNewButtonClickedSuccess();
 
 
 	virtual void NativeConstruct() override;
@@ -99,6 +110,10 @@ protected:
 	UButton* HoveringSaveButton;
 	UButton* HoveringDeleteButton;
 
+	FString CheckCallBackHoveringSaveButtonName;
+	int32  CheckCallBackHoveringDeleteButtonindex;
+
+
 	TArray<UButton*> SaveButtons;
 	TArray<UButton*> DeleteButtons;
 
@@ -113,6 +128,11 @@ protected:
 	void OnOptionButtonClicked();
 	UFUNCTION()
 	void OnExitButtonClicked();
+
+
+	UFUNCTION()
+	void OnceExitButtonSuccess();
+
 
 
 	UPROPERTY(meta = (BindWidget))

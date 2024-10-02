@@ -74,16 +74,42 @@ void USaveWidget::OnSaveButtonClicked()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+
+		CheckCallBackHoveringSaveButtonName = HoveringSaveButton->GetName();
+
+		if (!CheckCallBackHoveringSaveButtonName.IsEmpty())
+		{
+			FString EnglishMessage = bSaveMode
+				? FString::Printf(TEXT("Do you want to save in slot \"%s\"?"), *CheckCallBackHoveringSaveButtonName)
+				: FString::Printf(TEXT("Do you want to load from slot \"%s\"?"), *CheckCallBackHoveringSaveButtonName);
+
+			FString KoreanMessage = bSaveMode
+				? FString::Printf(TEXT("\"%s\" 슬롯에 저장하시겠습니까?"), *CheckCallBackHoveringSaveButtonName)
+				: FString::Printf(TEXT("\"%s\" 슬롯을 불러오겠습니까?"), *CheckCallBackHoveringSaveButtonName);
+
+			PeaceFulHazardGameMode->CheckOneMoreGameEvent.Broadcast(true, FText::FromString(EnglishMessage), FText::FromString(KoreanMessage));
+			PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.AddDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
+		}		
+
 	}
+
+}
+
+void USaveWidget::OnceSaveButtonClickedSuccess()
+{
+	if (CheckCallBackHoveringSaveButtonName.IsEmpty()) return;
 
 	if (bSaveMode)
 	{
-		PeaceFulHazardGameMode->SaveDataToSlot(HoveringSaveButton->GetName());
+		PeaceFulHazardGameMode->SaveDataToSlot(CheckCallBackHoveringSaveButtonName);
 	}
 	else
 	{
-		PeaceFulHazardGameMode->LoadDataFromSlot(HoveringSaveButton->GetName(), false);
+		PeaceFulHazardGameMode->LoadDataFromSlot(CheckCallBackHoveringSaveButtonName, false);
 	}
+	CheckCallBackHoveringSaveButtonName = FString("");
+	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
+
 }
 
 void USaveWidget::OnSaveButtonHovered()
@@ -113,6 +139,8 @@ void USaveWidget::OnSaveButtonUnhovered()
 	ChangeNowHoveringButton(nullptr, true);
 }
 
+
+
 void USaveWidget::OnDeleteButtonClicked()
 {
 	if (!bSaveMode) return;
@@ -123,12 +151,34 @@ void USaveWidget::OnDeleteButtonClicked()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+
+		CheckCallBackHoveringDeleteButtonindex = index;
+
+		FString ButtonName = SaveButtons[CheckCallBackHoveringDeleteButtonindex]->GetName();
+		FString EnglishMessage = FString::Printf(TEXT("Do you want to delete slot \"%s\"?"), *ButtonName);
+		FString KoreanMessage = FString::Printf(TEXT("\"%s\" 슬롯을 삭제 하시겠습니까?"), *ButtonName);
+
+		PeaceFulHazardGameMode->CheckOneMoreGameEvent.Broadcast(true, FText::FromString(EnglishMessage), FText::FromString(KoreanMessage));
+		PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.AddDynamic(this, &ThisClass::OnceDeleteButtonClickedSuccess);
+
 	}
 
-	if (bSaveMode)
+	
+}
+
+void USaveWidget::OnceDeleteButtonClickedSuccess()
+{
+	if (CheckCallBackHoveringDeleteButtonindex >= 0 && CheckCallBackHoveringDeleteButtonindex < 8)
 	{
-		PeaceFulHazardGameMode->DeleteDataFromSlot(SaveButtons[index]->GetName());
+		if (bSaveMode)
+		{
+			PeaceFulHazardGameMode->DeleteDataFromSlot(SaveButtons[CheckCallBackHoveringDeleteButtonindex]->GetName());
+		}
 	}
+
+	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceDeleteButtonClickedSuccess);
+
+
 }
 
 void USaveWidget::OnDeleteButtonHovered()
@@ -165,6 +215,8 @@ void USaveWidget::OnDeleteButtonUnhovered()
 
 }
 
+
+
 void USaveWidget::OnNewButtonClicked()
 {
 	if (bSaveMode) return;
@@ -174,9 +226,11 @@ void USaveWidget::OnNewButtonClicked()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
+		PeaceFulHazardGameMode->CheckOneMoreGameEvent.Broadcast(true, FText::FromString(FString("Play a new game? \n(Difficulty will not change)")), FText::FromString(FString(TEXT("새 게임을 시작하시겠습니까? \n(난이도는 유지 됩니다)"))));
+		PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.AddDynamic(this, &ThisClass::OnceNewButtonClickedSuccess);
+
 	}
 
-	PeaceFulHazardGameMode->LoadDataFromSlot(FString(""), true);
 
 }
 
@@ -186,6 +240,17 @@ void USaveWidget::OnNewButtonHovered()
 	{
 		PeaceFulHazardGameMode->PlayUISound(ButtonHoverSound, 1.f);
 	}
+}
+
+void USaveWidget::OnceNewButtonClickedSuccess()
+{
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->LoadDataFromSlot(FString(""), true);
+		PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceNewButtonClickedSuccess);
+
+	}
+
 }
 
 void USaveWidget::CheckLanguage()
@@ -342,8 +407,6 @@ void USaveWidget::OnLanguageDropDownChanged(FString SelectedItem, ESelectInfo::T
 
 void USaveWidget::OnDefaultMouseSensibilityValueChanged(float Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnDefaultMouseSensibilityValueChanged Out: %f"), Value);
-
 	if (DefaultMouseSensibility && DefaultMouseSensibilityFill)
 	{
 		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(DefaultMouseSensibilityFill->Slot);
@@ -351,8 +414,6 @@ void USaveWidget::OnDefaultMouseSensibilityValueChanged(float Value)
 
 		if (CanvasSlotFill)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("OnDefaultMouseSensibilityValueChanged In: %f"), Value);
-
 			FMargin NewOffsets = CanvasSlotFill->GetOffsets();
 			NewOffsets.Right = maxDefaultMouseSensibilityFill * (1 - Value);
 			CanvasSlotFill->SetOffsets(NewOffsets);
@@ -371,8 +432,6 @@ void USaveWidget::OnAimMouseSensibilityValueChanged(float Value)
 	if (AimMouseSensibility && AimMouseSensibilityFill)
 	{
 		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(AimMouseSensibilityFill->Slot);
-
-		UE_LOG(LogTemp, Warning, TEXT("OnAimMouseSensibilityValueChanged Out: %f"), Value);
 
 		if (CanvasSlotFill)
 		{
@@ -536,10 +595,19 @@ void USaveWidget::OnExitButtonClicked()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->PlayUISound(ButtonClickSound, 1.f);
-		PeaceFulHazardGameMode->ShowLoadingEvent.Broadcast(true);
-		PeaceFulHazardGameMode->MoveToMainMenu();
 
+		PeaceFulHazardGameMode->CheckOneMoreGameEvent.Broadcast(true, FText::FromString(FString("Do you want to go back to Title Menu? \n(Unsaved Data will be deleted)")), FText::FromString(FString(TEXT("타이틀로 돌아가시겠습니까? \n(저장되지 않은 정보는 없어집니다)"))));
+		PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.AddDynamic(this, &ThisClass::OnceExitButtonSuccess);
 	}
+}
+
+void USaveWidget::OnceExitButtonSuccess()
+{
+	PeaceFulHazardGameMode->ShowLoadingEvent.Broadcast(true);
+	PeaceFulHazardGameMode->MoveToMainMenu();
+
+	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceExitButtonSuccess);
+
 }
 
 

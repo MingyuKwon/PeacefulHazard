@@ -63,6 +63,10 @@ protected:
 	void OnGameStartButtonlicked();
 
 	UFUNCTION()
+	void OnceGameStartButtonlickedSuccess();
+
+
+	UFUNCTION()
 	void OnGameStartButtonHoverd();
 
 

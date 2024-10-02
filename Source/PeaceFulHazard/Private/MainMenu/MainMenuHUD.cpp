@@ -11,6 +11,8 @@
 #include "MainMenu/MainMenuGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "UI/CheckOnceMoreWidget.h"
+
 void AMainMenuHUD::BackUIInputTrigger()
 {
     if (MainMenu_NewGameWidget)
@@ -32,6 +34,48 @@ void AMainMenuHUD::BackUIInputTrigger()
     {
         MainMenu_DefaultWidget->BackUIInputTrigger();
     }
+}
+
+void AMainMenuHUD::OneMoreCheckBackUIInputTrigger()
+{
+    if (CheckOnceMoreWidget)
+    {
+        CheckOnceMoreWidget->BackUIInputTrigger();
+    }
+
+    if (MainMenuGameMode)
+    {
+        MainMenuGameMode->PlayUISound(BackUISound, 0.5f);
+    }
+}
+
+void AMainMenuHUD::OneMoreCheckOkUIInputTrigger()
+{
+    if (CheckOnceMoreWidget)
+    {
+        CheckOnceMoreWidget->OkUIInputTrigger();
+    }
+}
+
+bool AMainMenuHUD::GetOneMoreCheckVisible()
+{
+    if (CheckOnceMoreWidget)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("CheckOnceMoreWidget->GetVisibility() %s"), CheckOnceMoreWidget->GetVisibility() != ESlateVisibility::Hidden ? *FString("True") : *FString("False"));
+        return CheckOnceMoreWidget->GetVisibility() != ESlateVisibility::Hidden;
+    }
+
+    return false;
+
+}
+
+void AMainMenuHUD::SetOnceCheckDisplay(bool bVisible, const FText EnglishText, const FText KoreanText)
+{
+    if (CheckOnceMoreWidget)
+    {
+        CheckOnceMoreWidget->SetOneMoreDisplay(bVisible, EnglishText, KoreanText);
+    }
+
 }
 
 void AMainMenuHUD::BeginPlay()
@@ -95,6 +139,16 @@ void AMainMenuHUD::BeginPlay()
 
     }
 
+    if (CheckOnceMoreWidgetClass != nullptr)
+    {
+        CheckOnceMoreWidget = CreateWidget<UCheckOnceMoreWidget>(GetWorld(), CheckOnceMoreWidgetClass);
+        if (CheckOnceMoreWidget != nullptr)
+        {
+            CheckOnceMoreWidget->AddToViewport();
+            CheckOnceMoreWidget->SetVisibility(ESlateVisibility::Hidden);
+
+        }
+    }
 
 }
 

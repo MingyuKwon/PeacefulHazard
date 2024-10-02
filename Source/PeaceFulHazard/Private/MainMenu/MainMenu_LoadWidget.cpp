@@ -62,6 +62,8 @@ void UMainMenu_LoadWidget::NativeConstruct()
 	}
 
 	ContinueButton->OnClicked.AddDynamic(this, &ThisClass::OnContinueButtonClicked);
+	ContinueButton->OnHovered.AddDynamic(this, &ThisClass::OnContinueButtonHoverd);
+
 }
 
 void UMainMenu_LoadWidget::OnSettingButtonClicked()
@@ -236,12 +238,32 @@ void UMainMenu_LoadWidget::OnSaveButtonClicked()
 	if (MainMenuGameMode)
 	{
 		MainMenuGameMode->PlayUISound(ButtonClickSound, 1.f);
-		MainMenuGameMode->LoadDataFromSlot(HoveringSaveButton->GetName(), false);
-		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
+
+		CheckCallBackHoveringSaveButtonName = HoveringSaveButton->GetName();
+
+		if (!CheckCallBackHoveringSaveButtonName.IsEmpty())
+		{
+			FString EnglishMessage = FString::Printf(TEXT("Do you want to load from slot \"%s\"?"), *CheckCallBackHoveringSaveButtonName);
+			FString KoreanMessage =  FString::Printf(TEXT("\"%s\" 슬롯을 불러오겠습니까?"), *CheckCallBackHoveringSaveButtonName);
+
+			MainMenuGameMode->CheckOneMoreMenuEvent.Broadcast(true, FText::FromString(EnglishMessage), FText::FromString(KoreanMessage));
+			MainMenuGameMode->CheckOneMoreSuccessMenuEvent.AddDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
+		}
+
 
 	}
 }
 
+void UMainMenu_LoadWidget::OnceSaveButtonClickedSuccess()
+{
+	if (CheckCallBackHoveringSaveButtonName.IsEmpty()) return;
+	if (MainMenuGameMode == nullptr) return;
+
+	MainMenuGameMode->LoadDataFromSlot(CheckCallBackHoveringSaveButtonName, false);
+	CheckCallBackHoveringSaveButtonName = FString("");
+	MainMenuGameMode->CheckOneMoreSuccessMenuEvent.RemoveDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
+
+}
 
 void UMainMenu_LoadWidget::OnSaveButtonHovered()
 {
@@ -271,14 +293,34 @@ void UMainMenu_LoadWidget::OnSaveButtonUnhovered()
 
 }
 
+
+
 void UMainMenu_LoadWidget::OnContinueButtonClicked()
 {
 	if (MainMenuGameMode)
 	{
-		MainMenuGameMode->LoadDataFromContinue();
 		MainMenuGameMode->PlayUISound(ButtonClickSound, 0.7f);
 
+		FString EnglishMessage = FString::Printf(TEXT("Do you want to continue last game? "));
+
+		FString KoreanMessage = FString::Printf(TEXT("가장 최근 게임을 이어서 하시겠습니까?"));
+
+		MainMenuGameMode->CheckOneMoreMenuEvent.Broadcast(true, FText::FromString(EnglishMessage), FText::FromString(KoreanMessage));
+		MainMenuGameMode->CheckOneMoreSuccessMenuEvent.AddDynamic(this, &ThisClass::OnceContinueButtonClickedSuccess);
+
+
 	}
+}
+
+void UMainMenu_LoadWidget::OnceContinueButtonClickedSuccess()
+{
+	if (MainMenuGameMode)
+	{
+		MainMenuGameMode->LoadDataFromContinue();
+		MainMenuGameMode->CheckOneMoreSuccessMenuEvent.RemoveDynamic(this, &ThisClass::OnceContinueButtonClickedSuccess);
+
+	}
+
 }
 
 void UMainMenu_LoadWidget::OnContinueButtonHoverd()
@@ -288,6 +330,8 @@ void UMainMenu_LoadWidget::OnContinueButtonHoverd()
 		MainMenuGameMode->PlayUISound(ButtonHoverSound, 0.5f);
 	}
 }
+
+
 
 void UMainMenu_LoadWidget::InitArrays()
 {

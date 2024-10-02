@@ -154,15 +154,9 @@ void AWeapon::Fire(FVector CameraPosition, FVector CameraNormalVector, float dam
         FVector RandomDirection = FMath::VRand(); // 랜덤 방향
         FVector RandomPointInSphere = SphereCenter + RandomDirection * FMath::FRandRange(0.f, SphereRadius);
 
-        DrawDebugSphere(GetWorld(), SphereCenter, SphereRadius, 12, FColor::Red, false, 3.f);
+        //DrawDebugSphere(GetWorld(), SphereCenter, SphereRadius, 12, FColor::Red, false, 3.f);
 
         bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, Start + (RandomPointInSphere - Start).GetSafeNormal() * 10000.0f, ECC_Visibility, Params);
-
-        if (bHit)
-        {
-            DrawDebugLine(GetWorld(), HitResult.ImpactPoint, Start, FColor::Blue, false, 3.f);
-        }
-
     }
 
     if (PeaceFulHazardGameMode)

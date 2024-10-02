@@ -11,6 +11,8 @@
 #include "UI/InformationPanelWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameMode/PeaceFulHazardGameMode.h"
+#include "UI/GameOverWidget.h"
+#include "UI/CheckOnceMoreWidget.h"
 
 void APlayerHUD::DrawHUD()
 {
@@ -81,6 +83,23 @@ void APlayerHUD::SetInventoryDisplay(bool bVisible)
         {
             PeaceFulHazardGameMode->PlayUISound(InventoryUIShowSound, 1.f);
         }
+    }
+}
+
+void APlayerHUD::SetGameOverDisplay(bool bVisible)
+{
+    if (!bVisible)
+    {
+        if (GameOverWidget)
+        {
+            InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+        return;
+    }
+
+    if (GameOverWidget)
+    {
+        GameOverWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     }
 }
 
@@ -207,6 +226,14 @@ void APlayerHUD::ShowLoadingUI(bool bVisible)
     else
     {
         bBeforeLoadingShow = true;
+    }
+}
+
+void APlayerHUD::SetOnceCheckDisplay(bool bVisible, const FText EnglishText, const FText KoreanText)
+{
+    if (CheckOnceMoreWidget)
+    {
+        CheckOnceMoreWidget->SetOneMoreDisplay(bVisible, EnglishText, KoreanText);
     }
 }
 
@@ -388,16 +415,26 @@ void APlayerHUD::BackUIInputTrigger()
         ItemBoxWidget->BackUIInputTrigger();
     }
 
+    if (GameOverWidget)
+    {
+        GameOverWidget->BackUIInputTrigger();
+
+    }
 
     if (InformationPanelWidget)
     {
         InformationPanelWidget->BackUIInputTrigger();
     }
 
+
+
     if (PeaceFulHazardGameMode)
     {
         PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
     }
+
+
+
 }
 
 void APlayerHUD::OkUIInputTrigger()
@@ -426,6 +463,29 @@ void APlayerHUD::OkUIInputTrigger()
     {
         SaveWidget->OkUIInputTrigger();
     }
+
+    
+}
+
+void APlayerHUD::OneMoreCheckBackUIInputTrigger()
+{
+    if (CheckOnceMoreWidget)
+    {
+        CheckOnceMoreWidget->BackUIInputTrigger();
+    }
+
+    if (PeaceFulHazardGameMode)
+    {
+        PeaceFulHazardGameMode->PlayUISound(BackUISound, 0.5f);
+    }
+}
+
+void APlayerHUD::OneMoreCheckOkUIInputTrigger()
+{
+    if (CheckOnceMoreWidget)
+    {
+        CheckOnceMoreWidget->OkUIInputTrigger();
+    }
 }
 
 bool APlayerHUD::GetCanCloseTab()
@@ -433,6 +493,16 @@ bool APlayerHUD::GetCanCloseTab()
     if (InventoryWidget)
     {
         return !(InventoryWidget->InteractLock);
+    }
+
+    return false;
+}
+
+bool APlayerHUD::GetOneMoreCheckVisible()
+{
+    if (CheckOnceMoreWidget)
+    {
+        return CheckOnceMoreWidget->GetVisibility() != ESlateVisibility::Hidden;
     }
 
     return false;
@@ -539,6 +609,27 @@ void APlayerHUD::BeginPlay()
         }
     }
     
+    if (GameOverWidgetClass != nullptr)
+    {
+        GameOverWidget = CreateWidget<UGameOverWidget>(GetWorld(), GameOverWidgetClass);
+        if (GameOverWidget != nullptr)
+        {
+            GameOverWidget->AddToViewport();
+            GameOverWidget->SetVisibility(ESlateVisibility::Hidden);
+
+        }
+    }
+
+    if (CheckOnceMoreWidgetClass != nullptr)
+    {
+        CheckOnceMoreWidget = CreateWidget<UCheckOnceMoreWidget>(GetWorld(), CheckOnceMoreWidgetClass);
+        if (CheckOnceMoreWidget != nullptr)
+        {
+            CheckOnceMoreWidget->AddToViewport();
+            CheckOnceMoreWidget->SetVisibility(ESlateVisibility::Hidden);
+
+        }
+    }
     
 
     SetItemInformationToDisplay();
