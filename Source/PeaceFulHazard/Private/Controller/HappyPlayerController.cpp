@@ -1322,7 +1322,21 @@ bool AHappyPlayerController::ChangeItemInventoryArray(EItemType itemType, int32 
     
     if (!CanGetItem(itemType, count)) return false;
 
-    if (!IsInventoryFull())
+    int32 MaxCountUnit = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
+
+    int index = 0; // show last item box, which has same item type
+    for (index = 0; index < 15; index++)
+    {
+        if (CharacterInventoty.inventoryItems[index] == itemType && CharacterInventoty.inventoryItemCounts[index] < MaxCountUnit)
+        {
+            break;
+        }
+
+    }
+
+    // if index == 15, should make new slot to obtain item
+
+    if (index >= 15)
     {
         int32 Emptyindex = 0;
         for (EItemType InventoryitemType : CharacterInventoty.inventoryItems)
@@ -1338,29 +1352,19 @@ bool AHappyPlayerController::ChangeItemInventoryArray(EItemType itemType, int32 
         CharacterInventoty.inventoryItems[Emptyindex] = itemType;
         CharacterInventoty.inventoryItemCounts[Emptyindex] = count;
 
-        if (CharacterInventoty.inventoryItemCounts[Emptyindex] > ItemInformation->ItemInformationMap[itemType].itemMaxCount)
+        if (CharacterInventoty.inventoryItemCounts[Emptyindex] > MaxCountUnit)
         {
-            if (!ChangeItemInventoryArray(itemType, CharacterInventoty.inventoryItemCounts[Emptyindex] - ItemInformation->ItemInformationMap[itemType].itemMaxCount)) return false;
+            int32 itemOverflow = CharacterInventoty.inventoryItemCounts[Emptyindex] - MaxCountUnit;
+            CharacterInventoty.inventoryItemCounts[Emptyindex] = MaxCountUnit;
 
-            CharacterInventoty.inventoryItemCounts[Emptyindex] = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
+
+            if (!ChangeItemInventoryArray(itemType, itemOverflow)) return false;
+
         }
+
     }
     else
     {
-        // inventory is full but free space is enough to get the item
-
-        int32 MaxCountUnit = ItemInformation->ItemInformationMap[itemType].itemMaxCount;
-
-        int index = 0;
-        for (index = 0; index < 15; index++)
-        {
-            if (CharacterInventoty.inventoryItems[index] == itemType && CharacterInventoty.inventoryItemCounts[index] < MaxCountUnit)
-            {
-                break;
-            }
-
-        }
-
         int32 FreeSpace = MaxCountUnit - CharacterInventoty.inventoryItemCounts[index];
         FreeSpace = FMath::Clamp(FreeSpace, 0, count);
 
@@ -1373,8 +1377,6 @@ bool AHappyPlayerController::ChangeItemInventoryArray(EItemType itemType, int32 
         }
 
     }
-
-    
 
     UpdateAllUI();
     return true;
