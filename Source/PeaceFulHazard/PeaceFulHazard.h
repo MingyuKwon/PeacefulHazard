@@ -41,6 +41,8 @@ enum class EItemType : uint8
     EIT_CathedralLockKey,
     EIST_GardenLockKey,
 
+    EIST_Treasure,
+
     EIT_Max
 };
 
@@ -72,6 +74,9 @@ enum class ETutorialType : uint8
     ETT_UIShowInventory,
 
     ETT_WarpExplain,
+
+    ETT_FinalBattleExplain,
+    ETT_FinalBattleTimeLimit,
 
     ETT_Max
 };

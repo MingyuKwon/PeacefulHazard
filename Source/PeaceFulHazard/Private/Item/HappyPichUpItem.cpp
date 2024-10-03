@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Item/HappyPichUpItem.h"
@@ -64,19 +64,20 @@ void AHappyPichUpItem::CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count)
 				case EItemType::EIT_MainCatheralDoorKey2:
 					PeaceFulHazardGameMode->ToDoUpdate(EPlayerToDo::EPTD_SearchCathedralSecondFloor);
 					break;
-
+				case EItemType::EIT_CathedralLockKey:
+					PeaceFulHazardGameMode->ToDoUpdate(EPlayerToDo::EPTD_GetTreasure);
+					break;
+				case EItemType::EIST_Treasure:
+					PeaceFulHazardGameMode->ToDoUpdate(EPlayerToDo::EPTD_Survive);
+					break;
 
 
 				}
 
-
 				PeaceFulHazardGameMode->SetAleradyInteract(GetName());
-
 			}
 
 			bAlreadyInteract = true;
-
-
 
 			AfterInteraction();
 
