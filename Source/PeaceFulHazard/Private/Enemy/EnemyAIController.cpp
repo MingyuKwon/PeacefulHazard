@@ -338,6 +338,8 @@ void AEnemyAIController::BeginPlay()
 
 void AEnemyAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors)
 {
+	if (bSurviveMode) return;
+
 	for (AActor* Actor : UpdatedActors)
 	{
 		if (Actor->IsA(APeaceFulHazardCharacter::StaticClass()))

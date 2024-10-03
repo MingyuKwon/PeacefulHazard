@@ -614,7 +614,14 @@ void APeaceFulHazardGameMode::PlayBGM()
 
     if (BackgroundMusics.Contains(currentMapType))
     {
-        PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_BGM ,BGMAudioComponent, BackgroundMusics[currentMapType], 1.f);
+        USoundBase* playSound = BackgroundMusics[currentMapType];
+
+        if (currentMapType == EWarpTarget::EWT_MainHub && GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+        {
+            playSound = FinalBattleBGM;
+        }
+        
+        PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_BGM ,BGMAudioComponent, playSound, 1.f);
     }
     
 }

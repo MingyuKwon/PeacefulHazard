@@ -206,6 +206,13 @@ protected:
 	TMap<EWarpTarget, USoundBase*> BackgroundMusics;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* FinalBattleBGM;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* GameClearMusic;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	USoundBase* GameOverMusic;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Audio")
