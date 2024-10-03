@@ -315,8 +315,24 @@ void AEnemyAIController::BeginPlay()
 	controlEnemy = Cast<AEnemyBase>(GetPawn());
 
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
-	PeaceFulHazardGameMode->PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeathCallback);
 
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeathCallback);
+		if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+		{
+			bSurviveMode = true;
+
+			TArray<AActor*> FoundCharacters;
+			UGameplayStatics::GetAllActorsOfClass(GetWorld(), APeaceFulHazardCharacter::StaticClass(), FoundCharacters);
+
+			if (FoundCharacters.Num() > 0)
+			{
+				Target = Cast<APeaceFulHazardCharacter>(FoundCharacters[0]);
+			}
+
+		}
+	}
 		
 }
 
@@ -334,14 +350,13 @@ void AEnemyAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActor
 // only visual perception will set target object, other perception will bring to impact point
 void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	if (!Actor->IsA(APeaceFulHazardCharacter::StaticClass())) return;
 
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *Stimulus.Type.Name.ToString());
+	if (!Actor->IsA(APeaceFulHazardCharacter::StaticClass())) return;
+	if (bSurviveMode) return;
 
 	APeaceFulHazardCharacter* InputTarget = Cast<APeaceFulHazardCharacter>(Actor);
 	if (InputTarget->bDeath) return;
 
-	// �ð� ���� ó��
 	if (Stimulus.Type.Name == "Default__AISense_Sight")
 	{
 		if (Stimulus.WasSuccessfullySensed())
@@ -362,7 +377,6 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 			}
 		}
 	}
-	// ������ ���� ó��
 	else if (Stimulus.Type.Name == "Default__AISense_Damage")
 	{
 		if (Target != nullptr) return; // if enemy is targetting, does not nees anymore
@@ -380,7 +394,6 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 
 		}
 	}
-	// �Ҹ� ���� ó��
 	else if (Stimulus.Type.Name == "Default__AISense_Hearing")
 	{
 		if (Target != nullptr) return;  // if enemy is targetting, does not nees anymore

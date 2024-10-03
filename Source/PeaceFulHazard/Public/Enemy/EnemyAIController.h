@@ -73,6 +73,8 @@ public:
 protected:
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 
+	bool bSurviveMode = false;
+
 	UFUNCTION()
 	void PlayerDeathCallback();
 

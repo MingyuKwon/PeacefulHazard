@@ -30,14 +30,12 @@ void AHappyInteractableSituation::FInalBattleCinematicShow(bool flag)
 				if (AdditiveStaticMesh1 && DisableMaterial)
 				{
 					AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
-					// AdditiveStaticMesh1의 두 번째 Material Slot 변경
 					AdditiveStaticMesh1->SetMaterial(1, DisableMaterial);
 				}
 
 				if (AdditiveStaticMesh2 && DisableMaterial)
 				{
 					AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
-					// AdditiveStaticMesh2의 두 번째 Material Slot 변경
 					AdditiveStaticMesh2->SetMaterial(1, DisableMaterial);
 				}
 				break;
@@ -49,14 +47,12 @@ void AHappyInteractableSituation::FInalBattleCinematicShow(bool flag)
 				if (AdditiveStaticMesh1 && DisableMaterial)
 				{
 					AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
-					// AdditiveStaticMesh1의 두 번째 Material Slot 변경
 					AdditiveStaticMesh1->SetMaterial(1, DisableMaterial);
 				}
 
 				if (AdditiveStaticMesh2 && DisableMaterial)
 				{
 					AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
-					// AdditiveStaticMesh2의 두 번째 Material Slot 변경
 					AdditiveStaticMesh2->SetMaterial(1, DisableMaterial);
 				}
 
