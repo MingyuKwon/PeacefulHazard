@@ -415,6 +415,12 @@ void APeaceFulHazardGameMode::BeginPlay()
         }, 0.1f, false);
 
 
+    if (GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+    {
+        DynamicSpawnMode = true;
+    }
+
+
 
     FTimerHandle TestHandle;
     GetWorld()->GetTimerManager().SetTimer(TestHandle, [this]()

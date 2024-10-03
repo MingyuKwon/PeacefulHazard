@@ -28,7 +28,14 @@ void ADynamicEnemySpawner::BeginPlay()
 
 	if (PeaceFulHazardGameMode)
 	{
+		if (PeaceFulHazardGameMode->GetPlayerToDo() != EPlayerToDo::EPTD_Survive)
+		{
+			Destroy();
+			return;
+		}
+
 		PeaceFulHazardGameMode->DynamicSpawnStartEvent.AddDynamic(this, &ThisClass::SpawnEnemy);
+
 	}
 
 }
