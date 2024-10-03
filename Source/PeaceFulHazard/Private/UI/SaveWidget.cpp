@@ -99,6 +99,8 @@ void USaveWidget::OnceSaveButtonClickedSuccess()
 {
 	if (CheckCallBackHoveringSaveButtonName.IsEmpty()) return;
 
+	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
+
 	if (bSaveMode)
 	{
 		PeaceFulHazardGameMode->SaveDataToSlot(CheckCallBackHoveringSaveButtonName);
@@ -108,7 +110,6 @@ void USaveWidget::OnceSaveButtonClickedSuccess()
 		PeaceFulHazardGameMode->LoadDataFromSlot(CheckCallBackHoveringSaveButtonName, false);
 	}
 	CheckCallBackHoveringSaveButtonName = FString("");
-	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
 
 }
 
@@ -168,6 +169,8 @@ void USaveWidget::OnDeleteButtonClicked()
 
 void USaveWidget::OnceDeleteButtonClickedSuccess()
 {
+	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceDeleteButtonClickedSuccess);
+
 	if (CheckCallBackHoveringDeleteButtonindex >= 0 && CheckCallBackHoveringDeleteButtonindex < 8)
 	{
 		if (bSaveMode)
@@ -176,7 +179,6 @@ void USaveWidget::OnceDeleteButtonClickedSuccess()
 		}
 	}
 
-	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceDeleteButtonClickedSuccess);
 
 
 }
@@ -246,8 +248,9 @@ void USaveWidget::OnceNewButtonClickedSuccess()
 {
 	if (PeaceFulHazardGameMode)
 	{
-		PeaceFulHazardGameMode->LoadDataFromSlot(FString(""), true);
 		PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceNewButtonClickedSuccess);
+
+		PeaceFulHazardGameMode->LoadDataFromSlot(FString(""), true);
 
 	}
 
@@ -603,10 +606,11 @@ void USaveWidget::OnExitButtonClicked()
 
 void USaveWidget::OnceExitButtonSuccess()
 {
+	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceExitButtonSuccess);
+
 	PeaceFulHazardGameMode->ShowLoadingEvent.Broadcast(true);
 	PeaceFulHazardGameMode->MoveToMainMenu();
 
-	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceExitButtonSuccess);
 
 }
 

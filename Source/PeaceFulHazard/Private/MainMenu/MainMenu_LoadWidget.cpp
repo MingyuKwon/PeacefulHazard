@@ -258,10 +258,10 @@ void UMainMenu_LoadWidget::OnceSaveButtonClickedSuccess()
 {
 	if (CheckCallBackHoveringSaveButtonName.IsEmpty()) return;
 	if (MainMenuGameMode == nullptr) return;
+	MainMenuGameMode->CheckOneMoreSuccessMenuEvent.RemoveDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
 
 	MainMenuGameMode->LoadDataFromSlot(CheckCallBackHoveringSaveButtonName, false);
 	CheckCallBackHoveringSaveButtonName = FString("");
-	MainMenuGameMode->CheckOneMoreSuccessMenuEvent.RemoveDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
 
 }
 
@@ -316,8 +316,8 @@ void UMainMenu_LoadWidget::OnceContinueButtonClickedSuccess()
 {
 	if (MainMenuGameMode)
 	{
-		MainMenuGameMode->LoadDataFromContinue();
 		MainMenuGameMode->CheckOneMoreSuccessMenuEvent.RemoveDynamic(this, &ThisClass::OnceContinueButtonClickedSuccess);
+		MainMenuGameMode->LoadDataFromContinue();
 
 	}
 
