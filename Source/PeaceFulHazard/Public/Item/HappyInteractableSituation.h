@@ -7,6 +7,7 @@
 #include "HappyInteractableSituation.generated.h"
 
 class USoundBase;
+class UMaterialInterface;
 
 /**
  * 
@@ -19,6 +20,9 @@ class PEACEFULHAZARD_API AHappyInteractableSituation : public AHappyInteractable
 protected:
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* InteractSuccessSound;
+
+	UFUNCTION()
+	void FInalBattleCinematicShow(bool flag);
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))

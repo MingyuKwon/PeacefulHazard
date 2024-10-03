@@ -1117,13 +1117,24 @@ void AHappyPlayerController::CinematicShow(bool bShow)
             PlayerHUD->SetDefaultDisplay(true);
         }
 
-        TutorialShow(ETutorialType::ETT_MoveTutorial);
-        if (ControlledCharacter && PeaceFulHazardGameMode && PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
+        if (PeaceFulHazardGameMode)
         {
+            if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+            {
+                TutorialShow(ETutorialType::ETT_FinalBattleTimeLimit);
+            }
+            else
+            {
+                TutorialShow(ETutorialType::ETT_MoveTutorial);
+            }
 
-
-            ControlledCharacter->bDissolveControllerControl = false;
+            if (ControlledCharacter && PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
+            {
+                ControlledCharacter->bDissolveControllerControl = false;
+            }
         }
+
+        
     }
 
     

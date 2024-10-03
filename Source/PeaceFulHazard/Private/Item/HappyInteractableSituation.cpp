@@ -7,6 +7,66 @@
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Components/BoxComponent.h"
 
+void AHappyInteractableSituation::FInalBattleCinematicShow(bool flag)
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+	{
+		if (flag)
+		{
+
+		}
+		else
+		{
+			Super::AfterInteraction();
+
+			Super::AfterInteraction();
+
+			switch (situationType)
+			{
+			case EInteractSituationType::EIST_NormalDoor:
+			case EInteractSituationType::EIST_BigDoor:
+				if (AdditiveStaticMesh1 && DisableMaterial)
+				{
+					AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
+					// AdditiveStaticMesh1의 두 번째 Material Slot 변경
+					AdditiveStaticMesh1->SetMaterial(1, DisableMaterial);
+				}
+
+				if (AdditiveStaticMesh2 && DisableMaterial)
+				{
+					AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
+					// AdditiveStaticMesh2의 두 번째 Material Slot 변경
+					AdditiveStaticMesh2->SetMaterial(1, DisableMaterial);
+				}
+				break;
+
+			case EInteractSituationType::EIST_GraveYardDoor:
+			case EInteractSituationType::EIST_MainCatheralDoor:
+			case EInteractSituationType::EIST_MainCatheralDoor2:
+
+				if (AdditiveStaticMesh1 && DisableMaterial)
+				{
+					AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
+					// AdditiveStaticMesh1의 두 번째 Material Slot 변경
+					AdditiveStaticMesh1->SetMaterial(1, DisableMaterial);
+				}
+
+				if (AdditiveStaticMesh2 && DisableMaterial)
+				{
+					AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
+					// AdditiveStaticMesh2의 두 번째 Material Slot 변경
+					AdditiveStaticMesh2->SetMaterial(1, DisableMaterial);
+				}
+
+				break;
+			}
+		}
+	}
+
+}
+
 void AHappyInteractableSituation::BeginPlay()
 {
 	Super::BeginPlay();
@@ -14,7 +74,7 @@ void AHappyInteractableSituation::BeginPlay()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->InteractSituationEvent.AddDynamic(this, &ThisClass::CheckBroadCastItemIsMe);
-
+		PeaceFulHazardGameMode->CinematicPlayEvent.AddDynamic(this, &ThisClass::FInalBattleCinematicShow);
 
 		if (situationType == EInteractSituationType::EIST_RedTriggerDoor ||
 			situationType == EInteractSituationType::EIST_BlueTriggerDoor || 

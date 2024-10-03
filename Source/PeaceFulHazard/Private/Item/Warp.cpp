@@ -29,6 +29,16 @@ void AWarp::WarpDisable()
 	if (BoxComponent)
 	{
 		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		if (AdditiveStaticMesh1 && DisableMaterial)
+		{
+			AdditiveStaticMesh1->SetMaterial(1, DisableMaterial);
+		}
+
+		if (AdditiveStaticMesh2 && DisableMaterial)
+		{
+			AdditiveStaticMesh2->SetMaterial(1, DisableMaterial);
+		}
 	}
 }
 
