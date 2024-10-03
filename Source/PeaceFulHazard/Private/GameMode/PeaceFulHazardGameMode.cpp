@@ -420,19 +420,7 @@ void APeaceFulHazardGameMode::BeginPlay()
         DynamicSpawnMode = true;
     }
 
-
-
-    FTimerHandle TestHandle;
-    GetWorld()->GetTimerManager().SetTimer(TestHandle, [this]()
-        {
-            if (DynamicSpawnMode)
-            {
-                DynamicSpawnStartEvent.Broadcast();
-            }
-
-        }, 3.f, false);
-
-    
+    CinematicPlayEvent.AddDynamic(this, &ThisClass::DynamimcSpawnStart);
     PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeath);
 }
 
@@ -686,6 +674,17 @@ void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo targetTodo)
 
         PeacFulGameInstance->UpdateToDo(targetTodo);
         SetGameBrightness();
+    }
+}
+
+void APeaceFulHazardGameMode::DynamimcSpawnStart(bool play)
+{
+    if (!play)
+    {
+        if (DynamicSpawnMode)
+        {
+            DynamicSpawnStartEvent.Broadcast();
+        }
     }
 }
 

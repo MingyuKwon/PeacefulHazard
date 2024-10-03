@@ -194,6 +194,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	bool DynamicSpawnMode = false;
 
+	UFUNCTION(BlueprintCallable)
+	void DynamimcSpawnStart(bool play);
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<EWarpTarget, FString> TravelMap;

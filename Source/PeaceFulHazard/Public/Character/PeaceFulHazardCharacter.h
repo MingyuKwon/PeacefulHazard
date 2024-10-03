@@ -225,6 +225,9 @@ protected:
 
 protected:
 
+	UFUNCTION()
+	void FInalBattleCinematicShow(bool flag);
+
 	// To add mapping context
 	virtual void BeginPlay();
 
