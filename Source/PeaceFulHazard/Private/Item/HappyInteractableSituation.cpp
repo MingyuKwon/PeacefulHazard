@@ -57,6 +57,11 @@ void AHappyInteractableSituation::FInalBattleCinematicShow(bool flag)
 				}
 
 				break;
+
+			case EInteractSituationType::EIST_SaveBox:
+				Destroy();
+				break;
+
 			}
 		}
 	}
