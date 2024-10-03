@@ -308,7 +308,7 @@ void AEnemyAIController::BeginPlay()
 
 	GetWorld()->GetTimerManager().SetTimer(nonAttackTimerHandle, [this]() {
 		nonAttackLock = false;
-		}, 2.f, false);
+		}, 3.f, false);
 
 
 	
