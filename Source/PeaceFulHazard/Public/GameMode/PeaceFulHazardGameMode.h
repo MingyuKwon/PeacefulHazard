@@ -181,8 +181,9 @@ public:
 
 	void LoadDataFromContinue();
 
-
+	UFUNCTION(BlueprintCallable)
 	EPlayerToDo GetPlayerToDo();
+
 	EDifficulty GetDifficulty();
 
 	void ToDoUpdate(EPlayerToDo targetTodo);
