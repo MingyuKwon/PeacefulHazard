@@ -71,6 +71,9 @@ void UPeacFulGameInstance::RefreshGame()
 {
     TutorialCheckMap.Empty();
 
+    todoIndex = 0;
+
+
     TutorialCheckMap.Add(ETutorialType::ETT_MoveTutorial, false);
     TutorialCheckMap.Add(ETutorialType::ETT_Fire, false);
     TutorialCheckMap.Add(ETutorialType::ETT_InteractWithItem, false);

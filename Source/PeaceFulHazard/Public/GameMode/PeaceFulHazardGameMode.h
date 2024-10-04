@@ -142,7 +142,7 @@ public:
 	FCheckOneMoreSuccessGameEvent CheckOneMoreSuccessGameEvent;
 
 	UPROPERTY(BlueprintReadWrite)
-	int32 FinalBattleTimeSecond = 0;
+	int32 FinalBattleTimeSecond = 300;
 
 	
 	void SaveSettingValue();
