@@ -53,7 +53,15 @@ void UDefaultPlayerWidget::SetTImeTextFunction(int32 timeSeconds)
     int32 seconds = timeSeconds % 60;
 
     FString TimeText = FString::Printf(TEXT("%d : %02d"), minutes, seconds);
+
+    if (timeSeconds <= 0)
+    {
+        TimeText = FString("Warp!");
+    }
+
     FinalTimeText->SetText(FText::FromString(TimeText));
+
+
 
     FLinearColor Color;
     if (minutes == 4)

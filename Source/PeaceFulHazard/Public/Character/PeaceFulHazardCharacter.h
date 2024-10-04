@@ -24,6 +24,7 @@ class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
 class USoundBase;
 class UNiagaraComponent;
+class ULevelSequence;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -118,6 +119,10 @@ public:
 
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Cinematics para")
+	TSoftObjectPtr<ULevelSequence> LevelSequenceToPlay;
+
+
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* HitSound;
 
@@ -225,6 +230,10 @@ protected:
 
 protected:
 
+	UFUNCTION()
+	void GameClear();
+
+	
 	UFUNCTION()
 	void FInalBattleCinematicShow(bool flag);
 

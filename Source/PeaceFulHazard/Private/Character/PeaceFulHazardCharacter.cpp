@@ -20,6 +20,10 @@
 #include "System/PeacFulGameInstance.h"
 #include "Materials/MaterialInstance.h"
 #include "NiagaraComponent.h"
+#include "LevelSequence.h"
+#include "LevelSequenceActor.h"
+#include "LevelSequencePlayer.h"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -336,6 +340,31 @@ void APeaceFulHazardCharacter::SetMaterialParaLerp(bool bDissolve, float value)
 	}
 }
 
+void APeaceFulHazardCharacter::GameClear()
+{
+	if (LevelSequenceToPlay)
+	{
+		ALevelSequenceActor* SequenceActor;
+		ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
+			GetWorld(), LevelSequenceToPlay.Get(), FMovieSceneSequencePlaybackSettings(), SequenceActor);
+
+		if (SequencePlayer)
+		{
+			if (PeaceFulHazardGameMode) PeaceFulHazardGameMode->CinematicPlayEvent.Broadcast(true);
+
+			SequencePlayer->Play();
+		}
+	}
+
+
+	Destroy();
+
+	if (EquipWeapon)
+	{
+		EquipWeapon->Destroy();
+	}
+}
+
 void APeaceFulHazardCharacter::FInalBattleCinematicShow(bool flag)
 {
 	if (PeaceFulHazardGameMode == nullptr) return;
@@ -384,6 +413,9 @@ void APeaceFulHazardCharacter::BeginPlay()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->CinematicPlayEvent.AddDynamic(this, &ThisClass::FInalBattleCinematicShow);
+		PeaceFulHazardGameMode->GameClearEvent.AddDynamic(this, &ThisClass::GameClear);
+
+		
 	}
 	
 

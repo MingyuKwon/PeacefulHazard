@@ -151,6 +151,11 @@ void AEnemyAIController::TriggerResetPivotIndex(bool bFollowingLastPosition)
 	}
 }
 
+void AEnemyAIController::GameClear()
+{
+	bGameClear = true;
+}
+
 void AEnemyAIController::PlayerDeathCallback()
 {
 	Target = nullptr;
@@ -214,33 +219,17 @@ void AEnemyAIController::UpdateBlackBoard()
 		if (CheckMovetoDestination())
 		{
 
-
 			if (!bNowAttacking && !bDeath && !bStunDamage && !bStunHeadShot)
 			{
-				if (GEngine)
-				{
-					FString text = FString::Printf(TEXT("Should Attack"));
-					GEngine->AddOnScreenDebugMessage(10, 1.f, FColor::Red, text);
-				}
-
 				if (nonAttackLock) return;
-
-				if (GEngine)
-				{
-					FString text = FString::Printf(TEXT("Attack"));
-					GEngine->AddOnScreenDebugMessage(11, 1.f, FColor::Blue, text);
-				}
 
 				if (controlEnemy->bBoss)
 				{
 					float distance = FVector::Dist2D(GetPawn()->GetActorLocation(), TargetLocation);
 					Attack(controlEnemy->AttackRange < distance);
-
 				}
 				else
 				{
-
-
 					Attack();
 				}
 
@@ -272,6 +261,9 @@ void AEnemyAIController::UpdateBlackBoard()
 		BlackboardComp->SetValueAsVector(TEXT("TargetLocation"), TargetLocation);
 		BlackboardComp->SetValueAsObject(TEXT("Target"), Target);
 
+		BlackboardComp->SetValueAsBool(TEXT("bGameClear"), bGameClear);
+
+		
 	}	
 
 }
@@ -313,6 +305,8 @@ void AEnemyAIController::BeginPlay()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeathCallback);
+		PeaceFulHazardGameMode->GameClearEvent.AddDynamic(this, &ThisClass::GameClear);
+
 		if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
 		{
 			bSurviveMode = true;
