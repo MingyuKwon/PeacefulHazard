@@ -104,26 +104,28 @@ void APeaceFulHazardGameMode::FinalBattleTimeFunction()
 {
     FinalBattleTimeSecond -= 1;
 
+    FinalTimeShowEvent.Broadcast(FinalBattleTimeSecond);
+
     if (FinalBattleTimeSecond == 299)
     {
         DynamicSpawnStartEvent.Broadcast();
 
-    }else if (FinalBattleTimeSecond == 240)
+    }else if (FinalBattleTimeSecond == 260)
     {
         DynamicSpawnStartEvent.Broadcast();
 
     }
-    else if (FinalBattleTimeSecond == 180)
+    else if (FinalBattleTimeSecond == 200)
     {
         DynamicSpawnStartEvent.Broadcast();
 
     }
-    else if (FinalBattleTimeSecond == 120)
+    else if (FinalBattleTimeSecond == 140)
     {
         DynamicSpawnStartEvent.Broadcast();
 
     }
-    else if (FinalBattleTimeSecond == 60)
+    else if (FinalBattleTimeSecond == 80)
     {
         DynamicSpawnStartEvent.Broadcast();
 
@@ -508,7 +510,7 @@ void APeaceFulHazardGameMode::SetGameBrightness()
         case EWarpTarget::EWT_MainHub:
             if(GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
             {
-                BrightnessTemp *= 0.675f;
+                BrightnessTemp *= 0.69f;
             }
             else
             {

@@ -32,12 +32,21 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* FinalTimeText;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* FinalTimeBackGround;
+
+	
+
+	UFUNCTION()
+	void SetTImeTextFunction(int32 timeSeconds);
+
 
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* LoadingCanvas;
 
-
-	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* MaxBulletText;
 

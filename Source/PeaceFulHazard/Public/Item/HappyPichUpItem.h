@@ -15,6 +15,22 @@ class PEACEFULHAZARD_API AHappyPichUpItem : public AHappyInteractableItem
 	GENERATED_BODY()
 	
 protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn Para", meta = (AllowPrivateAccess = "true"))
+	bool bFinalBattle = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn Para", meta = (AllowPrivateAccess = "true"))
+	int32 WaveCount = 1;
+
+	int32 CurrentWaveCount = 0;
+
+	void SetActorVisibility(bool flag);
+
+	UFUNCTION()
+	void CheckToShow();
+
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Para", meta = (AllowPrivateAccess = "true"))
 	EItemType ItemType;
 

@@ -5,6 +5,38 @@
 #include "Character/PeaceFulHazardCharacter.h"
 #include "Controller/HappyPlayerController.h"
 #include "GameMode/PeaceFulHazardGameMode.h"
+#include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
+
+void AHappyPichUpItem::SetActorVisibility(bool flag)
+{
+	if (flag)
+	{
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		StaticMeshComponent->SetVisibility(true);
+
+	}
+	else
+	{
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		StaticMeshComponent->SetVisibility(false);
+	}
+}
+
+void AHappyPichUpItem::CheckToShow()
+{
+	CurrentWaveCount++;
+
+	if (CurrentWaveCount == WaveCount)
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->DynamicSpawnStartEvent.RemoveDynamic(this, &ThisClass::CheckToShow);
+		}
+
+		SetActorVisibility(true);
+	}
+}
 
 void AHappyPichUpItem::BeginPlay()
 {
@@ -29,6 +61,17 @@ void AHappyPichUpItem::BeginPlay()
 			break;
 		}
 		
+		if (bFinalBattle )
+		{
+			SetActorVisibility(false);
+
+			if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+			{
+				PeaceFulHazardGameMode->DynamicSpawnStartEvent.AddDynamic(this, &ThisClass::CheckToShow);
+
+			}
+
+		}
 	}
 }
 

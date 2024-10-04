@@ -22,11 +22,62 @@ void UDefaultPlayerWidget::NativeConstruct()
     PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
     PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
 
+    if (PeaceFulHazardGameMode)
+    {
+        if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive && PeaceFulHazardGameMode->currentMapType == EWarpTarget::EWT_MainHub)
+        {
+            PeaceFulHazardGameMode->FinalTimeShowEvent.AddDynamic(this, &ThisClass::SetTImeTextFunction);
+            FinalTimeText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+            FinalTimeBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+        }
+        else
+        {
+            FinalTimeText->SetVisibility(ESlateVisibility::Hidden);
+            FinalTimeBackGround->SetVisibility(ESlateVisibility::Hidden);
+
+        }
+
+    }
 }
 
 void UDefaultPlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
     Super::NativeTick(MyGeometry, InDeltaTime);
+
+}
+
+void UDefaultPlayerWidget::SetTImeTextFunction(int32 timeSeconds)
+{
+    int32 minutes = timeSeconds / 60;
+    int32 seconds = timeSeconds % 60;
+
+    FString TimeText = FString::Printf(TEXT("%d : %02d"), minutes, seconds);
+    FinalTimeText->SetText(FText::FromString(TimeText));
+
+    FLinearColor Color;
+    if (minutes == 4)
+    {
+        Color = FLinearColor(1.0f, 0.5f, 0.5f);  
+    }
+    else if (minutes == 3)
+    {
+        Color = FLinearColor(1.0f, 0.4f, 0.4f);  
+    }
+    else if (minutes == 2)
+    {
+        Color = FLinearColor(1.0f, 0.3f, 0.3f);
+    }
+    else if (minutes == 1)
+    {
+        Color = FLinearColor(1.0f, 0.2f, 0.2f);
+    }
+    else if (minutes == 0)
+    {
+        Color = FLinearColor(1.0f, 0.0f, 0.0f); 
+    }
+
+    FinalTimeText->SetColorAndOpacity(FSlateColor(Color));
 
 }
 
