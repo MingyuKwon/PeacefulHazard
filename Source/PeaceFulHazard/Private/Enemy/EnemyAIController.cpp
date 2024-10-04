@@ -306,12 +306,6 @@ void AEnemyAIController::BeginPlay()
 	BlackboardComp = GetBlackboardComponent();
 	GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyAIController::UpdateBlackBoard , 0.1f, true);
 
-	GetWorld()->GetTimerManager().SetTimer(nonAttackTimerHandle, [this]() {
-		nonAttackLock = false;
-		}, 3.f, false);
-
-
-	
 	controlEnemy = Cast<AEnemyBase>(GetPawn());
 
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
@@ -333,6 +327,12 @@ void AEnemyAIController::BeginPlay()
 
 		}
 	}
+
+	GetWorld()->GetTimerManager().SetTimer(nonAttackTimerHandle, [this]() {
+		nonAttackLock = false;
+		}, bSurviveMode ? 1.f : 3.f, false);
+
+
 		
 }
 

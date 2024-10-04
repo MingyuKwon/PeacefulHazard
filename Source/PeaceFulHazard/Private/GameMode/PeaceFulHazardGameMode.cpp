@@ -100,6 +100,36 @@ void APeaceFulHazardGameMode::SetEnemySaveRefCount(bool bPlus)
 
 
 
+void APeaceFulHazardGameMode::FinalBattleTimeFunction()
+{
+    FinalBattleTimeSecond += 1;
+
+    if (FinalBattleTimeSecond == 1)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }else if (FinalBattleTimeSecond == 5)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
+    else if (FinalBattleTimeSecond == 10)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
+    else if (FinalBattleTimeSecond == 180)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
+    else if (FinalBattleTimeSecond == 240)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
+}
+
 void APeaceFulHazardGameMode::SaveSettingValue()
 {
     if (PeacFulGameInstance == nullptr) return;
@@ -690,7 +720,7 @@ void APeaceFulHazardGameMode::DynamimcSpawnStart(bool play)
     {
         if (DynamicSpawnMode)
         {
-            DynamicSpawnStartEvent.Broadcast();
+            GetWorld()->GetTimerManager().SetTimer(finalBattleTimerHandle, this, &ThisClass::FinalBattleTimeFunction, 1.f, true);
         }
     }
 }

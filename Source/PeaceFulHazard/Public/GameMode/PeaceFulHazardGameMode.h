@@ -141,6 +141,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FCheckOneMoreSuccessGameEvent CheckOneMoreSuccessGameEvent;
 
+	UPROPERTY(BlueprintReadWrite)
+	int32 FinalBattleTimeSecond = 0;
 
 	
 	void SaveSettingValue();
@@ -190,6 +192,10 @@ public:
 
 
 protected:
+
+	FTimerHandle finalBattleTimerHandle;
+	UFUNCTION()
+	void FinalBattleTimeFunction();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	bool DynamicSpawnMode = false;
