@@ -47,6 +47,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCheckOneMoreSuccessGameEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinalTimeShowEvent, int32, seconds);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameClearEvent);
+
 
 class UPeacFulGameInstance;
 class USoundBase;
@@ -66,6 +68,9 @@ public:
 
 	UFUNCTION()
 	void ChangeLanguageCallBack();
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FGameClearEvent GameClearEvent;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FShowLoadingEvent ShowLoadingEvent;

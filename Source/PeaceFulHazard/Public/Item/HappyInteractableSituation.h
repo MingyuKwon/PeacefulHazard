@@ -24,6 +24,14 @@ protected:
 	UFUNCTION()
 	void FInalBattleCinematicShow(bool flag);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn Para", meta = (AllowPrivateAccess = "true"))
+	int32 WaveCount = 1;
+
+	int32 CurrentWaveCount = 0;
+
+	UFUNCTION()
+	void CheckToShow();
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* AdditiveStaticMesh1;

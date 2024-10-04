@@ -8,20 +8,6 @@
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 
-void AHappyPichUpItem::SetActorVisibility(bool flag)
-{
-	if (flag)
-	{
-		BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		StaticMeshComponent->SetVisibility(true);
-
-	}
-	else
-	{
-		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		StaticMeshComponent->SetVisibility(false);
-	}
-}
 
 void AHappyPichUpItem::CheckToShow()
 {

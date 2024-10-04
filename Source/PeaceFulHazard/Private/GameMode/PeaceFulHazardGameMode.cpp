@@ -130,6 +130,11 @@ void APeaceFulHazardGameMode::FinalBattleTimeFunction()
         DynamicSpawnStartEvent.Broadcast();
 
     }
+    else if (FinalBattleTimeSecond == 0)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
 }
 
 void APeaceFulHazardGameMode::SaveSettingValue()

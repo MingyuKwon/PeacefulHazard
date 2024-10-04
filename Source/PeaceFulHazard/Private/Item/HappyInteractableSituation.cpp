@@ -21,8 +21,6 @@ void AHappyInteractableSituation::FInalBattleCinematicShow(bool flag)
 		{
 			Super::AfterInteraction();
 
-			Super::AfterInteraction();
-
 			switch (situationType)
 			{
 			case EInteractSituationType::EIST_NormalDoor:
@@ -68,6 +66,21 @@ void AHappyInteractableSituation::FInalBattleCinematicShow(bool flag)
 
 }
 
+void AHappyInteractableSituation::CheckToShow()
+{
+	CurrentWaveCount++;
+
+	if (CurrentWaveCount == WaveCount)
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->DynamicSpawnStartEvent.RemoveDynamic(this, &ThisClass::CheckToShow);
+		}
+
+		SetActorVisibility(true);
+	}
+}
+
 void AHappyInteractableSituation::BeginPlay()
 {
 	Super::BeginPlay();
@@ -75,6 +88,15 @@ void AHappyInteractableSituation::BeginPlay()
 	if (PeaceFulHazardGameMode)
 	{
 		PeaceFulHazardGameMode->InteractSituationEvent.AddDynamic(this, &ThisClass::CheckBroadCastItemIsMe);
+
+		if (situationType == EInteractSituationType::EIST_FinalWarp)
+		{
+			SetActorVisibility(false);
+			PeaceFulHazardGameMode->DynamicSpawnStartEvent.AddDynamic(this, &ThisClass::CheckToShow);
+
+			return;
+		}
+
 		PeaceFulHazardGameMode->CinematicPlayEvent.AddDynamic(this, &ThisClass::FInalBattleCinematicShow);
 
 		if (situationType == EInteractSituationType::EIST_RedTriggerDoor ||
@@ -84,7 +106,11 @@ void AHappyInteractableSituation::BeginPlay()
 		{
 			PeaceFulHazardGameMode->TriggerDoorEvent.AddDynamic(this, &ThisClass::ListenTirggerOn);
 		}
+
+
+
 	}
+
 
 }
 
@@ -311,6 +337,13 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 					AfterInteraction();
 
 				}
+			}
+		}else if (situationType == EInteractSituationType::EIST_FinalWarp)
+		{
+			if (PeaceFulHazardGameMode)
+			{
+				UE_LOG(LogTemp, Display, TEXT("Game Clear"));
+				PeaceFulHazardGameMode->GameClearEvent.Broadcast();
 			}
 		}
 		else

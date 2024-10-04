@@ -32,6 +32,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials Para")
 	UMaterialInterface* DisableMaterial;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetAdditiveVisibility(bool flag);
+
+	void SetActorVisibility(bool flag);
+
 
 	FString GetKeyName();
 

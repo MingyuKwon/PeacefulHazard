@@ -26,6 +26,7 @@ void UCanInteractWidget::SetActionEnable(bool bCanShowUI, bool flag)
 
 void UCanInteractWidget::SetInteractEnable(bool bCanShowUI, bool flag, UTexture2D* DoorInteractkeyImage, FString DoorInteractkeyName)
 {
+
 	if (!bCanShowUI)
 	{
 		InteractImage->SetVisibility(ESlateVisibility::Hidden);

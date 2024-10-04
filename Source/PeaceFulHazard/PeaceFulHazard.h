@@ -130,6 +130,8 @@ enum class EInteractSituationType : uint8
     EIST_BlueTrigger,
     EIST_BlueTriggerDoor,
 
+    EIST_FinalWarp,
+
     EIST_Max
 };
 

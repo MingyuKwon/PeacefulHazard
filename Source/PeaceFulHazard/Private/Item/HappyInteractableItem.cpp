@@ -58,6 +58,23 @@ void AHappyInteractableItem::BeginPlay()
 
 }
 
+void AHappyInteractableItem::SetActorVisibility(bool flag)
+{
+    SetAdditiveVisibility(flag);
+
+    if (flag)
+    {
+        BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+        StaticMeshComponent->SetVisibility(true);
+
+    }
+    else
+    {
+        BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        StaticMeshComponent->SetVisibility(false);
+    }
+}
+
 FString AHappyInteractableItem::GetKeyName()
 {
     if (PeaceFulHazardGameMode == nullptr) return FString("");
@@ -167,6 +184,9 @@ void AHappyInteractableItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
                 bIntearctable = true;
                 if (CanInteractWidget)
                 {
+                    UE_LOG(LogTemp, Display, TEXT("bCanInteractable : %s, bIntearctable : %s"), bCanInteractable ? *FString("True") : *FString("False"), bIntearctable ? *FString("True") : *FString("False"));
+
+
                     CanInteractWidget->SetInteractEnable(bCanInteractable, bIntearctable, DoorInteractkeyImage, GetKeyName());
                 }
             }

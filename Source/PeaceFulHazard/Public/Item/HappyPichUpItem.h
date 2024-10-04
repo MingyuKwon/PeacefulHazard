@@ -24,7 +24,6 @@ protected:
 
 	int32 CurrentWaveCount = 0;
 
-	void SetActorVisibility(bool flag);
 
 	UFUNCTION()
 	void CheckToShow();
