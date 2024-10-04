@@ -54,6 +54,7 @@ class UPeacFulGameInstance;
 class USoundBase;
 class UAudioComponent;
 class APostProcessVolume;
+class ULevelSequence;
 
 UCLASS(minimalapi)
 class APeaceFulHazardGameMode : public AGameModeBase
@@ -62,6 +63,8 @@ class APeaceFulHazardGameMode : public AGameModeBase
 
 public:
 	APeaceFulHazardGameMode();
+
+	bool bGameClear = false;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FModeLanguageChangeEvent LanguageChangeEvent;
@@ -204,6 +207,13 @@ public:
 
 protected:
 
+	UPROPERTY(EditAnywhere, Category = "Cinematics para")
+	TSoftObjectPtr<ULevelSequence> LevelSequenceToPlay;
+
+	UFUNCTION()
+	void OnSequenceFinished();
+
+
 	FTimerHandle finalBattleTimerHandle;
 	UFUNCTION()
 	void FinalBattleTimeFunction();
@@ -228,6 +238,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	USoundBase* GameClearMusic;
 
+	UFUNCTION()
+	void GameClear();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	USoundBase* GameOverMusic;

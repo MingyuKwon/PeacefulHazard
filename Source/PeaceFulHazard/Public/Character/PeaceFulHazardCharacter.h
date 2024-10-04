@@ -119,8 +119,6 @@ public:
 
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "Cinematics para")
-	TSoftObjectPtr<ULevelSequence> LevelSequenceToPlay;
 
 
 	UPROPERTY(EditAnywhere, Category = "Sound Para")

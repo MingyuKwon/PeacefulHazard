@@ -11,6 +11,9 @@
 #include "Sound/SoundBase.h"
 #include "Components/AudioComponent.h"
 #include "System/SettingSave.h"
+#include "LevelSequence.h"
+#include "LevelSequenceActor.h"
+#include "LevelSequencePlayer.h"
 
 APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 {
@@ -99,6 +102,12 @@ void APeaceFulHazardGameMode::SetEnemySaveRefCount(bool bPlus)
 
 
 
+
+void APeaceFulHazardGameMode::OnSequenceFinished()
+{
+    UE_LOG(LogTemp, Display, TEXT("OnSequenceFinished"));
+    CinematicPlayEvent.Broadcast(false);
+}
 
 void APeaceFulHazardGameMode::FinalBattleTimeFunction()
 {
@@ -459,6 +468,8 @@ void APeaceFulHazardGameMode::BeginPlay()
 
     CinematicPlayEvent.AddDynamic(this, &ThisClass::DynamimcSpawnStart);
     PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeath);
+    GameClearEvent.AddDynamic(this, &ThisClass::GameClear);
+    
 }
 
 void APeaceFulHazardGameMode::PlayerDeath()
@@ -649,6 +660,29 @@ void APeaceFulHazardGameMode::LoadDataFromContinue()
     }
 }
 
+
+void APeaceFulHazardGameMode::GameClear()
+{
+    if (PeacFulGameInstance == nullptr) return;
+
+    if (LevelSequenceToPlay)
+    {
+        ALevelSequenceActor* SequenceActor;
+        ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
+            GetWorld(), LevelSequenceToPlay.Get(), FMovieSceneSequencePlaybackSettings(), SequenceActor);
+
+        if (SequencePlayer)
+        {
+            SequencePlayer->OnFinished.AddDynamic(this, &ThisClass::OnSequenceFinished);
+            CinematicPlayEvent.Broadcast(true);
+            SequencePlayer->Play();
+        }
+    }
+
+    bGameClear = true;
+    PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_BGM, BGMAudioComponent, GameClearMusic, 1.f);
+
+}
 
 void APeaceFulHazardGameMode::PlayBGM()
 {

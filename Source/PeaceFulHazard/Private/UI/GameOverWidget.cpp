@@ -27,6 +27,29 @@ void UGameOverWidget::BackUIInputTrigger()
 	SaveCanvas->SetVisibility(ESlateVisibility::Hidden);
 }
 
+void UGameOverWidget::SetGameEndVisibility(bool bVisible, bool bGameClear)
+{
+	if (!bVisible)
+	{
+		SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
+
+	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	if (bGameClear)
+	{
+		GameClearCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		GameClearCanvas->SetVisibility(ESlateVisibility::Hidden);
+
+	}
+	
+
+}
+
 void UGameOverWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -64,7 +87,11 @@ void UGameOverWidget::NativeConstruct()
 	GoTitleButton->OnClicked.AddDynamic(this, &ThisClass::OnGoTitleButtonClicked);
 	GoTitleButton->OnHovered.AddDynamic(this, &ThisClass::OnGoTitleButtonHoverd);
 
+	GoTitleButton_Clear->OnClicked.AddDynamic(this, &ThisClass::OnGoTitleButtonClicked);
+	GoTitleButton_Clear->OnHovered.AddDynamic(this, &ThisClass::OnGoTitleButtonHoverd);
+
 	SaveCanvas->SetVisibility(ESlateVisibility::Hidden);
+	GameClearCanvas->SetVisibility(ESlateVisibility::Hidden);
 
 }
 

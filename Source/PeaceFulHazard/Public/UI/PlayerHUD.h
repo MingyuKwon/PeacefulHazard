@@ -36,7 +36,7 @@ public:
 
 	void SetInventoryDisplay(bool bVisible);
 
-	void SetGameOverDisplay(bool bVisible);
+	void SetGameOverDisplay(bool bVisible, bool bGameClear = false);
 
 	void SetItemBoxDisplay(bool bVisible);
 

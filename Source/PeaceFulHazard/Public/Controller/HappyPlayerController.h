@@ -195,7 +195,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ShowLoadingUI(bool bVisible);
 
-
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<EWarpTarget, FString> TravelMap;
@@ -306,6 +305,7 @@ public:
 
 	int32 GetPlayerForce();
 
+	void GameClear();
 
 
 	UFUNCTION(BlueprintCallable)

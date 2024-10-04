@@ -378,6 +378,20 @@ void AHappyPlayerController::SetHealth(float changeAmount)
     }
 }
 
+void AHappyPlayerController::GameClear()
+{
+    bShowMouseCursor = true;
+
+
+    FInputModeGameAndUI InputMode;
+    InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+    SetInputMode(InputMode);
+
+    if (PlayerHUD)
+    {
+       PlayerHUD->SetGameOverDisplay(true, true);
+    }
+ }
 
 void AHappyPlayerController::TakeDamge(float damage)
 {
@@ -976,6 +990,8 @@ void AHappyPlayerController::ShowLoadingUI(bool bVisible)
     }
 }
 
+
+
 bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
 {
     if (bReplace)
@@ -1121,7 +1137,14 @@ void AHappyPlayerController::CinematicShow(bool bShow)
         {
             if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
             {
-                TutorialShow(ETutorialType::ETT_FinalBattleTimeLimit);
+                if (PeaceFulHazardGameMode->bGameClear)
+                {
+                    GameClear();
+                }
+                else
+                {
+                    TutorialShow(ETutorialType::ETT_FinalBattleTimeLimit);
+                }
             }
             else
             {
