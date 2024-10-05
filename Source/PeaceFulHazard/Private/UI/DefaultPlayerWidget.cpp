@@ -85,6 +85,33 @@ void UDefaultPlayerWidget::SetTImeTextFunction(int32 timeSeconds)
         Color = FLinearColor(1.0f, 0.0f, 0.0f); 
     }
 
+
+    if (timeSeconds > 200)
+    {
+        Color = FLinearColor(1.0f, 0.5f, 0.5f);
+
+    }
+    else if (timeSeconds >  160)
+    {
+        Color = FLinearColor(1.0f, 0.4f, 0.4f);
+
+    }
+    else if (timeSeconds > 110)
+    {
+        Color = FLinearColor(1.0f, 0.3f, 0.3f);
+
+    }
+    else if (timeSeconds > 60)
+    {
+        Color = FLinearColor(1.0f, 0.2f, 0.2f);
+
+    }
+    else
+    {
+        Color = FLinearColor(1.0f, 0.0f, 0.0f);
+
+    }
+
     FinalTimeText->SetColorAndOpacity(FSlateColor(Color));
 
 }
