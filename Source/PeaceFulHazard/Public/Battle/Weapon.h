@@ -79,19 +79,19 @@ protected:
 	float BigBulletDamage = 20.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float Easy_NormalBulletDamage = 40.f;
+	float Easy_NormalBulletDamage = 30.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float Normal_NormalBulletDamage = 30.f;
+	float Normal_NormalBulletDamage = 25.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	float Hard_NormalBulletDamage = 20.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float Easy_BigBulletDamage = 80.f;
+	float Easy_BigBulletDamage = 60.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
-	float Normal_BigBulletDamage = 60.f;
+	float Normal_BigBulletDamage = 50.f;
 
 	UPROPERTY(EditAnywhere, Category = "Fire Para")
 	float Hard_BigBulletDamage = 40.f;
