@@ -102,6 +102,7 @@ void AHappyPichUpItem::CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count)
 
 
 				}
+				PeaceFulHazardGameMode->UpdateDefaultUIEvent.Broadcast();
 
 				PeaceFulHazardGameMode->SetAleradyInteract(GetName());
 			}

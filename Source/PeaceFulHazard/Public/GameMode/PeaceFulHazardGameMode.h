@@ -49,6 +49,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinalTimeShowEvent, int32, seconds)
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameClearEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateDefaultUIEvent);
+
 
 class UPeacFulGameInstance;
 class USoundBase;
@@ -153,7 +155,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FFinalTimeShowEvent FinalTimeShowEvent;
 
-	
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+
+	FUpdateDefaultUIEvent UpdateDefaultUIEvent;
 
 	UPROPERTY(BlueprintReadWrite)
 	int32 FinalBattleTimeSecond = 300;

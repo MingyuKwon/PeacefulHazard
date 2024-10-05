@@ -99,7 +99,7 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->ShowLoadingEvent.AddDynamic(this, &ThisClass::ShowLoadingUI);
 
 
-
+        PeaceFulHazardGameMode->UpdateDefaultUIEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
 
         PeaceFulHazardGameMode->CheckOneMoreGameEvent.AddDynamic(this, &ThisClass::SetOnceCheckDisplay);
 
@@ -965,6 +965,7 @@ void AHappyPlayerController::UseItem(EItemType itemType, bool bItem)
 
 void AHappyPlayerController::InteractWithItemUI(EItemType itemtype, int32 count)
 {
+
     if (itemtype == EItemType::EIT_Bag)
     {
         InventorySizeUpgrade(count);
@@ -973,6 +974,7 @@ void AHappyPlayerController::InteractWithItemUI(EItemType itemtype, int32 count)
     {
         ChangeItemInventory(itemtype, count);
     }
+    UpdateAllUI();
 
     CloseAllUI();
 }

@@ -242,6 +242,9 @@ void AHappyInteractableSituation::CheckBroadCastItemIsMe(EInteractSituationType 
 	{
 		PeaceFulHazardGameMode->SetAleradyInteract(GetName());
 		PeaceFulHazardGameMode->PlayUISound(InteractSuccessSound, 1.f);
+
+		PeaceFulHazardGameMode->UpdateDefaultUIEvent.Broadcast();
+
 	}
 
 	AfterInteraction();

@@ -307,7 +307,7 @@ void AEnemyAIController::BeginPlay()
 		PeaceFulHazardGameMode->PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeathCallback);
 		PeaceFulHazardGameMode->GameClearEvent.AddDynamic(this, &ThisClass::GameClear);
 
-		if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+		if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive && PeaceFulHazardGameMode->currentMapType ==EWarpTarget::EWT_MainHub)
 		{
 			bSurviveMode = true;
 

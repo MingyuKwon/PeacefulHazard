@@ -95,6 +95,8 @@ protected:
 	FTimerHandle updateHealthHandle;
 
 public:
+	UFUNCTION(BlueprintCallable)
+	void UpdateFinalClock();
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet);

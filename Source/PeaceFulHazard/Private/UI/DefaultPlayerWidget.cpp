@@ -22,23 +22,8 @@ void UDefaultPlayerWidget::NativeConstruct()
     PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
     PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
 
-    if (PeaceFulHazardGameMode)
-    {
-        if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive && PeaceFulHazardGameMode->currentMapType == EWarpTarget::EWT_MainHub)
-        {
-            PeaceFulHazardGameMode->FinalTimeShowEvent.AddDynamic(this, &ThisClass::SetTImeTextFunction);
-            FinalTimeText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-            FinalTimeBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+    UpdateFinalClock();
 
-        }
-        else
-        {
-            FinalTimeText->SetVisibility(ESlateVisibility::Hidden);
-            FinalTimeBackGround->SetVisibility(ESlateVisibility::Hidden);
-
-        }
-
-    }
 }
 
 void UDefaultPlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -94,6 +79,28 @@ void UDefaultPlayerWidget::SetTImeTextFunction(int32 timeSeconds)
 
 }
 
+
+
+void UDefaultPlayerWidget::UpdateFinalClock()
+{
+    if (PeaceFulHazardGameMode)
+    {
+        if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive && PeaceFulHazardGameMode->currentMapType == EWarpTarget::EWT_MainHub)
+        {
+            PeaceFulHazardGameMode->FinalTimeShowEvent.AddDynamic(this, &ThisClass::SetTImeTextFunction);
+            FinalTimeText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+            FinalTimeBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+        }
+        else
+        {
+            FinalTimeText->SetVisibility(ESlateVisibility::Hidden);
+            FinalTimeBackGround->SetVisibility(ESlateVisibility::Hidden);
+
+        }
+
+    }
+}
 
 
 void UDefaultPlayerWidget::UpdateBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet)
@@ -199,6 +206,8 @@ void UDefaultPlayerWidget::UpdateTodoUI()
     if (PeaceFulHazardGameMode == nullptr) return;
     if (PeacFulGameInstance == nullptr) return;
 
+    UpdateFinalClock();
+
     FString temp;
     PeacFulGameInstance->GetCurrentToDo(temp);
 
@@ -208,8 +217,6 @@ void UDefaultPlayerWidget::UpdateTodoUI()
 
 void UDefaultPlayerWidget::ShowLoadingUI(bool bVisible)
 {
-    UE_LOG(LogTemp, Warning, TEXT("ShowLoadingUI %s"), bVisible ? *FString("True") : *FString("False"));
-
     if (bVisible)
     {
         LoadingCanvas->SetVisibility(ESlateVisibility::Visible);
