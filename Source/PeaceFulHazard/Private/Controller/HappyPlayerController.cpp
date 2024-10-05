@@ -954,11 +954,11 @@ void AHappyPlayerController::UseItem(EItemType itemType, bool bItem)
     switch (itemType)
     {
     case EItemType::EIT_HealPack_Small :
-        SetHealth(15);
+        SetHealth(20);
         break;
 
     case EItemType::EIT_HealPack_Big:
-        SetHealth(40);
+        SetHealth(50);
         break;
     }
 }

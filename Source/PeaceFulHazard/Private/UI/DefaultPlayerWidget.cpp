@@ -64,44 +64,23 @@ void UDefaultPlayerWidget::SetTImeTextFunction(int32 timeSeconds)
 
 
     FLinearColor Color;
-    if (minutes == 4)
-    {
-        Color = FLinearColor(1.0f, 0.5f, 0.5f);  
-    }
-    else if (minutes == 3)
-    {
-        Color = FLinearColor(1.0f, 0.4f, 0.4f);  
-    }
-    else if (minutes == 2)
-    {
-        Color = FLinearColor(1.0f, 0.3f, 0.3f);
-    }
-    else if (minutes == 1)
-    {
-        Color = FLinearColor(1.0f, 0.2f, 0.2f);
-    }
-    else if (minutes == 0)
-    {
-        Color = FLinearColor(1.0f, 0.0f, 0.0f); 
-    }
 
-
-    if (timeSeconds > 200)
+    if (timeSeconds > 240)
     {
         Color = FLinearColor(1.0f, 0.5f, 0.5f);
 
     }
-    else if (timeSeconds >  160)
+    else if (timeSeconds > 200)
     {
         Color = FLinearColor(1.0f, 0.4f, 0.4f);
 
     }
-    else if (timeSeconds > 110)
+    else if (timeSeconds > 150)
     {
         Color = FLinearColor(1.0f, 0.3f, 0.3f);
 
     }
-    else if (timeSeconds > 60)
+    else if (timeSeconds > 80)
     {
         Color = FLinearColor(1.0f, 0.2f, 0.2f);
 

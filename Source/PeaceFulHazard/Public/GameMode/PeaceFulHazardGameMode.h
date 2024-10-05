@@ -156,7 +156,7 @@ public:
 	
 
 	UPROPERTY(BlueprintReadWrite)
-	int32 FinalBattleTimeSecond = 240;
+	int32 FinalBattleTimeSecond = 300;
 
 	
 	void SaveSettingValue();

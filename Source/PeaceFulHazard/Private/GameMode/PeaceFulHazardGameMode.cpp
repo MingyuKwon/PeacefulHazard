@@ -114,26 +114,26 @@ void APeaceFulHazardGameMode::FinalBattleTimeFunction()
 
     FinalTimeShowEvent.Broadcast(FinalBattleTimeSecond);
 
-    if (FinalBattleTimeSecond == 239)
+    if (FinalBattleTimeSecond == 299)
     {
         DynamicSpawnStartEvent.Broadcast();
 
-    }else if (FinalBattleTimeSecond == 200)
-    {
-        DynamicSpawnStartEvent.Broadcast();
-
-    }
-    else if (FinalBattleTimeSecond == 160)
+    }else if (FinalBattleTimeSecond == 240)
     {
         DynamicSpawnStartEvent.Broadcast();
 
     }
-    else if (FinalBattleTimeSecond == 110)
+    else if (FinalBattleTimeSecond == 200)
     {
         DynamicSpawnStartEvent.Broadcast();
 
     }
-    else if (FinalBattleTimeSecond == 60)
+    else if (FinalBattleTimeSecond == 150)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
+    else if (FinalBattleTimeSecond == 80)
     {
         DynamicSpawnStartEvent.Broadcast();
 
