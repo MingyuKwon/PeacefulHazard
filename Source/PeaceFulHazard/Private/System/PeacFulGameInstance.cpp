@@ -72,7 +72,7 @@ void UPeacFulGameInstance::RefreshGame()
     TutorialCheckMap.Empty();
 
     todoIndex = 0;
-
+    currentEnemyForce = 0;
 
     TutorialCheckMap.Add(ETutorialType::ETT_MoveTutorial, false);
     TutorialCheckMap.Add(ETutorialType::ETT_Fire, false);
