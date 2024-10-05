@@ -62,20 +62,19 @@ void UDefaultPlayerWidget::SetTImeTextFunction(int32 timeSeconds)
     FinalTimeText->SetText(FText::FromString(TimeText));
 
 
-
     FLinearColor Color;
 
-    if (timeSeconds > 240)
+    if (timeSeconds > 260)
     {
         Color = FLinearColor(1.0f, 0.5f, 0.5f);
 
     }
-    else if (timeSeconds > 200)
+    else if (timeSeconds > 220)
     {
         Color = FLinearColor(1.0f, 0.4f, 0.4f);
 
     }
-    else if (timeSeconds > 150)
+    else if (timeSeconds > 170)
     {
         Color = FLinearColor(1.0f, 0.3f, 0.3f);
 
