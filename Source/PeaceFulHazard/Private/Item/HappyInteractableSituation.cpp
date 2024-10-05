@@ -13,14 +13,22 @@ void AHappyInteractableSituation::FInalBattleCinematicShow(bool flag)
 
 	if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
 	{
+		Super::AfterInteraction();
+
 		if (flag)
 		{
+			switch (situationType)
+			{
+			case EInteractSituationType::EIST_SaveBox:
+			case EInteractSituationType::EIST_ItemBox:
 
+				Destroy();
+				break;
+
+			}
 		}
 		else
 		{
-			Super::AfterInteraction();
-
 			switch (situationType)
 			{
 			case EInteractSituationType::EIST_NormalDoor:
@@ -55,11 +63,6 @@ void AHappyInteractableSituation::FInalBattleCinematicShow(bool flag)
 				}
 
 				break;
-
-			case EInteractSituationType::EIST_SaveBox:
-				Destroy();
-				break;
-
 			}
 		}
 	}
