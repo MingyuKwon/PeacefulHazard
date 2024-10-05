@@ -105,7 +105,6 @@ void APeaceFulHazardGameMode::SetEnemySaveRefCount(bool bPlus)
 
 void APeaceFulHazardGameMode::OnSequenceFinished()
 {
-    UE_LOG(LogTemp, Display, TEXT("OnSequenceFinished"));
     CinematicPlayEvent.Broadcast(false);
 }
 
@@ -115,26 +114,26 @@ void APeaceFulHazardGameMode::FinalBattleTimeFunction()
 
     FinalTimeShowEvent.Broadcast(FinalBattleTimeSecond);
 
-    if (FinalBattleTimeSecond == 299)
+    if (FinalBattleTimeSecond == 239)
     {
         DynamicSpawnStartEvent.Broadcast();
 
-    }else if (FinalBattleTimeSecond == 260)
-    {
-        DynamicSpawnStartEvent.Broadcast();
-
-    }
-    else if (FinalBattleTimeSecond == 200)
+    }else if (FinalBattleTimeSecond == 200)
     {
         DynamicSpawnStartEvent.Broadcast();
 
     }
-    else if (FinalBattleTimeSecond == 140)
+    else if (FinalBattleTimeSecond == 160)
     {
         DynamicSpawnStartEvent.Broadcast();
 
     }
-    else if (FinalBattleTimeSecond == 80)
+    else if (FinalBattleTimeSecond == 110)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
+    else if (FinalBattleTimeSecond == 60)
     {
         DynamicSpawnStartEvent.Broadcast();
 

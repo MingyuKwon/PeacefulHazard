@@ -356,7 +356,7 @@ void UPeacFulGameInstance::Init()
 
     TutorialMapEnglish.Add(ETutorialType::ETT_WarpExplain, FString("The doors with a green glowing outline are warp doors. \n\nBy interacting with them, you can enter or exit different buildings or areas, so make sure to use them actively."));
     TutorialMapEnglish.Add(ETutorialType::ETT_FinalBattleExplain, FString("Now that you’ve obtained the treasure, all that’s left is to return. \nHead to the central plaza and wait for rescue.\n\nHowever, the enemies won’t let you leave easily, so it’s best to prepare as much as possible before heading out of the cathedral."));
-    TutorialMapEnglish.Add(ETutorialType::ETT_FinalBattleTimeLimit, FString("It will take 5 minutes for the rescue to arrive.\nafter 5 minutes, rescue portal will be spawned at this position,\n\nYou must survive for those 5 minutes using every possible means!"));
+    TutorialMapEnglish.Add(ETutorialType::ETT_FinalBattleTimeLimit, FString("It will take 4 minutes for the rescue to arrive.\nafter 4 minutes, rescue portal will be spawned at this position,\n\nYou must survive for those 4 minutes using every possible means!"));
 
     
     TutorialMapKorean.Add(ETutorialType::ETT_MoveTutorial, FString(TEXT("이동 : ASDW \n달리기 : 왼쪽 Shift \n\n상호작용 : 왼쪽 마우스 버튼 \n뒤로 가기 : 오른쪽 마우스 버튼\n\nE : 무기 장착")));
@@ -374,7 +374,7 @@ void UPeacFulGameInstance::Init()
 
     TutorialMapKorean.Add(ETutorialType::ETT_WarpExplain, FString(TEXT("테두리가 녹색 빛이 나는 문들을 워프 문 입니다. \n\n워프 문과 상호작용 하면 다른 건물이나 지역으로 들어가거나 나올 수 있으므로 적극 활용 해 봅시다")));
     TutorialMapKorean.Add(ETutorialType::ETT_FinalBattleExplain, FString(TEXT("이제 보물을 획득했으니, 복귀 하는 일만 남았습니다. \n중앙 광장으로 가서 구조를 기다리세요. \n\n다만, 적들이 순순히 보내 줄 리가 없으므로 최대한 준비를 한 후에, 성당 밖으로 나가는 것이 좋습니다")));
-    TutorialMapKorean.Add(ETutorialType::ETT_FinalBattleTimeLimit, FString(TEXT("구조까지 걸리는 시간을 5분 입니다.\n5분 뒤에 이 위치에 구조 포탈이 열릴 것 입니다. \n\n가능한 모든 수단을 동원해 5분 동안 살아남아야 합니다!")));
+    TutorialMapKorean.Add(ETutorialType::ETT_FinalBattleTimeLimit, FString(TEXT("구조까지 걸리는 시간을 4분 입니다.\n4분 뒤에 이 위치에 구조 포탈이 열릴 것 입니다. \n\n가능한 모든 수단을 동원해 4분 동안 살아남아야 합니다!")));
 
     
 
