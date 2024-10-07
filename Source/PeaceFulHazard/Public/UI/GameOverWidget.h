@@ -30,6 +30,8 @@ class PEACEFULHAZARD_API UGameOverWidget : public UUserWidget
 public:
 	void BackUIInputTrigger();
 
+	void SetGameEndVisibility(bool bVisible, bool bGameClear);
+
 protected:
 
 	int32 GetButtonIndex(UButton* button, bool bSaveButtons);
@@ -47,6 +49,11 @@ protected:
 	UCanvasPanel* SaveCanvas;
 
 	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* GameClearCanvas;
+
+	
+
+	UPROPERTY(meta = (BindWidget))
 	UButton* ContinueButton;
 
 	UPROPERTY(meta = (BindWidget))
@@ -55,6 +62,8 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* GoTitleButton;
 
+	UPROPERTY(meta = (BindWidget))
+	UButton* GoTitleButton_Clear;
 
 
 	UFUNCTION()

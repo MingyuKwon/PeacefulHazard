@@ -151,6 +151,11 @@ void AEnemyAIController::TriggerResetPivotIndex(bool bFollowingLastPosition)
 	}
 }
 
+void AEnemyAIController::GameClear()
+{
+	bGameClear = true;
+}
+
 void AEnemyAIController::PlayerDeathCallback()
 {
 	Target = nullptr;
@@ -214,33 +219,17 @@ void AEnemyAIController::UpdateBlackBoard()
 		if (CheckMovetoDestination())
 		{
 
-
 			if (!bNowAttacking && !bDeath && !bStunDamage && !bStunHeadShot)
 			{
-				if (GEngine)
-				{
-					FString text = FString::Printf(TEXT("Should Attack"));
-					GEngine->AddOnScreenDebugMessage(10, 1.f, FColor::Red, text);
-				}
-
 				if (nonAttackLock) return;
-
-				if (GEngine)
-				{
-					FString text = FString::Printf(TEXT("Attack"));
-					GEngine->AddOnScreenDebugMessage(11, 1.f, FColor::Blue, text);
-				}
 
 				if (controlEnemy->bBoss)
 				{
 					float distance = FVector::Dist2D(GetPawn()->GetActorLocation(), TargetLocation);
 					Attack(controlEnemy->AttackRange < distance);
-
 				}
 				else
 				{
-
-
 					Attack();
 				}
 
@@ -272,6 +261,9 @@ void AEnemyAIController::UpdateBlackBoard()
 		BlackboardComp->SetValueAsVector(TEXT("TargetLocation"), TargetLocation);
 		BlackboardComp->SetValueAsObject(TEXT("Target"), Target);
 
+		BlackboardComp->SetValueAsBool(TEXT("bGameClear"), bGameClear);
+
+		
 	}	
 
 }
@@ -306,22 +298,42 @@ void AEnemyAIController::BeginPlay()
 	BlackboardComp = GetBlackboardComponent();
 	GetWorld()->GetTimerManager().SetTimer(updateTimerHandle, this, &AEnemyAIController::UpdateBlackBoard , 0.1f, true);
 
-	GetWorld()->GetTimerManager().SetTimer(nonAttackTimerHandle, [this]() {
-		nonAttackLock = false;
-		}, 2.f, false);
-
-
-	
 	controlEnemy = Cast<AEnemyBase>(GetPawn());
 
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(this));
-	PeaceFulHazardGameMode->PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeathCallback);
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeathCallback);
+		PeaceFulHazardGameMode->GameClearEvent.AddDynamic(this, &ThisClass::GameClear);
+
+		if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive && PeaceFulHazardGameMode->currentMapType ==EWarpTarget::EWT_MainHub)
+		{
+			bSurviveMode = true;
+
+			TArray<AActor*> FoundCharacters;
+			UGameplayStatics::GetAllActorsOfClass(GetWorld(), APeaceFulHazardCharacter::StaticClass(), FoundCharacters);
+
+			if (FoundCharacters.Num() > 0)
+			{
+				Target = Cast<APeaceFulHazardCharacter>(FoundCharacters[0]);
+			}
+
+		}
+	}
+
+	GetWorld()->GetTimerManager().SetTimer(nonAttackTimerHandle, [this]() {
+		nonAttackLock = false;
+		}, bSurviveMode ? 1.f : 3.f, false);
+
 
 		
 }
 
 void AEnemyAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors)
 {
+	if (bSurviveMode) return;
+
 	for (AActor* Actor : UpdatedActors)
 	{
 		if (Actor->IsA(APeaceFulHazardCharacter::StaticClass()))
@@ -334,14 +346,13 @@ void AEnemyAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActor
 // only visual perception will set target object, other perception will bring to impact point
 void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	if (!Actor->IsA(APeaceFulHazardCharacter::StaticClass())) return;
 
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *Stimulus.Type.Name.ToString());
+	if (!Actor->IsA(APeaceFulHazardCharacter::StaticClass())) return;
+	if (bSurviveMode) return;
 
 	APeaceFulHazardCharacter* InputTarget = Cast<APeaceFulHazardCharacter>(Actor);
 	if (InputTarget->bDeath) return;
 
-	// �ð� ���� ó��
 	if (Stimulus.Type.Name == "Default__AISense_Sight")
 	{
 		if (Stimulus.WasSuccessfullySensed())
@@ -362,7 +373,6 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 			}
 		}
 	}
-	// ������ ���� ó��
 	else if (Stimulus.Type.Name == "Default__AISense_Damage")
 	{
 		if (Target != nullptr) return; // if enemy is targetting, does not nees anymore
@@ -380,7 +390,6 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 
 		}
 	}
-	// �Ҹ� ���� ó��
 	else if (Stimulus.Type.Name == "Default__AISense_Hearing")
 	{
 		if (Target != nullptr) return;  // if enemy is targetting, does not nees anymore

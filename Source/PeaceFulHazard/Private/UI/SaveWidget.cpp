@@ -16,6 +16,7 @@
 #include "Components/Slider.h"
 #include "Components/ComboBoxString.h"
 #include "SlateCore.h"
+#include "System/PeacFulSaveGame.h"
 
 void USaveWidget::BackUIInputTrigger()
 {
@@ -99,6 +100,8 @@ void USaveWidget::OnceSaveButtonClickedSuccess()
 {
 	if (CheckCallBackHoveringSaveButtonName.IsEmpty()) return;
 
+	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
+
 	if (bSaveMode)
 	{
 		PeaceFulHazardGameMode->SaveDataToSlot(CheckCallBackHoveringSaveButtonName);
@@ -108,7 +111,6 @@ void USaveWidget::OnceSaveButtonClickedSuccess()
 		PeaceFulHazardGameMode->LoadDataFromSlot(CheckCallBackHoveringSaveButtonName, false);
 	}
 	CheckCallBackHoveringSaveButtonName = FString("");
-	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceSaveButtonClickedSuccess);
 
 }
 
@@ -168,6 +170,8 @@ void USaveWidget::OnDeleteButtonClicked()
 
 void USaveWidget::OnceDeleteButtonClickedSuccess()
 {
+	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceDeleteButtonClickedSuccess);
+
 	if (CheckCallBackHoveringDeleteButtonindex >= 0 && CheckCallBackHoveringDeleteButtonindex < 8)
 	{
 		if (bSaveMode)
@@ -176,7 +180,6 @@ void USaveWidget::OnceDeleteButtonClickedSuccess()
 		}
 	}
 
-	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceDeleteButtonClickedSuccess);
 
 
 }
@@ -246,8 +249,9 @@ void USaveWidget::OnceNewButtonClickedSuccess()
 {
 	if (PeaceFulHazardGameMode)
 	{
-		PeaceFulHazardGameMode->LoadDataFromSlot(FString(""), true);
 		PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceNewButtonClickedSuccess);
+
+		PeaceFulHazardGameMode->LoadDataFromSlot(FString(""), true);
 
 	}
 
@@ -603,10 +607,11 @@ void USaveWidget::OnExitButtonClicked()
 
 void USaveWidget::OnceExitButtonSuccess()
 {
+	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceExitButtonSuccess);
+
 	PeaceFulHazardGameMode->ShowLoadingEvent.Broadcast(true);
 	PeaceFulHazardGameMode->MoveToMainMenu();
 
-	PeaceFulHazardGameMode->CheckOneMoreSuccessGameEvent.RemoveDynamic(this, &ThisClass::OnceExitButtonSuccess);
 
 }
 
@@ -712,6 +717,7 @@ void USaveWidget::ShowCurrentLocation()
 void USaveWidget::UpdateAllUI()
 {
 	CheckLanguage();
+	UpdaetLeftKeyDoorCount();
 
 	if (PeaceFulHazardGameMode)
 	{
@@ -915,6 +921,122 @@ void USaveWidget::SetMainMenuDisplay(EMenuType menuType, bool bSavePanelSave)
 }
 
 
+
+void USaveWidget::UpdaetLeftKeyDoorCount()
+{
+	if (PeacFulGameInstance == nullptr) return;
+
+	UPeacFulSaveGame* tempSave = PeacFulGameInstance->tempSaveGame;
+
+	int32 totalNormalKeyCount = 11;
+	int32 totalBigKeyCount = 2;
+
+	int32 totalNormalDoorCount = 7;
+	int32 totalBigDoorCount = 4;
+
+
+
+	int32 localNormalDoorCount = 1;
+	int32 localBigDoorCount = 1;
+	EWarpTarget currentMapType = EWarpTarget::EWT_Tutorial;
+	TArray<FString> tempInteractMap = tempSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames;
+	IterateStringArray(tempInteractMap, localNormalDoorCount, localBigDoorCount, totalNormalDoorCount, totalBigDoorCount, totalNormalKeyCount, totalBigKeyCount);
+	LeftNormalDoorTutorialCountText->SetText(FText::AsNumber(localNormalDoorCount));
+	LeftBigDoorTutorialCountText->SetText(FText::AsNumber(localBigDoorCount));
+
+
+	localNormalDoorCount = 2;
+	localBigDoorCount = 2;
+	currentMapType = EWarpTarget::EWT_MainHub;
+	tempInteractMap = tempSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames;
+	IterateStringArray(tempInteractMap, localNormalDoorCount, localBigDoorCount, totalNormalDoorCount, totalBigDoorCount, totalNormalKeyCount, totalBigKeyCount);
+	LeftNormalDoorMainHubCountText->SetText(FText::AsNumber(localNormalDoorCount));
+	LeftBigDoorMainhubCountText->SetText(FText::AsNumber(localBigDoorCount));
+
+
+	localNormalDoorCount = 0;
+	localBigDoorCount = 0;
+	currentMapType = EWarpTarget::EWT_MainCathedral;
+	tempInteractMap = tempSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames;
+	IterateStringArray(tempInteractMap, localNormalDoorCount, localBigDoorCount, totalNormalDoorCount, totalBigDoorCount, totalNormalKeyCount, totalBigKeyCount);
+
+
+	localNormalDoorCount = 1;
+	localBigDoorCount = 0;
+	currentMapType = EWarpTarget::EWT_CrossOver;
+	tempInteractMap = tempSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames;
+	IterateStringArray(tempInteractMap, localNormalDoorCount, localBigDoorCount, totalNormalDoorCount, totalBigDoorCount, totalNormalKeyCount, totalBigKeyCount);
+	LeftNormalDoorCrossoverCountText->SetText(FText::AsNumber(localNormalDoorCount));
+	LeftBigDoorCrossoverCountText->SetText(FText::AsNumber(localBigDoorCount));
+
+	localNormalDoorCount = 1;
+	localBigDoorCount = 0;
+	currentMapType = EWarpTarget::EWT_GraveYard;
+	tempInteractMap = tempSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames;
+	IterateStringArray(tempInteractMap, localNormalDoorCount, localBigDoorCount, totalNormalDoorCount, totalBigDoorCount, totalNormalKeyCount, totalBigKeyCount);
+	LeftNormalDoorGraveyardCountText->SetText(FText::AsNumber(localNormalDoorCount));
+	LeftBigDoorGraveyardCountText->SetText(FText::AsNumber(localBigDoorCount));
+
+	localNormalDoorCount = 1;
+	localBigDoorCount = 1;
+	currentMapType = EWarpTarget::EWT_RightGarden;
+	tempInteractMap = tempSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames;
+	IterateStringArray(tempInteractMap, localNormalDoorCount, localBigDoorCount, totalNormalDoorCount, totalBigDoorCount, totalNormalKeyCount, totalBigKeyCount);
+	LeftNormalDoorRightCountText->SetText(FText::AsNumber(localNormalDoorCount));
+	LeftBigDoorRightCountText->SetText(FText::AsNumber(localBigDoorCount));
+
+	localNormalDoorCount = 1;
+	localBigDoorCount = 0;
+	currentMapType = EWarpTarget::EWT_LeftGarden;
+	tempInteractMap = tempSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames;
+	IterateStringArray(tempInteractMap, localNormalDoorCount, localBigDoorCount, totalNormalDoorCount, totalBigDoorCount, totalNormalKeyCount, totalBigKeyCount);
+	LeftNormalDoorLeftCountText->SetText(FText::AsNumber(localNormalDoorCount));
+	LeftBigDoorLeftCountText->SetText(FText::AsNumber(localBigDoorCount));
+
+
+
+	LeftNormalKeyTotalCountText->SetText(FText::AsNumber(totalNormalKeyCount));
+	LeftBigKeyTotalCountText->SetText(FText::AsNumber(totalBigKeyCount));
+
+	LeftNormalDoorTotalCountText->SetText(FText::AsNumber(totalNormalDoorCount));
+	LeftBiglDoorTotalCountText->SetText(FText::AsNumber(totalBigDoorCount));
+
+
+}
+
+void USaveWidget::IterateStringArray(TArray<FString> tempInteractMap, int32& localNormalDoorCount, int32& localBigDoorCount, int32& totalNormalDoorCount, int32& totalBigDoorCount, int32& totalNormalKeyCount, int32& totalBigKeyCount)
+{
+	for (FString str : tempInteractMap)
+	{
+		if (str.Contains(FString("NormalDoor")))
+		{
+			localNormalDoorCount--;
+
+			totalNormalDoorCount--;
+		}
+
+		if (str.Contains(FString("BigDoor")))
+		{
+			localBigDoorCount--;
+
+			totalBigDoorCount--;
+		}
+
+		if (str.Contains(FString("NormalKey")))
+		{
+			totalNormalKeyCount--;
+		}
+
+		if (str.Contains(FString("BigKey")))
+		{
+			totalBigKeyCount--;
+		}
+
+
+
+	}
+
+}
 
 void USaveWidget::InitArrays()
 {

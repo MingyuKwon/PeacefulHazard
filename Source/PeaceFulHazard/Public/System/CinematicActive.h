@@ -23,7 +23,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, Category = "Cinematics")
+	UPROPERTY(EditAnywhere, Category = "Cinematics para")
 	TSoftObjectPtr<ULevelSequence> LevelSequenceToPlay;
 
 	UPROPERTY(EditAnywhere, Category = "Cinematics")

@@ -32,12 +32,21 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* FinalTimeText;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* FinalTimeBackGround;
+
+	
+
+	UFUNCTION()
+	void SetTImeTextFunction(int32 timeSeconds);
+
 
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* LoadingCanvas;
 
-
-	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* MaxBulletText;
 
@@ -86,6 +95,8 @@ protected:
 	FTimerHandle updateHealthHandle;
 
 public:
+	UFUNCTION(BlueprintCallable)
+	void UpdateFinalClock();
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet);

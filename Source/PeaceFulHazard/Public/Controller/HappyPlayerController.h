@@ -195,7 +195,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ShowLoadingUI(bool bVisible);
 
-
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	TMap<EWarpTarget, FString> TravelMap;
@@ -209,7 +208,7 @@ protected:
 	FCharacterInventoty CharacterInventoty;
 	FCharacterItemBox CharacterItemBox;
 
-	int32 maxBullet = 10;
+	int32 maxBullet = 15;
 	int32 currentBullet = 10;
 
 	float currentHealth = 50.f;
@@ -224,8 +223,8 @@ protected:
 	void SetGamePause(bool flag);
 
 
-	int32 normalBulletMax = 10;
-	int32 BigBulletMax = 5;
+	int32 normalBulletMax = 15;
+	int32 BigBulletMax = 8;
 
 	int32 GetLeftBullet();
 	int32 GetAnotherBullet();
@@ -306,6 +305,7 @@ public:
 
 	int32 GetPlayerForce();
 
+	void GameClear();
 
 
 	UFUNCTION(BlueprintCallable)

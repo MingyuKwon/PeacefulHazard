@@ -22,6 +22,8 @@ void UDefaultPlayerWidget::NativeConstruct()
     PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
     PeacFulGameInstance = Cast<UPeacFulGameInstance>(UGameplayStatics::GetGameInstance(this));
 
+    UpdateFinalClock();
+
 }
 
 void UDefaultPlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -30,6 +32,75 @@ void UDefaultPlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDelta
 
 }
 
+void UDefaultPlayerWidget::SetTImeTextFunction(int32 timeSeconds)
+{
+    int32 minutes = timeSeconds / 60;
+    int32 seconds = timeSeconds % 60;
+
+    FString TimeText = FString::Printf(TEXT("%d : %02d"), minutes, seconds);
+
+    if (timeSeconds <= 0)
+    {
+        TimeText = FString("Warp!");
+    }
+
+    FinalTimeText->SetText(FText::FromString(TimeText));
+
+
+    FLinearColor Color;
+
+    if (timeSeconds > 260)
+    {
+        Color = FLinearColor(1.0f, 0.5f, 0.5f);
+
+    }
+    else if (timeSeconds > 220)
+    {
+        Color = FLinearColor(1.0f, 0.4f, 0.4f);
+
+    }
+    else if (timeSeconds > 170)
+    {
+        Color = FLinearColor(1.0f, 0.3f, 0.3f);
+
+    }
+    else if (timeSeconds > 80)
+    {
+        Color = FLinearColor(1.0f, 0.2f, 0.2f);
+
+    }
+    else
+    {
+        Color = FLinearColor(1.0f, 0.0f, 0.0f);
+
+    }
+
+    FinalTimeText->SetColorAndOpacity(FSlateColor(Color));
+
+}
+
+
+
+void UDefaultPlayerWidget::UpdateFinalClock()
+{
+    if (PeaceFulHazardGameMode)
+    {
+        if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive && PeaceFulHazardGameMode->currentMapType == EWarpTarget::EWT_MainHub)
+        {
+            PeaceFulHazardGameMode->FinalTimeShowEvent.AddDynamic(this, &ThisClass::SetTImeTextFunction);
+            FinalTimeText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+            FinalTimeBackGround->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+        }
+        else
+        {
+            FinalTimeText->SetVisibility(ESlateVisibility::Hidden);
+            FinalTimeBackGround->SetVisibility(ESlateVisibility::Hidden);
+
+        }
+
+    }
+}
 
 
 void UDefaultPlayerWidget::UpdateBulletUI(int32 currentBullet, int32 maxBullet, int32 leftBullet, EItemType itemType, int32 anotherBullet)
@@ -135,6 +206,8 @@ void UDefaultPlayerWidget::UpdateTodoUI()
     if (PeaceFulHazardGameMode == nullptr) return;
     if (PeacFulGameInstance == nullptr) return;
 
+    UpdateFinalClock();
+
     FString temp;
     PeacFulGameInstance->GetCurrentToDo(temp);
 
@@ -144,8 +217,6 @@ void UDefaultPlayerWidget::UpdateTodoUI()
 
 void UDefaultPlayerWidget::ShowLoadingUI(bool bVisible)
 {
-    UE_LOG(LogTemp, Warning, TEXT("ShowLoadingUI %s"), bVisible ? *FString("True") : *FString("False"));
-
     if (bVisible)
     {
         LoadingCanvas->SetVisibility(ESlateVisibility::Visible);

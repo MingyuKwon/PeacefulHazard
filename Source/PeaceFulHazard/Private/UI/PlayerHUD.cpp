@@ -86,20 +86,11 @@ void APlayerHUD::SetInventoryDisplay(bool bVisible)
     }
 }
 
-void APlayerHUD::SetGameOverDisplay(bool bVisible)
+void APlayerHUD::SetGameOverDisplay(bool bVisible, bool bGameClear)
 {
-    if (!bVisible)
-    {
-        if (GameOverWidget)
-        {
-            InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
-        }
-        return;
-    }
-
     if (GameOverWidget)
     {
-        GameOverWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+        GameOverWidget->SetGameEndVisibility(bVisible, bGameClear);
     }
 }
 

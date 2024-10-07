@@ -7,6 +7,83 @@
 #include "GameMode/PeaceFulHazardGameMode.h"
 #include "Components/BoxComponent.h"
 
+void AHappyInteractableSituation::FInalBattleCinematicShow(bool flag)
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+	{
+		Super::AfterInteraction();
+
+		if (flag)
+		{
+			switch (situationType)
+			{
+			case EInteractSituationType::EIST_SaveBox:
+			case EInteractSituationType::EIST_ItemBox:
+
+				Destroy();
+				break;
+
+			}
+		}
+		else
+		{
+			switch (situationType)
+			{
+			case EInteractSituationType::EIST_NormalDoor:
+			case EInteractSituationType::EIST_BigDoor:
+				if (AdditiveStaticMesh1 && DisableMaterial)
+				{
+					AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
+					AdditiveStaticMesh1->SetMaterial(1, DisableMaterial);
+				}
+
+				if (AdditiveStaticMesh2 && DisableMaterial)
+				{
+					AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
+					AdditiveStaticMesh2->SetMaterial(1, DisableMaterial);
+				}
+				break;
+
+			case EInteractSituationType::EIST_GraveYardDoor:
+			case EInteractSituationType::EIST_MainCatheralDoor:
+			case EInteractSituationType::EIST_MainCatheralDoor2:
+
+				if (AdditiveStaticMesh1 && DisableMaterial)
+				{
+					AdditiveStaticMesh1->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
+					AdditiveStaticMesh1->SetMaterial(1, DisableMaterial);
+				}
+
+				if (AdditiveStaticMesh2 && DisableMaterial)
+				{
+					AdditiveStaticMesh2->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
+					AdditiveStaticMesh2->SetMaterial(1, DisableMaterial);
+				}
+
+				break;
+			}
+		}
+	}
+
+}
+
+void AHappyInteractableSituation::CheckToShow()
+{
+	CurrentWaveCount++;
+
+	if (CurrentWaveCount == WaveCount)
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->DynamicSpawnStartEvent.RemoveDynamic(this, &ThisClass::CheckToShow);
+		}
+
+		SetActorVisibility(true);
+	}
+}
+
 void AHappyInteractableSituation::BeginPlay()
 {
 	Super::BeginPlay();
@@ -15,6 +92,15 @@ void AHappyInteractableSituation::BeginPlay()
 	{
 		PeaceFulHazardGameMode->InteractSituationEvent.AddDynamic(this, &ThisClass::CheckBroadCastItemIsMe);
 
+		if (situationType == EInteractSituationType::EIST_FinalWarp)
+		{
+			SetActorVisibility(false);
+			PeaceFulHazardGameMode->DynamicSpawnStartEvent.AddDynamic(this, &ThisClass::CheckToShow);
+
+			return;
+		}
+
+		PeaceFulHazardGameMode->CinematicPlayEvent.AddDynamic(this, &ThisClass::FInalBattleCinematicShow);
 
 		if (situationType == EInteractSituationType::EIST_RedTriggerDoor ||
 			situationType == EInteractSituationType::EIST_BlueTriggerDoor || 
@@ -23,7 +109,11 @@ void AHappyInteractableSituation::BeginPlay()
 		{
 			PeaceFulHazardGameMode->TriggerDoorEvent.AddDynamic(this, &ThisClass::ListenTirggerOn);
 		}
+
+
+
 	}
+
 
 }
 
@@ -152,6 +242,9 @@ void AHappyInteractableSituation::CheckBroadCastItemIsMe(EInteractSituationType 
 	{
 		PeaceFulHazardGameMode->SetAleradyInteract(GetName());
 		PeaceFulHazardGameMode->PlayUISound(InteractSuccessSound, 1.f);
+
+		PeaceFulHazardGameMode->UpdateDefaultUIEvent.Broadcast();
+
 	}
 
 	AfterInteraction();
@@ -205,7 +298,7 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		{
 			if (PeaceFulHazardGameMode)
 			{
-				FString string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("Door is Locked. \nYou should trigger someting to open this door") : FString(TEXT("문이 닫혀 있다. \n반대쪽 에서 열어야 할 것 같다 "));
+				FString string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("Door is Locked. \nYou should trigger someting to open this door") : FString(TEXT("문이 닫혀 있다. \n뭔가 작동 시켜야 문이 열릴 것 같다 "));
 				PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
 			}
 		}
@@ -250,6 +343,13 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 					AfterInteraction();
 
 				}
+			}
+		}else if (situationType == EInteractSituationType::EIST_FinalWarp)
+		{
+			if (PeaceFulHazardGameMode)
+			{
+				UE_LOG(LogTemp, Display, TEXT("Game Clear"));
+				PeaceFulHazardGameMode->GameClearEvent.Broadcast();
 			}
 		}
 		else

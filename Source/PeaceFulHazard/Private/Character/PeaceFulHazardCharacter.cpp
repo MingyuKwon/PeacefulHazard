@@ -21,6 +21,7 @@
 #include "Materials/MaterialInstance.h"
 #include "NiagaraComponent.h"
 
+
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
@@ -336,6 +337,36 @@ void APeaceFulHazardCharacter::SetMaterialParaLerp(bool bDissolve, float value)
 	}
 }
 
+void APeaceFulHazardCharacter::GameClear()
+{
+	GetMesh()->SetVisibility(false);
+
+	if (EquipWeapon)
+	{
+		EquipWeapon->Destroy();
+	}
+}
+
+void APeaceFulHazardCharacter::FInalBattleCinematicShow(bool flag)
+{
+	if (PeaceFulHazardGameMode == nullptr) return;
+
+	if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+	{
+		if (flag)
+		{
+			GetMesh()->SetVisibility(false);
+		}
+		else
+		{
+			GetMesh()->SetVisibility(true);
+			SetActorLocation(FVector(1281.723877f, -630.322998f ,85.0f));
+			SetActorRotation(FRotator(0.f, 90.f, 0.f));
+		}
+	}
+
+}
+
 void APeaceFulHazardCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -360,6 +391,15 @@ void APeaceFulHazardCharacter::BeginPlay()
 	{
 		SpawnNiagaraPoint->Deactivate();
 	}
+
+	if (PeaceFulHazardGameMode)
+	{
+		PeaceFulHazardGameMode->CinematicPlayEvent.AddDynamic(this, &ThisClass::FInalBattleCinematicShow);
+		PeaceFulHazardGameMode->GameClearEvent.AddDynamic(this, &ThisClass::GameClear);
+
+		
+	}
+	
 
 }
 

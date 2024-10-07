@@ -159,12 +159,6 @@ void UMainMenu_SettingWidget::OnDefaultMouseSensibilityValueChanged(float Value)
 {
 	if (DefaultMouseSensibility && DefaultMouseSensibilityFill)
 	{
-		if (GEngine)
-		{
-			FString text = FString::Printf(TEXT("OnDefaultMouseSensibilityValueChanged : %f "), Value);
-			GEngine->AddOnScreenDebugMessage(8, 1.f, FColor::Green, text);
-		}
-
 		UCanvasPanelSlot* CanvasSlotFill = Cast<UCanvasPanelSlot>(DefaultMouseSensibilityFill->Slot);
 
 		if (CanvasSlotFill)

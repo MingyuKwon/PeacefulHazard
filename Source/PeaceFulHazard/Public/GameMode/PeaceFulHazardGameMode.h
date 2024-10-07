@@ -45,12 +45,18 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCinematicPlayEvent, bool, bPlay);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FCheckOneMoreGameEvent, bool, bVisible, const FText, EnglishText, const FText, KoreanText);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCheckOneMoreSuccessGameEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinalTimeShowEvent, int32, seconds);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameClearEvent);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateDefaultUIEvent);
 
 
 class UPeacFulGameInstance;
 class USoundBase;
 class UAudioComponent;
 class APostProcessVolume;
+class ULevelSequence;
 
 UCLASS(minimalapi)
 class APeaceFulHazardGameMode : public AGameModeBase
@@ -60,11 +66,16 @@ class APeaceFulHazardGameMode : public AGameModeBase
 public:
 	APeaceFulHazardGameMode();
 
+	bool bGameClear = false;
+
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FModeLanguageChangeEvent LanguageChangeEvent;
 
 	UFUNCTION()
 	void ChangeLanguageCallBack();
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FGameClearEvent GameClearEvent;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FShowLoadingEvent ShowLoadingEvent;
@@ -141,6 +152,15 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FCheckOneMoreSuccessGameEvent CheckOneMoreSuccessGameEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FFinalTimeShowEvent FinalTimeShowEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+
+	FUpdateDefaultUIEvent UpdateDefaultUIEvent;
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 FinalBattleTimeSecond = 300;
 
 	
 	void SaveSettingValue();
@@ -181,8 +201,9 @@ public:
 
 	void LoadDataFromContinue();
 
-
+	UFUNCTION(BlueprintCallable)
 	EPlayerToDo GetPlayerToDo();
+
 	EDifficulty GetDifficulty();
 
 	void ToDoUpdate(EPlayerToDo targetTodo);
@@ -190,8 +211,22 @@ public:
 
 protected:
 
+	UPROPERTY(EditAnywhere, Category = "Cinematics para")
+	TSoftObjectPtr<ULevelSequence> LevelSequenceToPlay;
+
+	UFUNCTION()
+	void OnSequenceFinished();
+
+
+	FTimerHandle finalBattleTimerHandle;
+	UFUNCTION()
+	void FinalBattleTimeFunction();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
 	bool DynamicSpawnMode = false;
+
+	UFUNCTION(BlueprintCallable)
+	void DynamimcSpawnStart(bool play);
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "map Parameter")
@@ -200,6 +235,15 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	TMap<EWarpTarget, USoundBase*> BackgroundMusics;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* FinalBattleBGM;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* GameClearMusic;
+
+	UFUNCTION()
+	void GameClear();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	USoundBase* GameOverMusic;

@@ -121,7 +121,7 @@ protected:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI Para")
-	ERouteNum routeNum = ERouteNum::ERN_None;
+	ERouteNum routeNum = ERouteNum::ERN_RouteNum1;
 
 	APeaceFulHazardGameMode* PeaceFulHazardGameMode;
 	

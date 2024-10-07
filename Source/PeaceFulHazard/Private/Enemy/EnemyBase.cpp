@@ -261,27 +261,7 @@ void AEnemyBase::AttackImpact(int32 index)
                 );
 
                 float InnerRadius = 50.f;
-                float OuterRadius = 170.f;
-
-                DrawDebugSphere(
-                    GetWorld(),
-                    BombLocationSave + FVector::UpVector * 50.f,  // 스피어 중심
-                    InnerRadius,                                 // 반경
-                    32,                                          // 세그먼트 수 (세밀하게 그리기)
-                    FColor::Red,                                 // 색상 (내부는 빨간색)
-                    false,                                       // 지속 여부 (false면 일정 시간 후 사라짐)
-                    5.0f                                         // 지속 시간 (5초 동안 그리기)
-                );
-
-                DrawDebugSphere(
-                    GetWorld(),
-                    BombLocationSave + FVector::UpVector * 50.f,  // 스피어 중심
-                    OuterRadius,                                 // 반경
-                    32,                                          // 세그먼트 수
-                    FColor::Yellow,                              // 색상 (외부는 노란색)
-                    false,                                       // 지속 여부
-                    5.0f                                         // 지속 시간
-                );
+                float OuterRadius = 210.f;
 
                 UGameplayStatics::ApplyRadialDamageWithFalloff(
                     GetWorld(),
@@ -657,13 +637,15 @@ void AEnemyBase::UpdateValue()
 {
     if (EnemyAIController)
     {
+        float plusSpeed = 20.f;
+
         if (EnemyAIController->Target || EnemyAIController->bFollowingLastPositon)
         {
-            GetCharacterMovement()->MaxWalkSpeed = ChasingMoveSpeed;
+            GetCharacterMovement()->MaxWalkSpeed = ChasingMoveSpeed + plusSpeed;
         }
         else
         {
-            GetCharacterMovement()->MaxWalkSpeed = PatrolMoveSpeed;
+            GetCharacterMovement()->MaxWalkSpeed = PatrolMoveSpeed + plusSpeed;
         }
 
         if (EnemyAIController->bStunDamage || EnemyAIController->bStunHeadShot && !EnemyAIController->bDeath)

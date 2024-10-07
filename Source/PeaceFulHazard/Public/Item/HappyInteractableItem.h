@@ -29,6 +29,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")
 	UTexture2D* DoorInteractkeyImage = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials Para")
+	UMaterialInterface* DisableMaterial;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetAdditiveVisibility(bool flag);
+
+	void SetActorVisibility(bool flag);
+
+
 	FString GetKeyName();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Parameter")

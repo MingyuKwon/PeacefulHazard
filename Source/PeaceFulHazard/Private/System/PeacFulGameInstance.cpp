@@ -27,19 +27,19 @@ void UPeacFulGameInstance::UpdateToDo(EPlayerToDo targetTodo)
         break;
 
     case EPlayerToDo::EPTD_SearchCathedral:
-        currentEnemyForce += 10;
+        currentEnemyForce += 15;
         break;
 
     case EPlayerToDo::EPTD_SearchLeftGarden:
-        currentEnemyForce += 15;
+        currentEnemyForce += 20;
         break;
 
     case EPlayerToDo::EPTD_SearchCathedralSecondFloor:
-        currentEnemyForce += 10;
+        currentEnemyForce += 20;
         break;
 
     case EPlayerToDo::EPTD_Survive:
-        currentEnemyForce += 15;
+        currentEnemyForce += 10;
         break;
 
       
@@ -71,6 +71,9 @@ void UPeacFulGameInstance::RefreshGame()
 {
     TutorialCheckMap.Empty();
 
+    todoIndex = 0;
+    currentEnemyForce = 0;
+
     TutorialCheckMap.Add(ETutorialType::ETT_MoveTutorial, false);
     TutorialCheckMap.Add(ETutorialType::ETT_Fire, false);
     TutorialCheckMap.Add(ETutorialType::ETT_InteractWithItem, false);
@@ -83,6 +86,8 @@ void UPeacFulGameInstance::RefreshGame()
     TutorialCheckMap.Add(ETutorialType::ETT_UIMenu_Save, false);
     TutorialCheckMap.Add(ETutorialType::ETT_UIShowInventory, false);
     TutorialCheckMap.Add(ETutorialType::ETT_WarpExplain, false);
+    TutorialCheckMap.Add(ETutorialType::ETT_FinalBattleExplain, false);
+    TutorialCheckMap.Add(ETutorialType::ETT_FinalBattleTimeLimit, false);
 
     
     tempSaveGame = Cast<UPeacFulSaveGame>(UGameplayStatics::CreateSaveGameObject(UPeacFulSaveGame::StaticClass()));
@@ -151,7 +156,7 @@ void UPeacFulGameInstance::ResetSetting()
 
     Brightness = 14.f;
 
-    Resolution = FString("1920 x 1080");
+    Resolution = FString("1280 x 720");
 }
 
 void UPeacFulGameInstance::LoadSettingValue()
@@ -302,7 +307,7 @@ void UPeacFulGameInstance::Init()
     ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchLeftGarden, FString("Investigate the \"left garden\" to see if we can find any useful clues."));
     ToDoMapEnglish.Add(EPlayerToDo::EPTD_SearchCathedralSecondFloor, FString("Investigate the \"cathedral\" second floor"));
     ToDoMapEnglish.Add(EPlayerToDo::EPTD_GetTreasure, FString("Get the Treasure!"));
-    ToDoMapEnglish.Add(EPlayerToDo::EPTD_Survive, FString("Survive within the time limit"));
+    ToDoMapEnglish.Add(EPlayerToDo::EPTD_Survive, FString("Let's escape this area and complete the mission!"));
 
     ToDoMapKorean.Add(EPlayerToDo::EPTD_GetOutTutorialRoom, FString(TEXT("건물에서 나갈 방법을 찾자")));
     ToDoMapKorean.Add(EPlayerToDo::EPTD_LookAroundMainHub, FString(TEXT("보물에 대한 정보를 제공할 수 있는 무언가를 찾아 중앙광장을 둘러보자.")));
@@ -314,8 +319,10 @@ void UPeacFulGameInstance::Init()
     ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchLeftGarden, FString(TEXT("\"왼쪽 정원\"을 조사하여 유용한 단서를 찾을 수 있는지 확인하자.")));
     ToDoMapKorean.Add(EPlayerToDo::EPTD_SearchCathedralSecondFloor, FString(TEXT("\"성당\" 2층을 조사하자.")));
     ToDoMapKorean.Add(EPlayerToDo::EPTD_GetTreasure, FString(TEXT("보물을 획득하자!")));
-    ToDoMapKorean.Add(EPlayerToDo::EPTD_Survive, FString(TEXT("제한 시간 동안 생존해라!.")));
+    ToDoMapKorean.Add(EPlayerToDo::EPTD_Survive, FString(TEXT("이 지역에서 탈출하고, 임무를 완수하자")));
 
+
+    
 
     MapNameEnglish.Add(EWarpTarget::EWT_Tutorial, FString("Tutorial Room"));
     MapNameEnglish.Add(EWarpTarget::EWT_MainHub, FString("Main Hub"));
@@ -348,6 +355,8 @@ void UPeacFulGameInstance::Init()
     TutorialMapEnglish.Add(ETutorialType::ETT_UIShowInventory, FString("In the inventory, you can use, combine, discard items. \n\nSome items may have different options for use or whether they can be discarded."));
 
     TutorialMapEnglish.Add(ETutorialType::ETT_WarpExplain, FString("The doors with a green glowing outline are warp doors. \n\nBy interacting with them, you can enter or exit different buildings or areas, so make sure to use them actively."));
+    TutorialMapEnglish.Add(ETutorialType::ETT_FinalBattleExplain, FString("Now that you’ve obtained the treasure, all that’s left is to return. \nHead to the central plaza and wait for rescue.\n\nHowever, the enemies won’t let you leave easily, so it’s best to prepare as much as possible before heading out of the cathedral."));
+    TutorialMapEnglish.Add(ETutorialType::ETT_FinalBattleTimeLimit, FString("It will take 5 minutes for the rescue to arrive.\nafter 5 minutes, rescue portal will be spawned at this position,\n\nYou must survive for those 5 minutes using every possible means!"));
 
     
     TutorialMapKorean.Add(ETutorialType::ETT_MoveTutorial, FString(TEXT("이동 : ASDW \n달리기 : 왼쪽 Shift \n\n상호작용 : 왼쪽 마우스 버튼 \n뒤로 가기 : 오른쪽 마우스 버튼\n\nE : 무기 장착")));
@@ -364,8 +373,10 @@ void UPeacFulGameInstance::Init()
     TutorialMapKorean.Add(ETutorialType::ETT_UIShowInventory, FString(TEXT("인벤토리에서 아이템을 사용, 결합, 버릴 수 있습니다. \n\n일부 아이템은 사용 방법이나 버릴 수 있는지 여부에 따라 다른 옵션이 있을 수 있습니다.")));
 
     TutorialMapKorean.Add(ETutorialType::ETT_WarpExplain, FString(TEXT("테두리가 녹색 빛이 나는 문들을 워프 문 입니다. \n\n워프 문과 상호작용 하면 다른 건물이나 지역으로 들어가거나 나올 수 있으므로 적극 활용 해 봅시다")));
+    TutorialMapKorean.Add(ETutorialType::ETT_FinalBattleExplain, FString(TEXT("이제 보물을 획득했으니, 복귀 하는 일만 남았습니다. \n중앙 광장으로 가서 구조를 기다리세요. \n\n다만, 적들이 순순히 보내 줄 리가 없으므로 최대한 준비를 한 후에, 성당 밖으로 나가는 것이 좋습니다")));
+    TutorialMapKorean.Add(ETutorialType::ETT_FinalBattleTimeLimit, FString(TEXT("구조까지 걸리는 시간을 5분 입니다.\n5분 뒤에 이 위치에 구조 포탈이 열릴 것 입니다. \n\n가능한 모든 수단을 동원해 5분 동안 살아남아야 합니다!")));
 
-
+    
 
     
     LoadSettingValue();

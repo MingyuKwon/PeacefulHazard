@@ -1,10 +1,28 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Item/HappyPichUpItem.h"
 #include "Character/PeaceFulHazardCharacter.h"
 #include "Controller/HappyPlayerController.h"
 #include "GameMode/PeaceFulHazardGameMode.h"
+#include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
+
+
+void AHappyPichUpItem::CheckToShow()
+{
+	CurrentWaveCount++;
+
+	if (CurrentWaveCount == WaveCount)
+	{
+		if (PeaceFulHazardGameMode)
+		{
+			PeaceFulHazardGameMode->DynamicSpawnStartEvent.RemoveDynamic(this, &ThisClass::CheckToShow);
+		}
+
+		SetActorVisibility(true);
+	}
+}
 
 void AHappyPichUpItem::BeginPlay()
 {
@@ -29,6 +47,17 @@ void AHappyPichUpItem::BeginPlay()
 			break;
 		}
 		
+		if (bFinalBattle )
+		{
+			SetActorVisibility(false);
+
+			if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+			{
+				PeaceFulHazardGameMode->DynamicSpawnStartEvent.AddDynamic(this, &ThisClass::CheckToShow);
+
+			}
+
+		}
 	}
 }
 
@@ -64,19 +93,21 @@ void AHappyPichUpItem::CheckBroadCastItemIsMe(EItemType _itemtype, int32 _count)
 				case EItemType::EIT_MainCatheralDoorKey2:
 					PeaceFulHazardGameMode->ToDoUpdate(EPlayerToDo::EPTD_SearchCathedralSecondFloor);
 					break;
-
+				case EItemType::EIT_CathedralLockKey:
+					PeaceFulHazardGameMode->ToDoUpdate(EPlayerToDo::EPTD_GetTreasure);
+					break;
+				case EItemType::EIST_Treasure:
+					PeaceFulHazardGameMode->ToDoUpdate(EPlayerToDo::EPTD_Survive);
+					break;
 
 
 				}
-
+				PeaceFulHazardGameMode->UpdateDefaultUIEvent.Broadcast();
 
 				PeaceFulHazardGameMode->SetAleradyInteract(GetName());
-
 			}
 
 			bAlreadyInteract = true;
-
-
 
 			AfterInteraction();
 

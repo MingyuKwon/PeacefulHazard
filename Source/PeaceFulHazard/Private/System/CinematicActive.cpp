@@ -51,13 +51,11 @@ void ACinematicActive::MapStartCallBack()
         if (!PeaceFulHazardGameMode->CheckAleradyInteract(GetName()))
         {
             PlaySequence();
-            UE_LOG(LogTemp, Warning, TEXT("Play Sequence"));
 
         }
         else
         {
             Destroy();
-            UE_LOG(LogTemp, Warning, TEXT("Alerady Play Sequence"));
 
         }
     }

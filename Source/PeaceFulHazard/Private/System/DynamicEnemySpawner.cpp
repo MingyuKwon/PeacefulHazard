@@ -18,6 +18,7 @@ ADynamicEnemySpawner::ADynamicEnemySpawner()
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Static Mesh Board"));
 	StaticMesh->SetupAttachment(RootComponent);
+	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 // Called when the game starts or when spawned
@@ -26,9 +27,18 @@ void ADynamicEnemySpawner::BeginPlay()
 	Super::BeginPlay();
 	PeaceFulHazardGameMode = Cast<APeaceFulHazardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 
+	SetActorVisibility(bDonotHide);
+
 	if (PeaceFulHazardGameMode)
 	{
+		if (PeaceFulHazardGameMode->GetPlayerToDo() != EPlayerToDo::EPTD_Survive)
+		{
+			Destroy();
+			return;
+		}
+
 		PeaceFulHazardGameMode->DynamicSpawnStartEvent.AddDynamic(this, &ThisClass::SpawnEnemy);
+
 	}
 
 }
@@ -43,10 +53,22 @@ void ADynamicEnemySpawner::SetMaterialParaLerp(float value)
 
 void ADynamicEnemySpawner::SpawnEnemy()
 {
-	
-	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::TimerEnd, SpawnTime, false);
-		
+	invokeWaveCount++;
+
+	if (waveCount <= invokeWaveCount)
+	{
+		if (!bAleradySpawnEnemy)
+		{
+			bAleradySpawnEnemy = true;
+			SetActorVisibility(true);
+
+			FTimerHandle TimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::TimerEnd, SpawnTime, false);
+		}
+	}
+
+
+
 }
 
 void ADynamicEnemySpawner::TimerEnd()
@@ -71,8 +93,12 @@ void ADynamicEnemySpawner::TimerEnd()
 void ADynamicEnemySpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	acculumateValue += bDestory ? 0.02f : DeltaTime / (SpawnTime * 2);
 
-	SetMaterialParaLerp(acculumateValue);
+	if (bAleradySpawnEnemy)
+	{
+		acculumateValue += bDestory ? 0.02f : DeltaTime / (SpawnTime * 2);
+		SetMaterialParaLerp(acculumateValue);
+
+	}
 }
 

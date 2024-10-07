@@ -147,6 +147,8 @@ void UMainMenu_NewGameWidget::OnceGameStartButtonlickedSuccess()
 {
 	if (MainMenuGameMode)
 	{
+		MainMenuGameMode->CheckOneMoreSuccessMenuEvent.RemoveDynamic(this, &ThisClass::OnceGameStartButtonlickedSuccess);
+
 		MainMenuGameMode->MenuModeChangeEvent.Broadcast(EMainMenuType::EMT_GameStart, true);
 
 		FTimerHandle timerHandle;
@@ -156,7 +158,6 @@ void UMainMenu_NewGameWidget::OnceGameStartButtonlickedSuccess()
 
 			}, 1.f, false);
 
-		MainMenuGameMode->CheckOneMoreSuccessMenuEvent.RemoveDynamic(this, &ThisClass::OnceGameStartButtonlickedSuccess);
 
 	}
 }

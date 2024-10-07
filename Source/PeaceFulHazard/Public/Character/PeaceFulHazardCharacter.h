@@ -24,6 +24,7 @@ class APeaceFulHazardGameMode;
 class UPeacFulGameInstance;
 class USoundBase;
 class UNiagaraComponent;
+class ULevelSequence;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -118,6 +119,8 @@ public:
 
 
 protected:
+
+
 	UPROPERTY(EditAnywhere, Category = "Sound Para")
 	USoundBase* HitSound;
 
@@ -140,13 +143,13 @@ protected:
 	USoundBase* FootStep_R_Sound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
-	float AimMoveSpeed = 100.f;
+	float AimMoveSpeed = 110.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
-	float DefaultMoveSpeed = 170.f;
+	float DefaultMoveSpeed = 180.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
-	float ShiftMoveSpeed = 300.f;
+	float ShiftMoveSpeed = 320.f;
 
 
 	float MouseSensitivity = 0.4f;
@@ -224,6 +227,13 @@ protected:
 	void SetMaterialParaLerp(bool bDissolve, float value);
 
 protected:
+
+	UFUNCTION()
+	void GameClear();
+
+	
+	UFUNCTION()
+	void FInalBattleCinematicShow(bool flag);
 
 	// To add mapping context
 	virtual void BeginPlay();

@@ -20,6 +20,21 @@ public:
 	ADynamicEnemySpawner();
 
 protected:
+
+	UPROPERTY(EditAnywhere, Category = "Spawn Para");
+	bool bDonotHide = false;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetActorVisibility(bool flag);
+
+
+	bool bAleradySpawnEnemy = false;
+
+	UPROPERTY(EditAnywhere, Category = "Spawn Para");
+	int32 waveCount = 1;
+
+	int32 invokeWaveCount = 0;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* StaticMesh;
 

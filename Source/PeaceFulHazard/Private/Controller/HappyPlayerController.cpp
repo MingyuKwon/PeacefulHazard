@@ -99,7 +99,7 @@ void AHappyPlayerController::BeginPlay()
         PeaceFulHazardGameMode->ShowLoadingEvent.AddDynamic(this, &ThisClass::ShowLoadingUI);
 
 
-
+        PeaceFulHazardGameMode->UpdateDefaultUIEvent.AddDynamic(this, &ThisClass::UpdateAllUI);
 
         PeaceFulHazardGameMode->CheckOneMoreGameEvent.AddDynamic(this, &ThisClass::SetOnceCheckDisplay);
 
@@ -125,12 +125,16 @@ void AHappyPlayerController::BeginPlay()
                 bShowMouseCursor = false;
                 SetInputMode(FInputModeGameOnly());
                 PlayerHUD->ShowLoadingUI(false);
-            }, 0.5f, false);
+            }, 1.5f, false);
 
     }
 
     GetWorld()->GetTimerManager().SetTimer(UpdateValueHandle, this, &AHappyPlayerController::UpdateValue, 0.02f, true);
 
+    FTimerHandle DefaultUpdateHandle;
+    GetWorld()->GetTimerManager().SetTimer(DefaultUpdateHandle, this, &AHappyPlayerController::UpdateDefaultUI, 2.f, true);
+
+    
     
 }
 
@@ -378,6 +382,20 @@ void AHappyPlayerController::SetHealth(float changeAmount)
     }
 }
 
+void AHappyPlayerController::GameClear()
+{
+    bShowMouseCursor = true;
+
+
+    FInputModeGameAndUI InputMode;
+    InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+    SetInputMode(InputMode);
+
+    if (PlayerHUD)
+    {
+       PlayerHUD->SetGameOverDisplay(true, true);
+    }
+ }
 
 void AHappyPlayerController::TakeDamge(float damage)
 {
@@ -940,17 +958,18 @@ void AHappyPlayerController::UseItem(EItemType itemType, bool bItem)
     switch (itemType)
     {
     case EItemType::EIT_HealPack_Small :
-        SetHealth(15);
+        SetHealth(20);
         break;
 
     case EItemType::EIT_HealPack_Big:
-        SetHealth(40);
+        SetHealth(50);
         break;
     }
 }
 
 void AHappyPlayerController::InteractWithItemUI(EItemType itemtype, int32 count)
 {
+
     if (itemtype == EItemType::EIT_Bag)
     {
         InventorySizeUpgrade(count);
@@ -959,6 +978,7 @@ void AHappyPlayerController::InteractWithItemUI(EItemType itemtype, int32 count)
     {
         ChangeItemInventory(itemtype, count);
     }
+    UpdateAllUI();
 
     CloseAllUI();
 }
@@ -975,6 +995,8 @@ void AHappyPlayerController::ShowLoadingUI(bool bVisible)
         PlayerHUD->ShowLoadingUI(bVisible);
     }
 }
+
+
 
 bool AHappyPlayerController::ChangeItemInventoryArrayOneSlot(int32 itemIndex, EItemType itemType, int32 itemCount, bool bReplace)
 {
@@ -1117,13 +1139,31 @@ void AHappyPlayerController::CinematicShow(bool bShow)
             PlayerHUD->SetDefaultDisplay(true);
         }
 
-        TutorialShow(ETutorialType::ETT_MoveTutorial);
-        if (ControlledCharacter && PeaceFulHazardGameMode && PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
+        if (PeaceFulHazardGameMode)
         {
+            if (PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+            {
+                if (PeaceFulHazardGameMode->bGameClear)
+                {
+                    GameClear();
+                }
+                else
+                {
+                    TutorialShow(ETutorialType::ETT_FinalBattleTimeLimit);
+                }
+            }
+            else
+            {
+                TutorialShow(ETutorialType::ETT_MoveTutorial);
+            }
 
-
-            ControlledCharacter->bDissolveControllerControl = false;
+            if (ControlledCharacter && PeaceFulHazardGameMode->GetPlayerToDo() == EPlayerToDo::EPTD_GetOutTutorialRoom)
+            {
+                ControlledCharacter->bDissolveControllerControl = false;
+            }
         }
+
+        
     }
 
     

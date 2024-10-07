@@ -11,6 +11,9 @@
 #include "Sound/SoundBase.h"
 #include "Components/AudioComponent.h"
 #include "System/SettingSave.h"
+#include "LevelSequence.h"
+#include "LevelSequenceActor.h"
+#include "LevelSequencePlayer.h"
 
 APeaceFulHazardGameMode::APeaceFulHazardGameMode()
 {
@@ -99,6 +102,48 @@ void APeaceFulHazardGameMode::SetEnemySaveRefCount(bool bPlus)
 
 
 
+
+void APeaceFulHazardGameMode::OnSequenceFinished()
+{
+    CinematicPlayEvent.Broadcast(false);
+}
+
+void APeaceFulHazardGameMode::FinalBattleTimeFunction()
+{
+    FinalBattleTimeSecond -= 1;
+
+    FinalTimeShowEvent.Broadcast(FinalBattleTimeSecond);
+
+    if (FinalBattleTimeSecond == 299)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }else if (FinalBattleTimeSecond == 260)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
+    else if (FinalBattleTimeSecond == 220)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
+    else if (FinalBattleTimeSecond == 170)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
+    else if (FinalBattleTimeSecond == 80)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
+    else if (FinalBattleTimeSecond == 0)
+    {
+        DynamicSpawnStartEvent.Broadcast();
+
+    }
+}
 
 void APeaceFulHazardGameMode::SaveSettingValue()
 {
@@ -415,19 +460,15 @@ void APeaceFulHazardGameMode::BeginPlay()
         }, 0.1f, false);
 
 
+    if (GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+    {
+        DynamicSpawnMode = true;
+    }
 
-    FTimerHandle TestHandle;
-    GetWorld()->GetTimerManager().SetTimer(TestHandle, [this]()
-        {
-            if (DynamicSpawnMode)
-            {
-                DynamicSpawnStartEvent.Broadcast();
-            }
-
-        }, 3.f, false);
-
-    
+    CinematicPlayEvent.AddDynamic(this, &ThisClass::DynamimcSpawnStart);
     PlayerDeathEvent.AddDynamic(this, &ThisClass::PlayerDeath);
+    GameClearEvent.AddDynamic(this, &ThisClass::GameClear);
+    
 }
 
 void APeaceFulHazardGameMode::PlayerDeath()
@@ -482,7 +523,14 @@ void APeaceFulHazardGameMode::SetGameBrightness()
             BrightnessTemp *= 1.1f;
             break;
         case EWarpTarget::EWT_MainHub:
-            BrightnessTemp *= 0.8f;
+            if(GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+            {
+                BrightnessTemp *= 0.69f;
+            }
+            else
+            {
+                BrightnessTemp *= 0.8f;
+            }
             break;
         case EWarpTarget::EWT_CrossOver:
             BrightnessTemp *= 1.1f;
@@ -612,6 +660,29 @@ void APeaceFulHazardGameMode::LoadDataFromContinue()
 }
 
 
+void APeaceFulHazardGameMode::GameClear()
+{
+    if (PeacFulGameInstance == nullptr) return;
+
+    if (LevelSequenceToPlay)
+    {
+        ALevelSequenceActor* SequenceActor;
+        ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
+            GetWorld(), LevelSequenceToPlay.Get(), FMovieSceneSequencePlaybackSettings(), SequenceActor);
+
+        if (SequencePlayer)
+        {
+            SequencePlayer->OnFinished.AddDynamic(this, &ThisClass::OnSequenceFinished);
+            CinematicPlayEvent.Broadcast(true);
+            SequencePlayer->Play();
+        }
+    }
+
+    bGameClear = true;
+    PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_BGM, BGMAudioComponent, GameClearMusic, 1.f);
+
+}
+
 void APeaceFulHazardGameMode::PlayBGM()
 {
     if (currentMapType == EWarpTarget::EWT_None) return;
@@ -620,7 +691,14 @@ void APeaceFulHazardGameMode::PlayBGM()
 
     if (BackgroundMusics.Contains(currentMapType))
     {
-        PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_BGM ,BGMAudioComponent, BackgroundMusics[currentMapType], 1.f);
+        USoundBase* playSound = BackgroundMusics[currentMapType];
+
+        if (currentMapType == EWarpTarget::EWT_MainHub && GetPlayerToDo() == EPlayerToDo::EPTD_Survive)
+        {
+            playSound = FinalBattleBGM;
+        }
+        
+        PeacFulGameInstance->PlayAudioComponent(EGameSoundType::EGST_BGM ,BGMAudioComponent, playSound, 1.f);
     }
     
 }
@@ -680,6 +758,17 @@ void APeaceFulHazardGameMode::ToDoUpdate(EPlayerToDo targetTodo)
 
         PeacFulGameInstance->UpdateToDo(targetTodo);
         SetGameBrightness();
+    }
+}
+
+void APeaceFulHazardGameMode::DynamimcSpawnStart(bool play)
+{
+    if (!play)
+    {
+        if (DynamicSpawnMode)
+        {
+            GetWorld()->GetTimerManager().SetTimer(finalBattleTimerHandle, this, &ThisClass::FinalBattleTimeFunction, 1.f, true);
+        }
     }
 }
 
