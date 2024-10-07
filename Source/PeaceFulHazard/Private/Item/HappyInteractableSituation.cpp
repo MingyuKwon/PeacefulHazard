@@ -298,7 +298,7 @@ void AHappyInteractableSituation::InteractWithPlayer(APeaceFulHazardCharacter* c
 		{
 			if (PeaceFulHazardGameMode)
 			{
-				FString string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("Door is Locked. \nYou should trigger someting to open this door") : FString(TEXT("문이 닫혀 있다. \n반대쪽 에서 열어야 할 것 같다 "));
+				FString string = PeaceFulHazardGameMode->GetCurrentLanguage() == ELanguage::ED_English ? FString("Door is Locked. \nYou should trigger someting to open this door") : FString(TEXT("문이 닫혀 있다. \n뭔가 작동 시켜야 문이 열릴 것 같다 "));
 				PeaceFulHazardGameMode->NoticeUIShowEvent.Broadcast(true, string);
 			}
 		}

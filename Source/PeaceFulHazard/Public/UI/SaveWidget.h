@@ -507,6 +507,48 @@ protected:
 	void ShowCurrentLocation();
 	
 
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftNormalKeyTotalCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftBigKeyTotalCountText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftNormalDoorTotalCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftBiglDoorTotalCountText;
+
+
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftNormalDoorGraveyardCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftBigDoorGraveyardCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftNormalDoorMainHubCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftBigDoorMainhubCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftNormalDoorTutorialCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftBigDoorTutorialCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftNormalDoorCrossoverCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftBigDoorCrossoverCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftNormalDoorRightCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftBigDoorRightCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftNormalDoorLeftCountText;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftBigDoorLeftCountText;
+
+
+	void UpdaetLeftKeyDoorCount();
+	void IterateStringArray(TArray<FString> tempInteractMap, int32& localNormalDoorCount, int32& localBigDoorCount, int32& totalNormalDoorCount, int32& totalBigDoorCount, int32& totalNormalKeyCount, int32& totalBigKeyCount);
+
 	////////////////// MiniMap //////////////////////////////////
 
 	void InitArrays();

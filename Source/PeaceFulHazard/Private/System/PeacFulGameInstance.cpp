@@ -156,7 +156,7 @@ void UPeacFulGameInstance::ResetSetting()
 
     Brightness = 14.f;
 
-    Resolution = FString("1920 x 1080");
+    Resolution = FString("1280 x 720");
 }
 
 void UPeacFulGameInstance::LoadSettingValue()

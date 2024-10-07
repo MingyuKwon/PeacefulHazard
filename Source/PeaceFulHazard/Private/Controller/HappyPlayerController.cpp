@@ -131,6 +131,10 @@ void AHappyPlayerController::BeginPlay()
 
     GetWorld()->GetTimerManager().SetTimer(UpdateValueHandle, this, &AHappyPlayerController::UpdateValue, 0.02f, true);
 
+    FTimerHandle DefaultUpdateHandle;
+    GetWorld()->GetTimerManager().SetTimer(DefaultUpdateHandle, this, &AHappyPlayerController::UpdateDefaultUI, 2.f, true);
+
+    
     
 }
 
