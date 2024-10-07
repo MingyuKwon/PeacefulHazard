@@ -637,13 +637,15 @@ void AEnemyBase::UpdateValue()
 {
     if (EnemyAIController)
     {
+        float plusSpeed = 20.f;
+
         if (EnemyAIController->Target || EnemyAIController->bFollowingLastPositon)
         {
-            GetCharacterMovement()->MaxWalkSpeed = ChasingMoveSpeed;
+            GetCharacterMovement()->MaxWalkSpeed = ChasingMoveSpeed + plusSpeed;
         }
         else
         {
-            GetCharacterMovement()->MaxWalkSpeed = PatrolMoveSpeed;
+            GetCharacterMovement()->MaxWalkSpeed = PatrolMoveSpeed + plusSpeed;
         }
 
         if (EnemyAIController->bStunDamage || EnemyAIController->bStunHeadShot && !EnemyAIController->bDeath)

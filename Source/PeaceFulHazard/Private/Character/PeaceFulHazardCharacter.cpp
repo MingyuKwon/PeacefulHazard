@@ -339,8 +339,7 @@ void APeaceFulHazardCharacter::SetMaterialParaLerp(bool bDissolve, float value)
 
 void APeaceFulHazardCharacter::GameClear()
 {
-
-	Destroy();
+	GetMesh()->SetVisibility(false);
 
 	if (EquipWeapon)
 	{

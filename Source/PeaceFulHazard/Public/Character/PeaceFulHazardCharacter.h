@@ -143,13 +143,13 @@ protected:
 	USoundBase* FootStep_R_Sound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
-	float AimMoveSpeed = 100.f;
+	float AimMoveSpeed = 110.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
-	float DefaultMoveSpeed = 170.f;
+	float DefaultMoveSpeed = 180.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movemnet Parameter", meta = (AllowPrivateAccess = "true"))
-	float ShiftMoveSpeed = 300.f;
+	float ShiftMoveSpeed = 320.f;
 
 
 	float MouseSensitivity = 0.4f;

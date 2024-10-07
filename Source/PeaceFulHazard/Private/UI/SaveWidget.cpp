@@ -928,10 +928,10 @@ void USaveWidget::UpdaetLeftKeyDoorCount()
 
 	UPeacFulSaveGame* tempSave = PeacFulGameInstance->tempSaveGame;
 
-	int32 totalNormalKeyCount = 10;
+	int32 totalNormalKeyCount = 11;
 	int32 totalBigKeyCount = 2;
 
-	int32 totalNormalDoorCount = 6;
+	int32 totalNormalDoorCount = 7;
 	int32 totalBigDoorCount = 4;
 
 
@@ -952,6 +952,14 @@ void USaveWidget::UpdaetLeftKeyDoorCount()
 	IterateStringArray(tempInteractMap, localNormalDoorCount, localBigDoorCount, totalNormalDoorCount, totalBigDoorCount, totalNormalKeyCount, totalBigKeyCount);
 	LeftNormalDoorMainHubCountText->SetText(FText::AsNumber(localNormalDoorCount));
 	LeftBigDoorMainhubCountText->SetText(FText::AsNumber(localBigDoorCount));
+
+
+	localNormalDoorCount = 0;
+	localBigDoorCount = 0;
+	currentMapType = EWarpTarget::EWT_MainCathedral;
+	tempInteractMap = tempSave->MapInteractSaveMap.FindOrAdd(currentMapType).interactedItemNames;
+	IterateStringArray(tempInteractMap, localNormalDoorCount, localBigDoorCount, totalNormalDoorCount, totalBigDoorCount, totalNormalKeyCount, totalBigKeyCount);
+
 
 	localNormalDoorCount = 1;
 	localBigDoorCount = 0;
