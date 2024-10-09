@@ -1,41 +1,65 @@
-# PeacefulHazard
+# PeacefulHazard: Happy Hazard
 
-About This Game
-This is a survival adventure game inspired by Resident Evil 2, but without the horror element.
+![Main Banner](Store_Images/MainBanner.png)
 
-The player receives a mission to find treasure, exploring vast stages, solving puzzles, and either avoiding or defeating enemies while trying to escape.
+---
 
-Strategic gameplay is required due to the limited resources and inventory system, offering tension and a sense of challenge without relying on fear.
+## About This Game
+**PeacefulHazard** is a survival adventure game inspired by *Resident Evil 2*—without the horror. 
 
+The player embarks on a mission to search vast stages for hidden treasures, solve intricate puzzles, and navigate around or confront enemies, all while managing limited resources and inventory space. The game focuses on strategic gameplay, tension, and a sense of challenge, offering engaging mechanics without relying on fear.
 
-**Key Features**
+---
 
-**Puzzle Solving and Treasure Hunting:**
-![Game Screenshot](Store_Images/Treasure.png)
+## Key Features
 
-Players must find hidden treasures and solve puzzles across various stages, with the ultimate goal of escaping.
+### Puzzle Solving and Treasure Hunting
+![Treasure Hunting](Store_Images/Treasure.png)
 
+Vast stages await exploration where players must solve puzzles to discover hidden treasures. The ultimate objective? Solve the puzzles, find the treasures, and escape.
 
-**Combat or Avoidance:**
-![Game Screenshot](Store_Images/EnemyBattle.png)
+---
 
-Throughout the stages, players encounter enemies that can either be defeated or avoided, depending on the situation.
+### Combat or Avoidance
+![Combat](Store_Images/EnemyBattle.png)
 
+Face enemies head-on or choose to avoid them. Each encounter presents a choice that can affect your resources and progress.
 
-**Limited Resources:**
-![Game Screenshot](Store_Images/ItemPickupImage.png)
-![Game Screenshot](Store_Images/pickupShot.png)
+---
 
-The number of consumable items, such as bullets, keys, and healing items, is limited, making efficient resource management essential.
+### Limited Resources
+![Item Pickup](Store_Images/ItemPickupImage.png)
+![Key Pickup](Store_Images/pickupShot.png)
 
+Consumable items like bullets, keys, and healing supplies are scarce. Effective resource management becomes crucial to your survival.
 
-**Inventory Management:**
-![Game Screenshot](Store_Images/inventory.png)
+---
 
-With limited inventory space, players must selectively carry important items, and these choices have a significant impact on the game's progression.
+### Inventory Management
+![Inventory](Store_Images/inventory.png)
 
+Players have limited inventory space, requiring them to make critical decisions on what to carry. Choosing the right items will be key to advancing through the game.
 
-**Messages from Predecessor Agents:**
-![Game Screenshot](Store_Images/memo.png)
+---
 
-Scattered across the map are tips left by previous agents. Reading and using this information can be helpful during gameplay.
+### Messages from Predecessor Agents
+![Agent Memo](Store_Images/memo.png)
+
+Discover hints and tips left by previous agents across the map. These clues can provide valuable insights and help you overcome challenges.
+
+---
+
+## Controller Support
+Gameplay is currently optimized for mouse and keyboard controls.
+
+---
+
+## How to Download
+For the latest version, [click here to download](your-download-link) and join the adventure!
+
+---
+
+## Community & Feedback
+We value feedback from our players! Feel free to contribute to our [issue tracker](link-to-issue-tracker) or join discussions on our [community forum](link-to-forum).
+
+![Footer](Store_Images/FooterBanner.png) <!-- Optional Footer Image -->
