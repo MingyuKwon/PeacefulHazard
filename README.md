@@ -9,8 +9,10 @@
 
 The player embarks on a mission to search vast stages for hidden treasures, solve intricate puzzles, and navigate around or confront enemies, all while managing limited resources and inventory space. The game focuses on strategic gameplay, tension, and a sense of challenge, offering engaging mechanics without relying on fear.
 
-**development start**
+
+**development Duration**
 Version1.0 : 2024-8-14 ~ 2024-10-7
+
 ---
 
 ## Key Features
