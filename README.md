@@ -55,29 +55,29 @@ Discover hints and tips left by previous agents across the map. These clues can 
 ![Explore the Area GIF](Store_Gifs/1-FirstGameCineatic.gif)
 
 ### 1. Explore the Area
-![Explore the Area GIF](Store_Gifs/2-TutorialMove.gif)
-![Explore the Area GIF](Store_Gifs/3-GraveyardMove.gif)
-![Explore the Area GIF](Store_Gifs/4-RightGardenMove.gif)
-![Explore the Area GIF](Store_Gifs/5-WalkCathedral.gif)
+![Explore the Area GIF](Trailer_Gifs/2-TutorialMove.gif)
+![Explore the Area GIF](Trailer_Gifs/3-GraveyardMove.gif)
+![Explore the Area GIF](Trailer_Gifs/4-RightGardenMove.gif)
+![Explore the Area GIF](Trailer_Gifs/5-WalkCathedral.gif)
 
 ### 2. Battle With Enemies
-![Battle With Enemies GIF](Store_Gifs/6-CrossOverBattle.gif)
-![Battle With Enemies GIF](Store_Gifs/7-CathedralBattle.gif)
-![Battle With Enemies GIF](Store_Gifs/8-RightGardenBattle.gif)
-![Battle With Enemies GIF](Store_Gifs/9-BossBattle.gif)
+![Battle With Enemies GIF](Trailer_Gifs/6-CrossOverBattle.gif)
+![Battle With Enemies GIF](Trailer_Gifs/7-CathedralBattle.gif)
+![Battle With Enemies GIF](Trailer_Gifs/8-RightGardenBattle.gif)
+![Battle With Enemies GIF](Trailer_Gifs/9-BossBattle.gif)
 
 ### 3. Get Item and Solve Puzzles
-![Get Item and Solve Puzzles GIF](Store_Gifs/10-ObtainItemKey.gif)
-![Get Item and Solve Puzzles GIF](Store_Gifs/11-OpenDoor.gif)
-![Get Item and Solve Puzzles GIF](Store_Gifs/12-OneWayDoor.gif)
-![Get Item and Solve Puzzles GIF](Store_Gifs/13-CrystalInteract.gif)
+![Get Item and Solve Puzzles GIF](Trailer_Gifs/10-ObtainItemKey.gif)
+![Get Item and Solve Puzzles GIF](Trailer_Gifs/11-OpenDoor.gif)
+![Get Item and Solve Puzzles GIF](Trailer_Gifs/12-OneWayDoor.gif)
+![Get Item and Solve Puzzles GIF](Trailer_Gifs/13-CrystalInteract.gif)
 
 ### 4. Manage Your Inventory and Expand It
-![Manage Inventory GIF](Store_Gifs/14-UseItem.gif)
-![Manage Inventory GIF](Store_Gifs/15-ItemCombine.gif)
-![Manage Inventory GIF](Store_Gifs/16-ObtainBag.gif)
-![Manage Inventory GIF](Store_Gifs/17-UseItemBox.gif)
+![Manage Inventory GIF](Trailer_Gifs/14-UseItem.gif)
+![Manage Inventory GIF](Trailer_Gifs/15-ItemCombine.gif)
+![Manage Inventory GIF](Trailer_Gifs/16-ObtainBag.gif)
+![Manage Inventory GIF](Trailer_Gifs/17-UseItemBox.gif)
 
 ### 5. Get Treasure and Complete Mission
-![Get Treasure and Complete Mission GIF](Store_Gifs/18-MainHub-first-cinematic.gif)
-![Get Treasure and Complete Mission GIF](Store_Gifs/19-MoveTowardTreasure.gif)
+![Get Treasure and Complete Mission GIF](Trailer_Gifs/18-MainHub-first-cinematic.gif)
+![Get Treasure and Complete Mission GIF](Trailer_Gifs/19-MoveTowardTreasure.gif)
