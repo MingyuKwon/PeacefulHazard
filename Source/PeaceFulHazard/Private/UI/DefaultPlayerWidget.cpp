@@ -247,7 +247,7 @@ void UDefaultPlayerWidget::UpdateHealthUI(float health, int32 currentForce)
     }
     else if (gap > 0)
     {
-        ForceGapText->SetColorAndOpacity(FLinearColor::Green);
+        ForceGapText->SetColorAndOpacity(FLinearColor(0.f, 0.164859f, 0.614583f));
 
     }
     else
