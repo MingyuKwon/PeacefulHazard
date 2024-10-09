@@ -48,18 +48,3 @@ Players have limited inventory space, requiring them to make critical decisions 
 Discover hints and tips left by previous agents across the map. These clues can provide valuable insights and help you overcome challenges.
 
 ---
-
-## Controller Support
-Gameplay is currently optimized for mouse and keyboard controls.
-
----
-
-## How to Download
-For the latest version, [click here to download](your-download-link) and join the adventure!
-
----
-
-## Community & Feedback
-We value feedback from our players! Feel free to contribute to our [issue tracker](link-to-issue-tracker) or join discussions on our [community forum](link-to-forum).
-
-![Footer](Store_Images/FooterBanner.png) <!-- Optional Footer Image -->
