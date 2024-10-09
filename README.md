@@ -52,7 +52,7 @@ Discover hints and tips left by previous agents across the map. These clues can 
 
 ## Game Trailer GIFS
 
-![Explore the Area GIF](Store_Gifs/1-FirstGameCineatic.gif)
+![Explore the Area GIF](Trailer_Gifs/1-FirstGameCineatic.gif)
 
 ### 1. Explore the Area
 ![Explore the Area GIF](Trailer_Gifs/2-TutorialMove.gif)
